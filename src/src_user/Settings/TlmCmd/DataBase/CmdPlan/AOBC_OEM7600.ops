@@ -1,0 +1,57 @@
+.# ===== OEM7600 FILTER 単体試験 =====
+.# BCでOEM7600の電源ON
+.AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 40
+.# BCでOEM7600の電源OFF
+.AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 52
+
+.# [Chk] AOBC_HK_GEN.POWER.UNREG_SW_STATE.GPS_RがONになることを確認する
+ check_value AOBC_HK_GEN.POWER.UNREG_SW_STATE.GPS_R == ON
+.# 実際にコンポに電源が入っているかは、INAの読みで判断する。[TODO]INAの読みをまとめたら、閾値を適切な値に設定する
+.check_value AOBC_HK_GEN.POWER.GPS_R.VOLTAGE_V > 3.2
+ check_value AOBC_HK_GEN.POWER.GPS_R.VOLTAGE_V < 3.4
+ check_value AOBC_HK_GEN.POWER.GPS_R.CURRENT_mA > 200.0
+ check_value AOBC_HK_GEN.POWER.GPS_R.CURRENT_mA < 300.0
+.AOBC_RT.Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW 0 1
+ wait_sec 5
+.AOBC_RT.Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW 0 0
+ wait_sec 5
+.AOBC_RT.Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER 0 1
+.# [Chk] AOBC.HK_COMPO.GPS_R.GPS_TIME_msecに値が入ることを確認する
+ check_value AOBC_HK_COMPO.GPS_R.GPS_TIME_msec != 0
+.# [Chk] AOBC_HK_COMPO.GPS_R.VISIBLE_SATに値が入ることを確認する（GPSシミュレータなしでは不要）
+ check_value AOBC_HK_COMPO.GPS_R.VISIBLE_SAT != 0
+.#
+.# ----- コマンド試験 -----
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb3 1 # AOBC_COMPONENTSをDL
+ wait_sec 5
+.# [Chk] 正しく設定されていることを確認する
+ check_value AOBC_COMPONENTS.OEM_BAUDRATE == 115200
+.#
+ Cmd_DI_OEM7600_SET_UART_BAUDRATE 0 9600
+ wait_sec 5
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb3 1 # AOBC_COMPONENTSをDL
+.# [Chk] 正しく設定されていることを確認する
+ check_value AOBC_COMPONENTS.OEM_BAUDRATE == 9600
+ #
+.# ----- レンジテレメ取得時試験 -----
+ Cmd_DI_OEM7600_SET_UART_BAUDRATE 0 9600
+ wait_sec 5
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb3 1 # AOBC_COMPONENTSをDL
+.# [Chk] 正しく設定されていることを確認する
+ # 位置テレメの停止を送信
+ Cmd_DI_OEM7600_SET_TLM_CONTENTS 0 0 0xf1
+ wait_sec 2
+ # レンジテレメ取得CMDを送信
+ Cmd_DI_OEM7600_SET_TLM_CONTENTS 0 0 0x2b
+ wait_sec 2
+ #
+.# ----- アプリ実行時間の確認 ----- 
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x99 1 # APP_TIMEをDL
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc3 1 # APP_TIME2をDL
+ #
+.# ----- レンジテレメ確認 -----
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xca 1 # RANGE1をDL
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xcb 1 # RANGE2をDL
+.#

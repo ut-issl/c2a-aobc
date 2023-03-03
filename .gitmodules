@@ -1,0 +1,3 @@
+[submodule "src/src_core"]
+	path = src/src_core
+	url = https://github.com/ut-issl/c2a-core

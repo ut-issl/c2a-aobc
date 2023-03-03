@@ -1,0 +1,191 @@
+.# ===== AOCS Bias 試験 =====
+.#
+.# TLMダウンリンク
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+.#
+.# ----- MPU9250磁気バイアスCmd試験 -----
+.#
+ AOBC_RT.Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT 0 1000 -2000 3000 0
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_X_nT == 1000
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_Y_nT == -2000
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_Z_nT == 3000
+.#
+ AOBC_RT.Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT 0 -100 200 -300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_X_nT == 900
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_Y_nT == -1800
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_Z_nT == 2700
+.#
+ AOBC_RT.Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT 0 100000 -2000 3000 0
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_X_nT == 900
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_Y_nT == -1800
+ check_value AOBC_BIAS.MPU9250_MAG_BIAS_COMP_Z_nT == 2700
+.# コマンドエラーを確認
+.# 変更反映されていないことを確認
+.#
+.#
+.# ----- RM3100磁気バイアスCmd試験 -----
+.#
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 0 -1000 2000 -3000 0
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_X_nT == -1000
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Y_nT == 2000
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Z_nT == -3000
+.#
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 0 100 -200 300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_X_nT == -900
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Y_nT == 1800
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Z_nT == -2700
+.#
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 0 100000 -200 300 0
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_X_nT == -900
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Y_nT == 1800
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Z_nT == -2700
+.# コマンドエラーを確認
+.# 変更反映されていないことを確認
+.#
+.# defaultクリア確認
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 0 0 0 0 2
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_X_nT == -1000
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Y_nT == 2000
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Z_nT == -3000
+.#
+.# 次コマンドに向けて再設定
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 0 100 -200 300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_X_nT == -900
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Y_nT == 1800
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Z_nT == -2700
+.#
+.# Add error確認
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 0 50000 -200 300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_X_nT == -1000
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Y_nT == 2000
+ check_value AOBC_BIAS.RM_AOBC_MAG_BIAS_COMP_Z_nT == -3000
+.#
+.#
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 1 -1000 2000 -3000 0
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_X_nT == -1000
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Y_nT == 2000
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Z_nT == -3000
+.#
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 1 100 -200 300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_X_nT == -900
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Y_nT == 1800
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Z_nT == -2700
+.#
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 1 100000 -200 300 0
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_X_nT == -900
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Y_nT == 1800
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Z_nT == -2700
+.# コマンドエラーを確認
+.# 変更反映されていないことを確認
+.#
+.#
+.# defaultクリア確認
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 1 0 0 0 2
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_X_nT == -1000
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Y_nT == 2000
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Z_nT == -3000
+.#
+.# 次コマンドに向けて再設定
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 1 100 -200 300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_X_nT == -900
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Y_nT == 1800
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Z_nT == -2700
+.#
+.# Add error確認
+ AOBC_RT.Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT 1 50000 -200 300 1
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_X_nT == -1000
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Y_nT == 2000
+ check_value AOBC_BIAS.RM_EXT_MAG_BIAS_COMP_Z_nT == -3000
+.#
+.#
+.# ----- MPU9250ジャイロバイアスCmd試験 -----
+.#
+ AOBC_RT.Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S 0 0.001 -0.002 0.003
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.MPU9250_ANG_VEL_BIAS_COMP_X_rad/s == 0.001
+ check_value AOBC_BIAS.MPU9250_ANG_VEL_BIAS_COMP_Y_rad/s == -0.002
+ check_value AOBC_BIAS.MPU9250_ANG_VEL_BIAS_COMP_Z_rad/s == 0.003
+.#
+.# コマンドエラー確認
+ AOBC_RT.Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S 0 1.0 -0.002 0.003
+ wait_sec 1
+ check_value AOBC_HK_GEN.OBC.GS_CMD.LAST_EXEC_STS == PRM
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.MPU9250_ANG_VEL_BIAS_COMP_X_rad/s == 0.001
+ check_value AOBC_BIAS.MPU9250_ANG_VEL_BIAS_COMP_Y_rad/s == -0.002
+ check_value AOBC_BIAS.MPU9250_ANG_VEL_BIAS_COMP_Z_rad/s == 0.003
+.# 値が変わらないことを確認
+.#
+.#
+.#
+.# ----- STIM210ジャイロバイアスCmd試験 -----
+.#
+ AOBC_RT.Cmd_DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S 0 0.01 -0.02 0.03
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.STIM210_ANG_VEL_BIAS_COMP_X_rad/s == 0.01
+ check_value AOBC_BIAS.STIM210_ANG_VEL_BIAS_COMP_Y_rad/s == -0.02
+ check_value AOBC_BIAS.STIM210_ANG_VEL_BIAS_COMP_Z_rad/s == 0.03
+.#
+.# コマンドエラー確認
+ AOBC_RT.Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S 0 1.0 -0.002 0.003
+ wait_sec 1
+ check_value AOBC_HK_GEN.OBC.GS_CMD.LAST_EXEC_STS == PRM
+ wait_sec 1
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb7 1 # AOBC_BIASをDL
+ wait_sec 1
+ check_value AOBC_BIAS.STIM210_ANG_VEL_BIAS_COMP_X_rad/s == 0.01
+ check_value AOBC_BIAS.STIM210_ANG_VEL_BIAS_COMP_Y_rad/s == -0.02
+ check_value AOBC_BIAS.STIM210_ANG_VEL_BIAS_COMP_Z_rad/s == 0.03
+.# 値が変わらないことを確認
+.#

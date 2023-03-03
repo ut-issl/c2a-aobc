@@ -1,0 +1,43 @@
+{
+  "c2a_root_dir" : "../../../",
+  "input_file_encoding" : "utf-8",
+  "target_dirs" : [
+    "src_core/",
+    "src_user/"
+  ],
+  "ignore_dirs" : [
+    "src_core/Examples"
+  ],
+  "ignore_files" : [
+    "src_user/TlmCmd/telemetry_definitions.c",
+    "src_user/TlmCmd/command_definitions.c",
+    "src_user/Library/xxhash.c",
+    "src_user/Library/xxhash.h",
+    "src_user/Library/matrix_definition.h",
+    "src_user/Library/matrix.c"
+  ],
+  "ignore_rules" : [
+  ],
+  "comment_ignore_rules" : [
+    "以下を指定すると，該当ルールが無視される",
+    "comment",
+    "newline",
+    "eof",
+    "space",
+    "operator_space",
+    "preprocessor",
+    "include_guard"
+  ],
+  "additional_type" : [
+    "CommonTlmCmdPacket",
+    "CommonTlmPacket",
+    "CommonCmdPacket",
+    "SpacePacket",
+    "TlmSpacePacket",
+    "CmdSpacePacket",
+    "TCP"
+  ],
+  "comment_additional_type" : [
+    "FIXME: CTCP, CTP, CCP については，整理が終わり次第，消して大丈夫になるはず"
+  ]
+}

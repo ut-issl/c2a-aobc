@@ -1,0 +1,82 @@
+.# ===== OC EH 試験 =====
+
+.# ===== POWER =====
+.# OC閾値設定を確認
+.check_value AOBC_POWER.STIM_OC_EL_THRE_MA == 5
+.check_value AOBC_POWER.STIM_SW_OC_MA == 500
+.# 設定できていない場合改めて実行
+.AOBC_RT.Cmd_APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD 1 5
+.AOBC_RT.Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION 1 500
+.Cmd_DI_INA260_SET_OVER_CURRENT_PROTECTION 1 1000
+
+.# ===== STIM210 =====
+.# STIM210の電源投入・テレコマ疎通を確認する
+.AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 38
+.# ！！中断！！（緊急時）
+.AOBC_RT.Cmd_APP_PSC_CONTROL_UNREG_PORT 0 0
+.# [Chk] HKのPOW_STIM210_STATEがONになることを確認する
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+.# [Chk] COMPONENTSのSTIM_ANG_VEL_*_RAD_Sが更新されることを確認する
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+.# [Chk] S/W H/W過電流検知によるEHが発火しないことを確認
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+
+.# ===== INA260 =====
+.# 過電流検知の設定値を変更する
+.# H/W OCが起きるように小さい値を設定
+.AOBC_RT.Cmd_DI_INA260_SET_OVER_CURRENT_PROTECTION 1 1
+.# OBCに過電流検知閾値設定コマンドが届いたか確認する
+ # ここのcheck valueが通っても、INAまで設定が通っているかどうかは分からないことに注意
+.check_value AOBC_HK_GEN.FINE_GYRO.OC_LIMIT_mA == 1
+
+.# ===== STIM210 =====
+.# [Chk] H/W過電流検知によるprotectionを検知し、1段目のEHが発動していることを確認->RESET
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+.# [Chk] H/W過電流検知によるprotectionを検知し、多段のEHが発動していることを確認->POWER OFF
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+
+.# ===== INA260 =====
+.# 過電流検知の設定値を変更する
+.# H/W OCが起きないように元に戻す
+.AOBC_RT.Cmd_DI_INA260_SET_OVER_CURRENT_PROTECTION 1 500
+.# OBCに過電流検知閾値設定コマンドが届いたか確認する
+ # ここのcheck valueが通っても、INAまで設定が通っているかどうかは分からないことに注意
+.check_value AOBC_HK_GEN.FINE_GYRO.OC_LIMIT_mA == 500
+
+.# 過電流検知の設定値を変更する
+.# S/W OCが起きるように小さい値を設定
+.AOBC_RT.Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION 1 1
+.# OBCに過電流検知閾値設定コマンドが届いたか確認する
+.check_value AOBC_HK_GEN.FINE_GYRO_OC_EL_THRE_MA == 1
+
+.# ===== STIM210 =====
+.# STIM210の電源投入・テレコマ疎通を確認する
+.AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 38
+.# ！！中断！！（緊急時）
+.AOBC_RT.Cmd_APP_PSC_CONTROL_UNREG_PORT 0 0
+.# [Chk] HKのPOW_STIM210_STATEがONになることを確認する
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+.# [Chk] COMPONENTSのSTIM_ANG_VEL_*_RAD_Sが更新されることを確認する
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+.# [Chk] S/W過電流検知によるprotectionを検知し、1段目のEHが発動していることを確認->RESET
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
+.# [Chk] S/W過電流検知によるprotectionを検知し、多段のEHが発動していることを確認->POWER OFF
+.#     <YES>
+.#     <NO>
+.#     <CANCEL>
