@@ -49,12 +49,12 @@ extern const Mpu9250Filter* const mpu9250_filter;
 
 AppInfo APP_MPU9250_FILTER_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_RESET_ZFILTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_RESET_ZFILTER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet);
 
 #endif

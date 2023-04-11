@@ -36,6 +36,6 @@ extern const GyroSelector* const gyro_selector;
 
 AppInfo APP_GYRO_SELECTOR_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_GYRO_SELECTOR_SET_STATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_GYRO_SELECTOR_SET_STATE(const CommonCmdPacket* packet);
 
 #endif

@@ -26,6 +26,6 @@ extern const Rw0003Filter* const rw0003_filter;
 
 AppInfo APP_RW0003_FILTER_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_RW0003_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_RW0003_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet);
 #endif

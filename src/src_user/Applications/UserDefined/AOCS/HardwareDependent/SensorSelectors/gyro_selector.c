@@ -7,6 +7,7 @@
 #include "gyro_selector.h"
 
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 
 #include "../../../../DriverInstances/di_mpu9250.h"
 #include "../../../../DriverInstances/di_stim210.h"
@@ -72,17 +73,17 @@ static void APP_GYRO_SELECTOR_fusion_(void)
   // TODO_L 実装する
 }
 
-CCP_EXEC_STS Cmd_APP_GYRO_SELECTOR_SET_STATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_GYRO_SELECTOR_SET_STATE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   APP_GYRO_SELECTOR_STATE state;
 
   state = (APP_GYRO_SELECTOR_STATE)param[0];
-  if (state >= APP_GYRO_SELECTOR_STATE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (state >= APP_GYRO_SELECTOR_STATE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   gyro_selector_.state = state;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

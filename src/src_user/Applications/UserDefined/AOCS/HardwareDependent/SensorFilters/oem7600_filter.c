@@ -6,6 +6,7 @@
 
 #include "oem7600_filter.h"
 
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../../../DriverInstances/di_oem7600.h"
@@ -166,17 +167,17 @@ static int APP_OEM7600_FILTER_init_spike_filter_(void)
   return 0;
 }
 
-CCP_EXEC_STS Cmd_APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t read_out_offset = 0;
 
   OEM7600_IDX sensor_id = (OEM7600_IDX)(param[read_out_offset]);
-  if (sensor_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   uint8_t axis_id = param[read_out_offset];
-  if (axis_id >= OEM7600_FILTER_POS_VEL_SIX_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= OEM7600_FILTER_POS_VEL_SIX_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   SpikeFilter_Config config_received;
@@ -187,18 +188,17 @@ CCP_EXEC_STS Cmd_APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
   read_out_offset++;
 
   float reject_threshold_float;
-  endian_memcpy(&reject_threshold_float, param + read_out_offset, sizeof(float));
-  if (reject_threshold_float < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&reject_threshold_float, param + read_out_offset, sizeof(float));
+  if (reject_threshold_float < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_received.reject_threshold = (double)(reject_threshold_float);
   read_out_offset += sizeof(float);
 
   float amplitude_limit_to_accept_as_step_float;
-  endian_memcpy(&amplitude_limit_to_accept_as_step_float, param + read_out_offset, sizeof(float));
-  if (amplitude_limit_to_accept_as_step_float < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&amplitude_limit_to_accept_as_step_float, param + read_out_offset, sizeof(float));
+  if (amplitude_limit_to_accept_as_step_float < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_received.amplitude_limit_to_accept_as_step = (double)(amplitude_limit_to_accept_as_step_float);
 
   C2A_MATH_ERROR init_error;
-  CCP_EXEC_STS exec_result = CCP_EXEC_ILLEGAL_CONTEXT;
 
   if (axis_id < PHYSICAL_CONST_THREE_DIM)
   {
@@ -208,7 +208,7 @@ CCP_EXEC_STS Cmd_APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
     if (init_error == C2A_MATH_ERROR_OK)
     {
       oem7600_filter_.position_spike_filter_config[axis_id] = config_received;
-      exec_result = CCP_EXEC_SUCCESS;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
     }
   }
   else
@@ -219,24 +219,24 @@ CCP_EXEC_STS Cmd_APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
     if (init_error == C2A_MATH_ERROR_OK)
     {
       oem7600_filter_.velocity_spike_filter_config[axis_id_vel] = config_received;
-      exec_result = CCP_EXEC_SUCCESS;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
     }
   }
 
-  return exec_result;
+  return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, init_error);
 }
 
-CCP_EXEC_STS Cmd_APP_OEM7600_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_OEM7600_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t read_out_offset = 0;
 
   OEM7600_IDX sensor_id = (OEM7600_IDX)(param[read_out_offset]);
-  if (sensor_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   uint8_t axis_id = param[read_out_offset];
-  if (axis_id >= OEM7600_FILTER_POS_VEL_SIX_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= OEM7600_FILTER_POS_VEL_SIX_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   if (axis_id < PHYSICAL_CONST_THREE_DIM)
   {
@@ -248,7 +248,7 @@ CCP_EXEC_STS Cmd_APP_OEM7600_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* pa
     SPIKE_FILTER_reset(&APP_OEM7600_FILTER_velocity_spike_[axis_id_vel]);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

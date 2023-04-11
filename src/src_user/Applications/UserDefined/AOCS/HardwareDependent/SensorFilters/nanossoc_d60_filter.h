@@ -31,6 +31,6 @@ extern const NanoSsocD60Filter* const nanossoc_d60_filter;
 
 AppInfo APP_NANOSSOC_D60_FILTER_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
 
 #endif

@@ -7,6 +7,7 @@
 #include "mpu9250_filter.h"
 
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../../../DriverInstances/di_mpu9250.h"
 #include "../../aocs_manager.h"
@@ -240,30 +241,29 @@ static int APP_MPU9250_FILTER_init_spike_filter_gyro_(void)
 }
 
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t read_out_offset = 0;
 
   MPU9250_FILTER_SENSOR_ID sensor_id = (MPU9250_FILTER_SENSOR_ID)(param[0]);
-  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   uint8_t axis_id = param[1];
-  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   float sampling_freq_Hz;
-  endian_memcpy(&sampling_freq_Hz, param + read_out_offset, sizeof(float));
-  if (sampling_freq_Hz < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&sampling_freq_Hz, param + read_out_offset, sizeof(float));
+  if (sampling_freq_Hz < 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset += sizeof(float);
 
   float cut_off_feq_Hz;
-  endian_memcpy(&cut_off_feq_Hz, param + read_out_offset, sizeof(float));
-  if (cut_off_feq_Hz < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&cut_off_feq_Hz, param + read_out_offset, sizeof(float));
+  if (cut_off_feq_Hz < 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   C2A_MATH_ERROR init_error;
-  CCP_EXEC_STS exec_result;
   switch (sensor_id)
   {
   case MPU9250_FILTER_SENSOR_ID_MAG:
@@ -273,14 +273,14 @@ CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* pac
     {
       mpu9250_filter_.cut_off_freq_lpf_1st_mag_Hz[axis_id] = cut_off_feq_Hz;
       mpu9250_filter_.sampling_freq_Hz = sampling_freq_Hz;
-      exec_result = CCP_EXEC_SUCCESS;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
     }
     else
     {
       // in this case, filter setting is already overwritten as through due to numerical error
       mpu9250_filter_.cut_off_freq_lpf_1st_mag_Hz[axis_id] = 0.0f;
       mpu9250_filter_.sampling_freq_Hz = 0.0f;
-      exec_result = CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, init_error);
     }
     break;
   case MPU9250_FILTER_SENSOR_ID_GYRO:
@@ -290,36 +290,35 @@ CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* pac
     {
       mpu9250_filter_.cut_off_freq_lpf_1st_gyro_Hz[axis_id] = cut_off_feq_Hz;
       mpu9250_filter_.sampling_freq_Hz = sampling_freq_Hz;
-      exec_result = CCP_EXEC_SUCCESS;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
     }
     else
     {
       // in this case, filter setting is already overwritten as through due to numerical error
       mpu9250_filter_.cut_off_freq_lpf_1st_gyro_Hz[axis_id] = 0.0f;
       mpu9250_filter_.sampling_freq_Hz = 0.0f;
-      exec_result = CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, init_error);
     }
     break;
   default:
-    exec_result = CCP_EXEC_ILLEGAL_PARAMETER;
     break;
   }
 
-  return exec_result;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t read_out_offset = 0;
 
   MPU9250_FILTER_SENSOR_ID sensor_id = (MPU9250_FILTER_SENSOR_ID)(param[0]);
-  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   uint8_t axis_id = param[read_out_offset];
-  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   SpikeFilter_Config config_recieved;
@@ -330,18 +329,17 @@ CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
   read_out_offset++;
 
   float reject_threshold_float;
-  endian_memcpy(&reject_threshold_float, param + read_out_offset, sizeof(float));
-  if (reject_threshold_float < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&reject_threshold_float, param + read_out_offset, sizeof(float));
+  if (reject_threshold_float < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_recieved.reject_threshold = (double)(reject_threshold_float);
   read_out_offset += sizeof(float);
 
   float amplitude_limit_to_accept_as_step_float;
-  endian_memcpy(&amplitude_limit_to_accept_as_step_float, param + read_out_offset, sizeof(float));
-  if (amplitude_limit_to_accept_as_step_float < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&amplitude_limit_to_accept_as_step_float, param + read_out_offset, sizeof(float));
+  if (amplitude_limit_to_accept_as_step_float < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_recieved.amplitude_limit_to_accept_as_step = (double)(amplitude_limit_to_accept_as_step_float);
 
   C2A_MATH_ERROR init_error;
-  CCP_EXEC_STS exec_result;
   switch (sensor_id)
   {
   case MPU9250_FILTER_SENSOR_ID_MAG:
@@ -350,11 +348,11 @@ CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
     if (init_error == C2A_MATH_ERROR_OK)
     {
       mpu9250_filter_.spike_filter_config_mag[axis_id] = config_recieved;
-      exec_result = CCP_EXEC_SUCCESS;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
     }
     else
     {
-      exec_result = CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, init_error);
     }
     break;
   case MPU9250_FILTER_SENSOR_ID_GYRO:
@@ -363,79 +361,70 @@ CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
     if (init_error == C2A_MATH_ERROR_OK)
     {
       mpu9250_filter_.spike_filter_config_gyro[axis_id] = config_recieved;
-      exec_result = CCP_EXEC_SUCCESS;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
     }
     else
     {
-      exec_result = CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, init_error);
     }
     break;
   default:
-    exec_result = CCP_EXEC_ILLEGAL_PARAMETER;
     break;
   }
 
-  return exec_result;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 }
 
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_RESET_ZFILTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_RESET_ZFILTER(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   MPU9250_FILTER_SENSOR_ID sensor_id = (MPU9250_FILTER_SENSOR_ID)(param[0]);
-  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t axis_id = param[1];
-  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  CCP_EXEC_STS exec_result;
   switch (sensor_id)
   {
   case MPU9250_FILTER_SENSOR_ID_MAG:
     Z_FILTER_reset(&APP_MPU9250_FILTER_lpf_1st_mag_[axis_id]);
-    exec_result = CCP_EXEC_SUCCESS;
-    break;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case MPU9250_FILTER_SENSOR_ID_GYRO:
     Z_FILTER_reset(&APP_MPU9250_FILTER_lpf_1st_gyro_[axis_id]);
-    exec_result = CCP_EXEC_SUCCESS;
-    break;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   default:
-    exec_result = CCP_EXEC_ILLEGAL_PARAMETER;
     break;
   }
 
-  return exec_result;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 }
 
 
-CCP_EXEC_STS Cmd_APP_MPU9250_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MPU9250_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   MPU9250_FILTER_SENSOR_ID sensor_id = (MPU9250_FILTER_SENSOR_ID)(param[0]);
-  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= MPU9250_FILTER_SENSOR_ID_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t axis_id = param[1];
-  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  CCP_EXEC_STS exec_result;
   switch (sensor_id)
   {
   case MPU9250_FILTER_SENSOR_ID_MAG:
     SPIKE_FILTER_reset(&APP_MPU9250_FILTER_spike_mag_[axis_id]);
-    exec_result = CCP_EXEC_SUCCESS;
-    break;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case MPU9250_FILTER_SENSOR_ID_GYRO:
     SPIKE_FILTER_reset(&APP_MPU9250_FILTER_spike_gyro_[axis_id]);
-    exec_result = CCP_EXEC_SUCCESS;
-    break;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   default:
-    exec_result = CCP_EXEC_ILLEGAL_PARAMETER;
     break;
   }
 
-  return exec_result;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 }
 
 #pragma section

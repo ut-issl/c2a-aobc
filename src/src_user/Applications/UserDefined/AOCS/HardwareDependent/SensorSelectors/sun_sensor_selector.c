@@ -131,7 +131,7 @@ static void APP_SS_SELECTOR_fusion_(void)
   // available_sun_sensor_listをソートしてsun_sensor_intensity_rankingにする処理などもここで行う
 }
 
-CCP_EXEC_STS Cmd_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD(const CommonCmdPacket* packet)
 {
   size_t arg_num = 0;
   float intensity_lower_threshold_percent = CCP_get_param_from_packet(packet, arg_num, float);
@@ -140,25 +140,25 @@ CCP_EXEC_STS Cmd_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD(const CommonCmdPack
 
   if (intensity_lower_threshold_percent < 0.0f || intensity_upper_threshold_percent < 0.0f)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   if (intensity_lower_threshold_percent >= intensity_upper_threshold_percent)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   const float threshold_upper_limit_percent = 1000.0f;
   if (intensity_lower_threshold_percent > threshold_upper_limit_percent ||
     intensity_upper_threshold_percent > threshold_upper_limit_percent)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   sun_sensor_selector_.sun_intensity_lower_threshold_percent = intensity_lower_threshold_percent;
   sun_sensor_selector_.sun_intensity_upper_threshold_percent = intensity_upper_threshold_percent;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

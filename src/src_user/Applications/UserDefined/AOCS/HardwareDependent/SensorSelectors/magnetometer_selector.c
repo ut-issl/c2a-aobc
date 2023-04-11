@@ -7,6 +7,7 @@
 #include "magnetometer_selector.h"
 
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../../../DriverInstances/di_mpu9250.h"
 #include "../../../../DriverInstances/di_rm3100.h"
 #include "../SensorFilters/mpu9250_filter.h"
@@ -75,17 +76,17 @@ static void APP_MAG_SELECTOR_fusion_(void)
   // TODO_L 実装する
 }
 
-CCP_EXEC_STS Cmd_APP_MAG_SELECTOR_SET_STATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MAG_SELECTOR_SET_STATE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   APP_MAG_SELECTOR_STATE state;
 
   state = (APP_MAG_SELECTOR_STATE)param[0];
-  if (state >= APP_MAG_SELECTOR_STATE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (state >= APP_MAG_SELECTOR_STATE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   magnetometer_selector_.state = state;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

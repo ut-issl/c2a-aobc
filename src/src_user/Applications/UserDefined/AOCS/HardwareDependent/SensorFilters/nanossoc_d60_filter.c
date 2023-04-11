@@ -92,7 +92,7 @@ static void APP_NANOSSOC_D60_FILTER_exec_(void)
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
 {
   SpikeFilter_Config config_received;
 
@@ -102,24 +102,24 @@ CCP_EXEC_STS Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdP
   float reject_threshold_rad = CCP_get_param_from_packet(packet, 2, float);
 
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(reject_threshold_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   config_received.reject_threshold = (double)(reject_threshold_rad);
 
   float amplitude_limit_to_accept_as_step_rad = CCP_get_param_from_packet(packet, 3, float);
 
   range_check_result = C2A_MATH_check_range_violation(amplitude_limit_to_accept_as_step_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   config_received.amplitude_limit_to_accept_as_step = (double)(amplitude_limit_to_accept_as_step_rad);
 
   C2A_MATH_ERROR init_error = SPIKE_FILTER_init(&APP_NANOSSOC_D60_FILTER_spike_, config_received);
 
-  if (init_error != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (init_error != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   nanossoc_d60_filter_.spike_filter_config = config_received;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

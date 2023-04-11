@@ -37,6 +37,6 @@ AppInfo APP_SS_SELECTOR_create_app(void);
 * @param  CommonCmdPacket
 * @return CCP_EXEC_STSに準拠
 */
-CCP_EXEC_STS Cmd_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD(const CommonCmdPacket* packet);
 
 #endif

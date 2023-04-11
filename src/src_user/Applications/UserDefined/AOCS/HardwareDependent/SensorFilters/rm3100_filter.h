@@ -34,8 +34,8 @@ extern const Rm3100Filter* const rm3100_filter;
 
 AppInfo APP_RM3100_FILTER_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_RM3100_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_RM3100_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_RM3100_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_RM3100_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
 
 #endif

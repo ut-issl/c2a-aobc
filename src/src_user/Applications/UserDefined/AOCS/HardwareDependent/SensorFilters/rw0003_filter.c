@@ -6,6 +6,7 @@
 
 #include "rw0003_filter.h"
 
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../aocs_manager.h"
@@ -82,14 +83,14 @@ static void APP_RW0003_FILTER_exec_(void)
 }
 
 
-CCP_EXEC_STS Cmd_APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t read_out_offset = 0;
   SpikeFilter_Config config_received;
 
   RW0003_IDX axis_id = (RW0003_IDX)(param[read_out_offset]);
-  if (axis_id >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
   config_received.count_limit_to_accept = param[read_out_offset];
@@ -99,36 +100,36 @@ CCP_EXEC_STS Cmd_APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket*
   read_out_offset++;
 
   float reject_threshold;
-  endian_memcpy(&reject_threshold, param + read_out_offset, sizeof(float));
+  ENDIAN_memcpy(&reject_threshold, param + read_out_offset, sizeof(float));
   read_out_offset += sizeof(float);
-  if (reject_threshold < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (reject_threshold < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_received.reject_threshold = reject_threshold;
 
   float amplitude_limit_to_accept_as_step;
-  endian_memcpy(&amplitude_limit_to_accept_as_step, param + read_out_offset, sizeof(float));
+  ENDIAN_memcpy(&amplitude_limit_to_accept_as_step, param + read_out_offset, sizeof(float));
   read_out_offset += sizeof(float);
-  if (amplitude_limit_to_accept_as_step < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (amplitude_limit_to_accept_as_step < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_received.amplitude_limit_to_accept_as_step = amplitude_limit_to_accept_as_step;
 
   C2A_MATH_ERROR init_error = SPIKE_FILTER_init(&APP_RW0003_FILTER_spike_[axis_id], config_received);
-  if (init_error != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (init_error != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   rw0003_filter_.spike_filter_config[axis_id] = config_received;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_RW0003_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_RW0003_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t read_out_offset = 0;
 
   RW0003_IDX axis_id = (RW0003_IDX)(param[read_out_offset]);
   read_out_offset++;
-  if (axis_id >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis_id >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   SPIKE_FILTER_reset(&APP_RW0003_FILTER_spike_[axis_id]);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

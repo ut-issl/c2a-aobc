@@ -121,10 +121,10 @@ static C2A_MATH_ERROR APP_SAGITTA_FILTER_calc_spike_filter_out_quaternion_(Quate
   return sagitta_filter_.q_i2b_filter_error;
 }
 
-CCP_EXEC_STS Cmd_APP_SAGITTA_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SAGITTA_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet)
 {
   SAGITTA_IDX sensor_id = (SAGITTA_IDX)(CCP_get_param_from_packet(packet, 0, uint8_t));
-  if (sensor_id >= SAGITTA_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= SAGITTA_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   SpikeFilter_Config config_received;
   config_received.count_limit_to_accept = CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -132,31 +132,31 @@ CCP_EXEC_STS Cmd_APP_SAGITTA_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket
   config_received.count_limit_to_reject_continued_warning = CCP_get_param_from_packet(packet, 2, uint8_t);
 
   float reject_threshold_float = CCP_get_param_from_packet(packet, 3, float);
-  if (reject_threshold_float < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (reject_threshold_float < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_received.reject_threshold = (double)(reject_threshold_float);
 
   float amplitude_limit_to_accept_as_step_float = CCP_get_param_from_packet(packet, 4, float);
-  if (amplitude_limit_to_accept_as_step_float < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (amplitude_limit_to_accept_as_step_float < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   config_received.amplitude_limit_to_accept_as_step = (double)(amplitude_limit_to_accept_as_step_float);
 
    C2A_MATH_ERROR init_error = SPIKE_FILTER_init(&APP_SAGITTA_FILTER_q_i2b_spike_, config_received);
 
   // 初期化に成功した場合のみ，sagitta_filterのconfigステータスを変更
-  if (init_error != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (init_error != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   sagitta_filter_.q_i2b_spike_filter_config = config_received;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SAGITTA_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SAGITTA_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet)
 {
   SAGITTA_IDX sensor_id = (SAGITTA_IDX)(CCP_get_param_from_packet(packet, 0, uint8_t));
-  if (sensor_id >= SAGITTA_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sensor_id >= SAGITTA_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   SPIKE_FILTER_reset(&APP_SAGITTA_FILTER_q_i2b_spike_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

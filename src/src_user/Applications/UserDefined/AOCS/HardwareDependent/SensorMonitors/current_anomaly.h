@@ -23,7 +23,7 @@ extern const CurrentAnomaly* const current_anomaly;
 
 AppInfo APP_CURRENT_ANOMALY_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION(const CommonCmdPacket* packet);
 
 #endif

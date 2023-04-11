@@ -12,6 +12,7 @@
 #include "mtq_seiren_controller.h"
 
 #include <math.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../../../../Library/vector3.h"
 #include "../../../../../Library/matrix33.h"
 #include "../../../../../Library/c2a_math.h"
@@ -345,21 +346,21 @@ static void APP_MTQ_SEIREN_CONTROLLER_integrate_trq_(void)
 
 
 // コマンド関数
-CCP_EXEC_STS Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   uint32_t mtq_demagnetization_required_time_ms;
-  endian_memcpy(&mtq_demagnetization_required_time_ms, param, sizeof(uint32_t));
+  ENDIAN_memcpy(&mtq_demagnetization_required_time_ms, param, sizeof(uint32_t));
 
   if (mtq_demagnetization_required_time_ms < 0)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   mtq_seiren_controller_.mtq_demagnetization_required_time_ms = mtq_demagnetization_required_time_ms;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

@@ -51,6 +51,6 @@ AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void);
  */
 void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProductControl cross_product_cntrl);
 
-CCP_EXEC_STS Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME(const CommonCmdPacket* packet);
 
 #endif

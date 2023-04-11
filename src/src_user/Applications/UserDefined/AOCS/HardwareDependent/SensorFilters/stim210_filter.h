@@ -33,12 +33,12 @@ extern const Stim210Filter* const stim210_filter;
 
 AppInfo APP_STIM210_FILTER_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_STIM210_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_STIM210_FILTER_SET_ZFILTER_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_STIM210_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_STIM210_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_STIM210_FILTER_RESET_ZFILTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_STIM210_FILTER_RESET_ZFILTER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_STIM210_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_STIM210_FILTER_RESET_SPIKE_FILTER(const CommonCmdPacket* packet);
 
 #endif

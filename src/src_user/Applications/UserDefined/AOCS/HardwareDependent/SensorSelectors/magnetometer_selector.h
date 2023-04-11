@@ -37,7 +37,7 @@ extern const MagnetometerSelector* const magnetometer_selector;
 
 AppInfo APP_MAG_SELECTOR_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_MAG_SELECTOR_SET_STATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MAG_SELECTOR_SET_STATE(const CommonCmdPacket* packet);
 
 
 #endif

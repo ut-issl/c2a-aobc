@@ -113,30 +113,30 @@ APP_PSC_STATE APP_CURRENT_ANOMALY_get_switch_state_(INA260_IDX idx)
   }
 }
 
-CCP_EXEC_STS Cmd_APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD(const CommonCmdPacket* packet)
 {
   INA260_IDX idx = (INA260_IDX)CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (idx >= INA260_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= INA260_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint16_t hw_oc_event_logger_threshold_V = CCP_get_param_from_packet(packet, 1, uint16_t);
-  if (hw_oc_event_logger_threshold_V < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (hw_oc_event_logger_threshold_V < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   current_anomaly_.hw_oc_event_logger_threshold_V[idx] = hw_oc_event_logger_threshold_V;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION(const CommonCmdPacket* packet)
 {
   INA260_IDX idx = (INA260_IDX)CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (idx >= INA260_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= INA260_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint16_t sw_oc_threshold_mA = CCP_get_param_from_packet(packet, 1, uint16_t);
-  if (sw_oc_threshold_mA < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sw_oc_threshold_mA < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   current_anomaly_.sw_oc_threshold_mA[idx] = sw_oc_threshold_mA;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
