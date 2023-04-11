@@ -15,9 +15,6 @@
 #include <src_core/Applications/memory_dump.h>
 #include <src_core/Applications/gs_command_dispatcher.h>
 #include <src_core/Applications/realtime_command_dispatcher.h>
-#include <src_core/Applications/timeline_command_dispatcher.h>
-// #include "../DriverInstances/gstos_packet_handler.h"
-// #include "../Middleware/CCSDSMW.h"
 
 void flush_screen_(void);
 void print_time_stamp_(void);

@@ -24,6 +24,6 @@ AppInfo AppStatus(void);
 
 AppInfo print_app_status(void);
 
-CCP_EXEC_STS Cmd_AS_set_id(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AS_set_id(const CommonCmdPacket* packet);
 
 #endif

@@ -1,6 +1,7 @@
 #pragma section REPRO
 #include "AppStatus.h"
 
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include "../../Library/vt100.h"
 #include "../../TlmCmd/command_definitions.h"
@@ -37,13 +38,13 @@ static void print_app_status_(void)
          app_manager->ais[asi_.app_id].min, app_manager->ais[asi_.app_id].max);
 }
 
-CCP_EXEC_STS Cmd_AS_set_id(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AS_set_id(const CommonCmdPacket* packet)
 {
   AS_ACK ack = AS_UNKNOWN;
 
   if (CCP_get_param_len(packet) != 1)
   {
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   ack = set_app_id_((size_t)CCP_get_param_head(packet)[0]);
@@ -51,13 +52,13 @@ CCP_EXEC_STS Cmd_AS_set_id(const CommonCmdPacket* packet)
   switch (ack)
   {
   case AS_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   case AS_INVALID_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   default:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 }
 
