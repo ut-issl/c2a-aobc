@@ -151,21 +151,21 @@ static void APP_AOCS_DR_read_data_()
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_DR_SET_WRITE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_DR_SET_WRITE(const CommonCmdPacket* packet)
 {
   uint8_t arg_num = 0;
   APP_AOCS_DR_RECORD_PERMISSION permission = (APP_AOCS_DR_RECORD_PERMISSION)CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
   if (permission >= APP_AOCS_DR_RECORD_PERMISSION_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   APP_AOCS_DR_OVERWRITE overwrite = (APP_AOCS_DR_OVERWRITE)CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
   if (overwrite >= APP_AOCS_DR_OVERWRITE_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   aocs_data_recorder_.record_permission = permission;
@@ -175,7 +175,7 @@ CCP_EXEC_STS Cmd_APP_AOCS_DR_SET_WRITE(const CommonCmdPacket* packet)
   {
     // Disableしたらcounterをリセットする
     aocs_data_recorder_.write_tlm_algorithm.counter = 0;
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 
   // permission enable時のみpartition, write_pointerを設定
@@ -183,44 +183,44 @@ CCP_EXEC_STS Cmd_APP_AOCS_DR_SET_WRITE(const CommonCmdPacket* packet)
   arg_num++;
   if (partition_id < APP_NVM_PARTITION_ID_DR_1 || partition_id > APP_NVM_PARTITION_ID_DR_3)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   uint32_t write_pointer = CCP_get_param_from_packet(packet, arg_num, uint32_t);
   arg_num++;
   if (write_pointer * APP_AOCS_DR_ALGORITHM_TLM_SIZE >= aocs_data_recorder_.write_end_address)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   aocs_data_recorder_.write_partition_id = partition_id;
   aocs_data_recorder_.write_end_address = non_volatile_memory_partition->elements[aocs_data_recorder_.write_partition_id].size_byte;
   aocs_data_recorder_.write_pointer = write_pointer;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_DR_READ(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_DR_READ(const CommonCmdPacket* packet)
 {
   uint8_t arg_num = 0;
   APP_AOCS_DR_READ_MODE read_mode = (APP_AOCS_DR_READ_MODE)CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
   if (read_mode >= APP_AOCS_DR_READ_MODE_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   APP_NVM_PARTITION_ID partition_id = (APP_NVM_PARTITION_ID)CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
   if (partition_id < APP_NVM_PARTITION_ID_DR_1 || partition_id > APP_NVM_PARTITION_ID_DR_3)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   uint32_t read_pointer = (APP_AOCS_DR_RECORD_PERMISSION)CCP_get_param_from_packet(packet, arg_num, uint32_t);
   arg_num++;
   if (read_pointer * APP_AOCS_DR_ALGORITHM_TLM_SIZE >= aocs_data_recorder_.read_end_address)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // 読み出し処理
@@ -237,7 +237,7 @@ CCP_EXEC_STS Cmd_APP_AOCS_DR_READ(const CommonCmdPacket* packet)
   }
   APP_AOCS_DR_read_data_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

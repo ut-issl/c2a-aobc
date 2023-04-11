@@ -147,7 +147,7 @@ extern const AocsDataRecorder* const aocs_data_recorder;
 AppInfo APP_AOCS_DR_create_app(void);
 
 // コマンド
-CCP_EXEC_STS Cmd_APP_AOCS_DR_SET_WRITE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_DR_READ(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_DR_SET_WRITE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_DR_READ(const CommonCmdPacket* packet);
 
 #endif

@@ -6,6 +6,7 @@
 #include "non_volatile_memory_manager.h"
 #include "../../../Library/stdint.h"
 #include <string.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 
 /**
  * @brief ハードウェア依存のエラーコードを不揮発メモリ管理アプリのエラーコードに変換する
@@ -39,64 +40,64 @@ static void APP_NVM_MANAGER_exec_(void)
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_NVM_MANAGER_WRITE_BYTES(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_NVM_MANAGER_WRITE_BYTES(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t param_idx = 0;
 
   uint32_t start_address;
-  endian_memcpy(&start_address, param + param_idx, sizeof(uint32_t));
+  ENDIAN_memcpy(&start_address, param + param_idx, sizeof(uint32_t));
   param_idx += sizeof(uint32_t);
-  if (start_address >= APP_NVM_MANAGER_STOP_ADDRESS) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (start_address >= APP_NVM_MANAGER_STOP_ADDRESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t length;
-  endian_memcpy(&length, param + param_idx, sizeof(uint8_t));
+  ENDIAN_memcpy(&length, param + param_idx, sizeof(uint8_t));
   param_idx += sizeof(uint8_t);
-  if (length > APP_NVM_MANAGER_MAX_CMD_DATA_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (length == 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (length > APP_NVM_MANAGER_MAX_CMD_DATA_SIZE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (length == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   // 引数がrawなのでサイズチェックが必要
   uint8_t param_len_byte = param_idx + length;
-  if (CCP_get_param_len(packet) != param_len_byte) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (CCP_get_param_len(packet) != param_len_byte) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   uint8_t write_data[APP_NVM_MANAGER_MAX_CMD_DATA_SIZE];
-  endian_memcpy(write_data, param + param_idx, sizeof(uint8_t) * length);
+  ENDIAN_memcpy(write_data, param + param_idx, sizeof(uint8_t) * length);
   param_idx += length;
 
   non_volatile_memory_manager_.error_status = APP_NVM_MANAGER_write_bytes(start_address, length, write_data);
-  if (non_volatile_memory_manager_.error_status != APP_NVM_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (non_volatile_memory_manager_.error_status != APP_NVM_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   // テレメ用データ保存
   non_volatile_memory_manager_.write_info.start_address = start_address;
   non_volatile_memory_manager_.write_info.data_size_byte = length;
   memcpy(non_volatile_memory_manager_.write_info.data, write_data, length);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_NVM_MANAGER_READ_BYTES(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_NVM_MANAGER_READ_BYTES(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t param_idx = 0;
 
   uint32_t start_address;
-  endian_memcpy(&start_address, param + param_idx, sizeof(uint32_t));
+  ENDIAN_memcpy(&start_address, param + param_idx, sizeof(uint32_t));
   param_idx += sizeof(uint32_t);
-  if (start_address >= APP_NVM_MANAGER_STOP_ADDRESS) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (start_address >= APP_NVM_MANAGER_STOP_ADDRESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t length;
-  endian_memcpy(&length, param + param_idx, sizeof(uint8_t));
+  ENDIAN_memcpy(&length, param + param_idx, sizeof(uint8_t));
   param_idx += sizeof(uint8_t);
-  if (length > APP_NVM_MANAGER_MAX_CMD_DATA_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (length > APP_NVM_MANAGER_MAX_CMD_DATA_SIZE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   non_volatile_memory_manager_.error_status = APP_NVM_MANAGER_read_bytes(non_volatile_memory_manager_.read_info.data, start_address, length);
-  if (non_volatile_memory_manager_.error_status != APP_NVM_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (non_volatile_memory_manager_.error_status != APP_NVM_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   // テレメ用データ保存
   non_volatile_memory_manager_.read_info.start_address = start_address;
   non_volatile_memory_manager_.read_info.data_size_byte = length;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // 以降、使うハードウェアに応じて修正する関数

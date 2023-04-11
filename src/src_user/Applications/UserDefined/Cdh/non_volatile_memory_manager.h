@@ -57,8 +57,8 @@ extern const NonVolatileMemoryManager* const non_volatile_memory_manager;
 
 AppInfo APP_NVM_MANAGER_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_NVM_MANAGER_WRITE_BYTES(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_NVM_MANAGER_READ_BYTES(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_MANAGER_WRITE_BYTES(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_MANAGER_READ_BYTES(const CommonCmdPacket* packet);
 
 // 外部公開関数
 /**

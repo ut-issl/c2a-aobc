@@ -68,8 +68,8 @@ extern const NonVolatileMemoryPartition* const non_volatile_memory_partition;
 
 AppInfo APP_NVM_PARTITION_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_NVM_PARTITION_WRITE_BYTES(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_NVM_PARTITION_READ_BYTES(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_PARTITION_WRITE_BYTES(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_PARTITION_READ_BYTES(const CommonCmdPacket* packet);
 
 // 外部公開関数
 /**
