@@ -7,18 +7,24 @@
 #include "di_sagitta.h"
 
 #include <src_core/Library/print.h>
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/Power/power_switch_control.h"
+
+static void DI_SAGITTA_init_(void);
+static void DI_SAGITTA_update_(void);
 
 static SAGITTA_Driver sagitta_driver_[SAGITTA_IDX_MAX];
 const  SAGITTA_Driver* const sagitta_driver[SAGITTA_IDX_MAX] = {&sagitta_driver_[SAGITTA_IDX_IN_UNIT]};
 
-static void DI_SAGITTA_init_(void);
-static void DI_SAGITTA_update_(void);
+// バッファ
+// 面倒くさいので要素数一つと仮定してバッファを確保する
+static DS_StreamRecBuffer DI_SAGITTA_rx_buffer_;
+static uint8_t DI_SAGITTA_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
 static uint8_t DI_SAGITTA_is_booted_[SAGITTA_IDX_MAX];  //!< 0 = not booted, 1 = booted
 
@@ -27,16 +33,26 @@ AppInfo DI_SAGITTA_update(void)
   return AI_create_app_info("update_DI_SAGITTA", DI_SAGITTA_init_, DI_SAGITTA_update_);
 }
 
-
 static void DI_SAGITTA_init_(void)
 {
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
 
-  int ret = 0;
-  ret = SAGITTA_init(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), PORT_CH_UART_SAGITTA);
-
-  if (ret != 0)
+  ret1 = DS_init_stream_rec_buffer(&DI_SAGITTA_rx_buffer_,
+                                   DI_SAGITTA_rx_buffer_allocation_,
+                                   sizeof(DI_SAGITTA_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
   {
-    Printf("SAGITTA init Failed ! %d", ret);
+    Printf("SAGITTA buffer init Failed ! %d \n", ret1);
+  }
+
+  // 面倒くさいので要素数一つと仮定して初期化する
+  ret2 = SAGITTA_init(&sagitta_driver_[SAGITTA_IDX_IN_UNIT],
+                      PORT_CH_UART_SAGITTA,
+                      &DI_SAGITTA_rx_buffer_);
+  if (ret2 != DS_INIT_OK)
+  {
+    Printf("SAGITTA init Failed ! %d \n", ret2);
   }
 
   for (int i = 0; i < SAGITTA_IDX_MAX; i++)
@@ -56,8 +72,6 @@ static void DI_SAGITTA_init_(void)
   {
     Printf("SAGITTA: q_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
-
-  return;
 }
 
 
@@ -77,7 +91,7 @@ static void DI_SAGITTA_update_(void)
   {
     DS_REC_ERR_CODE ret = SAGITTA_rec(&sagitta_driver_[SAGITTA_IDX_IN_UNIT]);
 
-    if (sagitta_driver_->driver.super.config.rec_status_.ret_from_if_rx == 0) return;
+    if (sagitta_driver_->driver.super.config.info.rec_status_.ret_from_if_rx == 0) return;
 
     if (ret != DS_REC_OK)
     {
@@ -94,39 +108,39 @@ static void DI_SAGITTA_update_(void)
 }
 
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_BOOT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_SAGITTA_BOOT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
-  if (DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   ret = SAGITTA_boot(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
 
-  if (ret != DS_CMD_OK) return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  if (ret != DS_CMD_OK) return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 
   DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT] = 1;
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_SET_UNIX_TIME_US(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_SAGITTA_SET_UNIX_TIME_US(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t unix_time_us_upper = 0;
   uint32_t unix_time_us_lower = 0;
 
-  endian_memcpy(&unix_time_us_upper, &param[0], (uint8_t)sizeof(uint32_t));
-  endian_memcpy(&unix_time_us_lower, &param[4], (uint8_t)sizeof(uint32_t));
+  ENDIAN_memcpy(&unix_time_us_upper, &param[0], (uint8_t)sizeof(uint32_t));
+  ENDIAN_memcpy(&unix_time_us_lower, &param[4], (uint8_t)sizeof(uint32_t));
   ret = SAGITTA_set_unix_time_us(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), unix_time_us_upper, unix_time_us_lower);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
 {
-  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -170,13 +184,13 @@ CCP_EXEC_STS Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
     ret = SAGITTA_set_subscription(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
 {
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t); // SAGITTA_PARAMETER_ID
   uint8_t param_idx = CCP_get_param_from_packet(packet, 1, uint8_t); // 各SAGITTA_PARAMETER_ID内でのparameter index
@@ -222,46 +236,46 @@ CCP_EXEC_STS Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
     ret = SAGITTA_change_subscription(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet)
 {
-  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   DS_CMD_ERR_CODE ret;
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   ret = SAGITTA_read_parameter(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_id);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   SAGITTA_IDX idx;
   idx = (SAGITTA_IDX)param[0];
-  if (idx >= SAGITTA_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= SAGITTA_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float q_array_c2b[PHYSICAL_CONST_QUATERNION_DIM];
   for (int i = 0; i < PHYSICAL_CONST_QUATERNION_DIM; i++)
   {
-    endian_memcpy(&q_array_c2b[i], param + 1 + i * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&q_array_c2b[i], param + 1 + i * sizeof(float), sizeof(float));
   }
 
   Quaternion quaternion_c2b;
   C2A_MATH_ERROR ret;
   ret = QUATERNION_make_from_array(&quaternion_c2b, q_array_c2b, QUATERNION_SCALAR_POSITION_LAST);
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   SAGITTA_set_frame_transform_c2b(&sagitta_driver_[idx], quaternion_c2b);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

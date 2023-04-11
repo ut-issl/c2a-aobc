@@ -55,17 +55,17 @@ extern const DiStim210* const di_stim210[STIM210_IDX_MAX];
  */
 AppInfo DI_STIM210_update(void);
 
-CCP_EXEC_STS Cmd_DI_STIM210_INIT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_MODE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_NORMAL_MODE_FORMAT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_GYRO_OUTPUT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_SAMPLE_RATE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_TERMINATION_MODE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_LOW_PASS_FILTER(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_MODE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_NORMAL_MODE_FORMAT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_GYRO_OUTPUT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_SAMPLE_RATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_TERMINATION_MODE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_LOW_PASS_FILTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet);
 // 温度補正
-CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet);
 
 #endif

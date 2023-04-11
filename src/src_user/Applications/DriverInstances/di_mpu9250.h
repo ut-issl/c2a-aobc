@@ -54,11 +54,11 @@ extern const DiMpu9250* const di_mpu9250[MPU9250_IDX_MAX];
  */
 AppInfo DI_MPU9250_update(void);
 
-CCP_EXEC_STS Cmd_DI_MPU9250_INIT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MPU9250_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet);
 
 #endif

@@ -1,24 +1,30 @@
 #pragma section REPRO
 /**
-* @file   di_fm25v10.c
+* @file
 * @brief  FM25V10のDriver Instance
 */
 
 #include "di_fm25v10.h"
 
 #include <src_core/Library/print.h>
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include <math.h>
+
+static void DI_FM25V10_init_(void);
+static void DI_FM25V10_update_(void);
 
 static FM25V10_Driver fm25v10_driver_[FM25V10_IDX_MAX];
 const  FM25V10_Driver* const fm25v10_driver[FM25V10_IDX_MAX] = {&fm25v10_driver_[FM25V10_IDX_1],
                                                                 &fm25v10_driver_[FM25V10_IDX_2],
                                                                 &fm25v10_driver_[FM25V10_IDX_3],
                                                                 &fm25v10_driver_[FM25V10_IDX_4]};
+// バッファ
+static DS_StreamRecBuffer DI_FM25V10_rx_buffer_[FM25V10_IDX_MAX];
+static uint8_t DI_FM25V10_rx_buffer_allocation_[FM25V10_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
-static void DI_FM25V10_init_(void);
-static void DI_FM25V10_update_(void);
 
 /**
  * @brief  先頭globalアドレスからデバイス毎のlocalアドレスとどのデバイスに書き込むかを求める
@@ -47,17 +53,29 @@ AppInfo DI_FM25V10_update(void)
 
 static void DI_FM25V10_init_(void)
 {
-  int ret;
-  ret = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_1], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS1);
-  if (ret != 0)  Printf("FM25V10 #1 init Failed ! %d \n", ret);
-  ret = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_2], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS2);
-  if (ret != 0)  Printf("FM25V10 #2 init Failed ! %d \n", ret);
-  ret = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_3], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS3);
-  if (ret != 0)  Printf("FM25V10 #3 init Failed ! %d \n", ret);
-  ret = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_4], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS4);
-  if (ret != 0)  Printf("FM25V10 #4 init Failed ! %d \n", ret);
+  int i;
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
 
-  return;
+  for (i = 0; i < FM25V10_IDX_MAX; ++i)
+  {
+    ret1 = DS_init_stream_rec_buffer(&DI_FM25V10_rx_buffer_[i],
+                                     DI_FM25V10_rx_buffer_allocation_[i],
+                                     sizeof(DI_FM25V10_rx_buffer_allocation_[i]));
+    if (ret1 != DS_ERR_CODE_OK)
+    {
+      Printf("FM25V10 buffer #%d init Failed ! %d \n", i, ret1);
+    }
+  }
+
+  ret2 = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_1], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS1, &DI_FM25V10_rx_buffer_[FM25V10_IDX_1]);
+  if (ret2 != DS_INIT_OK)  Printf("FM25V10 #1 init Failed ! %d \n", ret2);
+  ret2 = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_2], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS2, &DI_FM25V10_rx_buffer_[FM25V10_IDX_2]);
+  if (ret2 != DS_INIT_OK)  Printf("FM25V10 #2 init Failed ! %d \n", ret2);
+  ret2 = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_3], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS3, &DI_FM25V10_rx_buffer_[FM25V10_IDX_3]);
+  if (ret2 != DS_INIT_OK)  Printf("FM25V10 #3 init Failed ! %d \n", ret2);
+  ret2 = FM25V10_init(&fm25v10_driver_[FM25V10_IDX_4], PORT_CH_SPI_FRAM, PORT_CH_GPIO_OUT_FRAM_CS4, &DI_FM25V10_rx_buffer_[FM25V10_IDX_4]);
+  if (ret2 != DS_INIT_OK)  Printf("FM25V10 #4 init Failed ! %d \n", ret2);
 }
 
 static void DI_FM25V10_update_(void)
@@ -66,52 +84,52 @@ static void DI_FM25V10_update_(void)
   return;
 }
 
-CCP_EXEC_STS Cmd_DI_FM25V10_WRITE_BYTE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_FM25V10_WRITE_BYTE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   FM25V10_IDX idx;
   idx = (FM25V10_IDX)param[0];
-  if (idx >= FM25V10_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= FM25V10_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint32_t start_address;
-  endian_memcpy(&start_address, param + 1, sizeof(uint32_t));
-  if (start_address >= FM25V10_STOP_ADDRESS) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&start_address, param + 1, sizeof(uint32_t));
+  if (start_address >= FM25V10_STOP_ADDRESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t write_data_byte;
   write_data_byte = param[5];
   DS_CMD_ERR_CODE ret;
   ret = FM25V10_write_bytes(&fm25v10_driver_[idx], start_address, &write_data_byte, 1);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_FM25V10_READ_BYTE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_FM25V10_READ_BYTE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   FM25V10_IDX idx;
   idx = (FM25V10_IDX)param[0];
-  if (idx >= FM25V10_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= FM25V10_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint32_t start_address;
-  endian_memcpy(&start_address, param + 1, sizeof(uint32_t));
-  if (start_address >= FM25V10_STOP_ADDRESS) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&start_address, param + 1, sizeof(uint32_t));
+  if (start_address >= FM25V10_STOP_ADDRESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t read_data_byte = 0x00;
   DS_CMD_ERR_CODE ret;
   ret = FM25V10_read_bytes(&fm25v10_driver_[idx], start_address, &read_data_byte, 1);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_FM25V10_MANAGE_STATUS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_FM25V10_MANAGE_STATUS(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   FM25V10_IDX idx;
   idx = (FM25V10_IDX)param[0];
-  if (idx >= FM25V10_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= FM25V10_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t read_or_write;  // 0 = write, others = read
   read_or_write = param[1];
@@ -129,7 +147,7 @@ CCP_EXEC_STS Cmd_DI_FM25V10_MANAGE_STATUS(const CommonCmdPacket* packet)
     ret = FM25V10_read_status(&fm25v10_driver_[idx]);
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 // 外部公開関数

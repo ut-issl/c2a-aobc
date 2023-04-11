@@ -50,10 +50,10 @@ AOCS_ERROR DI_RW0003_set_torque_Nm(const RW0003_IDX idx, const float torque_Nm);
 AOCS_ERROR DI_RW0003_set_speed_rad_s(const RW0003_IDX idx, const float speed_rad_s);
 
 // コマンド関数
-CCP_EXEC_STS Cmd_DI_RW0003_INIT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_RW0003_SET_IDLE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_RW0003_DRIVE_TORQUE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_SET_IDLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_DRIVE_TORQUE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet);
 
 #endif

@@ -1,5 +1,5 @@
 /**
-* @file   di_fm25v10.h
+* @file
 * @brief  FM25V10のDriver Instance
 */
 #ifndef DI_FM25V10_H_
@@ -50,9 +50,9 @@ extern const FM25V10_Driver* const fm25v10_driver[FM25V10_IDX_MAX];
 AppInfo DI_FM25V10_update(void);
 
 // コマンド関数
-CCP_EXEC_STS Cmd_DI_FM25V10_WRITE_BYTE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_FM25V10_READ_BYTE (const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_FM25V10_MANAGE_STATUS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_FM25V10_WRITE_BYTE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_FM25V10_READ_BYTE (const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_FM25V10_MANAGE_STATUS(const CommonCmdPacket* packet);
 
 // 外部公開関数
 /**

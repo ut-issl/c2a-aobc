@@ -8,22 +8,15 @@
 
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../../IfWrapper/GPIO.h"
 
-static NANOSSOC_D60_Driver nanossoc_d60_driver_[NANOSSOC_D60_IDX_MAX];
-const  NANOSSOC_D60_Driver* const nanossoc_d60_driver[NANOSSOC_D60_IDX_MAX]
-                                                     = {&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ]};
-
 static void DI_NANOSSOC_D60_init_(void);
 static void DI_NANOSSOC_D60_update_(void);
-
-static NANOSSOC_D60_IDX NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY; // DI_NANOSSOC_D60_update_が呼ばれたときにアップデートするサンセンサを指定するカウンタ．
-
+static uint8_t DI_NANOSSOC_D60_conv_idx_to_i2c_address_(uint8_t idx);
 /**
  * @brief  DI_NANOSSOC_D60_idx_counterアップデート関数
  *         DI_NANOSSOC_D60_update_で呼ばれて，カウンタをインクリメントし，次にアップデートするサンセンサの個体を指定する
@@ -32,25 +25,48 @@ static NANOSSOC_D60_IDX NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY; // D
  */
 static void DI_NANOSSOC_D60_update_idx_counter_(void);
 
+static NANOSSOC_D60_Driver nanossoc_d60_driver_[NANOSSOC_D60_IDX_MAX];
+const  NANOSSOC_D60_Driver* const nanossoc_d60_driver[NANOSSOC_D60_IDX_MAX]
+                                                     = {&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ]};
+// バッファ
+static DS_StreamRecBuffer DI_NANOSSOC_D60_rx_buffer_[NANOSSOC_D60_IDX_MAX];
+static uint8_t DI_NANOSSOC_D60_rx_buffer_allocation_[NANOSSOC_D60_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+
+static NANOSSOC_D60_IDX NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY; // DI_NANOSSOC_D60_update_が呼ばれたときにアップデートするサンセンサを指定するカウンタ．
+
 
 AppInfo DI_NANOSSOC_D60_update(void)
 {
   return AI_create_app_info("update_DI_NANOSSOC_D60", DI_NANOSSOC_D60_init_, DI_NANOSSOC_D60_update_);
 }
 
-
 static void DI_NANOSSOC_D60_init_(void)
 {
-  int ret;
+  uint8_t i;
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
+  uint8_t addr;
 
-  ret = NANOSSOC_D60_init(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_SS_PY);
-  if (ret != 0) Printf("NanoSSOC-D60 PY init Failed ! %d \n", ret);
-  ret = NANOSSOC_D60_init(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_SS_MY);
-  if (ret != 0) Printf("NanoSSOC-D60 MY init Failed ! %d \n", ret);
-  ret = NANOSSOC_D60_init(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_SS_PZ);
-  if (ret != 0) Printf("NanoSSOC-D60 PZ init Failed ! %d \n", ret);
-  ret = NANOSSOC_D60_init(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_SS_MZ);
-  if (ret != 0) Printf("NanoSSOC-D60 MZ init Failed ! %d \n", ret);
+  for (i = 0; i < NANOSSOC_D60_IDX_MAX; ++i)
+  {
+    ret1 = DS_init_stream_rec_buffer(&DI_NANOSSOC_D60_rx_buffer_[i],
+                                     DI_NANOSSOC_D60_rx_buffer_allocation_[i],
+                                     sizeof(DI_NANOSSOC_D60_rx_buffer_allocation_[i]));
+    if (ret1 != DS_ERR_CODE_OK)
+    {
+      Printf("NANOSSOC_D60 buffer #%d init Failed ! %d \n", i, ret1);
+    }
+
+    addr = DI_NANOSSOC_D60_conv_idx_to_i2c_address_(i);
+    ret2 = NANOSSOC_D60_init(&nanossoc_d60_driver_[i], PORT_CH_I2C_SENSORS, addr, &DI_NANOSSOC_D60_rx_buffer_[i]);
+    if (ret2 != DS_INIT_OK)
+    {
+      Printf("NANOSSOC_D60 #%d init Failed ! %d \n", i, ret2);
+    }
+  }
 
   C2A_MATH_ERROR ret_math;
   Quaternion q_py_c2b;
@@ -92,9 +108,7 @@ static void DI_NANOSSOC_D60_init_(void)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
-
 }
-
 
 static void DI_NANOSSOC_D60_update_(void)
 {
@@ -123,6 +137,24 @@ static void DI_NANOSSOC_D60_update_(void)
   DI_NANOSSOC_D60_update_idx_counter_();
 }
 
+static uint8_t DI_NANOSSOC_D60_conv_idx_to_i2c_address_(uint8_t idx)
+{
+  switch (idx)
+  {
+  case NANOSSOC_D60_IDX_ON_PY:
+    return I2C_DEVICE_ADDR_SS_PY;
+  case NANOSSOC_D60_IDX_ON_MY:
+    return I2C_DEVICE_ADDR_SS_MY;
+  case NANOSSOC_D60_IDX_ON_PZ:
+    return I2C_DEVICE_ADDR_SS_PZ;
+  case NANOSSOC_D60_IDX_ON_MZ:
+    return I2C_DEVICE_ADDR_SS_MZ;
+  default:
+    // ここには来ないはず
+    return 0;
+  }
+}
+
 static void DI_NANOSSOC_D60_update_idx_counter_(void)
 {
   NANOSSOC_D60_idx_counter_ = (NANOSSOC_D60_IDX)(NANOSSOC_D60_idx_counter_ + 1);
@@ -133,28 +165,28 @@ static void DI_NANOSSOC_D60_update_idx_counter_(void)
   }
 }
 
-CCP_EXEC_STS Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   NANOSSOC_D60_IDX idx;
   idx = (NANOSSOC_D60_IDX)param[0];
-  if (idx >= NANOSSOC_D60_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= NANOSSOC_D60_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float q_array_c2b[PHYSICAL_CONST_QUATERNION_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_QUATERNION_DIM; axis++)
   {
-    endian_memcpy(&q_array_c2b[axis], param + 1 + axis * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&q_array_c2b[axis], param + 1 + axis * sizeof(float), sizeof(float));
   }
 
   Quaternion quaternion_c2b;
   C2A_MATH_ERROR ret;
   ret = QUATERNION_make_from_array(&quaternion_c2b, q_array_c2b, QUATERNION_SCALAR_POSITION_LAST);
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[idx], quaternion_c2b);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

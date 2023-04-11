@@ -41,8 +41,8 @@ extern const RM3100_Driver* const rm3100_driver[RM3100_IDX_MAX];
  */
 AppInfo DI_RM3100_update(void);
 
-CCP_EXEC_STS Cmd_DI_RM3100_INIT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RM3100_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet);
 
 #endif

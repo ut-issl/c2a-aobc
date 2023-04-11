@@ -87,20 +87,20 @@ static AOCS_MANAGER_ERROR DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_(vo
 
 
 // コマンド関数
-CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   uint32_t pwm_period_ms;
-  endian_memcpy(&pwm_period_ms, param, sizeof(uint32_t));
+  ENDIAN_memcpy(&pwm_period_ms, param, sizeof(uint32_t));
 
   DS_CMD_ERR_CODE ret;
   ret = MTQ_SEIREN_set_pwm_period_ms(pwm_period_ms);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
@@ -108,23 +108,23 @@ CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet)
   int8_t pwm_signed_duty_percent;
 
   axis = (MTQ_SEIREN_IDX)param[0];
-  if (axis >= MTQ_SEIREN_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= MTQ_SEIREN_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  endian_memcpy(&pwm_signed_duty_percent, param + sizeof(uint8_t), sizeof(int8_t));
-  if (pwm_signed_duty_percent < -100 || pwm_signed_duty_percent > 100) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&pwm_signed_duty_percent, param + sizeof(uint8_t), sizeof(int8_t));
+  if (pwm_signed_duty_percent < -100 || pwm_signed_duty_percent > 100) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   DI_MTQ_SEIREN_set_pwm_duty(axis, pwm_signed_duty_percent);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet)
 {
   uint8_t arg_position = 0;
 
   MTQ_SEIREN_IDX idx = (MTQ_SEIREN_IDX)CCP_get_param_from_packet(packet, arg_position, uint8_t);
   arg_position++;
 
-  if (idx >= MTQ_SEIREN_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= MTQ_SEIREN_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float magnetic_moment_direction_b[PHYSICAL_CONST_THREE_DIM];
   for (int body_axis = 0; body_axis < PHYSICAL_CONST_THREE_DIM; body_axis++)
@@ -134,12 +134,12 @@ CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const Common
   }
 
   C2A_MATH_ERROR ret_math = MTQ_SEIREN_set_magnetic_moment_direction_b(&mtq_seiren_driver_[idx], magnetic_moment_direction_b);
-  if (ret_math != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret_math != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   AOCS_MANAGER_ERROR ret_manager = DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_();
-  if (ret_manager != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret_manager != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

@@ -16,7 +16,7 @@
  */
 typedef enum
 {
-  INA260_IDX_PIC          = 0,
+  INA260_IDX_PIC = 0,
   INA260_IDX_STIM210,
   INA260_IDX_SAGITTA,
   INA260_IDX_OEM7600,
@@ -39,8 +39,8 @@ extern const INA260_IDX* const DI_INA260_idx_counter;
  */
 AppInfo DI_INA260_update(void);
 
-CCP_EXEC_STS Cmd_DI_INA260_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_INA260_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_INA260_SET_OVER_CURRENT_PROTECTION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_INA260_SET_OVER_CURRENT_PROTECTION(const CommonCmdPacket* packet);
 
 #endif

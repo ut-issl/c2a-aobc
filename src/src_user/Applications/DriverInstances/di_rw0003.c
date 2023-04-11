@@ -7,25 +7,31 @@
 #include "di_rw0003.h"
 
 #include <src_core/Library/print.h>
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
 
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/AOCS/aocs_manager.h"
 #include "../../Library/vector3.h"
+
+static void DI_RW0003_init_(void);
+static void DI_RW0003_update_(void);
 
 static RW0003_Driver rw0003_driver_[RW0003_IDX_MAX];
 const  RW0003_Driver* const rw0003_driver[RW0003_IDX_MAX] = {&rw0003_driver_[RW0003_IDX_ON_X],
                                                              &rw0003_driver_[RW0003_IDX_ON_Y],
                                                              &rw0003_driver_[RW0003_IDX_ON_Z]};
+// バッファ
+static DS_StreamRecBuffer DI_RW0003_rx_buffer_[RW0003_IDX_MAX];
+static uint8_t DI_RW0003_rx_buffer_allocation_[RW0003_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+
 static float DI_RW0003_rw_speed_rad_s_[RW0003_IDX_MAX] = {0.0f, 0.0f, 0.0f};
 static uint8_t DI_RW0003_is_initialized_[RW0003_IDX_MAX];  //!< 0 = not initialized, 1 = initialized
 static RW0003_IDX DI_RW0003_idx_counter_ = (RW0003_IDX)(0);  //!< DI_RW0003_update_が呼ばれたときに観測するRWを指定するカウンタ．
 
-static void DI_RW0003_init_(void);
-static void DI_RW0003_update_(void);
 
 /**
  * @brief RW IDをインクリメントする
@@ -47,9 +53,24 @@ AppInfo DI_RW0003_update(void)
 
 static void DI_RW0003_init_(void)
 {
-  RW0003_init(&rw0003_driver_[RW0003_IDX_ON_X], PORT_CH_I2C_RWS, I2C_DEVICE_ADDR_RW_X);
-  RW0003_init(&rw0003_driver_[RW0003_IDX_ON_Y], PORT_CH_I2C_RWS, I2C_DEVICE_ADDR_RW_Y);
-  RW0003_init(&rw0003_driver_[RW0003_IDX_ON_Z], PORT_CH_I2C_RWS, I2C_DEVICE_ADDR_RW_Z);
+  uint8_t i;
+  DS_ERR_CODE ret1;
+
+  // 受信バッファの初期化
+  for (i = 0; i < RW0003_IDX_MAX; ++i)
+  {
+    ret1 = DS_init_stream_rec_buffer(&DI_RW0003_rx_buffer_[i],
+                                     DI_RW0003_rx_buffer_allocation_[i],
+                                     sizeof(DI_RW0003_rx_buffer_allocation_[i]));
+    if (ret1 != DS_ERR_CODE_OK)
+    {
+      Printf("RW0003 buffer #%d init Failed ! %d \n", i, ret1);
+    }
+  }
+
+  RW0003_init(&rw0003_driver_[RW0003_IDX_ON_X], PORT_CH_I2C_RWS, I2C_DEVICE_ADDR_RW_X, &DI_RW0003_rx_buffer_[RW0003_IDX_ON_X]);
+  RW0003_init(&rw0003_driver_[RW0003_IDX_ON_Y], PORT_CH_I2C_RWS, I2C_DEVICE_ADDR_RW_Y, &DI_RW0003_rx_buffer_[RW0003_IDX_ON_Y]);
+  RW0003_init(&rw0003_driver_[RW0003_IDX_ON_Z], PORT_CH_I2C_RWS, I2C_DEVICE_ADDR_RW_Z, &DI_RW0003_rx_buffer_[RW0003_IDX_ON_Z]);
 
   // 回転方向設定: Ref https://docs.google.com/presentation/d/10LCdETZEpM2TPSs5-GUYgjpkl0SGcNnRgydSOlRsS_I/edit#slide=id.ge080f54f61_0_111
   float direction_x[] = {-1.0f, 0.0f, 0.0f};
@@ -167,14 +188,14 @@ static AOCS_MANAGER_ERROR DI_RW0003_set_direction_matrix_to_aocs_manager_(void)
 
 
 // コマンド関数
-CCP_EXEC_STS Cmd_DI_RW0003_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RW0003_INIT(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   RW0003_IDX idx;
   DS_CMD_ERR_CODE ret;
 
   idx = (RW0003_IDX)param[0];
-  if (idx >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = RW0003_start_app(&rw0003_driver_[idx]);
   if (ret == DS_CMD_OK)
@@ -182,16 +203,16 @@ CCP_EXEC_STS Cmd_DI_RW0003_INIT(const CommonCmdPacket* packet)
     DI_RW0003_is_initialized_[idx] = 1;
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* packet)
 {
   uint8_t arg_position = 0;
 
   RW0003_IDX idx = (RW0003_IDX)CCP_get_param_from_packet(packet, arg_position, uint8_t);
   arg_position++;
-  if (idx >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float rotation_direction_b[PHYSICAL_CONST_THREE_DIM];
   for (int body_axis = 0; body_axis < PHYSICAL_CONST_THREE_DIM; body_axis++)
@@ -200,70 +221,70 @@ CCP_EXEC_STS Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* 
     arg_position++;
   }
   C2A_MATH_ERROR ret_math = RW0003_set_rotation_direction_b(&rw0003_driver_[idx], rotation_direction_b);
-  if (ret_math != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret_math != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   AOCS_MANAGER_ERROR ret_manager = DI_RW0003_set_direction_matrix_to_aocs_manager_();
-  if (ret_manager != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret_manager != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_RW0003_SET_IDLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RW0003_SET_IDLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   RW0003_IDX idx;
   DS_CMD_ERR_CODE ret;
 
   idx = (RW0003_IDX)param[0];
-  if (idx >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   ret = RW0003_set_idle(&rw0003_driver_[idx]);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_RW0003_DRIVE_TORQUE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RW0003_DRIVE_TORQUE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   RW0003_IDX idx;
   DS_CMD_ERR_CODE ret;
 
   idx = (RW0003_IDX)param[0];
-  if (idx >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   float torque_Nm;
-  endian_memcpy(&torque_Nm, param + 1, sizeof(float));
-  if (torque_Nm > RW0003_kMaxTorqueNm) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (torque_Nm < -1.0f * RW0003_kMaxTorqueNm) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&torque_Nm, param + 1, sizeof(float));
+  if (torque_Nm > RW0003_kMaxTorqueNm) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (torque_Nm < -1.0f * RW0003_kMaxTorqueNm) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = RW0003_drive_torque(&rw0003_driver_[idx], torque_Nm);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   RW0003_IDX idx;
   DS_CMD_ERR_CODE ret;
 
   idx = (RW0003_IDX)param[0];
-  if (idx >= RW0003_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   float speed_rad_s;
-  endian_memcpy(&speed_rad_s, param + 1, sizeof(float));
-  if (speed_rad_s > rw0003_driver_[idx].info.speed_limit1_rad_s) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (speed_rad_s < -1.0f * rw0003_driver_[idx].info.speed_limit1_rad_s) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&speed_rad_s, param + 1, sizeof(float));
+  if (speed_rad_s > rw0003_driver_[idx].info.speed_limit1_rad_s) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (speed_rad_s < -1.0f * rw0003_driver_[idx].info.speed_limit1_rad_s) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = RW0003_drive_speed(&rw0003_driver_[idx], speed_rad_s);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 #pragma section

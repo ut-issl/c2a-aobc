@@ -9,15 +9,20 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../UserDefined/AOCS/aocs_manager.h"
 
+static void DI_OEM7600_init_(void);
+static void DI_OEM7600_update_(void);
 
 static OEM7600_Driver oem7600_driver_[OEM7600_IDX_MAX];
 const  OEM7600_Driver* const oem7600_driver[OEM7600_IDX_MAX] = { &oem7600_driver_[OEM7600_IDX_IN_UNIT] };
 
-static void DI_OEM7600_init_(void);
-static void DI_OEM7600_update_(void);
+// バッファ
+// 面倒くさいので要素数一つと仮定してバッファを確保する
+static DS_StreamRecBuffer DI_OEM7600_rx_buffer_;
+static uint8_t DI_OEM7600_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
 
 AppInfo DI_OEM7600_update(void)
@@ -28,22 +33,28 @@ AppInfo DI_OEM7600_update(void)
 
 static void DI_OEM7600_init_(void)
 {
-  int oem7600_id = 0;
-  int error_code = 0;
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
 
-  for (oem7600_id = 0; oem7600_id < OEM7600_IDX_MAX; oem7600_id++)
+  ret1 = DS_init_stream_rec_buffer(&DI_OEM7600_rx_buffer_,
+                                   DI_OEM7600_rx_buffer_allocation_,
+                                   sizeof(DI_OEM7600_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
   {
-    error_code = OEM7600_init(&oem7600_driver_[oem7600_id], PORT_CH_UART_OEM, PORT_CH_GPIO_IN_OEM_PPS, PORT_CH_GPIO_OUT_OEM_RST);
-
-    if (error_code != 0)
-    {
-      Printf("OEM %d init Failed ! %d \n", oem7600_id, error_code);
-    }
+    Printf("OEM7600 buffer init Failed ! %d \n", ret1);
   }
 
-  return;
+  // 面倒くさいので要素数一つと仮定して初期化する
+  ret2 = OEM7600_init(&oem7600_driver_[OEM7600_IDX_IN_UNIT],
+                      PORT_CH_UART_OEM,
+                      PORT_CH_GPIO_IN_OEM_PPS,
+                      PORT_CH_GPIO_OUT_OEM_RST,
+                      &DI_OEM7600_rx_buffer_);
+  if (ret2 != DS_INIT_OK)
+  {
+    Printf("OEM7600 init Failed ! %d \n", ret2);
+  }
 }
-
 
 static void DI_OEM7600_update_(void)
 {
@@ -64,7 +75,7 @@ static void DI_OEM7600_update_(void)
   {
     DS_REC_ERR_CODE error_code_uart = OEM7600_rec(&oem7600_driver_[oem_id]);
 
-    if (oem7600_driver_->driver.super.config.rec_status_.ret_from_if_rx == 0) return;
+    if (oem7600_driver_->driver.super.config.info.rec_status_.ret_from_if_rx == 0) return;
 
     if (error_code_uart != DS_REC_OK)
     {
@@ -83,17 +94,17 @@ static void DI_OEM7600_update_(void)
 }
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_INIT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret = DS_CMD_ILLEGAL_CONTEXT;
 
   // TODO_L: 現段階では初期化コマンド不要だが，今後必要に応じて中身を詰める
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
@@ -104,18 +115,18 @@ CCP_EXEC_STS Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER(const CommonCmdPacket* packet)
 
 
   oem7600_id = (OEM7600_IDX)param[0];
-  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   power_onoff = param[1];
-  if ((power_onoff !=  kPowerOn) && (power_onoff != kPowerOff)) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if ((power_onoff !=  kPowerOn) && (power_onoff != kPowerOff)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = OEM7600_onoff_antenna_power(&oem7600_driver_[oem7600_id], power_onoff);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SOFTWARE_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_SOFTWARE_RESET(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
@@ -126,18 +137,21 @@ CCP_EXEC_STS Cmd_DI_OEM7600_SOFTWARE_RESET(const CommonCmdPacket* packet)
 
 
   oem7600_id = (OEM7600_IDX)param[0];
-  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   time_for_reset_sec = param[1];
-  if ((time_for_reset_sec < kTimeForResetMinSec) || (time_for_reset_sec > kTimeForResetMaxSec)) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if ((time_for_reset_sec < kTimeForResetMinSec) || (time_for_reset_sec > kTimeForResetMaxSec))
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
 
   ret = OEM7600_software_reset(&oem7600_driver_[oem7600_id], time_for_reset_sec);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
@@ -146,18 +160,18 @@ CCP_EXEC_STS Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW(const CommonCmdPacket* packet
 
 
   oem7600_id = (OEM7600_IDX)param[0];
-  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   high_low = (GPIO_HL)param[1];
-  if ((high_low != GPIO_HIGH) && (high_low != GPIO_LOW)) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if ((high_low != GPIO_HIGH) && (high_low != GPIO_LOW)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = OEM7600_set_reset_gpio_high_low(&oem7600_driver_[oem7600_id], high_low);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
@@ -168,12 +182,12 @@ CCP_EXEC_STS Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet)
 
 
   oem7600_id = (OEM7600_IDX)param[0];
-  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   tlm_out_interval_seconds = param[1];
-  if (tlm_out_interval_seconds > kTlmOutIntervalMaxSeconds) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (tlm_out_interval_seconds > kTlmOutIntervalMaxSeconds) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  endian_memcpy(&oem7600_tlm_id, &(param[2]), sizeof(oem7600_tlm_id));
+  ENDIAN_memcpy(&oem7600_tlm_id, &(param[2]), sizeof(oem7600_tlm_id));
 
   // range tlmの要求が来た時には、先にDSの設定が必要なので、ここで実施する
   if (oem7600_tlm_id == OEM7600_TLM_ID_RANGE)
@@ -185,11 +199,11 @@ CCP_EXEC_STS Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet)
     ret = OEM7600_set_tlm_contents(&oem7600_driver_[oem7600_id], oem7600_tlm_id, tlm_out_interval_seconds);
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SAVE_TLM_SETTING(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_SAVE_TLM_SETTING(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
@@ -197,14 +211,14 @@ CCP_EXEC_STS Cmd_DI_OEM7600_SAVE_TLM_SETTING(const CommonCmdPacket* packet)
 
 
   oem7600_id = (OEM7600_IDX)param[0];
-  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = OEM7600_save_tlm_setting(&oem7600_driver_[oem7600_id]);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SET_UART_BAUDRATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_OEM7600_SET_UART_BAUDRATE(const CommonCmdPacket* packet)
 {
   const uint32_t kMaxBaudRate = 115200;
   const uint32_t kMinBaudRate = 2;
@@ -212,15 +226,15 @@ CCP_EXEC_STS Cmd_DI_OEM7600_SET_UART_BAUDRATE(const CommonCmdPacket* packet)
   DS_CMD_ERR_CODE ret;
 
   OEM7600_IDX oem7600_id = (OEM7600_IDX)CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (oem7600_id >= OEM7600_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint32_t baudrate_cmd = CCP_get_param_from_packet(packet, 1, uint32_t);
-  if (baudrate_cmd > kMaxBaudRate) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (baudrate_cmd < kMinBaudRate) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (baudrate_cmd > kMaxBaudRate) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (baudrate_cmd < kMinBaudRate) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  ret = OEM7600_set_uart_baudrate(&oem7600_driver_[oem7600_id], baudrate_cmd);
+  ret = OEM7600_set_uart_baudrate(&oem7600_driver_[oem7600_id], baudrate_cmd, &DI_OEM7600_rx_buffer_);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 #pragma section

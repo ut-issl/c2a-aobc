@@ -8,22 +8,27 @@
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/Library/print.h>
 #include "../../Settings/port_config.h"
-
-static MOBC_Driver mobc_driver_;
-const MOBC_Driver* const mobc_driver = &mobc_driver_;
-
-/**
- * 一度に送出する最大テレメ数
- * 1115200 bps なので 240 Byte 1 packet 送るだけでも 17 ms かかる計算
- * 4 packet も送信すると それだけ 70ms 近くかかり送信だけで姿勢制御が 10 Hz で回らなくなるためそこまで送るべきではない
- * 逆に AOBC は 1 秒で 10 Tlm 以上送れなくなる
- */
-static const uint8_t DI_MOBC_kMsTlmPhMaxNumOfProc_ = 1;
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 static void DI_MOBC_init_(void);
 static void DI_MOBC_update_(void);
 static void DI_MOBC_ms_tlm_packet_handler_init_(void);
 static void DI_MOBC_ms_tlm_packet_handler_(void);
+
+static MOBC_Driver mobc_driver_;
+const MOBC_Driver* const mobc_driver = &mobc_driver_;
+
+// バッファ
+static DS_StreamRecBuffer DI_MOBC_rx_buffer_;
+static uint8_t DI_MOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+
+/**
+ * 一度に送出する最大テレメ数
+ * 115200 bps なので 240 Byte 1 packet 送るだけでも 17 ms かかる計算
+ * 4 packet も送信すると それだけ 70ms 近くかかり送信だけで姿勢制御が 10 Hz で回らなくなるためそこまで送るべきではない
+ * 逆に AOBC は 1 秒で 10 Tlm 以上送れなくなる
+ */
+static const uint8_t DI_MOBC_kMsTlmPhMaxNumOfProc_ = 1;
 
 
 AppInfo DI_MOBC_update(void)
@@ -33,11 +38,21 @@ AppInfo DI_MOBC_update(void)
 
 static void DI_MOBC_init_(void)
 {
-  DS_INIT_ERR_CODE ret = MOBC_init(&mobc_driver_, PORT_CH_UART_MOBC);
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
 
-  if (ret != DS_INIT_OK)
+  ret1 = DS_init_stream_rec_buffer(&DI_MOBC_rx_buffer_,
+                                   DI_MOBC_rx_buffer_allocation_,
+                                   sizeof(DI_MOBC_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
   {
-    Printf("MOBC init Failed ! %d \n", ret);
+    Printf("MOBC buffer init Failed ! %d \n", ret1);
+  }
+
+  ret2 = MOBC_init(&mobc_driver_, PORT_CH_UART_MOBC, &DI_MOBC_rx_buffer_);
+  if (ret2 != DS_INIT_OK)
+  {
+    Printf("MOBC init Failed ! %d \n", ret2);
   }
 }
 

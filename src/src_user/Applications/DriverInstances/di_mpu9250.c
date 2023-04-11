@@ -10,8 +10,13 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../../Library/matrix33.h"
+
+static void DI_MPU9250_init_(void);
+static void DI_MPU9250_update_(void);
+static void DI_MPU9250_temperature_caliblation_(void);
 
 static MPU9250_Driver mpu9250_driver_[MPU9250_IDX_MAX];
 const  MPU9250_Driver* const mpu9250_driver[MPU9250_IDX_MAX] = {&mpu9250_driver_[MPU9250_IDX_ON_AOBC]};
@@ -19,13 +24,16 @@ const  MPU9250_Driver* const mpu9250_driver[MPU9250_IDX_MAX] = {&mpu9250_driver_
 static DiMpu9250        di_mpu9250_[MPU9250_IDX_MAX];
 const  DiMpu9250* const di_mpu9250[MPU9250_IDX_MAX] = {&di_mpu9250_[MPU9250_IDX_ON_AOBC]};
 
+// バッファ
+static DS_StreamRecBuffer DI_MPU9250_rx_buffer_;
+static DS_StreamRecBuffer DI_AK8963_rx_buffer_;
+static uint8_t DI_MPU9250_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_AK8963_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+
 static const uint8_t DI_MPU9250_kNumCoeffTempCalib_ = 2;
 
-static void DI_MPU9250_init_(void);
-static void DI_MPU9250_update_(void);
-static void DI_MPU9250_temperature_caliblation_(void);
-
 static uint8_t DI_MPU9250_is_initialized_[MPU9250_IDX_MAX] = { 0 };  //!< 0 = not initialized, 1 = initialized
+
 
 AppInfo DI_MPU9250_update(void)
 {
@@ -35,10 +43,34 @@ AppInfo DI_MPU9250_update(void)
 
 static void DI_MPU9250_init_(void)
 {
-  int ret = MPU9250_init(&mpu9250_driver_[MPU9250_IDX_ON_AOBC], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_AOBC_MPU, I2C_DEVICE_ADDR_AOBC_MPU_AK);
-  if (ret != 0)
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
+  int ret3;
+
+  ret1 = DS_init_stream_rec_buffer(&DI_MPU9250_rx_buffer_,
+                                   DI_MPU9250_rx_buffer_allocation_,
+                                   sizeof(DI_MPU9250_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
   {
-    Printf("MPU9250 init Failed ! %d \n", ret);
+    Printf("MPU9250 buffer init Failed ! %d \n", ret1);
+  }
+  ret1 = DS_init_stream_rec_buffer(&DI_AK8963_rx_buffer_,
+                                   DI_AK8963_rx_buffer_allocation_,
+                                   sizeof(DI_AK8963_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
+  {
+    Printf("AK8963 buffer init Failed ! %d \n", ret1);
+  }
+
+  ret2 = MPU9250_init(&mpu9250_driver_[MPU9250_IDX_ON_AOBC],
+                      PORT_CH_I2C_SENSORS,
+                      I2C_DEVICE_ADDR_AOBC_MPU,
+                      I2C_DEVICE_ADDR_AOBC_MPU_AK,
+                      &DI_MPU9250_rx_buffer_,
+                      &DI_AK8963_rx_buffer_);
+  if (ret2 != DS_INIT_OK)
+  {
+    Printf("MPU9250 init Failed ! %d \n", ret2);
   }
 
   C2A_MATH_ERROR ret_math;
@@ -79,36 +111,36 @@ static void DI_MPU9250_init_(void)
   // X軸
   bias_coeff[0] = -0.024f;
   bias_coeff[1] = 0.0002f;
-  ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[0]),
+  ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[0]),
                                      DI_MPU9250_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("MPU9250 Gyro-X Bias Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-X Bias Temperature Caliblation init Failed ! \n");
   scale_factor_coeff[0] = 1.0f;
   scale_factor_coeff[1] = 0.0f;
-  ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[0]),
+  ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[0]),
                                      DI_MPU9250_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("MPU9250 Gyro-X SF Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-X SF Temperature Caliblation init Failed ! \n");
   // Y軸
   bias_coeff[0] = 0.0058f;
   bias_coeff[1] = -0.0005f;
-  ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[1]),
+  ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[1]),
                                      DI_MPU9250_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("MPU9250 Gyro-Y Bias Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-Y Bias Temperature Caliblation init Failed ! \n");
   scale_factor_coeff[0] = 1.0f;
   scale_factor_coeff[1] = 0.0f;
-  ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[1]),
+  ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[1]),
                                      DI_MPU9250_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("MPU9250 Gyro-Y SF Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-Y SF Temperature Caliblation init Failed ! \n");
   // Z軸
   bias_coeff[0] = 0.0179f;
   bias_coeff[1] = 0.0001f;
-  ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[2]),
+  ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[2]),
                                      DI_MPU9250_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("MPU9250 Gyro-Z Bias Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-Z Bias Temperature Caliblation init Failed ! \n");
   scale_factor_coeff[0] = 1.0f;
   scale_factor_coeff[1] = 0.0f;
-  ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[2]),
+  ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[2]),
                                      DI_MPU9250_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("MPU9250 Gyro-Z SF Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-Z SF Temperature Caliblation init Failed ! \n");
 
   return;
 }
@@ -164,7 +196,7 @@ static void DI_MPU9250_temperature_caliblation_(void)
   }
 }
 
-CCP_EXEC_STS Cmd_DI_MPU9250_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MPU9250_INIT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
 
@@ -172,79 +204,79 @@ CCP_EXEC_STS Cmd_DI_MPU9250_INIT(const CommonCmdPacket* packet)
   // TODO_L: このままで進める場合はどこでエラーが出たか分かるようにする
   // ジャイロ出力ON
   ret = MPU9250_enable_gyro(&mpu9250_driver_[MPU9250_IDX_ON_AOBC]);
-  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 
   // LPF設定ON
   ret = MPU9250_set_lpf(&mpu9250_driver_[MPU9250_IDX_ON_AOBC]);
-  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 
   // 角速度範囲指定
   ret = MPU9250_set_ang_vel_range(&mpu9250_driver_[MPU9250_IDX_ON_AOBC], MPU9250_ANG_VEL_RANGE_250_DEG_S);
-  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 
   // 加速度範囲指定
   ret = MPU9250_set_accel_range(&mpu9250_driver_[MPU9250_IDX_ON_AOBC], MPU9250_ACCEL_RANGE_2_G);
-  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 
   // 磁気センサ出力ON
   ret = MPU9250_enable_mag(&mpu9250_driver_[MPU9250_IDX_ON_AOBC]);
-  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  if (ret != DS_CMD_OK)  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 
   DI_MPU9250_is_initialized_[MPU9250_IDX_ON_AOBC] = 1;
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   MPU9250_IDX idx;
   idx = (MPU9250_IDX)param[0];
-  if (idx >= MPU9250_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= MPU9250_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float q_array_c2b[PHYSICAL_CONST_QUATERNION_DIM];
   for (int idx = 0; idx < PHYSICAL_CONST_QUATERNION_DIM; idx++)
   {
-    endian_memcpy(&q_array_c2b[idx], param + 1 + idx * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&q_array_c2b[idx], param + 1 + idx * sizeof(float), sizeof(float));
   }
   Quaternion quaternion_c2b;
   C2A_MATH_ERROR ret;
   ret = QUATERNION_make_from_array(&quaternion_c2b, q_array_c2b, QUATERNION_SCALAR_POSITION_LAST);
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   MPU9250_set_frame_transform_c2b(&mpu9250_driver_[idx], quaternion_c2b);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   MPU9250_IDX idx;
   idx = (MPU9250_IDX)param[0];
-  if (idx >= MPU9250_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= MPU9250_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float ang_vel_bias_compo_rad_s[PHYSICAL_CONST_THREE_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
-    endian_memcpy(&ang_vel_bias_compo_rad_s[axis], param + 1 + axis * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&ang_vel_bias_compo_rad_s[axis], param + 1 + axis * sizeof(float), sizeof(float));
   }
 
   C2A_MATH_ERROR ret;
   ret = MPU9250_set_ang_vel_bias_compo_rad_s(&mpu9250_driver_[idx], ang_vel_bias_compo_rad_s);
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
 {
   uint8_t arg_num = 0;
   MPU9250_IDX idx = (MPU9250_IDX)CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
-  if (idx >= MPU9250_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= MPU9250_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float mag_bias_compo_nT[PHYSICAL_CONST_THREE_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
@@ -255,7 +287,7 @@ CCP_EXEC_STS Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
 
   uint8_t add_flag = CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
-  if (idx >= 2) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= 2) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   C2A_MATH_ERROR ret;
   if (add_flag == 0)
@@ -266,12 +298,12 @@ CCP_EXEC_STS Cmd_DI_MPU9250_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
   {
     ret = MPU9250_add_mag_bias_compo_nT(&mpu9250_driver_[idx], mag_bias_compo_nT);
   }
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t offset = 0;
@@ -280,28 +312,28 @@ CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* p
   uint8_t axis;
   axis = param[0];
   offset += 1;
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float range_low_degC, range_high_degC;
-  endian_memcpy(&range_low_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_low_degC, param + offset, sizeof(float));
   offset += sizeof(float);
-  endian_memcpy(&range_high_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
   float coeff[DI_MPU9250_kNumCoeffTempCalib_];
-  endian_memcpy(&coeff[0], param + offset, sizeof(float));
+  ENDIAN_memcpy(&coeff[0], param + offset, sizeof(float));
   offset += sizeof(float);
-  endian_memcpy(&coeff[1], param + offset, sizeof(float));
+  ENDIAN_memcpy(&coeff[1], param + offset, sizeof(float));
   offset += sizeof(float);
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[axis]),
                                          DI_MPU9250_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
-  if (ret < 0)  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t offset = 0;
@@ -310,25 +342,25 @@ CCP_EXEC_STS Cmd_DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* pac
   uint8_t axis;
   axis = param[0];
   offset += 1;
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float range_low_degC, range_high_degC;
-  endian_memcpy(&range_low_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_low_degC, param + offset, sizeof(float));
   offset += sizeof(float);
-  endian_memcpy(&range_high_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
   float coeff[DI_MPU9250_kNumCoeffTempCalib_];
-  endian_memcpy(&coeff[0], param + offset, sizeof(float));
+  ENDIAN_memcpy(&coeff[0], param + offset, sizeof(float));
   offset += sizeof(float);
-  endian_memcpy(&coeff[1], param + offset, sizeof(float));
+  ENDIAN_memcpy(&coeff[1], param + offset, sizeof(float));
   offset += sizeof(float);
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[axis]),
                                          DI_MPU9250_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
-  if (ret < 0)  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

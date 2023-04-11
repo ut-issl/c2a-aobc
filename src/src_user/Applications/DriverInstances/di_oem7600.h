@@ -42,18 +42,18 @@ extern const OEM7600_Driver* const oem7600_driver[OEM7600_IDX_MAX];
 AppInfo DI_OEM7600_update(void);
 
 
-CCP_EXEC_STS Cmd_DI_OEM7600_INIT(const CommonCmdPacket* packet);  // TODO_L: 現段階では初期化コマンド不要だが，今後必要に応じて中身を詰める
+CCP_CmdRet Cmd_DI_OEM7600_INIT(const CommonCmdPacket* packet);  // TODO_L: 現段階では初期化コマンド不要だが，今後必要に応じて中身を詰める
 
-CCP_EXEC_STS Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SOFTWARE_RESET(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_OEM7600_SOFTWARE_RESET(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SAVE_TLM_SETTING(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_OEM7600_SAVE_TLM_SETTING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_OEM7600_SET_UART_BAUDRATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_OEM7600_SET_UART_BAUDRATE(const CommonCmdPacket* packet);
 
 #endif

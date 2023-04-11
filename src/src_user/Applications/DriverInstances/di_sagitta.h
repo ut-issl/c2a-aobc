@@ -42,17 +42,17 @@ extern const SAGITTA_Driver* const sagitta_driver[SAGITTA_IDX_MAX];
 AppInfo DI_SAGITTA_update(void);
 
 // Action
-CCP_EXEC_STS Cmd_DI_SAGITTA_BOOT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_SAGITTA_SET_UNIX_TIME_US(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_SAGITTA_BOOT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_SAGITTA_SET_UNIX_TIME_US(const CommonCmdPacket* packet);
 // Set parameter: Sagittaにparameter設定コマンドを送る
-CCP_EXEC_STS Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet);
 // Change parameter: ドライバ内のparameterを変更する。Sagittaに送信するのはCmd_DI_SAGITTA_SET_PARAMETER。
 // パラメータの値に対するアサーションはない。
 // Cmd_DI_SAGITTA_READ_PARAMETERにより設定した値が正常であることを地上局で確認する。
-CCP_EXEC_STS Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet);
 // Read parameter
-CCP_EXEC_STS Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
 
 #endif

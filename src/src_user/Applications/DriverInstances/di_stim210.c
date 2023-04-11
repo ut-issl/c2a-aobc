@@ -8,10 +8,15 @@
 
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../../Library/matrix33.h"
+
+static void DI_STIM210_init_(void);
+static void DI_STIM210_update_(void);
+static void DI_STIM210_temperature_caliblation_(void);
 
 static STIM210_Driver stim210_driver_[STIM210_IDX_MAX];
 const  STIM210_Driver* const stim210_driver[STIM210_IDX_MAX] = {&stim210_driver_[STIM210_IDX_IN_UNIT]};
@@ -19,21 +24,38 @@ const  STIM210_Driver* const stim210_driver[STIM210_IDX_MAX] = {&stim210_driver_
 static DiStim210        di_stim210_[STIM210_IDX_MAX];
 const  DiStim210* const di_stim210 [STIM210_IDX_MAX] = {&di_stim210_[STIM210_IDX_IN_UNIT]};
 
+// バッファ
+// 面倒くさいので要素数一つと仮定してバッファを確保する
+static DS_StreamRecBuffer DI_STIM210_rx_buffer_;
+static uint8_t DI_STIM210_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+
 static const uint8_t DI_STIM210_kNumCoeffTempCalib_ = 2;
 
-static void DI_STIM210_init_(void);
-static void DI_STIM210_update_(void);
-static void DI_STIM210_temperature_caliblation_(void);
 
 AppInfo DI_STIM210_update(void)
 {
   return AI_create_app_info("update_DI_STIM210", DI_STIM210_init_, DI_STIM210_update_);
 }
 
-
 static void DI_STIM210_init_(void)
 {
-  int ret = STIM210_init(&(stim210_driver_[STIM210_IDX_IN_UNIT]), PORT_CH_UART_STIM, PORT_CH_GPIO_OUT_STIM_TRIG, PORT_CH_GPIO_OUT_STIM_RST);
+  DS_ERR_CODE ret1;
+  int ret;
+
+  ret1 = DS_init_stream_rec_buffer(&DI_STIM210_rx_buffer_,
+                                   DI_STIM210_rx_buffer_allocation_,
+                                   sizeof(DI_STIM210_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
+  {
+    Printf("STIM210 buffer init Failed ! %d \n", ret1);
+  }
+
+  // 面倒くさいので要素数一つと仮定して初期化する
+  ret = STIM210_init(&stim210_driver_[STIM210_IDX_IN_UNIT],
+                      PORT_CH_UART_STIM,
+                      PORT_CH_GPIO_OUT_STIM_TRIG,
+                      PORT_CH_GPIO_OUT_STIM_RST,
+                      &DI_STIM210_rx_buffer_);
   if (ret != 0)
   {
     Printf("STIM210 init Failed ! %d \n", ret);
@@ -122,7 +144,7 @@ static void DI_STIM210_update_(void)
     // テレメ送信は86us後に始まる
     DS_REC_ERR_CODE ret_rec = STIM210_rec(&(stim210_driver_[STIM210_IDX_IN_UNIT]));
 
-    if (stim210_driver_->driver.super.config.rec_status_.ret_from_if_rx == 0) return;
+    if (stim210_driver_->driver.super.config.info.rec_status_.ret_from_if_rx == 0) return;
 
     if (ret_rec != DS_REC_OK)
     {
@@ -181,23 +203,23 @@ static void DI_STIM210_temperature_caliblation_(void)
   }
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_INIT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
 
   ret = STIM210_set_service_mode(&(stim210_driver_[STIM210_IDX_IN_UNIT]));
   ret = STIM210_set_normal_mode(&(stim210_driver_[STIM210_IDX_IN_UNIT]));
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_MODE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_MODE(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_OPERATION_MODE mode = (STIM210_OPERATION_MODE)param[0];
-  if (mode >= STIM210_OPERATION_MODE_MAX)  return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (mode >= STIM210_OPERATION_MODE_MAX)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   if (mode == STIM210_OPERATION_NORMAL_MODE)
   {
@@ -209,125 +231,125 @@ CCP_EXEC_STS Cmd_DI_STIM210_SET_MODE(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_NORMAL_MODE_FORMAT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_NORMAL_MODE_FORMAT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_NORMAL_MODE_FORMAT format = (STIM210_NORMAL_MODE_FORMAT)param[0];
-  if (format >= STIM210_NORMAL_MODE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (format >= STIM210_NORMAL_MODE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = STIM210_set_normal_mode_format(&(stim210_driver_[STIM210_IDX_IN_UNIT]), format);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_SAMPLE_RATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_SAMPLE_RATE(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_SAMPLE_RATE sample_rate = (STIM210_SAMPLE_RATE)param[0];
-  if (sample_rate >= STIM210_SAMPLE_RATE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sample_rate >= STIM210_SAMPLE_RATE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = STIM210_set_sample_rate(&(stim210_driver_[STIM210_IDX_IN_UNIT]), sample_rate);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_GYRO_OUTPUT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_GYRO_OUTPUT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_GYRO_OUTPUT_MODE gyro_output_mode = (STIM210_GYRO_OUTPUT_MODE)param[0];
-  if (gyro_output_mode >= STIM210_GYRO_OUTPUT_MODE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (gyro_output_mode >= STIM210_GYRO_OUTPUT_MODE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = STIM210_set_gyro_output(&(stim210_driver_[STIM210_IDX_IN_UNIT]), gyro_output_mode);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_TERMINATION_MODE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_TERMINATION_MODE(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_TERMINATION_MODE termination_mode = (STIM210_TERMINATION_MODE)param[0];
-  if (termination_mode >= STIM210_TERMINATION_MODE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (termination_mode >= STIM210_TERMINATION_MODE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = STIM210_set_termination_mode(&(stim210_driver_[STIM210_IDX_IN_UNIT]), termination_mode);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_LOW_PASS_FILTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_LOW_PASS_FILTER(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_LPF low_pass_filter_frequency = (STIM210_LPF)param[0];
-  if (low_pass_filter_frequency >= STIM210_LPF_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (low_pass_filter_frequency >= STIM210_LPF_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = STIM210_set_low_pass_filter(&(stim210_driver_[STIM210_IDX_IN_UNIT]), low_pass_filter_frequency);
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_IDX idx;
   idx = (STIM210_IDX)param[0];
-  if (idx >= STIM210_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= STIM210_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float q_array_c2b[PHYSICAL_CONST_QUATERNION_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_QUATERNION_DIM; axis++)
   {
-    endian_memcpy(&q_array_c2b[axis], param + 1 + axis * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&q_array_c2b[axis], param + 1 + axis * sizeof(float), sizeof(float));
   }
 
   Quaternion quaternion_c2b;
   C2A_MATH_ERROR ret;
   ret = QUATERNION_make_from_array(&quaternion_c2b, q_array_c2b, QUATERNION_SCALAR_POSITION_LAST);
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   STIM210_set_frame_transform_c2b(&stim210_driver_[idx], quaternion_c2b);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   STIM210_IDX idx;
   idx = (STIM210_IDX)param[0];
 
-  if (idx >= STIM210_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= STIM210_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float ang_vel_bias_compo_rad_s[PHYSICAL_CONST_THREE_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
-    endian_memcpy(&ang_vel_bias_compo_rad_s[axis], param + 1 + axis * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&ang_vel_bias_compo_rad_s[axis], param + 1 + axis * sizeof(float), sizeof(float));
   }
 
   C2A_MATH_ERROR ret;
   ret = STIM210_set_ang_vel_bias_compo_rad_s(&stim210_driver_[idx], ang_vel_bias_compo_rad_s);
 
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t offset = 0;
@@ -336,29 +358,29 @@ CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* p
   uint8_t axis;
   axis = param[0];
   offset += 1;
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float range_low_degC, range_high_degC;
-  endian_memcpy(&range_low_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_low_degC, param + offset, sizeof(float));
   offset += sizeof(float);
-  endian_memcpy(&range_high_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
   float coeff[DI_STIM210_kNumCoeffTempCalib_];
   for (uint8_t coeff_idx = 0; coeff_idx < DI_STIM210_kNumCoeffTempCalib_; coeff_idx++)
   {
-    endian_memcpy(&coeff[coeff_idx], param + offset, sizeof(float));
+    ENDIAN_memcpy(&coeff[coeff_idx], param + offset, sizeof(float));
     offset += sizeof(float);
   }
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[axis]),
                                          DI_STIM210_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
-  if (ret < 0)  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t offset = 0;
@@ -367,26 +389,26 @@ CCP_EXEC_STS Cmd_DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* pac
   uint8_t axis;
   axis = param[0];
   offset += 1;
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float range_low_degC, range_high_degC;
-  endian_memcpy(&range_low_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_low_degC, param + offset, sizeof(float));
   offset += sizeof(float);
-  endian_memcpy(&range_high_degC, param + offset, sizeof(float));
+  ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
   float coeff[DI_STIM210_kNumCoeffTempCalib_];
   for (uint8_t coeff_idx = 0; coeff_idx < DI_STIM210_kNumCoeffTempCalib_; coeff_idx++)
   {
-    endian_memcpy(&coeff[coeff_idx], param + offset, sizeof(float));
+    ENDIAN_memcpy(&coeff[coeff_idx], param + offset, sizeof(float));
     offset += sizeof(float);
   }
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[axis]),
                                          DI_STIM210_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
-  if (ret < 0)  return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

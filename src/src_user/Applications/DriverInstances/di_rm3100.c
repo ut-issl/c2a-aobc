@@ -7,26 +7,29 @@
 #include "di_rm3100.h"
 
 #include <src_core/Library/print.h>
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../../Library/vector3.h"
 
+static void DI_RM3100_init_(void);
+static void DI_RM3100_update_(void);
 
 static RM3100_Driver rm3100_driver_[RM3100_IDX_MAX];
 const  RM3100_Driver* const rm3100_driver[RM3100_IDX_MAX] = {&rm3100_driver_[RM3100_IDX_ON_AOBC],
                                                              &rm3100_driver_[RM3100_IDX_EXTERNAL]};
+// バッファ
+static DS_StreamRecBuffer DI_RM3100_rx_buffer_[RM3100_IDX_MAX];
+static uint8_t DI_RM3100_rx_buffer_allocation_[RM3100_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
 static uint8_t DI_RM3100_is_initialized_[RM3100_IDX_MAX] = { 0, 0 };  //!< 0 = not initialized, 1 = initialized
 
 static float DI_RM3100_default_bias_aobc_compo_nT_[PHYSICAL_CONST_THREE_DIM] = { 32808.59f, -79748.68f, 22059.96f };  //!< デフォルトバイアス値
 static float DI_RM3100_default_bias_ext_compo_nT_[PHYSICAL_CONST_THREE_DIM]  = { 36824.97f, -4596.48f,  -1133.40f };   //!< デフォルトバイアス値
 static float DI_RM3100_kBiasDiffMax_nT_ = 20000.0f; //!< 磁気バイアスAddコマンドでトータルバイアスがデフォルト値から離れすぎないようにするためのしきい値
-
-static void DI_RM3100_init_(void);
-static void DI_RM3100_update_(void);
 
 
 AppInfo DI_RM3100_update(void)
@@ -37,10 +40,27 @@ AppInfo DI_RM3100_update(void)
 
 static void DI_RM3100_init_(void)
 {
+  uint8_t i;
+  DS_ERR_CODE ret1;
   C2A_MATH_ERROR ret;
 
+  // バッファの初期化
+  for (i = 0; i < RM3100_IDX_MAX; ++i)
+  {
+    ret1 = DS_init_stream_rec_buffer(&DI_RM3100_rx_buffer_[i],
+                                     DI_RM3100_rx_buffer_allocation_[i],
+                                     sizeof(DI_RM3100_rx_buffer_allocation_[i]));
+    if (ret1 != DS_ERR_CODE_OK)
+    {
+      Printf("RM3100 buffer #%d init Failed ! %d \n", i, ret1);
+    }
+  }
+
   // AOBC
-  RM3100_init(&rm3100_driver_[RM3100_IDX_ON_AOBC], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_AOBC_RM);
+  RM3100_init(&rm3100_driver_[RM3100_IDX_ON_AOBC],
+              PORT_CH_I2C_SENSORS,
+              I2C_DEVICE_ADDR_AOBC_RM,
+              &DI_RM3100_rx_buffer_[RM3100_IDX_ON_AOBC]);
   Quaternion q_aobc_c2b;
   QUATERNION_make_from_euler_angles(&q_aobc_c2b,
                                     PHYSICAL_CONST_degree_to_radian(0.0f),
@@ -60,7 +80,10 @@ static void DI_RM3100_init_(void)
   }
 
   // External
-  RM3100_init(&rm3100_driver_[RM3100_IDX_EXTERNAL], PORT_CH_I2C_SENSORS, I2C_DEVICE_ADDR_EXT_RM);
+  RM3100_init(&rm3100_driver_[RM3100_IDX_EXTERNAL],
+              PORT_CH_I2C_SENSORS,
+              I2C_DEVICE_ADDR_EXT_RM,
+              &DI_RM3100_rx_buffer_[RM3100_IDX_EXTERNAL]);
   Quaternion q_ext_c2b;
   QUATERNION_make_from_euler_angles(&q_ext_c2b,
                                     PHYSICAL_CONST_degree_to_radian(-90.0f),
@@ -112,7 +135,7 @@ static void DI_RM3100_update_(void)
 }
 
 
-CCP_EXEC_STS Cmd_DI_RM3100_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RM3100_INIT(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   const uint8_t mode = RM3100_kCmmMode;
@@ -120,7 +143,7 @@ CCP_EXEC_STS Cmd_DI_RM3100_INIT(const CommonCmdPacket* packet)
   DS_CMD_ERR_CODE ret;
 
   idx = (RM3100_IDX)param[0];
-  if (idx >= RM3100_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RM3100_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = RM3100_set_mode(&rm3100_driver_[idx], mode);
   if (ret == DS_CMD_OK)
@@ -128,40 +151,40 @@ CCP_EXEC_STS Cmd_DI_RM3100_INIT(const CommonCmdPacket* packet)
     DI_RM3100_is_initialized_[idx] = 1;
   }
 
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   RM3100_IDX idx;
   idx = (RM3100_IDX)param[0];
-  if (idx >= RM3100_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RM3100_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float q_array_c2b[PHYSICAL_CONST_QUATERNION_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_QUATERNION_DIM; axis++)
   {
-    endian_memcpy(&q_array_c2b[axis], param + 1 + axis * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&q_array_c2b[axis], param + 1 + axis * sizeof(float), sizeof(float));
   }
 
   Quaternion quaternion_c2b;
   C2A_MATH_ERROR ret;
   ret = QUATERNION_make_from_array(&quaternion_c2b, q_array_c2b, QUATERNION_SCALAR_POSITION_LAST);
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   RM3100_set_frame_transform_c2b(&rm3100_driver_[idx], quaternion_c2b);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
 {
   uint8_t arg_num = 0;
   RM3100_IDX idx = (RM3100_IDX)CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
-  if (idx >= RM3100_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= RM3100_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float mag_bias_compo_nT[PHYSICAL_CONST_THREE_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
@@ -172,7 +195,7 @@ CCP_EXEC_STS Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
 
   uint8_t add_flag = CCP_get_param_from_packet(packet, arg_num, uint8_t);
   arg_num++;
-  if (add_flag >= 3) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (add_flag >= 3) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   C2A_MATH_ERROR ret;
   if (add_flag == 0)
@@ -212,7 +235,7 @@ CCP_EXEC_STS Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
     {
       // デフォルトから離れ過ぎたらデフォルト値に戻す
       RM3100_set_mag_bias_compo_nT(&rm3100_driver_[idx], mag_bias_default_compo_nT);
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
   }
   else
@@ -228,9 +251,9 @@ CCP_EXEC_STS Cmd_DI_RM3100_SET_MAG_BIAS_COMPO_NT(const CommonCmdPacket* packet)
     }
   }
 
-  if (ret != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

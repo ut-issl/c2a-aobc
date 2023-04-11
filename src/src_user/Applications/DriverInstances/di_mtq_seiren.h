@@ -43,8 +43,8 @@ AppInfo DI_MTQ_SEIREN_update(void);
 AOCS_ERROR DI_MTQ_SEIREN_set_pwm_duty(MTQ_SEIREN_IDX axis, int8_t pwm_signed_duty_percent);
 
 // コマンド関数
-CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet);
 
 #endif
