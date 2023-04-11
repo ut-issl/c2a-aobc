@@ -45,7 +45,7 @@ extern const TargetAttitudeCalculator* const target_attitude_calculator;
  */
 AppInfo APP_TARGET_ATT_CALC_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_TARGET_ATT_CALC_SET_MODE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_SET_MODE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet);
 
 #endif

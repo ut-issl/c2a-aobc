@@ -5,7 +5,6 @@
 */
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include <src_core/Library/endian_memcpy.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../../app_registry.h"
 
@@ -282,14 +281,14 @@ static uint8_t APP_TAFO_check_is_target_direction_same_(APP_TAFO_TARGET_DIRECITO
 }
 
 
-CCP_EXEC_STS Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packet)
 {
   float vec_to_main_target_body[PHYSICAL_CONST_THREE_DIM] = {1.0f, 0.0f, 0.0f};
 
   uint8_t main_target_direction = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (main_target_direction >= APP_TAFO_TARGET_DIRECITON_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
@@ -301,7 +300,7 @@ CCP_EXEC_STS Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packe
   is_normalized = VECTOR3_is_normalized(vec_to_main_target_body);
   if (is_normalized != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // main_target_directionとsub_target_directionが一致するのを禁止
@@ -309,7 +308,7 @@ CCP_EXEC_STS Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packe
                                                                                target_attitude_from_orbit_.sub_target_direction);
   if (is_target_direcition_same)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   // vec_to_main_target_bodyとvec_to_sub_target_bodyが一致するのを禁止
@@ -318,24 +317,24 @@ CCP_EXEC_STS Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packe
                                                             vec_to_main_target_body);
   if (c2a_math_error != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   target_attitude_from_orbit_.main_target_direction = (APP_TAFO_TARGET_DIRECITON)main_target_direction;
   VECTOR3_copy(target_attitude_from_orbit_.vec_to_main_target_body, vec_to_main_target_body);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet)
 {
   float vec_to_sub_target_body[PHYSICAL_CONST_THREE_DIM] = {1.0f, 0.0f, 0.0f};
 
   uint8_t sub_target_direction = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (sub_target_direction >= APP_TAFO_TARGET_DIRECITON_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
@@ -347,7 +346,7 @@ CCP_EXEC_STS Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet
   is_normalized = VECTOR3_is_normalized(vec_to_sub_target_body);
   if (is_normalized != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // main_target_directionとsub_target_directionが一致するのを禁止
@@ -355,7 +354,7 @@ CCP_EXEC_STS Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet
                                                                                (APP_TAFO_TARGET_DIRECITON)sub_target_direction);
   if (is_target_direcition_same)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   // vec_to_main_target_bodyとvec_to_sub_target_bodyが一致するのを禁止
@@ -364,72 +363,72 @@ CCP_EXEC_STS Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet
                                                             target_attitude_from_orbit_.vec_to_main_target_body);
   if (c2a_math_error != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   target_attitude_from_orbit_.sub_target_direction = (APP_TAFO_TARGET_DIRECITON)sub_target_direction;
   VECTOR3_copy(target_attitude_from_orbit_.vec_to_sub_target_body, vec_to_sub_target_body);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_APP_TAFO_SET_OFFSET_ANGLE_AND_AXIS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAFO_SET_OFFSET_ANGLE_AND_AXIS(const CommonCmdPacket* packet)
 {
 
   MATRIX33_ROTATION_AXIS offset_angle_axis = (MATRIX33_ROTATION_AXIS)CCP_get_param_from_packet(packet, 0, uint8_t);
   if (offset_angle_axis >= MATRIX33_ROTATION_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   float offset_angle_deg = CCP_get_param_from_packet(packet, 1, float);
   if ((offset_angle_deg <= -180.0f) || (180.0f < offset_angle_deg))
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   target_attitude_from_orbit_.offset_angle_axis = (MATRIX33_ROTATION_AXIS)offset_angle_axis;
   target_attitude_from_orbit_.offset_angle_rad = PHYSICAL_CONST_degree_to_radian(offset_angle_deg);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_APP_TAFO_SET_TARGET_LLA(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAFO_SET_TARGET_LLA(const CommonCmdPacket* packet)
 {
   float latitude_deg = CCP_get_param_from_packet(packet, 0, float);
   if (latitude_deg < -90.0f || 90.0f < latitude_deg)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   float longitude_deg = CCP_get_param_from_packet(packet, 1, float);
   if (longitude_deg <= -180.0f || 180.0f < longitude_deg)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   float altitude_m = CCP_get_param_from_packet(packet, 2, float);
   if (altitude_m < 0.0f)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   target_attitude_from_orbit_.target_lla_rad_m[0] = PHYSICAL_CONST_degree_to_radian(latitude_deg);
   target_attitude_from_orbit_.target_lla_rad_m[1] = PHYSICAL_CONST_degree_to_radian(longitude_deg);
   target_attitude_from_orbit_.target_lla_rad_m[2] = altitude_m;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet)
 {
   uint8_t is_enabled = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (is_enabled > 1)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // main_target_directionとsub_target_directionが一致しているとき，
@@ -438,12 +437,12 @@ CCP_EXEC_STS Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet)
                                                                                target_attitude_from_orbit_.sub_target_direction);
   if (is_target_direcition_same)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   target_attitude_from_orbit_.is_enabled = is_enabled;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

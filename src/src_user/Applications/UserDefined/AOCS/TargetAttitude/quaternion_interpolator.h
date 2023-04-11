@@ -46,10 +46,10 @@ extern const QuaternionInterpolator* const quaternion_interpolator;
  */
 AppInfo APP_QI_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_QI_RESET_TARGET_QUATERNION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_QI_ENABLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_QI_RESET_TARGET_QUATERNION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_QI_ENABLE(const CommonCmdPacket* packet);
 
 #endif

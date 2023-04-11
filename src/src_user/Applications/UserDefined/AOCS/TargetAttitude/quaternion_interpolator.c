@@ -108,7 +108,7 @@ static void APP_QI_exec_(void)
 }
 
 
-CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION(const CommonCmdPacket* packet)
 {
   C2A_MATH_ERROR error;
   float quaternion_target_i2t_array[PHYSICAL_CONST_QUATERNION_DIM] = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -122,13 +122,13 @@ CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION(const CommonCmdPacket* packet
     cycle_t current_ti = TMGR_get_master_total_cycle();
     if (attitude_changed_ti <= current_ti)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
     // 今回セットした姿勢変更完了時刻が，直前の姿勢変更完了時刻より前の場合エラー
     cycle_t previous_attitude_changed_ti = quaternion_interpolator_.target_list[current_target_num - 1].attitude_changed_ti;
     if (attitude_changed_ti <= previous_attitude_changed_ti)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
   }
 
@@ -139,16 +139,16 @@ CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION(const CommonCmdPacket* packet
   error = QUATERNION_make_from_array(&quaternion_target_i2t, quaternion_target_i2t_array, QUATERNION_SCALAR_POSITION_LAST);
   if (error != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   quaternion_interpolator_.target_list[current_target_num].attitude_changed_ti = attitude_changed_ti;
   quaternion_interpolator_.target_list[current_target_num].quaternion_target_i2t = quaternion_target_i2t;
   quaternion_interpolator_.current_target_num++;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY(const CommonCmdPacket* packet)
 {
   uint8_t arg_idx = 0;
   C2A_MATH_ERROR error;
@@ -167,13 +167,13 @@ CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY(const CommonCmdPacket* p
     cycle_t current_ti = TMGR_get_master_total_cycle();
     if (attitude_changed_ti <= current_ti)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
     // 今回セットした姿勢変更完了時刻が，直前の姿勢変更完了時刻より前の場合エラー
     cycle_t previous_attitude_changed_ti = quaternion_interpolator_.target_list[current_target_num - 1].attitude_changed_ti;
     if (attitude_changed_ti <= previous_attitude_changed_ti)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
   }
 
@@ -185,16 +185,16 @@ CCP_EXEC_STS Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY(const CommonCmdPacket* p
   error = QUATERNION_make_from_array(&quaternion_target_i2t, quaternion_target_i2t_array, QUATERNION_SCALAR_POSITION_LAST);
   if (error != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   quaternion_interpolator_.target_list[current_target_num].attitude_changed_ti = attitude_changed_ti;
   quaternion_interpolator_.target_list[current_target_num].quaternion_target_i2t = quaternion_target_i2t;
   quaternion_interpolator_.current_target_num++;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet)
 {
   C2A_MATH_ERROR error;
   float quaternion_target_i2t_array[PHYSICAL_CONST_QUATERNION_DIM] = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -204,14 +204,14 @@ CCP_EXEC_STS Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet
   uint8_t set_type = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (set_type >= APP_QI_SET_PREV_TARGET_TYPE_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   else if (set_type == APP_QI_SET_PREV_TARGET_TYPE_CURRENT_ATTITUDE)
   {
     // 現在のTIと推定Quaternionをセット
     quaternion_interpolator_.previous_attitude_changed_ti = current_ti;
     quaternion_interpolator_.previous_quaternion_target_i2t = aocs_manager->quaternion_est_i2b;
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else if (set_type == APP_QI_SET_PREV_TARGET_TYPE_ARBITRARY_ATTITUDE)
   {
@@ -220,7 +220,7 @@ CCP_EXEC_STS Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet
     // コマンド指定のTIが現在のTIより未来の場合はエラー
     if (attitude_changed_ti > current_ti)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
 
     for (int i = 0; i < PHYSICAL_CONST_QUATERNION_DIM; i++)
@@ -230,28 +230,28 @@ CCP_EXEC_STS Cmd_APP_QI_SET_PREV_TARGET_QUATERNION(const CommonCmdPacket* packet
     error = QUATERNION_make_from_array(&quaternion_target_i2t, quaternion_target_i2t_array, QUATERNION_SCALAR_POSITION_LAST);
     if (error != C2A_MATH_ERROR_OK)
     {
-      return CCP_EXEC_ILLEGAL_PARAMETER;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     }
 
     quaternion_interpolator_.previous_attitude_changed_ti = attitude_changed_ti;
     quaternion_interpolator_.previous_quaternion_target_i2t = quaternion_target_i2t;
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
     // NOT REACHED
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 }
 
-CCP_EXEC_STS Cmd_APP_QI_RESET_TARGET_QUATERNION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_QI_RESET_TARGET_QUATERNION(const CommonCmdPacket* packet)
 {
   // 引数なし
 
   // 有効時はリセット禁止
   if (quaternion_interpolator_.is_enabled)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   for (int i = 0; i < APP_QI_TARGET_MAX; i++)
@@ -264,21 +264,21 @@ CCP_EXEC_STS Cmd_APP_QI_RESET_TARGET_QUATERNION(const CommonCmdPacket* packet)
   quaternion_interpolator_.previous_attitude_changed_ti = 0;
   quaternion_interpolator_.previous_quaternion_target_i2t = QUATERNION_make_unit();
   quaternion_interpolator_.is_enabled = 0;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_APP_QI_ENABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_QI_ENABLE(const CommonCmdPacket* packet)
 {
   uint8_t is_enabled = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (is_enabled > 1)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   quaternion_interpolator_.is_enabled = is_enabled;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

@@ -52,10 +52,10 @@ extern const TargetAttitudeFromOrbit* const target_attitude_from_orbit;
  */
 AppInfo APP_TAFO_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAFO_SET_OFFSET_ANGLE_AND_AXIS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAFO_SET_TARGET_LLA(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAFO_SET_OFFSET_ANGLE_AND_AXIS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAFO_SET_TARGET_LLA(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet);
 
 #endif

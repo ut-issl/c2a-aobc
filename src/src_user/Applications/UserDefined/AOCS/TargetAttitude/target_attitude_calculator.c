@@ -127,12 +127,12 @@ static C2A_MATH_ERROR APP_TARGET_ATT_CALC_calc_target_angular_velocity_(void)
 
 
 
-CCP_EXEC_STS Cmd_APP_TARGET_ATT_CALC_SET_MODE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_SET_MODE(const CommonCmdPacket* packet)
 {
   APP_TARGET_ATT_CALC_MODE mode = (APP_TARGET_ATT_CALC_MODE)CCP_get_param_from_packet(packet, 0, uint8_t);
   if (mode >= APP_TARGET_ATT_CALC_MODE_MAX)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   target_attitude_calculator_.mode = mode;
@@ -142,20 +142,20 @@ CCP_EXEC_STS Cmd_APP_TARGET_ATT_CALC_SET_MODE(const CommonCmdPacket* packet)
     target_attitude_calculator_.is_enabled = 0;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet)
 {
   uint8_t is_enabled = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (is_enabled > 1)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   target_attitude_calculator_.is_enabled = is_enabled;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
