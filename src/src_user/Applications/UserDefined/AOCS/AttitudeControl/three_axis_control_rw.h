@@ -30,7 +30,7 @@ extern const ThreeAxisControlRw* const three_axis_control_rw;
 
 AppInfo APP_TAC_RW_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_TAC_RW_SET_GAIN(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAC_RW_SAVE_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_RW_SET_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_RW_SAVE_GAIN(const CommonCmdPacket* packet);
 
 #endif

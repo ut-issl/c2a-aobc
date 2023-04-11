@@ -21,7 +21,7 @@
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
 
 static ThreeAxisControlMtq        three_axis_control_mtq_;
 const  ThreeAxisControlMtq* const three_axis_control_mtq = &three_axis_control_mtq_;
@@ -220,24 +220,24 @@ static void APP_TAC_MTQ_adjust_cross_product_(const float angle_error_rad)
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_GAIN(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
   uint8_t att_omega_flag = param[param_id];
   param_id += (int)sizeof(uint8_t);
-  if (att_omega_flag >= 2) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (att_omega_flag >= 2) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t axis = param[param_id];
   param_id += (int)sizeof(uint8_t);
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   PidGains gains;
-  endian_memcpy(&gains.p_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.p_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  endian_memcpy(&gains.i_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.i_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  endian_memcpy(&gains.d_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.d_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   C2A_MATH_ERROR ret;
@@ -250,10 +250,10 @@ CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_GAIN(const CommonCmdPacket* packet)
     three_axis_control_mtq_.gains_att_cmd_tmp[axis] = gains;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SAVE_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_MTQ_SAVE_GAIN(const CommonCmdPacket* packet)
 {
   for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
@@ -262,30 +262,30 @@ CCP_EXEC_STS Cmd_APP_TAC_MTQ_SAVE_GAIN(const CommonCmdPacket* packet)
     PID_CONTROL_set_gain(&three_axis_control_mtq_.pid_att[axis],
                          three_axis_control_mtq_.gains_att_cmd_tmp[axis]);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet)
 {
   float limit_angle_rad = CCP_get_param_from_packet(packet, 0, float);
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(limit_angle_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.max_direct_feedback_angle_mtq_rad = limit_angle_rad;
 
   float limit_rate_rad_s = CCP_get_param_from_packet(packet, 1, float);
   range_check_result = C2A_MATH_check_range_violation(limit_rate_rad_s, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.max_direct_feedback_rate_mtq_rad_s = limit_rate_rad_s;
 
   float max_integral_angle_rad = CCP_get_param_from_packet(packet, 2, float);
   range_check_result = C2A_MATH_check_range_violation(max_integral_angle_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float max_angle_to_run_integral_rad = CCP_get_param_from_packet(packet, 3, float);
   range_check_result = C2A_MATH_check_range_violation(max_angle_to_run_integral_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.max_integral_angle_mtq_rad = max_integral_angle_rad;
   three_axis_control_mtq_.max_angle_to_run_integral_control_rad = max_angle_to_run_integral_rad;
@@ -298,25 +298,25 @@ CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* pa
                                    three_axis_control_mtq_.max_angle_to_run_integral_control_rad);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_LPF_PARAMS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_LPF_PARAMS(const CommonCmdPacket* packet)
 {
   static const float kMaxSampleRateHz  = 1000.0f; //!< アプリ実行周期最大値
   static const float kMaxNyquistRateHz = kMaxSampleRateHz / 2.0f;  //!< LPFに設定可能な理論上最大周波数
 
   float mtq_lpf_sample_freq_Hz = CCP_get_param_from_packet(packet, 0, float);
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(mtq_lpf_sample_freq_Hz, kMaxSampleRateHz, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float mtq_lpf_cutoff_freq_Hz = CCP_get_param_from_packet(packet, 1, float);
   range_check_result = C2A_MATH_check_range_violation(mtq_lpf_cutoff_freq_Hz, kMaxNyquistRateHz, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float mtq_lpf_damping_factor = CCP_get_param_from_packet(packet, 2, float);
   range_check_result = C2A_MATH_check_range_violation(mtq_lpf_damping_factor, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.mtq_lpf_cutoff_freq_Hz = mtq_lpf_cutoff_freq_Hz;
   three_axis_control_mtq_.mtq_lpf_sample_freq_Hz = mtq_lpf_sample_freq_Hz;
@@ -330,46 +330,46 @@ CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_LPF_PARAMS(const CommonCmdPacket* packet)
                               three_axis_control_mtq_.mtq_lpf_damping_factor);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet)
 {
   float allowable_error_ratio_transient = CCP_get_param_from_packet(packet, 0, float);
   // CrossProduct誤差許容率の値域は 0:全く許容しない ~ 1:全て許容
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(allowable_error_ratio_transient, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.allowable_error_ratio_transient = allowable_error_ratio_transient;
 
   float correction_gain_transient = CCP_get_param_from_packet(packet, 1, float);
   // CrossProduct誤差抑制ゲインの値域は 0:許容値より大きい誤差がある時は出力しない ~ 1:許容値より大きい誤差がある時もFull出力
   range_check_result = C2A_MATH_check_range_violation(correction_gain_transient, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.correction_gain_transient = correction_gain_transient;
 
   float allowable_error_ratio_stable = CCP_get_param_from_packet(packet, 2, float);
   // CrossProduct誤差許容率の値域は 0:全く許容しない ~ 1:全て許容
   range_check_result = C2A_MATH_check_range_violation(allowable_error_ratio_stable, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.allowable_error_ratio_stable = allowable_error_ratio_stable;
 
   float correction_gain_stable = CCP_get_param_from_packet(packet, 3, float);
   // CrossProduct誤差抑制ゲインの値域は 0:許容値より大きい誤差がある時は出力しない ~ 1:許容値より大きい誤差がある時もFull出力
   range_check_result = C2A_MATH_check_range_violation(correction_gain_stable, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.correction_gain_stable = correction_gain_stable;
 
   float acceptable_angle_error_as_stable_rad = CCP_get_param_from_packet(packet, 4, float);
   range_check_result = C2A_MATH_check_range_violation(acceptable_angle_error_as_stable_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   three_axis_control_mtq_.acceptable_angle_error_as_stable_rad = acceptable_angle_error_as_stable_rad;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

@@ -6,6 +6,7 @@
 
 #include "bdot.h"
 
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../../../Library/vector3.h"
 #include "../../../../Library/matrix33.h"
 #include "../../../../Library/math_constants.h"
@@ -189,7 +190,7 @@ AOCS_ERROR APP_BDOT_set_control_gain(float* control_gain)
   return ret;
 }
 
-CCP_EXEC_STS Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
@@ -197,7 +198,7 @@ CCP_EXEC_STS Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&control_gain[i], param + i * sizeof(float), sizeof(float));
+    ENDIAN_memcpy(&control_gain[i], param + i * sizeof(float), sizeof(float));
     // control_gainのアサーションはB_DOT_set_control_gainで行われるので，ここではアサーションをかけない
   }
 
@@ -206,21 +207,21 @@ CCP_EXEC_STS Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
 
   if (ret != AOCS_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   uint32_t minimum_time_derivative_step_ms;
   uint32_t mtq_output_time_length_ms;
 
-  endian_memcpy(&minimum_time_derivative_step_ms, param, sizeof(uint32_t));
-  endian_memcpy(&mtq_output_time_length_ms, param + sizeof(uint32_t), sizeof(uint32_t));
+  ENDIAN_memcpy(&minimum_time_derivative_step_ms, param, sizeof(uint32_t));
+  ENDIAN_memcpy(&mtq_output_time_length_ms, param + sizeof(uint32_t), sizeof(uint32_t));
 
   AOCS_ERROR ret = AOCS_ERROR_OK;
   if (minimum_time_derivative_step_ms <= 0) ret = AOCS_ERROR_RANGE_OVER;
@@ -228,13 +229,13 @@ CCP_EXEC_STS Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet)
 
   if (ret != AOCS_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   bdot_.minimum_time_derivative_step_ms = minimum_time_derivative_step_ms;
   bdot_.mtq_output_time_length_ms = mtq_output_time_length_ms;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

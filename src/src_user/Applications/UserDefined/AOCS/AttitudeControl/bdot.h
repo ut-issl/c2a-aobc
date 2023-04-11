@@ -52,8 +52,8 @@ AppInfo APP_BDOT_create_app(void);
  */
 AOCS_ERROR APP_BDOT_set_control_gain(float* control_gain);
 
-CCP_EXEC_STS Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet);
 
 #endif

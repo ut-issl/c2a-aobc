@@ -17,7 +17,8 @@
 #include "../../../../Library/ControlUtility/gyroscopic_effect.h"
 #include "../aocs_manager.h"
 
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 
 static ThreeAxisControlRw        three_axis_control_rw_;
 const  ThreeAxisControlRw* const three_axis_control_rw = &three_axis_control_rw_;
@@ -140,24 +141,24 @@ void APP_TAC_RW_calc_rot_vec_body_rad_(float rot_vec_body_rad[PHYSICAL_CONST_THR
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_RW_SET_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_RW_SET_GAIN(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
   uint8_t att_omega_flag = param[param_id];
   param_id += (int)sizeof(uint8_t);
-  if (att_omega_flag >= 2) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (att_omega_flag >= 2) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t axis = param[param_id];
   param_id += (int)sizeof(uint8_t);
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   PidGains gains;
-  endian_memcpy(&gains.p_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.p_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  endian_memcpy(&gains.i_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.i_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  endian_memcpy(&gains.d_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.d_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   C2A_MATH_ERROR ret;
@@ -170,10 +171,10 @@ CCP_EXEC_STS Cmd_APP_TAC_RW_SET_GAIN(const CommonCmdPacket* packet)
     three_axis_control_rw_.gains_att_cmd_tmp[axis] = gains;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_TAC_RW_SAVE_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TAC_RW_SAVE_GAIN(const CommonCmdPacket* packet)
 {
   for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
@@ -182,7 +183,7 @@ CCP_EXEC_STS Cmd_APP_TAC_RW_SAVE_GAIN(const CommonCmdPacket* packet)
     PID_CONTROL_set_gain(&three_axis_control_rw_.pid_att[axis],
                          three_axis_control_rw_.gains_att_cmd_tmp[axis]);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

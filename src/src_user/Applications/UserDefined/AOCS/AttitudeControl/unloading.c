@@ -8,8 +8,8 @@
 
 #include <math.h>
 
-#include <src_core/Library/endian_memcpy.h>
-
+#include <src_core/Library/endian.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../../../Library/vector3.h"
 #include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
 
@@ -158,32 +158,32 @@ void APP_UNLOADING_calc_output_torque(void)
   }
 }
 
-CCP_EXEC_STS Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t exec_is_enable;
 
-  endian_memcpy(&exec_is_enable, param, sizeof(uint8_t));
+  ENDIAN_memcpy(&exec_is_enable, param, sizeof(uint8_t));
 
   if (((APP_UNLOADING_EXEC)exec_is_enable != APP_UNLOADING_EXEC_ENABLE) && ((APP_UNLOADING_EXEC)exec_is_enable != APP_UNLOADING_EXEC_DISABLE))
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   unloading_.exec_is_enable = (APP_UNLOADING_EXEC)exec_is_enable;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int16_t angular_velocity_upper_threshold_rpm;
   int16_t angular_velocity_target_rpm;
   int16_t angular_velocity_lower_threshold_rpm;
 
-  endian_memcpy(&angular_velocity_upper_threshold_rpm, param, sizeof(int16_t));
-  endian_memcpy(&angular_velocity_target_rpm, param + sizeof(int16_t),  sizeof(int16_t));
-  endian_memcpy(&angular_velocity_lower_threshold_rpm, param + sizeof(int16_t) + sizeof(int16_t), sizeof(int16_t));
+  ENDIAN_memcpy(&angular_velocity_upper_threshold_rpm, param, sizeof(int16_t));
+  ENDIAN_memcpy(&angular_velocity_target_rpm, param + sizeof(int16_t),  sizeof(int16_t));
+  ENDIAN_memcpy(&angular_velocity_lower_threshold_rpm, param + sizeof(int16_t) + sizeof(int16_t), sizeof(int16_t));
 
   float angular_velocity_upper_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_upper_threshold_rpm);
   float angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_target_rpm);
@@ -193,29 +193,29 @@ CCP_EXEC_STS Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPac
   if ((angular_velocity_upper_threshold_rad_s < angular_velocity_target_rad_s) &&
       (angular_velocity_lower_threshold_rad_s > angular_velocity_target_rad_s))
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   unloading_.angular_velocity_upper_threshold_rad_s = angular_velocity_upper_threshold_rad_s;
   unloading_.angular_velocity_target_rad_s = angular_velocity_target_rad_s;
   unloading_.angular_velocity_lower_threshold_rad_s = angular_velocity_lower_threshold_rad_s;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_UNLOADING_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_UNLOADING_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   float control_gain;
 
-  endian_memcpy(&control_gain, param, sizeof(float));
+  ENDIAN_memcpy(&control_gain, param, sizeof(float));
 
   if (control_gain > 0.0)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   unloading_.control_gain = control_gain;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #pragma section

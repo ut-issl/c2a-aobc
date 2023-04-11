@@ -49,10 +49,10 @@ extern const ThreeAxisControlMtq* const three_axis_control_mtq;
 
 AppInfo APP_TAC_MTQ_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_GAIN(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SAVE_GAIN(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_LPF_PARAMS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_MTQ_SAVE_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_LPF_PARAMS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet);
 
 #endif

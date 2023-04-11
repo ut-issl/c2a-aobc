@@ -21,7 +21,7 @@
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
 
 static SunPointing        sun_pointing_;
 const  SunPointing* const sun_pointing = &sun_pointing_;
@@ -302,24 +302,24 @@ static void APP_SUN_POINTING_adjust_target_rate_(const SUN_POINTING_CONTROL_STAT
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_GAIN(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
   uint8_t att_omega_flag = param[param_id];
   param_id += (int)sizeof(uint8_t);
-  if (att_omega_flag >= 2) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (att_omega_flag >= 2) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   uint8_t axis = param[param_id];
   param_id += (int)sizeof(uint8_t);
-  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   PidGains gains;
-  endian_memcpy(&gains.p_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.p_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  endian_memcpy(&gains.i_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.i_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  endian_memcpy(&gains.d_gain, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&gains.d_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   C2A_MATH_ERROR ret;
@@ -332,10 +332,10 @@ CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_GAIN(const CommonCmdPacket* packet)
     sun_pointing_.gains_att_cmd_tmp[axis] = gains;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SAVE_GAIN(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SUN_POINTING_SAVE_GAIN(const CommonCmdPacket* packet)
 {
   for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
@@ -344,10 +344,10 @@ CCP_EXEC_STS Cmd_APP_SUN_POINTING_SAVE_GAIN(const CommonCmdPacket* packet)
     PID_CONTROL_set_gain(&sun_pointing_.pid_att[axis],
                          sun_pointing_.gains_att_cmd_tmp[axis]);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_TARGET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_TARGET(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -357,15 +357,15 @@ CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_TARGET(const CommonCmdPacket* packet)
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&sun_vec_target_body_cmd[i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&sun_vec_target_body_cmd[i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
-  if (VECTOR3_is_normalized(sun_vec_target_body_cmd) != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (VECTOR3_is_normalized(sun_vec_target_body_cmd) != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  endian_memcpy(&ang_vel_target_scalar_rad_s, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&ang_vel_target_scalar_rad_s, param + param_id, sizeof(float));
 
-  if (fabsf(ang_vel_target_scalar_rad_s) > SUN_POINTING_kMaxTargetAngVelRadSec_) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (fabsf(ang_vel_target_scalar_rad_s) > SUN_POINTING_kMaxTargetAngVelRadSec_) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float sun_vec_target_body[PHYSICAL_CONST_THREE_DIM] = { 0.0f, 0.0f, 0.0f };
   float cmd_vector_norm = VECTOR3_norm(sun_vec_target_body_cmd);
@@ -375,34 +375,34 @@ CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_TARGET(const CommonCmdPacket* packet)
   AOCS_MANAGER_set_ang_vel_target_body_rad_s(ang_vel_target_body_rad_s);
   sun_pointing_.spin_rate_around_sun_rad_s = ang_vel_target_scalar_rad_s;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet)
 {
   float limit_angle_rad = CCP_get_param_from_packet(packet, 0, float);
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(limit_angle_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.max_direct_feedback_angle_rad = limit_angle_rad;
 
   float limit_rate_rad_s = CCP_get_param_from_packet(packet, 1, float);
   range_check_result = C2A_MATH_check_range_violation(limit_rate_rad_s, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.max_direct_feedback_rate_rad_s = limit_rate_rad_s;
 
   float max_integral_angle_rad = CCP_get_param_from_packet(packet, 2, float);
   range_check_result = C2A_MATH_check_range_violation(max_integral_angle_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float max_angle_to_run_integral_rad = CCP_get_param_from_packet(packet, 3, float);
   range_check_result = C2A_MATH_check_range_violation(max_angle_to_run_integral_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float integral_control_permission_angle_rad = CCP_get_param_from_packet(packet, 4, float);
   range_check_result = C2A_MATH_check_range_violation(integral_control_permission_angle_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.max_integral_angle_rad = max_integral_angle_rad;
   sun_pointing_.max_angle_to_run_integral_control_rad = max_angle_to_run_integral_rad;
@@ -416,33 +416,33 @@ CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacke
                                     sun_pointing_.max_angle_to_run_integral_control_rad);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_LPF_PARAMS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_LPF_PARAMS(const CommonCmdPacket* packet)
 {
   static const float kMaxSampleRateHz = 1000.0f; //!< アプリ実行周期最大値
   static const float kMaxNyquistRateHz = kMaxSampleRateHz / 2.0f;  //!< LPFに設定可能な理論上最大周波数
 
   float lpf_sample_freq_Hz = CCP_get_param_from_packet(packet, 0, float);
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(lpf_sample_freq_Hz, kMaxSampleRateHz, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float lpf_trq_cutoff_freq_Hz = CCP_get_param_from_packet(packet, 1, float);
   range_check_result = C2A_MATH_check_range_violation(lpf_trq_cutoff_freq_Hz, kMaxNyquistRateHz, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float lpf_trq_damping_factor = CCP_get_param_from_packet(packet, 2, float);
   range_check_result = C2A_MATH_check_range_violation(lpf_trq_damping_factor, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float lpf_trq_cutoff_freq_spin_axis_Hz = CCP_get_param_from_packet(packet, 3, float);
   range_check_result = C2A_MATH_check_range_violation(lpf_trq_cutoff_freq_spin_axis_Hz, kMaxNyquistRateHz, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float lpf_spin_rate_cutoff_freq_Hz = CCP_get_param_from_packet(packet, 4, float);
   range_check_result = C2A_MATH_check_range_violation(lpf_spin_rate_cutoff_freq_Hz, kMaxNyquistRateHz, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.lpf_sample_freq_Hz = lpf_sample_freq_Hz;
   sun_pointing_.lpf_trq_cutoff_freq_Hz = lpf_trq_cutoff_freq_Hz;
@@ -467,46 +467,46 @@ CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_LPF_PARAMS(const CommonCmdPacket* packet)
   // for spin rate
   Z_FILTER_init_as_lpf_1st(&sun_pointing_.lpf_spin_rate, sun_pointing_.lpf_sample_freq_Hz, sun_pointing_.lpf_spin_rate_cutoff_freq_Hz);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet)
 {
   float allowable_error_ratio_transient = CCP_get_param_from_packet(packet, 0, float);
   // CrossProduct誤差許容率の値域は 0:全く許容しない ~ 1:全て許容
   C2A_MATH_ERROR range_check_result = C2A_MATH_check_range_violation(allowable_error_ratio_transient, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.mtq_allowable_error_ratio_transient = allowable_error_ratio_transient;
 
   float correction_gain_transient = CCP_get_param_from_packet(packet, 1, float);
   // CrossProduct誤差抑制ゲインの値域は 0:許容値より大きい誤差がある時は出力しない ~ 1:許容値より大きい誤差がある時もFull出力
   range_check_result = C2A_MATH_check_range_violation(correction_gain_transient, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.correction_gain_transient = correction_gain_transient;
 
   float allowable_error_ratio_stable = CCP_get_param_from_packet(packet, 2, float);
   // CrossProduct誤差許容率の値域は 0:全く許容しない ~ 1:全て許容
   range_check_result = C2A_MATH_check_range_violation(allowable_error_ratio_stable, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.mtq_allowable_error_ratio_stable = allowable_error_ratio_stable;
 
   float correction_gain_stable = CCP_get_param_from_packet(packet, 3, float);
   // CrossProduct誤差抑制ゲインの値域は 0:許容値より大きい誤差がある時は出力しない ~ 1:許容値より大きい誤差がある時もFull出力
   range_check_result = C2A_MATH_check_range_violation(correction_gain_stable, 1.0f, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.correction_gain_stable = correction_gain_stable;
 
   float acceptable_angle_error_to_spin_up_rad = CCP_get_param_from_packet(packet, 4, float);
   range_check_result = C2A_MATH_check_range_violation(acceptable_angle_error_to_spin_up_rad, MATH_CONST_PI, 0.0f);
-  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (range_check_result != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sun_pointing_.acceptable_angle_error_to_spin_up_rad = acceptable_angle_error_to_spin_up_rad;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

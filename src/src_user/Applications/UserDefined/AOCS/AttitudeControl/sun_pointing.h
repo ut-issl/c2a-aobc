@@ -90,11 +90,11 @@ extern const SunPointing* const sun_pointing;
  */
 AppInfo APP_SUN_POINTING_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_GAIN(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SAVE_GAIN(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_TARGET(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_LPF_PARAMS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SUN_POINTING_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SUN_POINTING_SAVE_GAIN(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_TARGET(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_LPF_PARAMS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SUN_POINTING_SET_ANTI_INTOXICATION_PARAMS(const CommonCmdPacket* packet);
 
 #endif
