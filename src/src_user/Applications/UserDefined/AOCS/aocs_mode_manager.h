@@ -50,10 +50,10 @@ AppInfo APP_AOCS_MM_sun_pointing_create_app(void);
 AppInfo APP_AOCS_MM_rough_three_axis_create_app(void);
 AppInfo APP_AOCS_MM_fine_three_axis_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_ANG_VEL_THRESHOLD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_ANG_VEL_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD(const CommonCmdPacket* packet);
 
 #endif

@@ -607,19 +607,19 @@ static uint8_t APP_AOCS_MANAGER_bit_flag_control_(const uint8_t flags_in, const 
 
 // Command functions
 // Structure
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MASS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MASS(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   float mass_sc_kg;
-  endian_memcpy(&mass_sc_kg, param, sizeof(float));
+  ENDIAN_memcpy(&mass_sc_kg, param, sizeof(float));
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_mass_sc_kg(mass_sc_kg);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -627,29 +627,29 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR(const CommonCmdPacket* pack
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&inertia_tensor_sc_body_kgm2[i][i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&inertia_tensor_sc_body_kgm2[i][i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
-  endian_memcpy(&inertia_tensor_sc_body_kgm2[0][1], param + param_id, sizeof(float));
+  ENDIAN_memcpy(&inertia_tensor_sc_body_kgm2[0][1], param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
   inertia_tensor_sc_body_kgm2[1][0] = inertia_tensor_sc_body_kgm2[0][1];
 
-  endian_memcpy(&inertia_tensor_sc_body_kgm2[0][2], param + param_id, sizeof(float));
+  ENDIAN_memcpy(&inertia_tensor_sc_body_kgm2[0][2], param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
   inertia_tensor_sc_body_kgm2[2][0] = inertia_tensor_sc_body_kgm2[0][2];
 
-  endian_memcpy(&inertia_tensor_sc_body_kgm2[1][2], param + param_id, sizeof(float));
+  ENDIAN_memcpy(&inertia_tensor_sc_body_kgm2[1][2], param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
   inertia_tensor_sc_body_kgm2[2][1] = inertia_tensor_sc_body_kgm2[1][2];
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_inertia_tensor_sc_body_kgm2(inertia_tensor_sc_body_kgm2);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_RMM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_RMM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -657,18 +657,18 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_RMM(const CommonCmdPacket* packet)
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&rmm_sc_body_Am2[i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&rmm_sc_body_Am2[i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_rmm_sc_body_Am2(rmm_sc_body_Am2);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // Target
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -676,7 +676,7 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION(const CommonCmdPacket* p
   float quaternion_target_i2t_array[PHYSICAL_CONST_QUATERNION_DIM];
   for (int i = 0; i < PHYSICAL_CONST_QUATERNION_DIM; i++)
   {
-    endian_memcpy(&quaternion_target_i2t_array[i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&quaternion_target_i2t_array[i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
@@ -684,27 +684,27 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION(const CommonCmdPacket* p
   C2A_MATH_ERROR ret_c2a_math = QUATERNION_make_from_array(&quaternion_target_i2t,
                                                            quaternion_target_i2t_array,
                                                            QUATERNION_SCALAR_POSITION_LAST);
-  if (ret_c2a_math != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret_c2a_math != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   AOCS_MANAGER_ERROR ret_aocs_manager = AOCS_MANAGER_set_quaternion_target_i2t(quaternion_target_i2t);
-  if (ret_aocs_manager != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret_aocs_manager != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
 
   MATRIX33_ROTATION_AXIS axis = (MATRIX33_ROTATION_AXIS)param[0];
   param_id += (int)sizeof(uint8_t);
-  if (axis >= MATRIX33_ROTATION_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (axis >= MATRIX33_ROTATION_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float angle_deg = 0.0f;
-  endian_memcpy(&angle_deg, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&angle_deg, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  if ((angle_deg < -180.0f) || (180.0f < angle_deg)) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if ((angle_deg < -180.0f) || (180.0f < angle_deg)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   float angle_rad = PHYSICAL_CONST_degree_to_radian(angle_deg);
 
   Quaternion q_diff;
@@ -727,53 +727,53 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE(co
   Quaternion q_target = QUATERNION_product(q_current, q_diff);
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_quaternion_target_i2t(q_target);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_LIMIT_MANEUVER_ANGLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_LIMIT_MANEUVER_ANGLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   float angle_deg;
-  endian_memcpy(&angle_deg, param, sizeof(float));
-  if ((angle_deg < 0.0f) || (180.0f < angle_deg)) return CCP_EXEC_ILLEGAL_PARAMETER;
+  ENDIAN_memcpy(&angle_deg, param, sizeof(float));
+  if ((angle_deg < 0.0f) || (180.0f < angle_deg)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   float angle_rad = PHYSICAL_CONST_degree_to_radian(angle_deg);
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_limit_maneuver_angle_rad(angle_rad);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY(const CommonCmdPacket* packet)
 {
   float ang_vel_deg_s = CCP_get_param_from_packet(packet, 0, float);
-  if (ang_vel_deg_s < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ang_vel_deg_s < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   float ang_vel_rad_s = PHYSICAL_CONST_degree_to_radian(ang_vel_deg_s);
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_limit_angular_velocity_rad_s(ang_vel_rad_s);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // Others
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   double reference_jday;
-  endian_memcpy(&reference_jday, param, sizeof(double));
+  ENDIAN_memcpy(&reference_jday, param, sizeof(double));
 
   ObcTime obct_reference = TMGR_get_master_clock();
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_reference_jday(reference_jday, obct_reference);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -781,45 +781,45 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* pac
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&constant_torque[i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&constant_torque[i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_constant_torque_body_Nm(constant_torque);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION permission_flag;
 
   permission_flag = (AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION)param[0];
-  if (permission_flag >= AOCS_MANAGER_CONSTANT_TORQUE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (permission_flag >= AOCS_MANAGER_CONSTANT_TORQUE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_constant_torque_permission(permission_flag);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state;
 
   mag_exclusive_state = (AOCS_MANAGER_MAG_EXCLUSIVE_STATE)param[0];
-  if (mag_exclusive_state >= AOCS_MANAGER_MAG_EXCLUSIVE_STATE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (mag_exclusive_state >= AOCS_MANAGER_MAG_EXCLUSIVE_STATE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_mag_exclusive_state(mag_exclusive_state);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -827,17 +827,17 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packe
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&max_torque[i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&max_torque[i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_internal_torque_max_body_Nm(max_torque);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
@@ -845,14 +845,14 @@ CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* pack
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    endian_memcpy(&max_torque[i], param + param_id, sizeof(float));
+    ENDIAN_memcpy(&max_torque[i], param + param_id, sizeof(float));
     param_id += (int)sizeof(float);
   }
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_external_torque_max_body_Nm(max_torque);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

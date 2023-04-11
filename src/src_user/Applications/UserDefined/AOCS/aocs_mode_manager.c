@@ -375,96 +375,96 @@ static uint8_t APP_AOCS_MM_judge_condition_(const uint8_t condition_flag, const 
 
 
 // Commands
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION(const CommonCmdPacket* packet)
 {
   uint8_t is_enabled = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (is_enabled > 1)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   aocs_mode_manager_.is_enabled_auto_mode_transition = is_enabled;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_ANG_VEL_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_ANG_VEL_THRESHOLD(const CommonCmdPacket* packet)
 {
   uint8_t arg_idx = 0;
   float angular_rate_limit_rad_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (angular_rate_limit_rad_s < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (angular_rate_limit_rad_s < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   float time_limit_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (time_limit_s < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (time_limit_s < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   float angular_rate_norm_increase_limit_rad_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (angular_rate_norm_increase_limit_rad_s < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (angular_rate_norm_increase_limit_rad_s < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   float ang_vel_anomaly_detection_period_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (ang_vel_anomaly_detection_period_s < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ang_vel_anomaly_detection_period_s < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   aocs_mode_manager_.ang_vel_conv_limit_rad_s = angular_rate_limit_rad_s;
   aocs_mode_manager_.ang_vel_conv_time_limit_s = time_limit_s;
   aocs_mode_manager_.ang_vel_norm_increase_limit_rad_s = angular_rate_norm_increase_limit_rad_s;
   aocs_mode_manager_.ang_vel_anomaly_detection_period_s = ang_vel_anomaly_detection_period_s;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD(const CommonCmdPacket* packet)
 {
   uint8_t arg_idx = 0;
   float sun_angle_div_limit_rad = CCP_get_param_from_packet(packet, arg_idx, float);
   C2A_MATH_ERROR check_zero_pi = C2A_MATH_check_range_violation(sun_angle_div_limit_rad, MATH_CONST_PI, 0.0f);
-  if (check_zero_pi != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (check_zero_pi != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   float sun_angle_div_time_limit_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (sun_angle_div_time_limit_s <= 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sun_angle_div_time_limit_s <= 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   aocs_mode_manager_.sun_angle_div_limit_rad = sun_angle_div_limit_rad;
   aocs_mode_manager_.sun_angle_div_time_limit_s = sun_angle_div_time_limit_s;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD(const CommonCmdPacket* packet)
 {
   uint8_t arg_idx = 0;
   float three_axis_div_limit_rad = CCP_get_param_from_packet(packet, arg_idx, float);
   C2A_MATH_ERROR check_zero_pi = C2A_MATH_check_range_violation(three_axis_div_limit_rad, MATH_CONST_PI, 0.0f);
-  if (check_zero_pi != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (check_zero_pi != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   float three_axis_div_time_limit_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (three_axis_div_time_limit_s <= 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (three_axis_div_time_limit_s <= 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   aocs_mode_manager_.three_axis_div_limit_rad = three_axis_div_limit_rad;
   aocs_mode_manager_.three_axis_div_time_limit_s = three_axis_div_time_limit_s;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD(const CommonCmdPacket* packet)
 {
   uint8_t arg_idx = 0;
   float sun_invisible_time_limit_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (sun_invisible_time_limit_s <= 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (sun_invisible_time_limit_s <= 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   float stt_invisible_time_limit_s = CCP_get_param_from_packet(packet, arg_idx, float);
-  if (stt_invisible_time_limit_s <= 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (stt_invisible_time_limit_s <= 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   arg_idx++;
 
   aocs_mode_manager_.sun_invisible_time_limit_s = sun_invisible_time_limit_s;
   aocs_mode_manager_.stt_invisible_time_limit_s = stt_invisible_time_limit_s;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

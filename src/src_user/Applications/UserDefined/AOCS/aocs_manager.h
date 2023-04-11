@@ -286,20 +286,20 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_add_gyroscopic_torque_body_nm(float out_torque_b
 
 // Command Functions
 // Structure
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MASS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_RMM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MASS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_RMM(const CommonCmdPacket* packet);
 // Target
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_LIMIT_MANEUVER_ANGLE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_LIMIT_MANEUVER_ANGLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY(const CommonCmdPacket* packet);
 // Others
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* packet);
 
 #endif
