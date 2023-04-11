@@ -6,6 +6,7 @@
 
 #include "power_switch_control.h"
 
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include "../../../IfWrapper/GPIO.h"
 #include "../../../Settings/port_config.h"
@@ -237,34 +238,34 @@ void APP_PSC_switch_state_tlm_unreg_(APP_PSC_UNREG_IDX port_id, APP_PSC_STATE ou
 }
 
 
-CCP_EXEC_STS Cmd_APP_PSC_CONTROL_5V_PORT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_PSC_CONTROL_5V_PORT(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   APP_PSC_5V_IDX port_id;
   APP_PSC_STATE switch_flag;
 
   port_id = (APP_PSC_5V_IDX)param[0];
-  if (port_id >= APP_PSC_5V_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (port_id >= APP_PSC_5V_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   switch_flag = (APP_PSC_STATE)param[1];
-  if (APP_PSC_control_5v_port_(port_id, switch_flag) != 0) return CCP_EXEC_ILLEGAL_PARAMETER;  // GPIO_setのエラーもパラメータエラーに帰着する
+  if (APP_PSC_control_5v_port_(port_id, switch_flag) != 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);  // GPIO_setのエラーもパラメータエラーに帰着する
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_PSC_CONTROL_UNREG_PORT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_PSC_CONTROL_UNREG_PORT(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   APP_PSC_UNREG_IDX port_id;
   APP_PSC_STATE switch_flag;
 
   port_id = (APP_PSC_UNREG_IDX)param[0];
-  if (port_id >= APP_PSC_UNREG_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;  // GPIO_setのエラーもパラメータエラーに帰着する
+  if (port_id >= APP_PSC_UNREG_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);  // GPIO_setのエラーもパラメータエラーに帰着する
 
   switch_flag = (APP_PSC_STATE)param[1];
-  if (APP_PSC_control_unreg_port_(port_id, switch_flag) != 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (APP_PSC_control_unreg_port_(port_id, switch_flag) != 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

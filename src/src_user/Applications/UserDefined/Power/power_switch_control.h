@@ -108,7 +108,7 @@ extern const PowerSwitchControl* const power_switch_control;
 
 AppInfo APP_PSC_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_PSC_CONTROL_5V_PORT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_PSC_CONTROL_UNREG_PORT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_PSC_CONTROL_5V_PORT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_PSC_CONTROL_UNREG_PORT(const CommonCmdPacket* packet);
 
 #endif
