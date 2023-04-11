@@ -53,7 +53,7 @@ extern const RoughThreeAxisDetermination* const rough_three_axis_determination;
  */
 AppInfo APP_RTAD_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_RTAD_SET_METHOD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_RTAD_SET_METHOD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT(const CommonCmdPacket* packet);
 
 #endif

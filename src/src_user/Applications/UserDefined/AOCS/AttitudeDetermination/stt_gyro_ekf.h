@@ -152,7 +152,7 @@ AppInfo APP_STT_GYRO_EKF_create_app(void);
 * @note   入力はコンポ座標系の値で行う．関数内部でbody座標系に変換した値も同時に入る．
 *         あわせて，EKFの計算で使う観測ノイズ共分散行列の値も変更される．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION(const CommonCmdPacket* packet);
 
 /*
 * @brief  STT Gyro EKF ジャイロランダムウォークノイズ標準偏差設定
@@ -160,7 +160,7 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION(const Com
 * @return CCP_EXEC_STSに準拠
 * @note   入力はコンポ座標系の値で行う．関数内部でbody座標系に変換した値も同時に入る．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const CommonCmdPacket* packet);
 
 /*
 * @brief  STT Gyro EKF STT観測誤差標準偏差設定
@@ -169,7 +169,7 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const Comm
 * @note   入力はコンポ座標系の値で行う．関数内部でbody座標系に変換した値も同時に入る．
 *         あわせて，EKFの計算で使う観測ノイズ共分散行列の値も変更される．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION(const CommonCmdPacket* packet);
 
 /*
 * @brief  STT Gyro EKF 推定値リセットコマンド
@@ -177,7 +177,7 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION(const CommonCmdPa
 * @return CCP_EXEC_STSに準拠
 * @note   状態変数と共分散の推定値をリセットし，新たに姿勢推定をやり直す．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet);
 
 /*
 * @brief  STT Gyro EKF 推定値反映コマンド
@@ -185,7 +185,7 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet);
 * @return CCP_EXEC_STSに準拠
 * @note   EKFの姿勢推定値を衛星の姿勢推定に反映するかどうかを決める．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE(const CommonCmdPacket* packet);
 
 /*
 * @brief  STT Gyro EKF 共分散行列初期値設定コマンド
@@ -193,7 +193,7 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE(const CommonCmdPacket* p
 * @return CCP_EXEC_STSに準拠
 * @note   共分散行列Pの初期値を設定する．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacket* packet);
 
 /*
 * @brief  STT Gyro EKF プロセスノイズ設定コマンド
@@ -201,6 +201,6 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacke
 * @return CCP_EXEC_STSに準拠
 * @note   プロセスノイズ共分散行列Qの初期値を設定する．
 */
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_PROCESS_NOISE_MATRIX(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_PROCESS_NOISE_MATRIX(const CommonCmdPacket* packet);
 
 #endif

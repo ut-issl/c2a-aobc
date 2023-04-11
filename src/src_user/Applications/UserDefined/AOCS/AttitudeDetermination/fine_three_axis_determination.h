@@ -37,6 +37,6 @@ extern const FineThreeAxisDetermination* const fine_three_axis_determination;
 
 AppInfo APP_FTAD_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_FTAD_SET_METHOD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_FTAD_SET_METHOD(const CommonCmdPacket* packet);
 
 #endif

@@ -94,17 +94,17 @@ static Quaternion APP_FTAD_stt_direct_(float time_step_s)
   return quaternion_i2b;
 }
 
-CCP_EXEC_STS Cmd_APP_FTAD_SET_METHOD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_FTAD_SET_METHOD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   APP_FTAD_METHOD method = (APP_FTAD_METHOD)param[0];
 
-  if (method >= APP_FTAD_METHOD_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (method >= APP_FTAD_METHOD_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   fine_three_axis_determination_.method = method;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

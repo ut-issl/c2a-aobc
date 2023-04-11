@@ -595,13 +595,13 @@ static void APP_STT_GYRO_EKF_update_system_matrix_(void)
   APP_STT_GYRO_EKF_system_matrix_.a.data[2][1] = -aocs_manager->ang_vel_est_body_rad_s[0];
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION(const CommonCmdPacket* packet)
 {
   float gyro_random_noise_standard_deviation_rad_s[PHYSICAL_CONST_THREE_DIM];
   for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
     gyro_random_noise_standard_deviation_rad_s[i] = CCP_get_param_from_packet(packet, i, float);
-    if (gyro_random_noise_standard_deviation_rad_s[i] < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (gyro_random_noise_standard_deviation_rad_s[i] < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   VECTOR3_copy(stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s, gyro_random_noise_standard_deviation_rad_s);
@@ -612,10 +612,10 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION(const Com
   // パラメータが更新されたので，姿勢推定をリセットして再度新しいパラメータで推定をやり直す
   APP_STT_GYRO_EKF_reset_estimation_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const CommonCmdPacket* packet)
 {
   size_t arg_num;
   float gyro_random_walk_standard_deviation_rad_s2[PHYSICAL_CONST_THREE_DIM];
@@ -623,11 +623,11 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const Comm
   for (arg_num = 0; arg_num < PHYSICAL_CONST_THREE_DIM; arg_num++)
   {
     gyro_random_walk_standard_deviation_rad_s2[arg_num] = CCP_get_param_from_packet(packet, arg_num, float);
-    if (gyro_random_walk_standard_deviation_rad_s2[arg_num] < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (gyro_random_walk_standard_deviation_rad_s2[arg_num] < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   float gyro_random_walk_time_constant_s = CCP_get_param_from_packet(packet, arg_num, float);
-  if (gyro_random_walk_time_constant_s < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (gyro_random_walk_time_constant_s < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   VECTOR3_copy(stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2, gyro_random_walk_standard_deviation_rad_s2);
   QUATERNION_trans_coordinate(stt_gyro_ekf_.gyro_random_walk.standard_deviation_body_rad_s2,
@@ -639,17 +639,17 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION(const Comm
   // パラメータが更新されたので，姿勢推定をリセットして再度新しいパラメータで推定をやり直す
   APP_STT_GYRO_EKF_reset_estimation_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION(const CommonCmdPacket* packet)
 {
   float stt_error_standard_deviation_rad[PHYSICAL_CONST_THREE_DIM];
 
   for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
     stt_error_standard_deviation_rad[i] = CCP_get_param_from_packet(packet, i, float);
-    if (stt_error_standard_deviation_rad[i] < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (stt_error_standard_deviation_rad[i] < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   VECTOR3_copy(stt_gyro_ekf_.stt_error.standard_deviation_compo_rad, stt_error_standard_deviation_rad);
@@ -667,10 +667,10 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION(const CommonCmdPa
   // パラメータが更新されたので，姿勢推定をリセットして再度新しいパラメータで推定をやり直す
   APP_STT_GYRO_EKF_reset_estimation_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet)
 {
   uint8_t reset_mode = CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -693,7 +693,7 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet)
       Quaternion init_quaternion_i2b;
       // 一旦，入力が正規化されているかどうか確認し，正規化されていないならreturnする
       QUATERNION_make_from_array_unnormalizing(&init_quaternion_i2b, init_quaternion_i2b_array, QUATERNION_SCALAR_POSITION_LAST);
-      if (QUATERNION_is_normalized(init_quaternion_i2b) != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+      if (QUATERNION_is_normalized(init_quaternion_i2b) != C2A_MATH_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
       // returnされなければ，入力が正規化されていることが保証されているため，改めて正規化はしない
       stt_gyro_ekf_.estimated_result.quaternion_i2b = init_quaternion_i2b;
@@ -701,53 +701,56 @@ CCP_EXEC_STS Cmd_STT_GYRO_EKF_RESET_ESTIMATION(const CommonCmdPacket* packet)
     break;
   default:
     // NOT REACHED
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // Quaternion以外の要素（角速度，共分散行列）の初期化
   VECTOR3_initialize(stt_gyro_ekf_.estimated_result.rate_bias_body_rad_s, 0.0f);
   APP_STT_GYRO_EKF_initialize_covariance_matrix_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE(const CommonCmdPacket* packet)
 {
   uint8_t use_ekf_estimated_quaternion = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (use_ekf_estimated_quaternion > APP_STT_GYRO_EKF_USE_ESTIMATED_ATTITUDE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (use_ekf_estimated_quaternion > APP_STT_GYRO_EKF_USE_ESTIMATED_ATTITUDE_MAX)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
   stt_gyro_ekf_.use_ekf_estimated_attitude = (APP_STT_GYRO_EKF_USE_ESTIMATED_ATTITUDE)use_ekf_estimated_quaternion;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacket* packet)
 {
   size_t arg_num;
   for (arg_num = 0; arg_num < PHYSICAL_CONST_THREE_DIM; arg_num++)
   {
     float initial_covarinace_upper_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
-    if (initial_covarinace_upper_diagonal_component < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (initial_covarinace_upper_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     stt_gyro_ekf_.initial_covariance.diagonal_component_stt[arg_num] = initial_covarinace_upper_diagonal_component;
   }
 
   float initial_covarinace_lower_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
-  if (initial_covarinace_lower_diagonal_component < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (initial_covarinace_lower_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   stt_gyro_ekf_.initial_covariance.diagonal_component_gyro = initial_covarinace_lower_diagonal_component;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_STT_GYRO_EKF_SET_PROCESS_NOISE_MATRIX(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_STT_GYRO_EKF_SET_PROCESS_NOISE_MATRIX(const CommonCmdPacket* packet)
 {
   float process_noise_covariance_attitude_element = CCP_get_param_from_packet(packet, 0, float);
-  if (process_noise_covariance_attitude_element < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (process_noise_covariance_attitude_element < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   stt_gyro_ekf_.process_noise_covariance.attitude_element = process_noise_covariance_attitude_element;
 
   float process_noise_covariance_attitude_rate_element = CCP_get_param_from_packet(packet, 1, float);
-  if (process_noise_covariance_attitude_rate_element < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (process_noise_covariance_attitude_rate_element < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   stt_gyro_ekf_.process_noise_covariance.attitude_rate_element = process_noise_covariance_attitude_rate_element;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

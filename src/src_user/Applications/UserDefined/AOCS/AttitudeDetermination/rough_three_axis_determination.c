@@ -9,7 +9,7 @@
 #include "rough_three_axis_determination.h"
 
 #include <math.h>
-
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../aocs_manager.h"
 #include "../aocs_error.h"
 #include "../../../../Library/vector3.h"
@@ -452,39 +452,39 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
   }
 }
 
-CCP_EXEC_STS Cmd_APP_RTAD_SET_METHOD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_RTAD_SET_METHOD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   APP_RTAD_METHOD method = (APP_RTAD_METHOD)param[0];
 
-  if (method >= APP_RTAD_METHOD_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (method >= APP_RTAD_METHOD_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   rough_three_axis_determination_.method = method;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
   float sun_vec_weight;
 
-  endian_memcpy(&sun_vec_weight, param, sizeof(float));
+  ENDIAN_memcpy(&sun_vec_weight, param, sizeof(float));
 
   C2A_MATH_ERROR ret;
   ret = C2A_MATH_check_range_violation(sun_vec_weight, 1.0f, 0.0f);
 
   if (ret != C2A_MATH_ERROR_OK)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   rough_three_axis_determination_.q_method_info.sun_vec_weight = sun_vec_weight;
   rough_three_axis_determination_.q_method_info.mag_vec_weight = 1.0f - sun_vec_weight;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
