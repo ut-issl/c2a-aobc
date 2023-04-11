@@ -21,6 +21,6 @@ extern const TimeSpaceCalculator* const time_space_calculator;
 
 AppInfo APP_TIME_SPACE_CALC_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_TIME_SPACE_CALC_SET_OFFSET_TIME(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TIME_SPACE_CALC_SET_OFFSET_TIME(const CommonCmdPacket* packet);
 
 #endif

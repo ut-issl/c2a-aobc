@@ -5,6 +5,7 @@
 */
 
 #include "time_space_calculator.h"
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/TimeManager/obc_time.h>
 #include "../aocs_manager.h"
@@ -119,21 +120,24 @@ static void APP_TIME_SPACE_CALC_update_eci_ecef_trans_(const double reference_jd
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_TIME_SPACE_CALC_SET_OFFSET_TIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TIME_SPACE_CALC_SET_OFFSET_TIME(const CommonCmdPacket* packet)
 {
   const float offset_range_limit_sec = 60 * 60; // 1時間に相当する秒数
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
 
   float time_offset_cmd_sec;
-  endian_memcpy(&time_offset_cmd_sec, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&time_offset_cmd_sec, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
-  if (C2A_MATH_check_abs_range_violation(time_offset_cmd_sec, offset_range_limit_sec) != C2A_MATH_ERROR_OK) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (C2A_MATH_check_abs_range_violation(time_offset_cmd_sec, offset_range_limit_sec) != C2A_MATH_ERROR_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
 
   time_space_calculator_.offset_sec = time_offset_cmd_sec;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
