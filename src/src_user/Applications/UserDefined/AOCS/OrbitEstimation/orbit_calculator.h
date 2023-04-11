@@ -53,7 +53,7 @@ extern const OrbitCalculator* const orbit_calculator;
 
 AppInfo APP_ORBIT_CALC_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_ORBIT_CALC_SET_METHOD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_ORBIT_CALC_SET_GPSR_UPDATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_ORBIT_CALC_SET_METHOD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_ORBIT_CALC_SET_GPSR_UPDATE(const CommonCmdPacket* packet);
 
 #endif

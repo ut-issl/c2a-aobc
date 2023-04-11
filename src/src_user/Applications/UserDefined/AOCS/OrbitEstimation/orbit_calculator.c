@@ -126,26 +126,26 @@ static void APP_ORBIT_CALC_exec_(void)
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_ORBIT_CALC_SET_METHOD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_ORBIT_CALC_SET_METHOD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   APP_ORBIT_CALC_METHOD method;
 
   method = (APP_ORBIT_CALC_METHOD)param[0];
-  if (method >= APP_ORBIT_CALC_METHOD_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (method >= APP_ORBIT_CALC_METHOD_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   orbit_calculator_.method = method;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_ORBIT_CALC_SET_GPSR_UPDATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_ORBIT_CALC_SET_GPSR_UPDATE(const CommonCmdPacket* packet)
 {
   APP_ORBIT_CALC_GPSR_UPDATE gpsr_update = (APP_ORBIT_CALC_GPSR_UPDATE)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  if (gpsr_update >= APP_ORBIT_CALC_GPSR_UPDATE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (gpsr_update >= APP_ORBIT_CALC_GPSR_UPDATE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   orbit_calculator_.gpsr_update = gpsr_update;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

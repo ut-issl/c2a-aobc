@@ -24,7 +24,7 @@ extern const KeplerOrbitPropagator* const kepler_orbit_propagator;
 
 AppInfo APP_KOP_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_KOP_SET_ORBIT_ELEMENTS(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_KOP_SAVE_ORBIT_ELEMENTS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_KOP_SET_ORBIT_ELEMENTS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_KOP_SAVE_ORBIT_ELEMENTS(const CommonCmdPacket* packet);
 
 #endif

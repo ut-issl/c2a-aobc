@@ -24,8 +24,8 @@ extern const Sgp4OrbitPropagator* const sgp4_orbit_propagator;
 
 AppInfo APP_SGP4_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_SGP4_SET_TLE_LINE1(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SGP4_SET_TLE_LINE2(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_APP_SGP4_SAVE_TLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SGP4_SET_TLE_LINE1(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SGP4_SET_TLE_LINE2(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_SGP4_SAVE_TLE(const CommonCmdPacket* packet);
 
 #endif

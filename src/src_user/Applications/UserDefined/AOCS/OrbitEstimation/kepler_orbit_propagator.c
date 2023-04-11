@@ -5,6 +5,7 @@
 */
 
 #include "kepler_orbit_propagator.h"
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/Library/print.h>
 #include "../aocs_manager.h"
@@ -83,41 +84,41 @@ static void APP_KOP_exec_(void)
   return;
 }
 
-CCP_EXEC_STS Cmd_APP_KOP_SET_ORBIT_ELEMENTS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_KOP_SET_ORBIT_ELEMENTS(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
 
   float semi_major_axis_km;
-  endian_memcpy(&semi_major_axis_km, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&semi_major_axis_km, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  if (semi_major_axis_km < PHYSICAL_CONST_EARTH_RADIUS_km) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (semi_major_axis_km < PHYSICAL_CONST_EARTH_RADIUS_km) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float eccentricity;
-  endian_memcpy(&eccentricity, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&eccentricity, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  if (eccentricity < 0.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (eccentricity > 1.0f) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (eccentricity < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (eccentricity > 1.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float inclination_rad;
-  endian_memcpy(&inclination_rad, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&inclination_rad, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
   inclination_rad = C2A_MATH_normalize_zero_2pi(inclination_rad);
 
   float raan_rad;
-  endian_memcpy(&raan_rad, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&raan_rad, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
   raan_rad = C2A_MATH_normalize_zero_2pi(raan_rad);
 
   float arg_perigee_rad;
-  endian_memcpy(&arg_perigee_rad, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&arg_perigee_rad, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
   arg_perigee_rad = C2A_MATH_normalize_zero_2pi(arg_perigee_rad);
 
   double epoch_jday;
-  endian_memcpy(&epoch_jday, param + param_id, sizeof(double));
+  ENDIAN_memcpy(&epoch_jday, param + param_id, sizeof(double));
   param_id += (int)sizeof(double);
-  if (epoch_jday < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (epoch_jday < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   kepler_orbit_propagator_.orbital_elements_cmd_tmp.semi_major_axis_km = semi_major_axis_km;
   kepler_orbit_propagator_.orbital_elements_cmd_tmp.inclination_rad = inclination_rad;
@@ -126,21 +127,24 @@ CCP_EXEC_STS Cmd_APP_KOP_SET_ORBIT_ELEMENTS(const CommonCmdPacket* packet)
   kepler_orbit_propagator_.orbital_elements_cmd_tmp.arg_perigee_rad = arg_perigee_rad;
   kepler_orbit_propagator_.orbital_elements_cmd_tmp.epoch_jday = epoch_jday;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_KOP_SAVE_ORBIT_ELEMENTS(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_KOP_SAVE_ORBIT_ELEMENTS(const CommonCmdPacket* packet)
 {
-  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.semi_major_axis_km < PHYSICAL_CONST_EARTH_RADIUS_km) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.eccentricity < 0.0f) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.eccentricity > 1.0f) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.epoch_jday < 0.0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.semi_major_axis_km < PHYSICAL_CONST_EARTH_RADIUS_km)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
+  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.eccentricity < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.eccentricity > 1.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (kepler_orbit_propagator_.orbital_elements_cmd_tmp.epoch_jday < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   kepler_orbit_propagator_.orbital_elements = kepler_orbit_propagator_.orbital_elements_cmd_tmp;
 
   KEPLER_ORBIT_init_constants(&kepler_orbit_propagator_.orbit_constants, kepler_orbit_propagator_.orbital_elements);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

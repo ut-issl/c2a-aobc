@@ -5,11 +5,11 @@
 */
 
 #include "sgp4_orbit_propagator.h"
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/TimeManager/time_manager.h>
-#include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/Library/print.h>
 #include "../../../app_registry.h"
-
 #include "../aocs_manager.h"
 #include "../../../../Library/matrix33.h"
 #include "../../../../Library/time_space.h"
@@ -117,64 +117,64 @@ static void APP_SGP4_exec_(void)
 }
 
 
-CCP_EXEC_STS Cmd_APP_SGP4_SET_TLE_LINE1(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SGP4_SET_TLE_LINE1(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
 
   uint8_t epoch_year;
-  endian_memcpy(&epoch_year, param + param_id, sizeof(uint8_t));
+  ENDIAN_memcpy(&epoch_year, param + param_id, sizeof(uint8_t));
   param_id += (int)sizeof(uint8_t);
 
   double epoch_day;
-  endian_memcpy(&epoch_day, param + param_id, sizeof(double));
+  ENDIAN_memcpy(&epoch_day, param + param_id, sizeof(double));
   param_id += (int)sizeof(double);
-  if (epoch_day < 1.0) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (epoch_day > 367.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (epoch_day < 1.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (epoch_day > 367.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float b_star;
-  endian_memcpy(&b_star, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&b_star, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  if (b_star < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (b_star < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sgp4_orbit_propagator_.tle_input_cmd_tmp.epoch_day = epoch_day;
   sgp4_orbit_propagator_.tle_input_cmd_tmp.epoch_year = epoch_year;
   sgp4_orbit_propagator_.tle_input_cmd_tmp.b_star = b_star;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SGP4_SET_TLE_LINE2(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SGP4_SET_TLE_LINE2(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   int param_id = 0;
 
   float inclination_deg;
-  endian_memcpy(&inclination_deg, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&inclination_deg, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   float raan_deg;
-  endian_memcpy(&raan_deg, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&raan_deg, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   float eccentricity;
-  endian_memcpy(&eccentricity, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&eccentricity, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  if (eccentricity < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (eccentricity > 1.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (eccentricity < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (eccentricity > 1.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float arg_perigee_deg;
-  endian_memcpy(&arg_perigee_deg, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&arg_perigee_deg, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   float mean_anomaly_deg;
-  endian_memcpy(&mean_anomaly_deg, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&mean_anomaly_deg, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
   float mean_motion_rpd;
-  endian_memcpy(&mean_motion_rpd, param + param_id, sizeof(float));
+  ENDIAN_memcpy(&mean_motion_rpd, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
-  if (mean_motion_rpd < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (mean_motion_rpd < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   sgp4_orbit_propagator_.tle_input_cmd_tmp.inclination_deg = inclination_deg;
   sgp4_orbit_propagator_.tle_input_cmd_tmp.raan_deg = raan_deg;
@@ -183,17 +183,17 @@ CCP_EXEC_STS Cmd_APP_SGP4_SET_TLE_LINE2(const CommonCmdPacket* packet)
   sgp4_orbit_propagator_.tle_input_cmd_tmp.mean_anomaly_deg = mean_anomaly_deg;
   sgp4_orbit_propagator_.tle_input_cmd_tmp.mean_motion_rpd = mean_motion_rpd;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_APP_SGP4_SAVE_TLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_SGP4_SAVE_TLE(const CommonCmdPacket* packet)
 {
-  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.epoch_day < 1.0) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.epoch_day > 367.0) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.b_star < 0.0) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.eccentricity < 0.0) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.eccentricity > 1.0) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.mean_motion_rpd < 0.0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.epoch_day < 1.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.epoch_day > 367.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.b_star < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.eccentricity < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.eccentricity > 1.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (sgp4_orbit_propagator_.tle_input_cmd_tmp.mean_motion_rpd < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
 
   C2A_MATH_ERROR ret = SGP4_initialize(&sgp4_orbit_propagator_.constants,
@@ -201,12 +201,12 @@ CCP_EXEC_STS Cmd_APP_SGP4_SAVE_TLE(const CommonCmdPacket* packet)
   if (ret != C2A_MATH_ERROR_OK)
   {
     SGP4_initialize(&sgp4_orbit_propagator_.constants, sgp4_orbit_propagator_.tle_input);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   sgp4_orbit_propagator_.tle_input = sgp4_orbit_propagator_.tle_input_cmd_tmp;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

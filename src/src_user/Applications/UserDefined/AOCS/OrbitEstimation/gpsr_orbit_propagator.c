@@ -175,7 +175,7 @@ static C2A_MATH_ERROR GPSR_ORBIT_PROPAGATOR_verify_orbital_elements_(const Keple
   return C2A_MATH_ERROR_OK;
 }
 
-CCP_EXEC_STS Cmd_APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD(const CommonCmdPacket* packet)
 {
   uint8_t oe_id = CCP_get_param_from_packet(packet, 0, uint8_t);
   double  value = CCP_get_param_from_packet(packet, 1, double);
@@ -183,38 +183,38 @@ CCP_EXEC_STS Cmd_APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD(const CommonCmdPacket* 
   switch (oe_id)
   {
   case 0:
-    if (value < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (value < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     gpsr_orbit_propagator_.orbital_elements_threshold.semi_major_axis_km = (float)value;
     break;
   case 1:
-    if (value < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
-    if (value > 1.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (value < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    if (value > 1.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     gpsr_orbit_propagator_.orbital_elements_threshold.eccentricity = (float)value;
     break;
   case 2:
-    if (value < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
-    if (value > MATH_CONST_PI_DOUBLE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (value < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    if (value > MATH_CONST_PI_DOUBLE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     gpsr_orbit_propagator_.orbital_elements_threshold.inclination_rad = (float)value;
     break;
   case 3:
-    if (value < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
-    if (value > MATH_CONST_2PI_DOUBLE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (value < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    if (value > MATH_CONST_2PI_DOUBLE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     gpsr_orbit_propagator_.orbital_elements_threshold.raan_rad = (float)value;
     break;
   case 4:
-    if (value < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
-    if (value > MATH_CONST_2PI_DOUBLE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (value < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    if (value > MATH_CONST_2PI_DOUBLE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad = (float)value;
     break;
   case 5:
-    if (value < 0.0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (value < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     gpsr_orbit_propagator_.orbital_elements_threshold.epoch_jday = value;
     break;
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

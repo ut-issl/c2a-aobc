@@ -36,6 +36,6 @@ extern const GpsrOrbitPropagator* const gpsr_orbit_propagator;
 
 AppInfo APP_GPSROP_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD(const CommonCmdPacket* packet);
 
 #endif
