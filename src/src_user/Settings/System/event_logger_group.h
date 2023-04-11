@@ -14,11 +14,11 @@
  */
 typedef enum
 {
-  // C2A CORE: 0-19
+  // C2A CORE: 0-49
   // src_core/System/EventManager/event_logger.h の EL_CORE_GROUP にて定義
 
-  // CDH: 20-39 通信・不揮発メモリエラーなど
-  EL_GROUP_TLM_ERROR_INA260 = 20,  // TLMエラー:INA260
+  // CDH: 50-69 通信・不揮発メモリエラーなど
+  EL_GROUP_TLM_ERROR_INA260 = 50,  // TLMエラー:INA260
   EL_GROUP_TLM_ERROR_MPU9250,      // TLMエラー:MPU9250
   EL_GROUP_TLM_ERROR_RM3100,       // TLMエラー:RM3100
   EL_GROUP_TLM_ERROR_NANOSSOC,     // TLMエラー:NANOSSOC-D60
@@ -39,20 +39,20 @@ typedef enum
   EL_GROUP_ERROR_RW0003Y,    // その他エラー:RW0003 y axis
   EL_GROUP_ERROR_RW0003Z,    // その他エラー:RW0003 z axis
 
-  // POWER: 40-49  過電流など
-  EL_GROUP_SW_OC = 40,
-  EL_GROUP_HW_OC = 41,
+  // POWER: 70-79  過電流など
+  EL_GROUP_SW_OC = 70,
+  EL_GROUP_HW_OC,
 
-  // THERMAL: 50-59  温度異常など
-  EL_GROUP_TEMPERATURE_HIGH = 50, // 高温異常
+  // THERMAL: 80-89  温度異常など
+  EL_GROUP_TEMPERATURE_HIGH = 80, // 高温異常
   EL_GROUP_TEMPERATURE_LOW,       // 低温異常
 
-  // AOCS: 60-99 制御異常など
-  EL_GROUP_AUTO_MODE_TRANSITION = 60, //!< 自動モード遷移
-  EL_GROUP_CALCULATION_ERROR = 61,    //!< アルゴリズム計算内での計算異常
+  // AOCS: 90-119 制御異常など
+  EL_GROUP_AUTO_MODE_TRANSITION = 90, //!< 自動モード遷移
+  EL_GROUP_CALCULATION_ERROR,    //!< アルゴリズム計算内での計算異常
 
-  // その他: 100-127
-  EL_GROUP_DR_WRITE = 100,       //!< DR書き込みエラー
+  // その他: 120-127
+  EL_GROUP_DR_WRITE = 120,       //!< DR書き込みエラー
   EL_GROUP_DR_READ,              //!< DR読み出しエラー
   EL_GROUP_NVM_TRIPLE_REDUNDANT, //!< 不揮発メモリ三重冗長エラー
 
