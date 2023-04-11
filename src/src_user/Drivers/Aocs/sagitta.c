@@ -95,7 +95,7 @@ static void SAGITTA_memcpy_s16_from_rx_frame_decoded_(int16_t* output, uint8_t o
 static void SAGITTA_memcpy_u16_from_rx_frame_decoded_(uint16_t* output, uint8_t offset);
 static void SAGITTA_memcpy_u8_from_rx_frame_decoded_(uint8_t* output, uint8_t offset);
 
-int SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch)
+DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
 
@@ -105,8 +105,11 @@ int SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch)
   sagitta_driver->driver.uart_config.data_length = UART_DATA_LENGTH_8BIT;
   sagitta_driver->driver.uart_config.stop_bit = UART_STOP_BIT_1BIT;
 
-  ret = DS_init(&(sagitta_driver->driver.super), &(sagitta_driver->driver.uart_config), SAGITTA_load_driver_super_init_settings_);
-  if (ret != DS_ERR_CODE_OK) return 1;
+  ret = DS_init(&(sagitta_driver->driver.super),
+                &(sagitta_driver->driver.uart_config),
+                rx_buffer,
+                SAGITTA_load_driver_super_init_settings_);
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
   sagitta_driver->info.quaternion_i2c = QUATERNION_make_unit();
   sagitta_driver->info.frame_transform_c2b = QUATERNION_make_unit();
@@ -207,7 +210,7 @@ int SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch)
   memset(&(sagitta_driver->info.set_parameter.subscription[default_subscription_length]), 0x00,
          SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH - default_subscription_length);
 
-  return 0;
+  return DS_INIT_OK;
 }
 
 // ---------- UART Telemetry ----------

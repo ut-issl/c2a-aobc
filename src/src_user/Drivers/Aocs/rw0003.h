@@ -60,31 +60,31 @@ typedef struct
  * @brief  RW0003初期化
  *
  *         RW0003_Driver構造体のポインタを渡すことでポートを初期化し，RW0003_Driverの各メンバも初期化する
- * @param  *rw0003_driver : 初期化するRW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver : 初期化するRW0003_Driver構造体へのポインタ
  * @param  ch             : RW0003が接続されているI2Cポート番号
  * @param  i2c_address    : RW0003のI2Cデバイスアドレス
- * @return 0              : 正常終了
- * @return 0以外          : 異常終了
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
  */
-int RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i2c_address);
+DS_INIT_ERR_CODE RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  RW0003アプリケーションスタートコマンド
- * @param  *rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE RW0003_start_app(RW0003_Driver* rw0003_driver);
 
 /**
  * @brief  RW0003 Idleモード指令コマンド
- * @param  *rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE RW0003_set_idle(RW0003_Driver* rw0003_driver);
 
 /**
  * @brief  RW0003回転数測定コマンド
- * @param  *rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE RW0003_observe_speed(RW0003_Driver* rw0003_driver);
@@ -98,7 +98,7 @@ DS_CMD_ERR_CODE RW0003_observe_temperature(RW0003_Driver* rw0003_driver);
 
 /**
  * @brief  RW0003トルク指令コマンド
- * @param  *rw0003_driver   : RW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver   : RW0003_Driver構造体へのポインタ
  * @param  torque_Nm : 指令トルク [Nm]
  * @return DS_CMD_ERR_CODEに準じる
  */
@@ -106,7 +106,7 @@ DS_CMD_ERR_CODE RW0003_drive_torque(RW0003_Driver* rw0003_driver, const float to
 
 /**
  * @brief  RW0003回転数指令コマンド
- * @param  *rw0003_driver      : RW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver      : RW0003_Driver構造体へのポインタ
  * @param  *speed_rad_s : 指令回転数 [rad/s]
  * @return DS_CMD_ERR_CODEに準じる
  */
@@ -114,7 +114,7 @@ DS_CMD_ERR_CODE RW0003_drive_speed(RW0003_Driver* rw0003_driver, const float spe
 
 /**
  * @brief  回転方向ベクトル設定関数
- * @param  *rw0003_driver       : RW0003_Driver構造体へのポインタ
+ * @param  rw0003_driver       : RW0003_Driver構造体へのポインタ
  * @param  rotation_direction_b : 機体固定座標系での回転方向ベクトル
  * @return C2A_MATH_ERRORに準じる
  */

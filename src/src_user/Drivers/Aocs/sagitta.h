@@ -319,30 +319,30 @@ typedef struct
  * @brief  SAGITTA初期化
  *
  *         SAGITTA_Driver構造体のポインタを渡すことでポートを初期化し，SAGITTA_Driverの各メンバも初期化する
- * @param  *sagitta_driver    : 初期化するSAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : 初期化するSAGITTA_Driver構造体へのポインタ
  * @param  ch          : SAGITTAが接続されているUARTポート番号
- * @return 0           : 正常終了
- * @return 0以外       : 異常終了
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
  */
-int SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch);
+DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  SAGITTA受信
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @retval DS_REC_ERR_CODEに準拠
  */
 DS_REC_ERR_CODE SAGITTA_rec(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAをブートする
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_boot(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのUnixTime[us]を設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  unix_time_us_upper : UnixTime上位32bit
  * @param  unix_time_us_lower : UnixTime下位32bit
  * @return DS_CMD_ERR_CODEを参照
@@ -351,77 +351,77 @@ DS_CMD_ERR_CODE SAGITTA_set_unix_time_us(SAGITTA_Driver* sagitta_driver, const u
 
 /**
  * @brief  SAGITTAのLog Levelパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_log_level(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのLimitsパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_limits(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのMountingパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_mounting(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのCameraパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_camera(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのImage Processorパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_image_processor(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのCentroidingパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_centroiding(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのLost in Space Algorithmパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_lisa(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのMatchingパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_matching(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのTrackingパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_tracking(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのValidationパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_validation(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのAlgoパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  * @note   Algo: Algorithm. ICDでのparameter名称.
  */
@@ -429,14 +429,14 @@ DS_CMD_ERR_CODE SAGITTA_set_algo(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAの非同期テレメパラメータを設定する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_subscription(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのLog Levelパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -445,7 +445,7 @@ DS_CMD_ERR_CODE SAGITTA_change_log_level(SAGITTA_Driver* sagitta_driver, uint8_t
 
 /**
  * @brief  SAGITTAのLimitsパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -454,7 +454,7 @@ DS_CMD_ERR_CODE SAGITTA_change_limits(SAGITTA_Driver* sagitta_driver, uint8_t pa
 
 /**
  * @brief  SAGITTAのMountingパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -463,7 +463,7 @@ DS_CMD_ERR_CODE SAGITTA_change_mounting(SAGITTA_Driver* sagitta_driver, uint8_t 
 
 /**
  * @brief  SAGITTAのCameraパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -472,7 +472,7 @@ DS_CMD_ERR_CODE SAGITTA_change_camera(SAGITTA_Driver* sagitta_driver, uint8_t pa
 
 /**
  * @brief  SAGITTAのImage Processorパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -481,7 +481,7 @@ DS_CMD_ERR_CODE SAGITTA_change_image_processor(SAGITTA_Driver* sagitta_driver, u
 
 /**
  * @brief  SAGITTAのCentroidingパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -490,7 +490,7 @@ DS_CMD_ERR_CODE SAGITTA_change_centroiding(SAGITTA_Driver* sagitta_driver, uint8
 
 /**
  * @brief  SAGITTAのLost in Space Algorithmパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -499,7 +499,7 @@ DS_CMD_ERR_CODE SAGITTA_change_lisa(SAGITTA_Driver* sagitta_driver, uint8_t para
 
 /**
  * @brief  SAGITTAのMatchingパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -508,7 +508,7 @@ DS_CMD_ERR_CODE SAGITTA_change_matching(SAGITTA_Driver* sagitta_driver, uint8_t 
 
 /**
  * @brief  SAGITTAのTrackingパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -517,7 +517,7 @@ DS_CMD_ERR_CODE SAGITTA_change_tracking(SAGITTA_Driver* sagitta_driver, uint8_t 
 
 /**
  * @brief  SAGITTAのValidationパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -526,7 +526,7 @@ DS_CMD_ERR_CODE SAGITTA_change_validation(SAGITTA_Driver* sagitta_driver, uint8_
 
 /**
  * @brief  SAGITTAのAlgoパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -536,7 +536,7 @@ DS_CMD_ERR_CODE SAGITTA_change_algo(SAGITTA_Driver* sagitta_driver, uint8_t para
 
 /**
  * @brief  SAGITTAの非同期テレメパラメータを変更する
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
  * @param  value              : 変更後の値
  * @return DS_CMD_ERR_CODEを参照
@@ -545,7 +545,7 @@ DS_CMD_ERR_CODE SAGITTA_change_subscription(SAGITTA_Driver* sagitta_driver, uint
 
 /**
  * @brief  SAGITTAのパラメータを読み取る
- * @param  *sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  parameter_id       : PARAMETER ID
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -553,7 +553,7 @@ DS_CMD_ERR_CODE SAGITTA_read_parameter(SAGITTA_Driver* sagitta_driver, const uin
 
 /**
  * @brief  座標変換行列設定関数
- * @param  *sagitta_driver  : SAGITTA_Driver構造体へのポインタ
+ * @param  sagitta_driver  : SAGITTA_Driver構造体へのポインタ
  * @param  q_c2b            : コンポ座標からボディ座標への座標変換Quaternion
  * @return C2A_MATH_ERRORに準じる
  */

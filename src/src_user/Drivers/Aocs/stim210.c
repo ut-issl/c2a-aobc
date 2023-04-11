@@ -5,7 +5,7 @@
 */
 
 #include "./stim210.h"
-#include <src_core/Library/endian_memcpy.h>
+#include <src_core/Library/endian.h>
 #include <src_core/Library/print.h>
 #include <string.h>
 #include "../../Library/vector3.h"
@@ -69,7 +69,11 @@ static int STIM210_convert_latency_(STIM210_Driver* stim210_driver, const uint8_
 
 static void STIM210_calc_ang_vel_calibration_(STIM210_Info* info);
 
-int STIM210_init(STIM210_Driver* stim210_driver, uint8_t ch, uint8_t ch_gpio_trig, uint8_t ch_gpio_reset)
+int STIM210_init(STIM210_Driver* stim210_driver,
+                 uint8_t ch,
+                 uint8_t ch_gpio_trig,
+                 uint8_t ch_gpio_reset,
+                 DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
   GPIO_ERR_CODE ret_gpio_trig_setting, ret_gpio_reset_setting;
@@ -80,7 +84,10 @@ int STIM210_init(STIM210_Driver* stim210_driver, uint8_t ch, uint8_t ch_gpio_tri
   stim210_driver->driver.uart_config.data_length = UART_DATA_LENGTH_8BIT;
   stim210_driver->driver.uart_config.stop_bit = UART_STOP_BIT_1BIT;
 
-  ret = DS_init(&(stim210_driver->driver.super), &(stim210_driver->driver.uart_config), STIM210_load_driver_super_init_settings_);
+  ret = DS_init(&(stim210_driver->driver.super),
+                &(stim210_driver->driver.uart_config),
+                rx_buffer,
+                STIM210_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return 1;
 
   stim210_driver->driver.ch_gpio_trig = ch_gpio_trig;
@@ -604,7 +611,7 @@ static int STIM210_analyze_normal_mode_format_idx_(STIM210_Driver* stim210_drive
 {
   uint8_t format_idx = 0;
   size_t size = sizeof(format_idx);
-  endian_memcpy(&(format_idx), &(stim210_rx_data[tlm_body_idx]), size);
+  ENDIAN_memcpy(&(format_idx), &(stim210_rx_data[tlm_body_idx]), size);
   tlm_body_idx += size;
 
   // ヘッダーとしてノーマルモードフォーマットとの整合性を確認されているのでこの値はinfoに格納しない
@@ -623,7 +630,7 @@ static int STIM210_analyze_gyro_output_(STIM210_Driver* stim210_driver, const ui
   for (idx = 0; idx < STIM210_RX_GYRO_OUTPUT_SIZE * PHYSICAL_CONST_THREE_DIM; idx++)
   {
     size = sizeof(gyro_output[idx]);
-    endian_memcpy(&(gyro_output[idx]), &(stim210_rx_data[tlm_body_idx]), size);
+    ENDIAN_memcpy(&(gyro_output[idx]), &(stim210_rx_data[tlm_body_idx]), size);
     tlm_body_idx += size;
   }
 
@@ -635,7 +642,7 @@ static int STIM210_analyze_gyro_output_(STIM210_Driver* stim210_driver, const ui
 static int STIM210_analyze_gyro_status_(STIM210_Driver* stim210_driver, const uint8_t* stim210_rx_data, uint8_t tlm_body_idx)
 {
   size_t size = sizeof(stim210_driver->info.status);
-  endian_memcpy(&(stim210_driver->info.status), &(stim210_rx_data[tlm_body_idx]), size);
+  ENDIAN_memcpy(&(stim210_driver->info.status), &(stim210_rx_data[tlm_body_idx]), size);
   tlm_body_idx += size;
 
   return tlm_body_idx;
@@ -644,7 +651,7 @@ static int STIM210_analyze_gyro_status_(STIM210_Driver* stim210_driver, const ui
 static int STIM210_analyze_buffer_(STIM210_Driver* stim210_driver, const uint8_t* stim210_rx_data, uint8_t tlm_body_idx)
 {
   size_t size = sizeof(stim210_driver->info.buffer);
-  endian_memcpy(&(stim210_driver->info.buffer), &(stim210_rx_data[tlm_body_idx]), size);
+  ENDIAN_memcpy(&(stim210_driver->info.buffer), &(stim210_rx_data[tlm_body_idx]), size);
   tlm_body_idx += size;
 
   return tlm_body_idx;
@@ -659,7 +666,7 @@ static int STIM210_analyze_temperature_(STIM210_Driver* stim210_driver, const ui
   for (idx = 0; idx < STIM210_RX_TEMPERATURE_SIZE * PHYSICAL_CONST_THREE_DIM; idx++)
   {
     size = sizeof(temperature_bytes[idx]);
-    endian_memcpy(&(temperature_bytes[idx]), &(stim210_rx_data[tlm_body_idx]), size);
+    ENDIAN_memcpy(&(temperature_bytes[idx]), &(stim210_rx_data[tlm_body_idx]), size);
     tlm_body_idx += size;
   }
 
@@ -673,7 +680,7 @@ static int STIM210_analyze_counter_(STIM210_Driver* stim210_driver, const uint8_
   size_t size = 0;
 
   size = sizeof(stim210_driver->info.counter);
-  endian_memcpy(&(stim210_driver->info.counter), &(stim210_rx_data[tlm_body_idx]), size);
+  ENDIAN_memcpy(&(stim210_driver->info.counter), &(stim210_rx_data[tlm_body_idx]), size);
   tlm_body_idx += size;
 
   return tlm_body_idx;
@@ -683,7 +690,7 @@ static int STIM210_analyze_latency_(STIM210_Driver* stim210_driver, const uint8_
 {
   uint8_t latency_bytes[STIM210_RX_LATENCY_SIZE];
   size_t size = sizeof(latency_bytes);
-  endian_memcpy(&(latency_bytes), &(stim210_rx_data[tlm_body_idx]), size);
+  ENDIAN_memcpy(&(latency_bytes), &(stim210_rx_data[tlm_body_idx]), size);
   tlm_body_idx += size;
 
   STIM210_convert_latency_(stim210_driver, latency_bytes);
@@ -694,7 +701,7 @@ static int STIM210_analyze_latency_(STIM210_Driver* stim210_driver, const uint8_
 static int STIM210_analyze_crc_(STIM210_Driver* stim210_driver, const uint8_t* stim210_rx_data, uint8_t tlm_body_idx)
 {
   size_t crc_size = sizeof(stim210_driver->info.crc);
-  endian_memcpy(&(stim210_driver->info.crc), &(stim210_rx_data[tlm_body_idx]), crc_size);
+  ENDIAN_memcpy(&(stim210_driver->info.crc), &(stim210_rx_data[tlm_body_idx]), crc_size);
   tlm_body_idx += crc_size;
 
   uint8_t crc8 = crc_8_atm_left(STIM210_kCrcInitial_, stim210_rx_data, tlm_body_idx - crc_size, STIM210_kCrcRevFlag_);

@@ -97,17 +97,24 @@ typedef struct
  * @brief  MPU9250初期化
  *
  *         MPU9250_Driver構造体のポインタを渡すことでポートを初期化し，MPU9250_Driverの各メンバも初期化する
- * @param  *mpu9250_driver    : 初期化するMPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver     : 初期化するMPU9250_Driver構造体へのポインタ
  * @param  ch                 : MPU9250が接続されているI2Cポート番号
- * @param  i2c_address        : MPU9250のI2Cデバイスアドレス
- * @return 0                  : 正常終了
- * @return 0以外               : 異常終了
+ * @param  i2c_address_mpu9250: MPU9250のI2Cデバイスアドレス
+ * @param  i2c_address_ak8963 : AK8963のI2Cデバイスアドレス
+ * @param  rx_buffer_mpu9250  : MPU9250 の受信バッファ
+ * @param  rx_buffer_ak8963   : AK8963 の受信バッファ
+ * @return DS_ERR_CODE
  */
-int MPU9250_init(MPU9250_Driver* mpu9250_driver, uint8_t ch, uint8_t i2c_address_mpu9250, uint8_t i2c_address_ak8963);
+DS_INIT_ERR_CODE MPU9250_init(MPU9250_Driver* mpu9250_driver,
+                         uint8_t ch,
+                         uint8_t i2c_address_mpu9250,
+                         uint8_t i2c_address_ak8963,
+                         DS_StreamRecBuffer* rx_buffer_mpu9250,
+                         DS_StreamRecBuffer* rx_buffer_ak8963);
 
 /**
  * @brief  MPU9250により角速度・温度・加速度・磁場の観測を行う
- * @param  *mpu9250_driver    : 初期化するMPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver    : 初期化するMPU9250_Driver構造体へのポインタ
  * @return 0                  : 正常終了
  * @return 1                  : 角速度・加速度・温度観測異常終了
  * @return 2                  : 磁気観測異常終了
@@ -116,14 +123,14 @@ int MPU9250_rec(MPU9250_Driver* mpu9250_driver);
 
 /**
  * @brief  MPU9250の磁気センサ(AK8963)をONして連続観測を開始する
- * @param  *mpu9250_driver    : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver    : MPU9250_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE MPU9250_enable_mag(MPU9250_Driver* mpu9250_driver);
 
 /**
  * @brief  MPU9250の角速度・温度・加速度センサをONして連続観測を開始する
- * @param  *mpu9250_driver    : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver    : MPU9250_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE MPU9250_enable_gyro(MPU9250_Driver* mpu9250_driver);
@@ -132,14 +139,14 @@ DS_CMD_ERR_CODE MPU9250_enable_gyro(MPU9250_Driver* mpu9250_driver);
  * @brief  MPU9250の角速度・磁場観測値のローパスフィルタのカットオフ周波数を設定する
  *
  *         TODO_L : 現状カットオフ周波数は固定しているので変更できるようにする
- * @param  *mpu9250_driver    : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver    : MPU9250_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE MPU9250_set_lpf(MPU9250_Driver* mpu9250_driver);
 
 /**
  * @brief  MPU9250の角速度観測範囲を設定する
- * @param  *mpu9250_driver    : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver    : MPU9250_Driver構造体へのポインタ
  * @param  range       : MPU9250_ANG_VEL_RANGEにある角速度範囲
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -147,7 +154,7 @@ DS_CMD_ERR_CODE MPU9250_set_ang_vel_range(MPU9250_Driver* mpu9250_driver, MPU925
 
 /**
  * @brief  MPU9250の加速度観測範囲を設定する
- * @param  *mpu9250_driver    : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver    : MPU9250_Driver構造体へのポインタ
  * @param  range       : MPU9250_ACCEL_RANGEにある角速度範囲
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -155,7 +162,7 @@ DS_CMD_ERR_CODE MPU9250_set_accel_range(MPU9250_Driver* mpu9250_driver, MPU9250_
 
 /**
  * @brief  座標変換行列設定関数
- * @param  *mpu9250_driver  : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver  : MPU9250_Driver構造体へのポインタ
  * @param  q_c2b            : コンポ座標からボディ座標への座標変換Quaternion
  * @return C2A_MATH_ERRORに準じる
  */
@@ -163,7 +170,7 @@ C2A_MATH_ERROR MPU9250_set_frame_transform_c2b(MPU9250_Driver* mpu9250_driver, c
 
 /**
  * @brief  角速度バイアス補正値設定関数
- * @param  *mpu9250_driver  : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver  : MPU9250_Driver構造体へのポインタ
  * @param  ang_vel_bias_compo_rad_s : コンポ座標での角速度バイアス補正値(計測値からこの値を差し引く)
  * @return C2A_MATH_ERROR_RANGE_OVER : 補正値が大きすぎる場合
  */
@@ -171,7 +178,7 @@ C2A_MATH_ERROR MPU9250_set_ang_vel_bias_compo_rad_s(MPU9250_Driver* mpu9250_driv
 
 /**
  * @brief  磁場ベクトルバイアス補正値設定関数
- * @param  *mpu9250_driver  : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver  : MPU9250_Driver構造体へのポインタ
  * @param  mag_bias_compo_nT : コンポ座標での磁場バイアス補正値(計測値からこの値を差し引く)
  * @return C2A_MATH_ERROR_RANGE_OVER : 補正値が大きすぎる場合
  */
@@ -179,7 +186,7 @@ C2A_MATH_ERROR MPU9250_set_mag_bias_compo_nT(MPU9250_Driver* mpu9250_driver, con
 
 /**
  * @brief  磁場ベクトルバイアス補正値設定関数(現在値への加算)
- * @param  *mpu9250_driver  : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver  : MPU9250_Driver構造体へのポインタ
  * @param  mag_bias_compo_nT : コンポ座標での磁場バイアス補正値(計測値からこの値を差し引く)
  * @return C2A_MATH_ERROR_RANGE_OVER : 補正値が大きすぎる場合
  */
@@ -187,7 +194,7 @@ C2A_MATH_ERROR MPU9250_add_mag_bias_compo_nT(MPU9250_Driver* mpu9250_driver, con
 
 /**
  * @brief  角速度スケールファクタ行列設定関数
- * @param  *mpu9250_driver  : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver  : MPU9250_Driver構造体へのポインタ
  * @param  ang_vel_scale_factor_compo : コンポ座標でのスケールファクタ行列
  * @return C2A_MATH_ERRORに準じる
  */
@@ -196,7 +203,7 @@ C2A_MATH_ERROR MPU9250_set_ang_vel_scale_factor_compo(MPU9250_Driver* mpu9250_dr
 
 /**
  * @brief  磁場ベクトルスケールファクタ行列設定関数
- * @param  *mpu9250_driver  : MPU9250_Driver構造体へのポインタ
+ * @param  mpu9250_driver  : MPU9250_Driver構造体へのポインタ
  * @param  mag_scale_factor_compo : コンポ座標でのスケールファクタ行列
  * @return C2A_MATH_ERRORに準じる
  */

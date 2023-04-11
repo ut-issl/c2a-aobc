@@ -57,7 +57,12 @@ static uint8_t convert_tlm_id_to_tlm_name_(char* copy_target, const uint32_t oem
 static DS_ERR_CODE OEM7600_store_range_tlm_chunk_(OEM7600_Driver* oem7600_driver);
 static DS_ERR_CODE OEM7600_store_range_tlm_chunk_pickup_(OEM7600_Driver* oem7600_driver, uint16_t if_rec_len, uint16_t* p_rx_buffer_read_pos);
 
-int OEM7600_init(OEM7600_Driver* oem7600_driver, uint8_t ch_uart, uint8_t ch_gpio_pps, uint8_t ch_gpio_reset)
+
+DS_INIT_ERR_CODE OEM7600_init(OEM7600_Driver* oem7600_driver,
+                              uint8_t ch_uart,
+                              uint8_t ch_gpio_pps,
+                              uint8_t ch_gpio_reset,
+                              DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret_driver_super_setting;
   GPIO_ERR_CODE ret_gpio_pps_setting, ret_gpio_reset_setting;
@@ -93,8 +98,9 @@ int OEM7600_init(OEM7600_Driver* oem7600_driver, uint8_t ch_uart, uint8_t ch_gpi
   }
 
   ret_driver_super_setting = DS_init(&(oem7600_driver->driver.super),
-                                               &(oem7600_driver->driver.uart_config),
-                                               OEM7600_load_driver_super_init_settings_);
+                                     &(oem7600_driver->driver.uart_config),
+                                     rx_buffer,
+                                     OEM7600_load_driver_super_init_settings_);
   ret_gpio_pps_setting     = (GPIO_ERR_CODE)GPIO_set_direction(ch_gpio_pps, GPIO_INPUT);
   ret_gpio_reset_setting   = (GPIO_ERR_CODE)GPIO_set_direction(ch_gpio_reset, GPIO_OUTPUT);
   ret_gpio_reset_setting   = (GPIO_ERR_CODE)GPIO_set_output(oem7600_driver->driver.ch_gpio_reset, GPIO_LOW); // LOWで初期化する
@@ -106,10 +112,9 @@ int OEM7600_init(OEM7600_Driver* oem7600_driver, uint8_t ch_uart, uint8_t ch_gpi
 #ifdef DRIVER_OEM7600_DEBUG_SHOW_GPIO_DATA
     Printf("GPIO ERR CODE: PPS, %d, RESET, %d \n", ret_gpio_pps_setting, ret_gpio_reset_setting);
 #endif
-    return 1;
+    return DS_INIT_DS_INIT_ERR;
   }
-
-  return 0;
+  return DS_INIT_OK;
 }
 
 
@@ -315,7 +320,7 @@ DS_CMD_ERR_CODE OEM7600_save_tlm_setting(OEM7600_Driver* oem7600_driver)
   return OEM7600_send_cmd_(oem7600_driver, (size_t)(kCmdPayloadLength), kCmdPayload);
 }
 
-DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate)
+DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate, DS_StreamRecBuffer* rx_buffer)
 {
   const char    kCmdPrefixChar[] = "serialconfig com1 ";
   const uint8_t kCmdPrefixCharLength = (uint8_t)(sizeof(kCmdPrefixChar) / sizeof(kCmdPrefixChar[0])) - 1; // NULL文字分を消す
@@ -352,6 +357,7 @@ DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const 
   oem7600_driver->info.uart_baudrate = baudrate;
   DS_ERR_CODE ret_driver_super_setting = DS_init(&(oem7600_driver->driver.super),
                                                  &(oem7600_driver->driver.uart_config),
+                                                 rx_buffer,
                                                  OEM7600_load_driver_super_init_settings_);
 
   if (ret_driver_super_setting != DS_ERR_CODE_OK) return DS_CMD_UNKNOWN_ERR;
@@ -1005,9 +1011,14 @@ DS_CMD_ERR_CODE OEM7600_end_rec_range_tlm(OEM7600_Driver* oem7600_driver)
 
   oem7600_driver->info.range_tlm_status.is_receiving = 0;
 
+  // FIXME: rx_buffer が引数に必要だが, 意外と影響範囲が大きくて面倒くさい
+  // そもそもここで DS_init しているのはなぜ？必要ないなら消したい
+  // もしくは, rx_buffer を必要としないそれ以外の初期化を行う関数が欲しい
+#if 0
   DS_init(&(oem7600_driver->driver.super),
           &(oem7600_driver->driver.uart_config),
           OEM7600_load_driver_super_init_settings_);
+#endif
 
   return DS_CMD_OK;
 }

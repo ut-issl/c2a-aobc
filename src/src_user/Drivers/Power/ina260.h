@@ -88,17 +88,17 @@ typedef struct
  * @brief  INA260初期化
  *
  *         INA260_Driver構造体のポインタを渡すことでポートを初期化し，INA260_Driverの各メンバも初期化する
- * @param  *ina260_driver : 初期化するINA260_Driver構造体へのポインタ
+ * @param  ina260_driver : 初期化するINA260_Driver構造体へのポインタ
  * @param  ch             : INA260が接続されているI2Cポート番号
  * @param  i2c_address    : INA260のI2Cデバイスアドレス
- * @return 0              : 正常終了
- * @return 0以外          : 異常終了
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
  */
-int INA260_init(INA260_Driver* ina260_driver, uint8_t ch, uint8_t i2c_address);
+DS_INIT_ERR_CODE INA260_init(INA260_Driver* ina260_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  INA260モード設定コマンド
- * @param  *ina260_driver : INA260_Driver構造体へのポインタ
+ * @param  ina260_driver : INA260_Driver構造体へのポインタ
  * @param  mode           : INA260に設定する各種モード情報を束ねたもの
  * @return DS_CMD_ERR_CODEに準じる
  */
@@ -109,7 +109,7 @@ DS_CMD_ERR_CODE INA260_set_mode(INA260_Driver* ina260_driver,
 
 /**
  * @brief  INA260過電流閾値設定コマンド
- * @param  *ina260_driver : INA260_Driver構造体へのポインタ
+ * @param  ina260_driver : INA260_Driver構造体へのポインタ
  * @param  mode           : INA260に設定する過電流閾値[mA]
  * @return DS_CMD_ERR_CODEに準じる
  */
@@ -117,21 +117,21 @@ DS_CMD_ERR_CODE INA260_set_over_current_threshold(INA260_Driver* ina260_driver, 
 
 /**
  * @brief  INA260過電流保護有効化コマンド
- * @param  *ina260_driver : INA260_Driver構造体へのポインタ
+ * @param  ina260_driver : INA260_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE INA260_enable_over_current_protection(INA260_Driver* ina260_driver);
 
 /**
  * @brief  INA260電流観測コマンド
- * @param  *ina260_driver : INA260_Driver構造体へのポインタ
+ * @param  ina260_driver : INA260_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE INA260_observe_current(INA260_Driver* ina260_driver);
 
 /**
  * @brief  INA260電圧観測コマンド
- * @param  *ina260_driver : INA260_Driver構造体へのポインタ
+ * @param  ina260_driver : INA260_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE INA260_observe_voltage(INA260_Driver* ina260_driver);
@@ -141,7 +141,7 @@ DS_CMD_ERR_CODE INA260_observe_voltage(INA260_Driver* ina260_driver);
  * @brief  INA260マスクレジスタの読み込み
  *
  *         読むことでOCラッチを外すことができる
- * @param  *ina260_driver : INA260_Driver構造体へのポインタ
+ * @param  ina260_driver : INA260_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEに準じる
  */
 DS_CMD_ERR_CODE INA260_read_mask_register(INA260_Driver* ina260_driver);

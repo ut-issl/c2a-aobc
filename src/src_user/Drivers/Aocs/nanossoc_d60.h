@@ -83,25 +83,26 @@ typedef struct
  * @brief  NANOSSOC_D60初期化
  *
  *         NANOSSOC_D60_Driver構造体のポインタを渡すことでポートを初期化し，NANOSSOC_D60_Driverの各メンバも初期化する
- * @param  *nanossoc_d60_driver : 初期化するNANOSSOC_D60_Driver構造体へのポインタ
+ * @param  nanossoc_d60_driver : 初期化するNANOSSOC_D60_Driver構造体へのポインタ
  * @param  ch                   : NANOSSOC_D60が接続されているI2Cポート番号
  * @param  i2c_address          : NANOSSOC_D60のI2Cデバイスアドレス
- * @return DS_ERR_CODEに準拠
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
  */
-int NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint8_t i2c_address);
+DS_INIT_ERR_CODE NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  NANOSSOC_D60観測
  *
  *         太陽方向，太陽検出率，エラーコードを読み出す
- * @param  *nanossoc_d60_driver : 初期化するNANOSSOC_D60_Driver構造体へのポインタ
+ * @param  nanossoc_d60_driver : 初期化するNANOSSOC_D60_Driver構造体へのポインタ
  * @return DS_ERR_CODEに準拠
  */
 DS_CMD_ERR_CODE NANOSSOC_D60_observe(NANOSSOC_D60_Driver* nanossoc_d60_driver);
 
 /**
  * @brief  座標変換行列設定関数
- * @param  *nanossoc_d60_driver  : NANOSSOC_D60_Driver構造体へのポインタ
+ * @param  nanossoc_d60_driver  : NANOSSOC_D60_Driver構造体へのポインタ
  * @param  q_c2b                 : コンポ座標からボディ座標への座標変換Quaternion
  * @return C2A_MATH_ERRORに準じる
  */

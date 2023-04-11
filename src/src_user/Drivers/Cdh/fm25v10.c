@@ -1,5 +1,5 @@
 /**
-* @file   fm25v10.c
+* @file
 * @brief  FM25V10 FRAMのドライバ
 */
 #pragma section REPRO
@@ -25,7 +25,7 @@ static DS_ERR_CODE FM25V10_analyze_rec_data_(DS_StreamConfig* stream_config, voi
 static DS_CMD_ERR_CODE FM25V10_convert_address_to_tx_data_(uint8_t* address_byte, uint32_t address_u32);
 
 // 公開関数
-int FM25V10_init(FM25V10_Driver* fm25v10_driver, uint8_t comm_ch, uint8_t gpio_ch)
+DS_INIT_ERR_CODE FM25V10_init(FM25V10_Driver* fm25v10_driver, uint8_t comm_ch, uint8_t gpio_ch, DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
 
@@ -37,6 +37,7 @@ int FM25V10_init(FM25V10_Driver* fm25v10_driver, uint8_t comm_ch, uint8_t gpio_c
 
   ret = DS_init(&(fm25v10_driver->driver.super),
                 &(fm25v10_driver->driver.spi_config),
+                rx_buffer,
                 FM25V10_load_driver_super_init_settings_);
 
   fm25v10_driver->info.status = 0x00;
@@ -44,8 +45,8 @@ int FM25V10_init(FM25V10_Driver* fm25v10_driver, uint8_t comm_ch, uint8_t gpio_c
   fm25v10_driver->info.last_read_data_byte = 0;
   fm25v10_driver->info.last_write_data_byte = 0;
 
-  if (ret != DS_ERR_CODE_OK) return 1;
-  return 0;
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
+  return DS_INIT_OK;
 }
 
 DS_CMD_ERR_CODE FM25V10_write_status(FM25V10_Driver* fm25v10_driver, const uint8_t status)

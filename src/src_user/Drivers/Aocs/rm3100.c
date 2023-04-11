@@ -26,7 +26,8 @@ static DS_ERR_CODE RM3100_analyze_rec_data_(DS_StreamConfig* stream_config, void
 static void RM3100_convert_bytes_to_float_(const uint8_t mag_c_bytes[RM3100_RX_FRAME_SIZE], float mag_c_nT[3]);
 static void RM3100_calc_mag_calibration_(RM3100_Info* info);
 
-int RM3100_init(RM3100_Driver* rm3100_driver, uint8_t ch, uint8_t i2c_address)
+
+DS_INIT_ERR_CODE RM3100_init(RM3100_Driver* rm3100_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer)
 {
   for (int axis = 0; axis < 3; axis++)
   {
@@ -45,11 +46,12 @@ int RM3100_init(RM3100_Driver* rm3100_driver, uint8_t ch, uint8_t i2c_address)
   rm3100_driver->driver.i2c_config.timeout_threshold = 1000;
 
   ret = DS_init(&(rm3100_driver->driver.super),
-                          &(rm3100_driver->driver.i2c_config),
-                          RM3100_load_driver_super_init_settings_);
+                &(rm3100_driver->driver.i2c_config),
+                rx_buffer,
+                RM3100_load_driver_super_init_settings_);
 
-  if (ret != DS_ERR_CODE_OK) return 1;
-  return 0;
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
+  return DS_INIT_OK;
 }
 
 DS_CMD_ERR_CODE RM3100_set_mode(RM3100_Driver* rm3100_driver, const uint8_t mode)

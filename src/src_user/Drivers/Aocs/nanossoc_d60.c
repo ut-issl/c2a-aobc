@@ -21,7 +21,7 @@ static DS_ERR_CODE NANOSSOC_D60_analyze_rec_data_(DS_StreamConfig* stream_config
 
 static void NANOSSOC_D60_convert_sun_angle_to_vector_(NANOSSOC_D60_Driver* nanossoc_d60_driver);
 
-int NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint8_t i2c_address)
+DS_INIT_ERR_CODE NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
 
@@ -32,10 +32,10 @@ int NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint
   nanossoc_d60_driver->driver.i2c_config.timeout_threshold = 1000; // 500だとタイムアウトするので、長めにとる
 
   ret = DS_init(&(nanossoc_d60_driver->driver.super),
-                          &(nanossoc_d60_driver->driver.i2c_config),
-                          NANOSSOC_D60_load_driver_super_init_settings_);
-
-  if (ret != DS_ERR_CODE_OK) return 1;
+                &(nanossoc_d60_driver->driver.i2c_config),
+                rx_buffer,
+                NANOSSOC_D60_load_driver_super_init_settings_);
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
   nanossoc_d60_driver->info.sun_intensity_percent = 0.0f;
   nanossoc_d60_driver->info.err_code = NANOSSOC_D60_ERROR_CODE_NOT_ENOUGH_RADIATION;
@@ -50,7 +50,7 @@ int NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint
   nanossoc_d60_driver->info.frame_transform_c2b = QUATERNION_make_unit();
   NANOSSOC_D60_convert_sun_angle_to_vector_(nanossoc_d60_driver);
 
-  return 0;
+  return DS_INIT_OK;
 }
 
 static DS_ERR_CODE NANOSSOC_D60_load_driver_super_init_settings_(DriverSuper* super)

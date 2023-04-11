@@ -91,7 +91,8 @@ static DS_CMD_ERR_CODE RW0003_send_read_(RW0003_Driver* rw0003_driver,
                                              const size_t write_data_length,
                                              const size_t read_data_length);
 
-int RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i2c_address)
+
+DS_INIT_ERR_CODE RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer)
 {
   rw0003_driver->info.speed_rad_s = 0.0f;
   rw0003_driver->info.torque_Nm   = 0.0f;
@@ -111,12 +112,11 @@ int RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i2c_address)
 
   DS_ERR_CODE ret;
   ret = DS_init(&(rw0003_driver->driver.super),
-                          &(rw0003_driver->driver.i2c_config),
-                          RW0003_load_driver_super_init_settings_);
-
-  if (ret != DS_ERR_CODE_OK) return 1;
-
-  return 0;
+                &(rw0003_driver->driver.i2c_config),
+                rx_buffer,
+                RW0003_load_driver_super_init_settings_);
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
+  return DS_INIT_OK;
 }
 
 DS_CMD_ERR_CODE RW0003_start_app(RW0003_Driver* rw0003_driver)

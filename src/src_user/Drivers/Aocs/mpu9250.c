@@ -5,7 +5,6 @@
 */
 
 #include "./mpu9250.h"
-#include <src_core/Library/endian_memcpy.h>
 #include <string.h>
 #include "../../Library/physical_constants.h"
 #include "../../Library/vector3.h"
@@ -63,7 +62,12 @@ static void MPU9250_convert_bytes_to_info_mag_(const uint8_t mag_bytes[MPU9250_M
 static uint16_t MPU9250_convert_uint8_to_uint16_(const uint8_t value_high, const uint8_t value_low);
 static float MPU9250_convert_uint16_to_float_(const uint16_t value);
 
-int MPU9250_init(MPU9250_Driver* mpu9250_driver, uint8_t ch, uint8_t i2c_address_mpu9250, uint8_t i2c_address_ak8963)
+DS_INIT_ERR_CODE MPU9250_init(MPU9250_Driver* mpu9250_driver,
+                         uint8_t ch,
+                         uint8_t i2c_address_mpu9250,
+                         uint8_t i2c_address_ak8963,
+                         DS_StreamRecBuffer* rx_buffer_mpu9250,
+                         DS_StreamRecBuffer* rx_buffer_ak8963)
 {
   DS_ERR_CODE ret;
   uint8_t axis;
@@ -76,10 +80,11 @@ int MPU9250_init(MPU9250_Driver* mpu9250_driver, uint8_t ch, uint8_t i2c_address
   mpu9250_driver->driver_mpu9250.i2c_config.timeout_threshold = 1000;
 
   ret = DS_init(&(mpu9250_driver->driver_mpu9250.super),
-                          &(mpu9250_driver->driver_mpu9250.i2c_config),
-                          MPU9250_gyro_load_driver_super_init_settings_);
+                &(mpu9250_driver->driver_mpu9250.i2c_config),
+                rx_buffer_mpu9250,
+                MPU9250_gyro_load_driver_super_init_settings_);
 
-  if (ret != DS_ERR_CODE_OK) return 1;
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
   // MPU9250内の磁気センサのI2C初期化
   // 磁気センサの利用にはMPU9250の初期化が必要なのでここで初期化を行う
@@ -90,10 +95,11 @@ int MPU9250_init(MPU9250_Driver* mpu9250_driver, uint8_t ch, uint8_t i2c_address
   mpu9250_driver->driver_ak8963.i2c_config.timeout_threshold = 500;
 
   ret = DS_init(&(mpu9250_driver->driver_ak8963.super),
-                          &(mpu9250_driver->driver_ak8963.i2c_config),
-                          MPU9250_mag_load_driver_super_init_settings_);
+                &(mpu9250_driver->driver_ak8963.i2c_config),
+                rx_buffer_ak8963,
+                MPU9250_mag_load_driver_super_init_settings_);
 
-  if (ret != DS_ERR_CODE_OK) return 1;
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
   for (axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
@@ -134,7 +140,7 @@ int MPU9250_init(MPU9250_Driver* mpu9250_driver, uint8_t ch, uint8_t i2c_address
   MPU9250_ang_vel_divider_ = 131.0f;
   MPU9250_accel_divider_ = 16384.0f;
 
-  return 0;
+  return DS_INIT_OK;
 }
 
 static DS_ERR_CODE MPU9250_gyro_load_driver_super_init_settings_(DriverSuper* super)

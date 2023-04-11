@@ -33,7 +33,7 @@ static uint16_t INA260_set_mode_with_bit_shift_(const uint16_t mode,
                                                 const uint16_t mask,
                                                 const uint8_t  shift_value);
 
-int INA260_init(INA260_Driver* ina260_driver, uint8_t ch, uint8_t i2c_address)
+DS_INIT_ERR_CODE INA260_init(INA260_Driver* ina260_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer)
 {
   ina260_driver->info.current_mA = 0.0f;
   ina260_driver->info.voltage_V = 0.0f;
@@ -53,11 +53,11 @@ int INA260_init(INA260_Driver* ina260_driver, uint8_t ch, uint8_t i2c_address)
   ina260_driver->driver.i2c_config.timeout_threshold = 500;
 
   ret = DS_init(&(ina260_driver->driver.super),
-                          &(ina260_driver->driver.i2c_config),
-                          INA260_load_driver_super_init_settings_);
-
-  if (ret != DS_ERR_CODE_OK) return 1;
-  return 0;
+                &(ina260_driver->driver.i2c_config),
+                rx_buffer,
+                INA260_load_driver_super_init_settings_);
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
+  return DS_INIT_OK;
 }
 
 DS_CMD_ERR_CODE INA260_set_mode(INA260_Driver* ina260_driver,
@@ -135,7 +135,7 @@ static DS_CMD_ERR_CODE INA260_set_parameter_(INA260_Driver* ina260_driver, uint8
   stream_config = &(ina260_driver->driver.super.stream_config[INA260_STREAM_TLM_CMD]);
 
   cmd[0] = cmd_id;
-  endian_memcpy(cmd + 1, &parameter, sizeof(parameter));
+  ENDIAN_memcpy(cmd + 1, &parameter, sizeof(parameter));
   DSSC_set_tx_frame(stream_config, cmd);
   DSSC_set_tx_frame_size(stream_config, cmd_size);
 
@@ -214,12 +214,12 @@ static DS_ERR_CODE INA260_analyze_rec_data_(DS_StreamConfig* stream_config, void
   // analyze
   if (INA260_tlm_id_ == INA260_kCmdIdReadCurrent_)
   {
-    endian_memcpy(&ina260_driver->info.current_raw, ina260_rx_data, sizeof(ina260_driver->info.current_raw));
+    ENDIAN_memcpy(&ina260_driver->info.current_raw, ina260_rx_data, sizeof(ina260_driver->info.current_raw));
     ina260_driver->info.current_mA = INA260_convert_current_mA_(ina260_driver->info.current_raw);
   }
   else if (INA260_tlm_id_ == INA260_kCmdIdReadVoltage_)
   {
-    endian_memcpy(&ina260_driver->info.voltage_raw, ina260_rx_data, sizeof(ina260_driver->info.voltage_raw));
+    ENDIAN_memcpy(&ina260_driver->info.voltage_raw, ina260_rx_data, sizeof(ina260_driver->info.voltage_raw));
     ina260_driver->info.voltage_V = INA260_convert_voltage_V_(ina260_driver->info.voltage_raw);
   }
   else

@@ -154,18 +154,22 @@ typedef struct
  * @brief  OEM7600初期化
  *
  *         OEM7600_Driver構造体のポインタを渡すことでポートを初期化し，OEM7600_Driverの各メンバも初期化する
- * @param  *oem7600     : 初期化するOEM7600_Driver構造体へのポインタ
+ * @param  oem7600     : 初期化するOEM7600_Driver構造体へのポインタ
  * @param  ch_uart      : OEM7600が接続されているUARTポート番号
  * @param  ch_gpio_pps  : OEM7600が接続されているPPS信号受信用GPIOポート番号
  * @param  ch_gpio_reset: OEM7600が接続されているReset信号送信用GPIOポート番号
- * @return 0            : 正常終了
- * @return 0以外        : 異常終了
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
  */
-int OEM7600_init(OEM7600_Driver* oem7600_driver, uint8_t ch_uart, uint8_t ch_gpio_pps, uint8_t ch_gpio_reset);
+DS_INIT_ERR_CODE OEM7600_init(OEM7600_Driver* oem7600_driver,
+                              uint8_t ch_uart,
+                              uint8_t ch_gpio_pps,
+                              uint8_t ch_gpio_reset,
+                              DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  OEM7600からのテレメデータ受信
- * @param  *oem7600 : OEM7600_Driver構造体へのポインタ
+ * @param  oem7600 : OEM7600_Driver構造体へのポインタ
  * @retval DS_REC_ERR_CODEに準拠
  */
 DS_REC_ERR_CODE OEM7600_rec(OEM7600_Driver* oem7600_driver);
@@ -173,7 +177,7 @@ DS_REC_ERR_CODE OEM7600_rec(OEM7600_Driver* oem7600_driver);
 
 /**
  * @brief  OEM7600付属アンテナの電源操作コマンドパケット送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @param  onoff:    on(1)/off(0)の指定
  * @return DS_CMD_ERR_CODE
  */
@@ -181,7 +185,7 @@ DS_CMD_ERR_CODE OEM7600_onoff_antenna_power(OEM7600_Driver* oem7600_driver, cons
 
 /**
  * @brief  OEM7600のsoftwareリセットコマンドパケット送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @param  time_for_reset_sec:コマンド送信からリセットまでの間の猶予時間 [sec]
  * @return DS_CMD_ERR_CODE
  */
@@ -189,7 +193,7 @@ DS_CMD_ERR_CODE OEM7600_software_reset(OEM7600_Driver* oem7600_driver, const uin
 
 /**
  * @brief  OEM7600のsoftwareリセットコマンドパケット送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @param  high_low: リセット用GPIOのHigh/Lowの指定
  * @return DS_CMD_ERR_CODE
  */
@@ -197,7 +201,7 @@ DS_CMD_ERR_CODE OEM7600_set_reset_gpio_high_low(OEM7600_Driver* oem7600_driver, 
 
 /**
  * @brief  OEM7600の出力TLM設定コマンドパケット送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @param  *tlm_name:TLMの名称 (ASCII)
  * @param  name_length: TLMの名称の文字数
  * @param  out_interval_sec:出力頻度 (seconds)
@@ -207,23 +211,23 @@ DS_CMD_ERR_CODE OEM7600_set_tlm_contents(OEM7600_Driver* oem7600_driver, const u
 
 /**
  * @brief  OEM7600の出力TLM設定保存コマンドパケット送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODE
  */
 DS_CMD_ERR_CODE OEM7600_save_tlm_setting(OEM7600_Driver* oem7600_driver);
 
 /**
  * @brief  OEM7600のUART伝送速度設定コマンドパケット送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @param  uint32_t: baudrate
  * @return DS_CMD_ERR_CODE
  */
-DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate);
+DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate, DS_StreamRecBuffer* rx_buffer);
 
 
 /**
  * @brief  OEM7600のレンジテレメ取得開始コマンド送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODE
  */
 DS_CMD_ERR_CODE OEM7600_start_rec_range_tlm(OEM7600_Driver* oem7600_driver);
@@ -231,7 +235,7 @@ DS_CMD_ERR_CODE OEM7600_start_rec_range_tlm(OEM7600_Driver* oem7600_driver);
 
 /**
  * @brief  OEM7600のレンジテレメ取得終了コマンド送信処理
- * @param  *oem7600: OEM7600_Driver構造体へのポインタ
+ * @param  oem7600: OEM7600_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODE
  */
 DS_CMD_ERR_CODE OEM7600_end_rec_range_tlm(OEM7600_Driver* oem7600_driver);

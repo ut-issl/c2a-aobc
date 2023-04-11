@@ -169,22 +169,27 @@ typedef struct
  * @brief  STIM210初期化
  *
  *         STIM210_Driver構造体のポインタを渡すことでポートを初期化し，STIM210_Driverの各メンバも初期化する
- * @param  *stim210_driver    : 初期化するSTIM210_Driver構造体へのポインタ
+ * @param  stim210_driver    : 初期化するSTIM210_Driver構造体へのポインタ
  * @param  ch      : STIM210が接続されているUARTポート番号
  * @param  ch_gpio_trig  : STIM210が接続されているテレメトリ送出信号送信用GPIOポート番号
  * @param  ch_gpio_reset : STIM210が接続されているReset信号送信用GPIOポート番号
+ * @param  rx_buffer: 受信バッファ
  * @retval 0       : 正常終了
- * @retval 1       : ドライバスーパー異常終了
+ * @retval 1       : DS 異常終了
  * @retval 2       : GPIO入出力設定異常終了
  * @retval 3       : GPIO初期化異常終了
  */
-int STIM210_init(STIM210_Driver* stim210_driver, uint8_t ch, uint8_t ch_gpio_trig, uint8_t ch_gpio_reset);
+int STIM210_init(STIM210_Driver* stim210_driver,
+                 uint8_t ch,
+                 uint8_t ch_gpio_trig,
+                 uint8_t ch_gpio_reset,
+                 DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  STIM210のパラメータを初期値にリセットする。
  *
  *         電源OFF時のみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver    : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver    : STIM210_Driver構造体へのポインタ
  * @retval 0       : 正常終了
  * @retval 0以外   : 異常終了
  */
@@ -194,14 +199,14 @@ int STIM210_reset_param(STIM210_Driver* stim210_driver);
  * @brief  STIM210のデータ（テレメ）受信
  *
  *         ノーマルモードのみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @retval DS_REC_ERR_CODEに準拠
  */
 DS_REC_ERR_CODE STIM210_rec(STIM210_Driver* stim210_driver);
 
 /**
  * @brief  GPIOを用いたSTIM210のテレメ送信
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @retval 0     : 正常終了
  * @retval 0以外 : 異常終了
  * @note   GPIO LOWを250ns以上キープする。テレメ送信は86us後に始まる。
@@ -210,7 +215,7 @@ int STIM210_send_tlm_by_gpio(STIM210_Driver* stim210_driver);
 
 /**
  * @brief  GPIOを用いたSTIM210のリセット
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @retval 0     : 正常終了
  * @retval 0以外 : 異常終了
  * @note   GPIO HIGHを1us以上キープする。パラメータもリセットする。
@@ -221,7 +226,7 @@ int STIM210_reset_by_gpio(STIM210_Driver* stim210_driver);
  * @brief  STIM210の運用モードをサービスモードにする
  *
  *         ノーマルモードと初期モードで実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE STIM210_set_service_mode(STIM210_Driver* stim210_driver);
@@ -230,7 +235,7 @@ DS_CMD_ERR_CODE STIM210_set_service_mode(STIM210_Driver* stim210_driver);
  * @brief  STIM210のノーマルモードでの出力フォーマットを変更する
  *
  *         サービスモードのみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @param  normal_mode_format : 出力フォーマット
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -238,7 +243,7 @@ DS_CMD_ERR_CODE STIM210_set_normal_mode_format(STIM210_Driver* stim210_driver, S
 
 /**
  * @brief  STIM210のノーマルモードのサンプルレートを変更する
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @param  sample_rate : サンプルレート
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -248,7 +253,7 @@ DS_CMD_ERR_CODE STIM210_set_sample_rate(STIM210_Driver* stim210_driver, STIM210_
  * @brief  STIM210のノーマルモードでのジャイロ出力を変更する
  *
  *         サービスモードのみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @param  gyro_output_mode : ジャイロ出力
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -258,7 +263,7 @@ DS_CMD_ERR_CODE STIM210_set_gyro_output(STIM210_Driver* stim210_driver, STIM210_
  * @brief  STIM210のノーマルモードでの終端子を変更する
  *
  *         サービスモードのみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @param  gyro_termination_mode : 終端子
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -268,7 +273,7 @@ DS_CMD_ERR_CODE STIM210_set_termination_mode(STIM210_Driver* stim210_driver, STI
  * @brief  STIM210のLPFのカットオフ周波数を変更する
  *
  *         サービスモードのみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @param  low_pass_filter_frequency : LPFのカットオフ周波数
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -278,14 +283,14 @@ DS_CMD_ERR_CODE STIM210_set_low_pass_filter(STIM210_Driver* stim210_driver, STIM
  * @brief  STIM210をノーマルモードに移行する
  *
  *         サービスモードのみ実行可能。それ以外の時は異常終了する。
- * @param  *stim210_driver : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver : STIM210_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE STIM210_set_normal_mode(STIM210_Driver* stim210_driver);
 
 /**
  * @brief  座標変換行列設定関数
- * @param  *stim210_driver  : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver  : STIM210_Driver構造体へのポインタ
  * @param  q_c2b            : コンポ座標からボディ座標への座標変換Quaternion
  * @return C2A_MATH_ERRORに準じる
  */
@@ -293,7 +298,7 @@ C2A_MATH_ERROR STIM210_set_frame_transform_c2b(STIM210_Driver* stim210_driver, c
 
 /**
  * @brief  角速度バイアス補正値設定関数
- * @param  *stim210_driver  : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver  : STIM210_Driver構造体へのポインタ
  * @param  ang_vel_bias_compo_rad_s : コンポ座標での角速度バイアス補正値(計測値からこの値を差し引く)
  * @return C2A_MATH_ERROR_RANGE_OVER : 補正値が大きすぎる場合
  */
@@ -301,7 +306,7 @@ C2A_MATH_ERROR STIM210_set_ang_vel_bias_compo_rad_s(STIM210_Driver* stim210_driv
 
 /**
  * @brief  角速度スケールファクタ行列設定関数
- * @param  *stim210_driver  : STIM210_Driver構造体へのポインタ
+ * @param  stim210_driver  : STIM210_Driver構造体へのポインタ
  * @param  ang_vel_scale_factor_compo : コンポ座標でのスケールファクタ行列
  * @return C2A_MATH_ERRORに準じる
  */
