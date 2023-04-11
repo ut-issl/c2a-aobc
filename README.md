@@ -129,3 +129,22 @@ $ git submodule update
   - [C2A on PIC32作業メモ](https://docs.google.com/document/d/17qht6L0Rpsqb0js0d_csOZxUoAG2PunjISfkOXmWaYQ/edit#)
 - Gitlab版のC2A COREからGithub版のC2A COREへの移行方法
   - [関連MRのNoteを参照](https://gitlab.com/ut_issl/c2a/c2a_issl6u_aobc/-/merge_requests/175)
+
+## Brief history of development
+- 21st Jan. 2021: Development start in a private repository at GitLab.
+- 03rd Mar. 2023: Move to a private repository at GotHub to prepare publish as OSS
+
+## Contributors in the GitLab repository
+- ISSL, UT
+  - Satoshi Ikari: 963 commits
+  - Ryo Suzumoto: 367 commits
+  - Takayuki Hosonuma: 352 commits
+  - Toshihiro Suzuki: 341 commits
+  - Hirotaka Sekine: 242 commits
+  - Toshio Imamura: 149 commits
+  - Masahiro Fujiwara: 129 commits
+  - Yutaro Ito: 55 commits
+  - Riki Nakamura: 14 commits
+  - Yoshinari Gyu: 13 commits
+- ArkEdge Space Inc.
+  - sksat: 8 commits
