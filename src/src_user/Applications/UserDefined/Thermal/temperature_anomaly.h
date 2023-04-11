@@ -54,6 +54,6 @@ extern const TemperatureAnomaly* const temperature_anomaly;
 
 AppInfo APP_TEMPERATURE_ANOMALY_create_app(void);
 
-CCP_EXEC_STS Cmd_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD(const CommonCmdPacket* packet);
 
 #endif

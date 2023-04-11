@@ -107,28 +107,28 @@ static void APP_TEMPERATURE_ANOMALY_update_temperature_(void)
 }
 
 
-CCP_EXEC_STS Cmd_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD(const CommonCmdPacket* packet)
 {
   uint8_t arg_position = 0;
 
   APP_TEMPERATURE_ANOMALY_IDX idx = (APP_TEMPERATURE_ANOMALY_IDX)CCP_get_param_from_packet(packet, arg_position, uint8_t);
   arg_position++;
-  if (idx >= APP_TEMPERATURE_ANOMALY_IDX_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (idx >= APP_TEMPERATURE_ANOMALY_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   APP_TEMPERATURE_ANOMALY_TemperatureThreshold threshold;
   threshold.upper_degC = CCP_get_param_from_packet(packet, arg_position, float);
   arg_position++;
-  if (threshold.lower_degC >= APP_TEMPERATURE_ANOMALY_kMaxTemperatureDegC_) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (threshold.lower_degC >= APP_TEMPERATURE_ANOMALY_kMaxTemperatureDegC_) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   threshold.lower_degC = CCP_get_param_from_packet(packet, arg_position, float);
   arg_position++;
-  if (threshold.lower_degC <= PHYSICAL_CONST_ABSOLUTE_ZERO_degC) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (threshold.lower_degC <= PHYSICAL_CONST_ABSOLUTE_ZERO_degC) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
-  if (threshold.upper_degC <= threshold.lower_degC) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (threshold.upper_degC <= threshold.lower_degC) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   temperature_anomaly_.threshold_list[idx] = threshold;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
