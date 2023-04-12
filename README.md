@@ -1,22 +1,21 @@
-# C2A_ISSL6U_AOBC
-- ISSL6UプロジェクトAOBC用搭載S/Wのレポジトリです。
+# C2AAOBC
+- 姿勢制御を行うOBCであるAOBC用搭載S/Wのレポジトリです。
 - 基本的には次のような構成で使うことを想定しています。
   - 実機
     - vMicro + Visual Studio 2019
   - SILS
-    - S2E_CORE: [`develop` branch](https://github.com/ut-issl/s2e-core)
-    - S2E_6U_AOCS: [`develop` branch](https://gitlab.com/ut_issl/s2e/s2e_6u_aocs)
+    - S2E-AOBC: [`develop` branch](https://github.com/ut-issl/s2e-aobc)
     - WINGS: 最新の [`develop` branch](https://gitlab.com/ut_issl/wings/wings)
 
 # clone方法
-- `C2A_CORE_OSS` がgit submoduleとして含まれているので，以下で一発．
+- `C2A-CORE` がgit submoduleとして含まれているので，以下で一発．
 ```
-$ git clone --recursive https://gitlab.com/ut_issl/c2a/c2a_issl6u_aobc.git
+$ git clone --recursive git@github.com:ut-issl/c2a-aobc.git
 ```
 -  もしくは，以下でもOK．
 ```
-$ git clone https://gitlab.com/ut_issl/c2a/c2a_issl6u_aobc.git
-$ cd c2a_user_oss/
+$ git clone git@github.com:ut-issl/c2a-aobc.git
+$ cd c2a-aobc/
 $ git submodule init
 $ git submodule update
 ```
@@ -63,8 +62,8 @@ $ git submodule update
    - settings.json は AOBC 用に以下のように編集すること
 ```
 {
-  "c2a_root_dir" : "各自の環境でのc2a_issl6u_aobc/src/への相対パス",
-  "db_path" : "各自の環境でのc2a_issl6u_aobc/src/src_user/Settings/TlmCmd/DataBase/への相対パス",
+  "c2a_root_dir" : "各自の環境でのc2a-aobc/src/への相対パス",
+  "db_path" : "各自の環境でのc2a-aobc/src/src_user/Settings/TlmCmd/DataBase/への相対パス",
   "db_prefix" : "ISSL6U_AOBC",
   "tlm_id_range" : ["0x00", "0x100"],
   "input_file_encoding" : "utf-8",
@@ -77,9 +76,10 @@ $ git submodule update
 # 開発方針
 + branch構成
 ```
-├── master      # 実機での動作保証のある最新版
+├── main        # 実機での動作保証のある最新版
 ├── develop     # ビルドが通る最新版
 └── feature/*   # 開発途中のソフトウェア群
+└── hotfix/*    # mainに対してパッチを当てるソフトウェア群
 ```
 + 機能開発の流れ
 	1. developブランチからfeatureブランチを作成する．
@@ -114,21 +114,6 @@ $ git submodule update
 - S2Eと組み合わせた動作検証時のビルドエラーについては，まずは下記の操作を試してみると良い
   - `git submodule update`を実施する
   - S2Eのcmakeキャッシュを削除する
-
-# リンク
-- AOCS向けにソフトウェア実装方針を共有するための資料
-  - [AOBCソフトウェア実装の流れ](https://docs.google.com/document/d/14OuY41fJfsOdKE1TKaHTMnW9VLONgaY5A5TD-xbHqgo/edit)
-- 開発環境構築について
-  - [Windowsでの開発環境構築](https://docs.google.com/document/d/1D-qFvEHJL7lSSLtrswytTh9BjlI4bcp1ibxdYQCqYZw/edit)
-- WINGS関連
-  - [WINGS](https://gitlab.com/ut_issl/wings/wings)
-  - [WINGS_TMTC_IF](https://gitlab.com/ut_issl/wings/wings_tmtc_if)
-  - [WINGSの手順書など](https://drive.google.com/drive/folders/1SCELfyxr5oZQyx01R5A-9RA1Tbu2YvMI)
-- 作業メモ
-  - [C2Aパラメータ設定](https://docs.google.com/spreadsheets/d/1TC4UriiveSK-meA7cFga9Z1l7IFpGzfVQ6Lbi_XFUdk/edit#gid=0)
-  - [C2A on PIC32作業メモ](https://docs.google.com/document/d/17qht6L0Rpsqb0js0d_csOZxUoAG2PunjISfkOXmWaYQ/edit#)
-- Gitlab版のC2A COREからGithub版のC2A COREへの移行方法
-  - [関連MRのNoteを参照](https://gitlab.com/ut_issl/c2a/c2a_issl6u_aobc/-/merge_requests/175)
 
 ## Brief history of development
 - 21st Jan. 2021: Development start in a private repository at GitLab.
