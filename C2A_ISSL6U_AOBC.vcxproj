@@ -142,8 +142,7 @@
     <ClCompile Include="src\src_core\Drivers\Super\driver_super.c" />
     <ClCompile Include="src\src_core\Library\ascii_conv.c" />
     <ClCompile Include="src\src_core\Library\CRC.c" />
-    <ClCompile Include="src\src_core\Library\endian_conv.c" />
-    <ClCompile Include="src\src_core\Library\endian_memcpy.c" />
+    <ClCompile Include="src\src_core\Library\endian.c" />
     <ClCompile Include="src\src_core\Library\majority_vote_for3.c" />
     <ClCompile Include="src\src_core\Library\c2a_round.c" />
     <ClCompile Include="src\src_core\System\AnomalyLogger\anomaly_logger.c" />
