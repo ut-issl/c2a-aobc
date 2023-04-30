@@ -75,7 +75,7 @@ jobs:
 
       - name: check extlib
         shell: powershell
-        working-directory: ./ExtLibraries
+        working-directory: ./s2e-aobc/ExtLibraries
         run: |
           ls cspice
           ls cspice/cspice_msvs/lib
