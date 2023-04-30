@@ -55,7 +55,7 @@ jobs:
         id: cache-extlib
         uses: actions/cache@v3
         with:
-          key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-core/ExtLibraries/**') }}
+          key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-aobc/s2e-core/ExtLibraries/**') }}
           path: ExtLibraries
 
       - name: build extlib
