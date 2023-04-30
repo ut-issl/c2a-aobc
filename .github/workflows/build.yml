@@ -61,7 +61,7 @@ jobs:
       - name: build extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
         shell: powershell
-        working-directory: ./s2e-aocs/s2e-core/ExtLibraries
+        working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
           cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug"
           cmake --build .
@@ -69,7 +69,7 @@ jobs:
       - name: install extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
         shell: powershell
-        working-directory: ./s2e-aocs/s2e-core/ExtLibraries
+        working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
           cmake --install .
 
@@ -89,7 +89,7 @@ jobs:
 
       - name: build
         shell: cmd
-        working-directory: ./s2e-aocs/s2e-aocs-core
+        working-directory: ./s2e-aobc/s2e-aocs-core
         run: |
           cl.exe
           cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DFLIGHT_SW_DIR=../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
