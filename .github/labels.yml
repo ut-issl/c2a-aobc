@@ -6,37 +6,13 @@
   color: "0075ca"
   description: "Improvements or additions to documentation"
 
-- name: "duplicate"
-  color: "cfd8d7"
-  description: "This issue or pull request already exists"
-
-- name: "enhancement"
-  description: "New feature or request"
-  color: "a2eeef"
-
 - name: "good first issue"
   description: "Good for newcomers"
   color: "7057ff"
 
-- name: "help wanted"
-  description: "Extra attention is needed"
-  color: "008672"
-
-- name: "invalid"
-  description: "This doesn't seem right"
-  color: "e4e669"
-
 - name: "question"
   description: "Further information is requested"
   color: "d876e3"
-
-- name: "wontfix"
-  description: "This will not be worked on"
-  color: "ffffff"
-
-- name: "icebox"
-  description: "icebox or pending"
-  color: "c5def5"
 
 - name: "priority::high"
   description: "priorityg high"
@@ -49,6 +25,18 @@
 - name: "priority::medium"
   description: "priority medium"
   color: "fbca04"
+
+- name: "major update"
+  color: "B60205"
+  description: "Major update"
+
+- name: "minor update"
+  color: "EFFA85"
+  description: "Minor update"
+
+- name: "patch"
+  color: "08C036"
+  description: "Patch"
 
 - name: "tools"
   description: ""
