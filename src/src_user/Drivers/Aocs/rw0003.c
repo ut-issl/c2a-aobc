@@ -66,7 +66,7 @@ static const uint8_t RW0003_kReadAddressLimitSpeed1_ = 0x33;
 static const uint8_t RW0003_kReadAddressLimitSpeed2_ = 0x34;
 
 static const uint8_t RW0003_kMcfReadEdac_ = 0xa7;   //!< EDAC memory読み出し返答テレメのMessage Control Field
-static const uint8_t RW0003_kMcfDiagnostics_ = 0x00;//!< Diagnostics返答テレメのMessage Control Field TODO: 更新する
+static const uint8_t RW0003_kMcfDiagnostics_ = 0xa4;//!< Diagnostics返答テレメのMessage Control Field
 
 static const int      RW0003_kCrcRevFlag_ = 0;      //!< CRC関数の反転フラグ
 static const uint16_t RW0003_kCrcInitial_ = 0xffff; //!< CRC計算初期値
