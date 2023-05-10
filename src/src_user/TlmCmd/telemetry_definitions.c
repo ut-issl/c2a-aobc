@@ -56,6 +56,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_GPSR_RANGE_P2_(uint8_t* packet, uint16_t* len, u
 static TF_TLM_FUNC_ACK Tlm_AOBC_ORBIT2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_FILTERS_2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_DR_ALGORITHM_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_DEBUG_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
@@ -107,6 +108,7 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_AOBC_ORBIT2].tlm_func = Tlm_AOBC_ORBIT2_;
   tlm_table[Tlm_CODE_AOBC_FILTERS_2].tlm_func = Tlm_AOBC_FILTERS_2_;
   tlm_table[Tlm_CODE_AOBC_DR_ALGORITHM].tlm_func = Tlm_AOBC_DR_ALGORITHM_;
+  tlm_table[Tlm_CODE_AOBC_DEBUG].tlm_func = Tlm_AOBC_DEBUG_;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_OBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
@@ -3631,6 +3633,35 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_DR_ALGORITHM_(uint8_t* packet, uint16_t* len, ui
 #endif
 
   *len = 130;
+  return TF_TLM_FUNC_ACK_SUCCESS;
+}
+
+static TF_TLM_FUNC_ACK Tlm_AOBC_DEBUG_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+{
+  if (98 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+
+#ifndef BUILD_SETTINGS_FAST_BUILD
+  TF_copy_float(&packet[26], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
+  TF_copy_float(&packet[30], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
+  TF_copy_float(&packet[34], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_float(&packet[38], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
+  TF_copy_float(&packet[42], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
+  TF_copy_float(&packet[46], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
+  TF_copy_float(&packet[50], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.vdd_V));
+  TF_copy_float(&packet[54], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.vdd_V));
+  TF_copy_float(&packet[58], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.vdd_V));
+  TF_copy_float(&packet[62], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.seu_count));
+  TF_copy_float(&packet[66], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.seu_count));
+  TF_copy_float(&packet[70], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.seu_count));
+  TF_copy_float(&packet[74], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.fault_state));
+  TF_copy_float(&packet[78], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.fault_state));
+  TF_copy_float(&packet[82], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.fault_state));
+  TF_copy_i32(&packet[86], (int32_t)(rw0003_driver[RW0003_IDX_ON_X]->info.diagnostic_reset_reason));
+  TF_copy_i32(&packet[90], (int32_t)(rw0003_driver[RW0003_IDX_ON_Y]->info.diagnostic_reset_reason));
+  TF_copy_i32(&packet[94], (int32_t)(rw0003_driver[RW0003_IDX_ON_Z]->info.diagnostic_reset_reason));
+#endif
+
+  *len = 98;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
