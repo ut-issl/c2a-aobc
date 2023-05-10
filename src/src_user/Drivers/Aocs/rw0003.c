@@ -9,6 +9,7 @@
 #endif
 
 #include "./rw0003.h"
+#include <src_core/Library/print.h>
 #include <string.h>
 
 #include <src_core/Library/crc.h>
@@ -424,12 +425,12 @@ static DS_CMD_ERR_CODE RW0003_send_read_(RW0003_Driver* rw0003_driver,
   }
 
 #ifdef DRIVER_RW0003_DEBUG_SHOW_REC_DATA
-  if (rw0003_driver->driver.super.config.rec_status_.ret_from_if_rx > 0)
+  if (rw0003_driver->driver.super.config.info.rec_status_.ret_from_if_rx > 0)
   {
-    Printf("rw rx_frame_: %d Bytes \n", rw0003_driver->driver.super.config.rec_status_.ret_from_if_rx);
-    for (int i = 0; i < rw0003_driver->driver.super.config.rec_status_.ret_from_if_rx; i++)
+    Printf("rw rx_frame_: %d Bytes \n", rw0003_driver->driver.super.config.info.rec_status_.ret_from_if_rx);
+    for (int i = 0; i < rw0003_driver->driver.super.config.info.rec_status_.ret_from_if_rx; i++)
     {
-      Printf("%02x ", rw0003_driver->driver.super.stream_config[0].rx_frame_[i]);
+      Printf("%02x ", rw0003_driver->driver.super.stream_config[0].settings.rx_buffer_[i]);
       if (i % 4 == 3) Printf("   ");
     }
     Printf("\n");
