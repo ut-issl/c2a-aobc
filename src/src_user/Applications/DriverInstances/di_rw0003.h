@@ -55,5 +55,9 @@ CCP_CmdRet Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* pa
 CCP_CmdRet Cmd_DI_RW0003_SET_IDLE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_RW0003_DRIVE_TORQUE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_READ_VDD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_READ_SEU_COUNT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_READ_FAULT_STATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_DIAGNOSTIC(const CommonCmdPacket* packet);
 
 #endif

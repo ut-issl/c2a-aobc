@@ -44,6 +44,7 @@ static const uint8_t RW0003_kSlipTfesc_ = 0xdd;  //!< SLIP TFESC
 static const uint8_t RW0003_kSrcAddress_ = 0x11;  //!< I2C source address. 実際は0xc0以外の適当な値でよくこの値は仕様書で例として与えられているもの
 
 static const uint8_t RW0003_kCmdIdInit_      = 0x01;
+static const uint8_t RW0003_kCmdIdDiagnostic_= 0x04;
 static const uint8_t RW0003_kCmdIdReadFile_  = 0x07;
 static const uint8_t RW0003_kCmdIdWriteFile_ = 0x08;
 static const uint8_t RW0003_kCmdIdMax_       = 0x1f;
@@ -52,12 +53,18 @@ static const uint8_t RW0003_kWriteAddressIdle_   = 0x00;
 static const uint8_t RW0003_kWriteAddressSpeed_  = 0x03;
 static const uint8_t RW0003_kWriteAddressTorque_ = 0x12;
 
+static const uint8_t RW0003_kDiagnosticsChannel_ = 0x00;
+
+static const uint8_t RW0003_kReadAddressVDD_         = 0x02;
 static const uint8_t RW0003_kReadAddressTemperature_ = 0x03;
 static const uint8_t RW0003_kReadAddressSpeed_       = 0x15;
+static const uint8_t RW0003_kReadAddressSEUCount_    = 0x18;
+static const uint8_t RW0003_kReadAddressFaultState_  = 0x19;
 static const uint8_t RW0003_kReadAddressLimitSpeed1_ = 0x33;
 static const uint8_t RW0003_kReadAddressLimitSpeed2_ = 0x34;
 
 static const uint8_t RW0003_kMcfReadEdac_ = 0xa7;   //!< EDAC memory読み出し返答テレメのMessage Control Field
+static const uint8_t RW0003_kMcfDiagnostics_ = 0x00;//!< Diagnostics返答テレメのMessage Control Field TODO: 更新する
 
 static const int      RW0003_kCrcRevFlag_ = 0;      //!< CRC関数の反転フラグ
 static const uint16_t RW0003_kCrcInitial_ = 0xffff; //!< CRC計算初期値
@@ -97,6 +104,10 @@ DS_INIT_ERR_CODE RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i
   rw0003_driver->info.speed_rad_s = 0.0f;
   rw0003_driver->info.torque_Nm   = 0.0f;
   rw0003_driver->info.temperature_degC = 0.0f;
+  rw0003_driver->info.vdd_V = 0.0f;
+  rw0003_driver->info.seu_count = 0.0f;
+  rw0003_driver->info.fault_state = 0.0f;
+  rw0003_driver->info.diagnostic_reset_reason = 0;
   rw0003_driver->info.speed_limit1_rad_s = 900.0f;  // デフォルト値を初期値とする TODO_L 設定・読み出し関数を作る
   rw0003_driver->info.speed_limit2_rad_s = 1000.0f; // デフォルト値を初期値とする TODO_L 設定・読み出し関数を作る
   rw0003_driver->info.rotation_direction_b[0] = 1.0f;
@@ -199,6 +210,51 @@ C2A_MATH_ERROR RW0003_set_rotation_direction_b(RW0003_Driver* rm3100_driver,
   VECTOR3_copy(rm3100_driver->info.rotation_direction_b,
               rotation_direction_b);
   return C2A_MATH_ERROR_OK;
+}
+
+DS_CMD_ERR_CODE RW0003_read_vdd(RW0003_Driver* rw0003_driver)
+{
+  return RW0003_read_edac_(rw0003_driver, RW0003_kReadAddressVDD_);
+}
+
+DS_CMD_ERR_CODE RW0003_read_seu_count(RW0003_Driver* rw0003_driver)
+{
+  return RW0003_read_edac_(rw0003_driver, RW0003_kReadAddressSEUCount_);
+}
+
+DS_CMD_ERR_CODE RW0003_read_fault_state(RW0003_Driver* rw0003_driver)
+{
+  return RW0003_read_edac_(rw0003_driver, RW0003_kReadAddressFaultState_);
+}
+
+DS_CMD_ERR_CODE RW0003_diagnostic(RW0003_Driver* rw0003_driver)
+{
+  DS_CMD_ERR_CODE ret;
+
+  // Command Definition
+  uint8_t mcf;
+  ret = RW0003_convert_to_mcf_(RW0003_POLL_WITH_REPLY, RW0003_kCmdIdDiagnostic_, &mcf);
+  if (ret != DS_CMD_OK) return ret;
+
+  // NSP message conversion
+  const  size_t kNspDataLength = RW0003_NSP_HEADER_SIZE + sizeof(uint8_t) + RW0003_NSP_CRC_SIZE;
+  uint8_t nsp_data[kNspDataLength];
+  RW0003_convert_to_nsp_with_data_(rw0003_driver->driver.i2c_config.device_address,
+    mcf, &RW0003_kDiagnosticsChannel_, sizeof(RW0003_kDiagnosticsChannel_), nsp_data);
+
+  // SLIP: diagnosticはCRCのみSLIPする可能性がある
+  const size_t kSlipDataMaxLength = kNspDataLength + RW0003_NSP_CRC_SIZE;
+  uint8_t slip_data[kSlipDataMaxLength];
+  size_t slip_data_length = kSlipDataMaxLength;
+  RW0003_encode_slip_(nsp_data, kNspDataLength, slip_data, &slip_data_length);
+  slip_data[slip_data_length] = RW0003_kSlipFend_;
+  slip_data_length++;
+
+  const size_t kReadDataLength = RW0003_RX_MAX_FRAME_SIZE;
+  ret = RW0003_send_read_(rw0003_driver, slip_data, slip_data_length, kReadDataLength);
+  if (ret != DS_CMD_OK) return ret;
+
+  return DS_CMD_OK;
 }
 
 
@@ -443,9 +499,30 @@ static DS_ERR_CODE RW0003_analyze_rec_data_(DS_StreamConfig* stream_config, void
     {
       memcpy(&rw0003_driver->info.speed_rad_s, decoded_rx_data + pos, sizeof(float));
     }
+    else if (read_address == RW0003_kReadAddressVDD_)
+    {
+      memcpy(&rw0003_driver->info.vdd_V, decoded_rx_data + pos, sizeof(float));
+    }
+    else if (read_address == RW0003_kReadAddressSEUCount_)
+    {
+      memcpy(&rw0003_driver->info.seu_count, decoded_rx_data + pos, sizeof(float));
+    }
+    else if (read_address == RW0003_kReadAddressFaultState_)
+    {
+      memcpy(&rw0003_driver->info.fault_state, decoded_rx_data + pos, sizeof(float));
+    }
     else
     {
       return DS_ERR_CODE_ERR;
+    }
+  }
+  else if (RW0003_rx_mcf == RW0003_kMcfDiagnostics_)
+  {
+    uint8_t read_address = decoded_rx_data[pos];
+    pos++;
+    if (read_address == RW0003_kDiagnosticsChannel_)
+    {
+      memcpy(&rw0003_driver->info.diagnostic_reset_reason, decoded_rx_data + pos, sizeof(int32_t));
     }
   }
   return DS_ERR_CODE_OK;
