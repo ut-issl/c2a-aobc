@@ -430,7 +430,7 @@ static DS_CMD_ERR_CODE RW0003_send_read_(RW0003_Driver* rw0003_driver,
     Printf("rw rx_frame_: %d Bytes \n", rw0003_driver->driver.super.config.info.rec_status_.ret_from_if_rx);
     for (int i = 0; i < rw0003_driver->driver.super.config.info.rec_status_.ret_from_if_rx; i++)
     {
-      Printf("%02x ", rw0003_driver->driver.super.stream_config[0].settings.rx_buffer_[i]);
+      Printf("%02x ", rw0003_driver->driver.super.stream_config[0].settings.rx_buffer_->buffer[i]);
       if (i % 4 == 3) Printf("   ");
     }
     Printf("\n");
