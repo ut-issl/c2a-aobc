@@ -330,7 +330,7 @@ CCP_CmdRet Cmd_DI_RW0003_READ_FAULT_STATE(const CommonCmdPacket* packet)
 
   if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  ret = RW0003_read_fautl_state(&rw0003_driver_[idx]);
+  ret = RW0003_read_fault_state(&rw0003_driver_[idx]);
 
   return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }

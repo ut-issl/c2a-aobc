@@ -37,7 +37,7 @@ typedef struct
   float vdd_V;              //!< output of +3.3 V DC/DC converter [V]
   float seu_count;          //!< number of errors
   float fault_state;        //!< 1: wheel is in an fault, 0: otherwise
-  init32_t diagnostic_reset_reason;      //!< reset reason
+  int32_t diagnostic_reset_reason;      //!< reset reason
   float speed_limit1_rad_s; //!< clipされる回転数  [rad/s] (limit1 < limit2)
   float speed_limit2_rad_s; //!< 異常停止する回転数 [rad/s] (limit1 < limit2)
   float rotation_direction_b[PHYSICAL_CONST_THREE_DIM]; //!< 機体座標系での回転方向単位ベクトル(右手系)

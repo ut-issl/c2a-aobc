@@ -15,6 +15,8 @@
 #include "../../Library/vector3.h"
 #include "../../Library/c2a_math.h"
 
+// #define DRIVER_RW0003_DEBUG_SHOW_REC_DATA
+
 /**
  * @enum   RW0003_POLL
  * @brief  POLL bitの設定
@@ -420,6 +422,19 @@ static DS_CMD_ERR_CODE RW0003_send_read_(RW0003_Driver* rw0003_driver,
   {
     return DS_CMD_DRIVER_SUPER_ERR;
   }
+
+#ifdef DRIVER_RW0003_DEBUG_SHOW_REC_DATA
+  if (rw0003_driver->driver.super.config.rec_status_.ret_from_if_rx > 0)
+  {
+    Printf("rw rx_frame_: %d Bytes \n", rw0003_driver->driver.super.config.rec_status_.ret_from_if_rx);
+    for (int i = 0; i < rw0003_driver->driver.super.config.rec_status_.ret_from_if_rx; i++)
+    {
+      Printf("%02x ", rw0003_driver->driver.super.stream_config[0].rx_frame_[i]);
+      if (i % 4 == 3) Printf("   ");
+    }
+    Printf("\n");
+  }
+#endif
 
   ret = DS_analyze_rec_data(&(rw0003_driver->driver.super), RW0003_STREAM_TLM_CMD, rw0003_driver);
   if (ret == DS_ERR_CODE_OK)
