@@ -12,7 +12,7 @@ rem Do nothing for now.
 echo done.
 echo.
 echo [SET UP DEVELOP ENVIRONMENT FOR SAMPLE AOBC USER]
-call :make_link ".\Examples\src\src_common" ".\"
+call :make_link ".\Examples\src\src_aobc" ".\"
 echo done.
 echo.
 echo The process has been completed.

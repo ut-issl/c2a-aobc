@@ -11,7 +11,7 @@ echo "RUN_AFTER_CLONE.command"
 echo "setting for local repository."
 
 echo "[SET UP DEVELOP ENVIRONMENT FOR SAMPLE AOBC USER]"
-make_link "./Examples/src/src_common" "./"
+make_link "./Examples/src/src_aobc" "./"
 echo done.
 echo.
 
