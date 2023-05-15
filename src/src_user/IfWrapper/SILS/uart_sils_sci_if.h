@@ -2,27 +2,19 @@
  * @file
  * @brief   uart_sils_sci_if
  * @details SILSでDriverのテストをするように作った
-            ccsds_sils_sci_if.c/hのほぼコピー
  */
 #ifndef UART_SILS_SCI_IF_H_
 #define UART_SILS_SCI_IF_H_
 
-#include <Windows.h>
+#include "sils_sci_if.h"
 
-class SciComPortUart
-{
-public:
-  SciComPortUart(void);
-  ~SciComPortUart(void);
 
-  int send(unsigned char* buffer, size_t length, size_t offset);
-  int receive(unsigned char* buffer, size_t length, size_t offset);
-
-private:
-  HANDLE myHComPort_;
-  DCB config_;
-  bool init_success_;
-};
+// 最初だけ初期化して、プログラム終了時にポートを閉じるようにしたい
+#ifdef WIN32
+static SCIComPort SILS_SCI_IF_sci_com_uart_(11);
+#else
+static SCIComPort SILS_SCI_IF_sci_com_uart_(1);
+#endif
 
 int SILS_SCI_UART_IF_init();
 int SILS_SCI_UART_IF_tx(unsigned char* data_v, int count);

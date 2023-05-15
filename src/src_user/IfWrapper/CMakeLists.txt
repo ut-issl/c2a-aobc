@@ -18,6 +18,7 @@ set(C2A_SRCS
 if(USE_SCI_COM)
   add_definitions(-DUSE_SCI_COM)
   list(APPEND C2A_SRCS
+    SILS/sils_sci_if.c
     SILS/CCSDS_SILS_SCI_IF.c
   )
   message("USE SCI_COM")
@@ -26,6 +27,7 @@ endif()
 if(USE_SCI_COM_UART)
   add_definitions(-DUSE_SCI_COM_UART)
   list(APPEND C2A_SRCS
+    SILS/sils_sci_if.c
     SILS/uart_sils_sci_if.cpp
   )
   message("USE SCI_COM")
