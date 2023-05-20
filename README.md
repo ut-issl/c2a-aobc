@@ -117,7 +117,7 @@ $ git submodule update
 
 ## Brief history of development
 - 21st Jan. 2021: Development start in a private repository at GitLab.
-- 03rd Mar. 2023: Move to a private repository at GotHub to prepare publish as OSS
+- 03rd Mar. 2023: Move to a private repository at GitHub to prepare publish as OSS
 
 ## Contributors in the GitLab repository
 - ISSL, UT
