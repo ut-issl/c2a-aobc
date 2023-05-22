@@ -27,6 +27,6 @@ if exist %1 (
 ) else (
   mkdir %1
 )
-robocopy %2 %1 /S /E /NFL /NDL /XD Examples
+robocopy %2 %1 /S /E /NFL /XD Examples
 
 exit /b
