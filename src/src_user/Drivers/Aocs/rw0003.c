@@ -107,10 +107,10 @@ DS_INIT_ERR_CODE RW0003_init(RW0003_Driver* rw0003_driver, uint8_t ch, uint8_t i
   rw0003_driver->info.speed_rad_s = 0.0f;
   rw0003_driver->info.torque_Nm   = 0.0f;
   rw0003_driver->info.temperature_degC = 0.0f;
-  rw0003_driver->info.vdd_V = 0.0f;
-  rw0003_driver->info.seu_count = 0.0f;
-  rw0003_driver->info.fault_state = 0.0f;
-  rw0003_driver->info.diagnostic_reset_reason = 0;
+  rw0003_driver->info.vdd_V = -1.0f;
+  rw0003_driver->info.seu_count = -1.0f;
+  rw0003_driver->info.fault_state = -1.0f;
+  rw0003_driver->info.diagnostic_reset_reason = -1;
   rw0003_driver->info.speed_limit1_rad_s = 900.0f;  // デフォルト値を初期値とする TODO_L 設定・読み出し関数を作る
   rw0003_driver->info.speed_limit2_rad_s = 1000.0f; // デフォルト値を初期値とする TODO_L 設定・読み出し関数を作る
   rw0003_driver->info.rotation_direction_b[0] = 1.0f;
@@ -240,15 +240,14 @@ DS_CMD_ERR_CODE RW0003_diagnostic(RW0003_Driver* rw0003_driver)
   if (ret != DS_CMD_OK) return ret;
 
   // NSP message conversion
-  const  size_t kNspDataLength = RW0003_NSP_HEADER_SIZE + sizeof(uint8_t) + RW0003_NSP_CRC_SIZE;
+  const size_t kNspDataLength = RW0003_NSP_HEADER_SIZE + sizeof(uint8_t) + RW0003_NSP_CRC_SIZE;
   uint8_t nsp_data[kNspDataLength];
   RW0003_convert_to_nsp_with_data_(rw0003_driver->driver.i2c_config.device_address,
-    mcf, &RW0003_kDiagnosticsChannel_, sizeof(RW0003_kDiagnosticsChannel_), nsp_data);
+                                   mcf, &RW0003_kDiagnosticsChannel_, sizeof(RW0003_kDiagnosticsChannel_), nsp_data);
 
-  // SLIP: diagnosticはCRCのみSLIPする可能性がある
-  const size_t kSlipDataMaxLength = kNspDataLength + RW0003_NSP_CRC_SIZE;
+  const size_t kSlipDataMaxLength = kNspDataLength + sizeof(RW0003_kSlipFend_);
   uint8_t slip_data[kSlipDataMaxLength];
-  size_t slip_data_length = kSlipDataMaxLength;
+  size_t slip_data_length = kNspDataLength;
   RW0003_encode_slip_(nsp_data, kNspDataLength, slip_data, &slip_data_length);
   slip_data[slip_data_length] = RW0003_kSlipFend_;
   slip_data_length++;
