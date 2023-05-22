@@ -17,8 +17,8 @@ option(USE_SCI_COM "Use SCI_COM" OFF)
 
 option(USE_SCI_COM_UART "Use SCI_COM_UART" OFF)
 
-set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_aobc/src/src_core)
-set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_aobc/src/src_user)
+set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src_aobc/src/src_core)
+set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src_aobc/src/src_user)
 
 set(USE_ALL_C2A_CORE_APPS OFF)
 set(USE_ALL_C2A_CORE_TEST_APPS OFF)
