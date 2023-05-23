@@ -56,6 +56,7 @@ typedef enum
   Tlm_CODE_AOBC_ORBIT2 = 0xcc,
   Tlm_CODE_AOBC_FILTERS_2 = 0xcd,
   Tlm_CODE_AOBC_DR_ALGORITHM = 0xce,
+  Tlm_CODE_AOBC_DEBUG = 0xcf,
 
   TLM_CODE_MAX
 } TLM_CODE;
