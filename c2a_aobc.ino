@@ -1,5 +1,5 @@
 /*
- Name:		C2A_ISSL6U_AOBC.ino
+ Name:		C2A_AOBC.ino
 */
 
 extern "C" 
@@ -20,8 +20,8 @@ static void __USER_ISR C2A_timer1_handler_(void);
 // Arduino functions
 void setup() 
 {
-  // TODO: ‚±‚±‚Å‚¢‚¢‚Ì‚©êŠ‚Í—vŒŸ“¢
-  Serial.begin(115200);   // Debugƒ|[ƒg
+  // TODO: ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½êŠï¿½Í—vï¿½ï¿½ï¿½ï¿½
+  Serial.begin(115200);   // Debugï¿½|ï¿½[ï¿½g
 
   C2A_init_();
 
@@ -42,28 +42,28 @@ static void C2A_main_(void)
   while (1)
   {
     C2A_core_main();
-    // ƒ†[ƒU[’è‹`loopˆ—‚Í‚±‚±‚É“ü‚ê‚é
+    // ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½`loopï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½É“ï¿½ï¿½ï¿½ï¿½
   }
 
   return;
 }
 
-// C2AŠÖ˜A‚Ì‰Šú‰»
-// HWŠÖ˜A•”•ªiƒ^ƒCƒ}[CŠ„‚èž‚ÝÝ’è‚È‚Çj‚Ì‚Ý“ÆŽ©‚É‰Šú‰»
-// Printf“à•”‚Å WDT_clear_wdt(); ‚ªŒÄ‚Î‚ê‚Ä‚é‚±‚Æ‚É’ˆÓI
+// C2Aï¿½Ö˜Aï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
+// HWï¿½Ö˜Aï¿½ï¿½ï¿½ï¿½ï¿½iï¿½^ï¿½Cï¿½}ï¿½[ï¿½Cï¿½ï¿½ï¿½èžï¿½ÝÝ’ï¿½È‚Çjï¿½Ì‚Ý“ÆŽï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½
+// Printfï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ WDT_clear_wdt(); ï¿½ï¿½ï¿½Ä‚Î‚ï¿½Ä‚é‚±ï¿½Æ‚É’ï¿½ï¿½ÓI
 static void C2A_init_(void)
 {
   TMGR_init();                // Time Manager
-                              // AM_initialize_all_apps ‚Å‚ÌŽžŠÔŒv‘ª‚Ì‚½‚ß‚É‚±‚±‚Å‰Šú‰»
+                              // AM_initialize_all_apps ï¿½Å‚ÌŽï¿½ï¿½ÔŒvï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ß‚É‚ï¿½ï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½
   Printf("C2A_init: TMGR_init done.\n");
 
-  // ƒ^ƒCƒ}Š„ž‚ÝŠÖ˜A
+  // ï¿½^ï¿½Cï¿½}ï¿½ï¿½ï¿½ï¿½ï¿½ÝŠÖ˜A
   C2A_timer_setting_();
   Printf("C2A_init: timer_setting_ done.\n");
 
   C2A_core_init();
 
-  TMGR_clear(); // TODO: user_oss‚Æ‘µ‚¦‚ÄÄ“x‰Šú‰»‚µ‚Ä‚¢‚é‚ªC‚±‚ÌŽžŠ„‚èž‚Ý‚ðŽ~‚ß‚é‚×‚«‚©‚È‚Ç—vŒŸ“¢
+  TMGR_clear(); // TODO: user_ossï¿½Æ‘ï¿½ï¿½ï¿½ï¿½ÄÄ“xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚ªï¿½Cï¿½ï¿½ï¿½ÌŽï¿½ï¿½ï¿½ï¿½èžï¿½Ý‚ï¿½ï¿½~ï¿½ß‚ï¿½×‚ï¿½ï¿½ï¿½ï¿½È‚Ç—vï¿½ï¿½ï¿½ï¿½
 
   return;
 }
@@ -75,7 +75,7 @@ static void C2A_timer_setting_(void)
   setIntPriority(_TIMER_1_VECTOR, _T1_IPL_IPC, _T1_SPL_IPC);
   setIntEnable(_TIMER_1_IRQ);
   TMR1 = 0; // clear timer
-  // ŽŸ‚Ì’l‚Í1ms‚ÌƒNƒƒbƒNƒAƒbƒv‚É‚È‚è‚©‚ÂAŽžŒë·’~Ï‚ªÅ¬‚É‚È‚é‚æ‚¤‚ÉŽÀŒ±‚ðs‚¤Žè“®’²®‚µ‚½’l
+  // ï¿½ï¿½ï¿½Ì’lï¿½ï¿½1msï¿½ÌƒNï¿½ï¿½ï¿½bï¿½Nï¿½Aï¿½bï¿½vï¿½É‚È‚è‚©ï¿½ÂAï¿½ï¿½ï¿½ï¿½ï¿½ë·ï¿½~ï¿½Ï‚ï¿½ï¿½Åï¿½ï¿½É‚È‚ï¿½æ‚¤ï¿½ÉŽï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½è“®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½l
   T1CON = TACON_PS_8; // set prescaler
   PR1 = (unsigned int)(10001);
 

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.c2a_issl6u_aobc.vsarduino.h">
+    <ClInclude Include="__vm\.c2a_aobc_example.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="__vm\.src_user.vsarduino.h">
@@ -457,6 +457,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="c2a_issl6u_aobc.ino" />
+    <None Include="c2a_aobc_example.ino" />
   </ItemGroup>
 </Project>
