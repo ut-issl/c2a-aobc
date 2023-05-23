@@ -41,7 +41,7 @@ set(C2A_SRCS
   # ${C2A_USER_DIR}/C2A_main.c
 )
 
-include_directories(src)
+include_directories(src_aobc/src)
 
 add_subdirectory(${C2A_CORE_DIR})
 
