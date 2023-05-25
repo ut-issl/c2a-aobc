@@ -1,5 +1,5 @@
 /*
- Name:		C2A_AOBC_EXAMPLE.ino
+ Name:  c2a_aobc_example.ino
 */
 
 extern "C" 
@@ -20,8 +20,8 @@ static void __USER_ISR C2A_timer1_handler_(void);
 // Arduino functions
 void setup() 
 {
-  // TODO: �����ł����̂��ꏊ�͗v����
-  Serial.begin(115200);   // Debug�|�[�g
+  // TODO: ここでいいのか場所は要検討
+  Serial.begin(115200);   // Debugポート
 
   C2A_init_();
 
@@ -42,28 +42,28 @@ static void C2A_main_(void)
   while (1)
   {
     C2A_core_main();
-    // ���[�U�[��`loop�����͂����ɓ����
+    // ユーザー定義loop処理はここに入れる
   }
 
   return;
 }
 
-// C2A�֘A�̏�����
-// HW�֘A�����i�^�C�}�[�C���荞�ݐݒ�Ȃǁj�̂ݓƎ��ɏ�����
-// Printf������ WDT_clear_wdt(); ���Ă΂�Ă邱�Ƃɒ��ӁI
+// C2A関連の初期化
+// HW関連部分（タイマー，割り込み設定など）のみ独自に初期化
+// Printf内部で WDT_clear_wdt(); が呼ばれてることに注意！
 static void C2A_init_(void)
 {
   TMGR_init();                // Time Manager
-                              // AM_initialize_all_apps �ł̎��Ԍv���̂��߂ɂ����ŏ�����
+                              // AM_initialize_all_apps での時間計測のためにここで初期化
   Printf("C2A_init: TMGR_init done.\n");
 
-  // �^�C�}�����݊֘A
+  // タイマ割込み関連
   C2A_timer_setting_();
   Printf("C2A_init: timer_setting_ done.\n");
 
   C2A_core_init();
 
-  TMGR_clear(); // TODO: user_oss�Ƒ����čēx���������Ă��邪�C���̎����荞�݂��~�߂�ׂ����ȂǗv����
+  TMGR_clear(); // TODO: user_ossと揃えて再度初期化しているが，この時割り込みを止めるべきかなど要検討
 
   return;
 }
@@ -75,7 +75,7 @@ static void C2A_timer_setting_(void)
   setIntPriority(_TIMER_1_VECTOR, _T1_IPL_IPC, _T1_SPL_IPC);
   setIntEnable(_TIMER_1_IRQ);
   TMR1 = 0; // clear timer
-  // ���̒l��1ms�̃N���b�N�A�b�v�ɂȂ肩�A�����덷�~�ς��ŏ��ɂȂ�悤�Ɏ������s���蓮���������l
+  // 次の値は1msのクロックアップになりかつ、時刻誤差蓄積が最小になるように実験を行う手動調整した値
   T1CON = TACON_PS_8; // set prescaler
   PR1 = (unsigned int)(10001);
 
