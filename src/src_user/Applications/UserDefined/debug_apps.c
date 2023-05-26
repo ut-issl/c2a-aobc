@@ -8,7 +8,6 @@
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
-#include <src_core/System/AnomalyLogger/anomaly_logger.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include "../../TlmCmd/telemetry_definitions.h"
 #include <src_core/TlmCmd/block_command_table.h>
@@ -31,11 +30,6 @@ AppInfo print_time_stamp(void)
   return AI_create_app_info("tstm", NULL, print_time_stamp_);
 }
 
-// AppInfo print_anomaly_status(void)
-// {
-//   return AI_create_app_info("anmly", NULL, print_anomaly_status_);
-// }
-
 AppInfo print_cmd_status(void)
 {
   return AI_create_app_info("cmds", NULL, print_cmd_status_);
@@ -48,7 +42,6 @@ void flush_screen_(void)
   VT100_erase_line();
   Printf("-- EQUULEUS Flight S/W (H-ON, F-ON) --\n");
   VT100_erase_line();
-  // Printf("BUILD: %s %s (Rev. %d)\n", __DATE__, __TIME__, SVN_REVISION);
   Printf("BUILD: %s %s\n", __DATE__, __TIME__);
 }
 
@@ -61,17 +54,6 @@ void print_time_stamp_(void)
   Printf("MODE: STAT %d, PREV %d, CURR %d\n",
          mode_manager->stat, mode_manager->previous_id, mode_manager->current_id);
 }
-
-// void print_anomaly_status_(void)
-// {
-//   const AL_AnomalyRecord* ar = AL_get_latest_record();
-//   VT100_erase_line();
-//   Printf("ANOMALY: CTR %d, HEAD %d, TIME: <%d, %d, %d>, CODE: <%d, %d>, RL %d\n",
-//          anomaly_logger->counter, anomaly_logger->header,
-//          ar->time.total_cycle, ar->time.mode_cycle, ar->time.step,
-//          ar->code.group, ar->code.local,
-//          ar->run_length);
-// }
 
 void print_cmd_status_(void)
 {

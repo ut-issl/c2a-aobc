@@ -25,7 +25,6 @@ set(USE_ALL_C2A_CORE_TEST_APPS OFF)
 set(USE_ALL_C2A_CORE_LIB ON)
 
 set(C2A_SRCS
-  # ${C2A_CORE_DIR}/Applications/anomaly_handler.c
   ${C2A_CORE_DIR}/Applications/divided_cmd_utility.c
   ${C2A_CORE_DIR}/Applications/event_utility.c
   ${C2A_CORE_DIR}/Applications/gs_command_dispatcher.c
@@ -35,7 +34,6 @@ set(C2A_SRCS
   ${C2A_CORE_DIR}/Applications/timeline_command_dispatcher.c
   # ${C2A_CORE_DIR}/Applications/utility_command.c
   # ${C2A_CORE_DIR}/Applications/utility_counter.c
-  ${C2A_CORE_DIR}/System/AnomalyLogger/anomaly_logger.c
 
   # SRC_USER codes
   # ${C2A_USER_DIR}/C2A_main.c

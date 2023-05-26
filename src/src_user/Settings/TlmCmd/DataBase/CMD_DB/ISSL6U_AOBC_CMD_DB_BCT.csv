@@ -37,7 +37,7 @@ Comment,Name,ShortName,BCID,エイリアス,,,,,Danger Flag,Description,Note
 ,BC_AC_STT_UPDATE,,28,,,,,,danger,,
 **,==== 各系領域 ====,,,,,,,,,,
 *,./C2A/TlmCmd/NormalBlockCommandDefinition/で定義,,,,,,,,,,
-*,アノマリハンドラはBC_AH_など，接頭辞を適切につけること！,,,,,,,,,,
+*,イベントハンドラはBC_EH_など，接頭辞を適切につけること！,,,,,,,,,,
 **,AOCS,,,,,,,,,,
 ,BC_HK_CYCLIC_TLM,,30,○,○,○,○,○,,,
 ,BC_SELECT_RM3100_ON_AOBC,,31,○,○,○,○,○,,,
