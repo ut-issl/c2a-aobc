@@ -22,6 +22,7 @@ $ git submodule update
 - clone後， windowsの場合は`RUN_AFTER_CLONE.bat`，macの場合は`RUN_AFTER_CLONE.command`を実行する．
   - これで，localのgit環境設定が行われる
   - 別ディレクトリなどに新しくcloneし直した場合も，実行し直す
+  - `Examples`フォルダへのコピーも行われる．
 
 
 # 開発環境構築手順
@@ -114,6 +115,9 @@ $ git submodule update
 - S2Eと組み合わせた動作検証時のビルドエラーについては，まずは下記の操作を試してみると良い
   - `git submodule update`を実施する
   - S2Eのcmakeキャッシュを削除する
+
+# 本リポジトリに対するユーザーサイドリポジトリの設定について
+- 衛星固有の設定ファイルなどを含んだユーザーリポジトリを作成する際は、`Examples` のフォルダ構成を参考にすること。
 
 ## Brief history of development
 - 21st Jan. 2021: Development start in a private repository at GitLab.
