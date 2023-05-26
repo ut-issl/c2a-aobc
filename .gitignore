@@ -58,3 +58,6 @@ src/src_user/IfWrapper/SILS/FLASH_DB/*.dat
 # Visual Micro for PIC32
 Debug/
 Release/
+
+# for c2a user sample
+Examples/src_aobc
