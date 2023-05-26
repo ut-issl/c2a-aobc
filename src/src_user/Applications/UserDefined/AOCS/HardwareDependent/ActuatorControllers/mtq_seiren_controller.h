@@ -10,10 +10,10 @@
 #ifndef MTQ_SEIREN_CONTROLLER_H_
 #define MTQ_SEIREN_CONTROLLER_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/System/TimeManager/time_manager.h>
-#include "../../../../../Library/stdint.h"
 #include "../../../../../Library/physical_constants.h"
 #include "../../../../../Library/ControlUtility/cross_product_control.h"
 
