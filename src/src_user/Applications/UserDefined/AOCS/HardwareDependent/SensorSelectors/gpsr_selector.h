@@ -6,8 +6,8 @@
 #ifndef GPSR_SELECTOR_H_
 #define GPSR_SELECTOR_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
-#include "../../../../../Library/stdint.h"
 
 /**
  * @enum   APP_GPSR_SELECTOR_STATE

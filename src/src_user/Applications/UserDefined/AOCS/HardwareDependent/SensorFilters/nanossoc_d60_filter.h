@@ -5,9 +5,9 @@
 #ifndef NANOSSOC_D60_FILTER_H_
 #define NANOSSOC_D60_FILTER_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../../Library/stdint.h"
 #include "../../../../../Library/physical_constants.h"
 #include "../../../../../Library/SignalProcess/z_filter.h"
 #include "../../../../../Library/SignalProcess/spike_filter.h"

@@ -6,11 +6,11 @@
 #ifndef THREE_AXIS_CONTROL_RW_H_
 #define THREE_AXIS_CONTROL_RW_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include "../../../../Library/physical_constants.h"
 #include "../../../../Library/pid_control.h"
-#include "../../../../Library/stdint.h"
 #include "../../AOCS/aocs_error.h"
 
 /**

@@ -1,7 +1,7 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
-#include "../Library/stdint.h"
+#include <stdint.h>
 
 /**
  * @brief GPIOの方向を定義するためのenum

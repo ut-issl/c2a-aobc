@@ -6,7 +6,7 @@
 #ifndef SPIKE_FILTER_H_
 #define SPIKE_FILTER_H_
 
-#include "../stdint.h"
+#include <stdint.h>
 #include "../c2a_math.h"
 #include "../physical_constants.h"
 

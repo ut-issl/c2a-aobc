@@ -6,7 +6,7 @@
 #ifndef Z_FILTER_H_
 #define Z_FILTER_H_
 
-#include "../stdint.h"
+#include <stdint.h>
 #include "../c2a_math.h"
 
 

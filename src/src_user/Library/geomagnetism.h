@@ -8,7 +8,7 @@
 #ifndef GEOMAGNETISM_H_
 #define GEOMAGNETISM_H_
 
-#include "stdint.h"
+#include <stdint.h>
 #include "physical_constants.h"
 #include "c2a_math.h"
 

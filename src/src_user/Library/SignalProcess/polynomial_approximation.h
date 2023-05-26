@@ -6,7 +6,7 @@
 #ifndef POLYNOMIAL_APPROXIMATION_H_
 #define POLYNOMIAL_APPROXIMATION_H_
 
-#include "../stdint.h"
+#include <stdint.h>
 
 #define POLYNOMIAL_APPROX_MAX_COEFF_NUM (10) //!< 係数数最大数
 

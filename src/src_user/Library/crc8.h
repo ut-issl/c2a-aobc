@@ -8,7 +8,7 @@
 
 #include <stddef.h> // for size_t
 #include <stdbool.h>
-#include "stdint.h"
+#include <stdint.h>
 
 /**
   * @brief CRC-8-ATM
