@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.13)
 project(C2A_USER_LIB)
 
 set(C2A_SRCS
-  git_revision.c
   pid_control.c
   ControlUtility/cross_product_control.c
   ControlUtility/gyroscopic_effect.c
