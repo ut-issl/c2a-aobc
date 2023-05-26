@@ -59,7 +59,7 @@ $ git submodule update
    - [テレコマDBの使い方](https://github.com/ut-issl/tlm-cmd-db)
 2. tlm-cmd-generator を実行してソースコードに反映させる
    - [tlm-cmd-generatorの使い方](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
-   - [v.1.4.0-issl-variant](https://github.com/ut-issl/c2a-tlm-cmd-code-generator/tree/v1.4.0-issl-variant) に git checkout すること
+   - [ISSL用のブランチ](https://github.com/ut-issl/c2a-tlm-cmd-code-generator/tree/feature/issl) に git checkout すること
    - settings.json は AOBC 用に以下のように編集すること
 ```
 {
@@ -67,6 +67,7 @@ $ git submodule update
   "db_path" : "各自の環境でのc2a-aobc/src/src_user/Settings/TlmCmd/DataBase/への相対パス",
   "db_prefix" : "ISSL6U_AOBC",
   "tlm_id_range" : ["0x00", "0x100"],
+  "is_cmd_prefixed_in_db" : 1,
   "input_file_encoding" : "utf-8",
   "output_file_encoding" : "utf-8",
   "is_main_obc" : 0
