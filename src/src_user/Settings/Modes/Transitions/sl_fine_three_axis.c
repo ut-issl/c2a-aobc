@@ -43,7 +43,7 @@ void BCL_load_rough_three_axis_rw_to_fine_three_axis(void)
   timing_sec += 35;
 
   // モード遷移完了
-  BCL_tool_register_cmd(timing_sec, Cmd_CODE_MM_FINISH_TRANSITION);
+  BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_MM_FINISH_TRANSITION);
 
   // 自動モード遷移ON
   timing_sec += (5 * 60);
