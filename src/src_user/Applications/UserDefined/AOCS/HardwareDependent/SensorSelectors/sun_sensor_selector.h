@@ -5,9 +5,9 @@
 #ifndef SUN_SENSOR_SELECTOR_H_
 #define SUN_SENSOR_SELECTOR_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../../Library/stdint.h"
 
 typedef struct
 {

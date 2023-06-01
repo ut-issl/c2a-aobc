@@ -6,11 +6,11 @@
 
 #include "di_mtq_seiren.h"
 
+#include <stdint.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include "../UserDefined/AOCS/aocs_manager.h"
 #include "../../Settings/port_config.h"
-#include "../../Library/stdint.h"
 #include "../../Library/vector3.h"
 
 

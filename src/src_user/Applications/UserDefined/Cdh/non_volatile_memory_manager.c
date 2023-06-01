@@ -3,8 +3,9 @@
 * @file   non_volatile_memory_manager.c
 * @brief  不揮発メモリ管理をするアプリ
 */
+
+#include <stdint.h>
 #include "non_volatile_memory_manager.h"
-#include "../../../Library/stdint.h"
 #include <string.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 

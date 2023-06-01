@@ -5,9 +5,9 @@
 */
 #include "thermo_sensor.h"
 
+#include <stdint.h>
 #include "../../../IfWrapper/ADC.h"
 #include "../../../Settings/port_config.h"
-#include "../../../Library/stdint.h"
 #include "../../../Library/physical_constants.h"
 
 

@@ -6,7 +6,7 @@
 #ifndef MATRIX_DEFINITION_H_
 #define MATRIX_DEFINITION_H_
 
-#include "stdint.h"
+#include <stdint.h>
 #include <stddef.h>
 
 /**

@@ -50,7 +50,7 @@ typedef enum
 
   // ==== 各系領域 ====
   // ./C2A/TlmCmd/NormalBlockCommandDefinition/で定義
-  // アノマリハンドラはBC_AH_など，接頭辞を適切につけること！
+  // イベントハンドラはBC_EH_など，接頭辞を適切につけること！
 
   // AOCS
   BC_HK_CYCLIC_TLM = 30,

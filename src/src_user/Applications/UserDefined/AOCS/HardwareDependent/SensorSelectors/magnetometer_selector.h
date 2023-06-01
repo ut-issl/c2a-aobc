@@ -5,9 +5,9 @@
 #ifndef MAGNETOMETER_SELECTOR_H_
 #define MAGNETOMETER_SELECTOR_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../../Library/stdint.h"
 
 /**
  * @enum   APP_MAG_SELECTOR_STATE

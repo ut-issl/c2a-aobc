@@ -7,7 +7,7 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-#include "../Library/stdint.h"
+#include <stdint.h>
 
 /**
 * @brief  ADCの初期化

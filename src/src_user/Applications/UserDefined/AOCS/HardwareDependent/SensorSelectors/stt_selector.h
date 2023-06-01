@@ -6,8 +6,8 @@
 #ifndef STT_SELECTOR_H_
 #define STT_SELECTOR_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
-#include "../../../../../Library/stdint.h"
 
 /**
  * @enum   APP_STT_SELECTOR_STATE

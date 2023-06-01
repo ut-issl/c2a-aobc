@@ -38,11 +38,9 @@ void AR_load_initial_settings(void)
   add_application_(AR_TLC_DISPATCHER_BC, TLCD_bc_create_app);
   add_application_(AR_TLC_DISPATCHER_TLM, TLCD_tlm_create_app);
   add_application_(AR_EVENT_UTILITY, EVENT_UTIL_create_app);
-  // add_application_(AR_ANOMALY_HANDLER, AH_create_app);
   // add_application_(AR_DBG_FLUSH_SCREEN, flush_screen);
   // add_application_(AR_DBG_PRINT_TIMESTAMP, print_time_stamp);
   // add_application_(AR_DBG_PRINT_CMD_STATUS, print_cmd_status);
-  // add_application_(AR_DBG_AH_STATUS, print_ah_status);
 
   // User Defined
   // AOCS

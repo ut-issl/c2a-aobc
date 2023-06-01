@@ -3,11 +3,12 @@
 * @file   non_volatile_memory_parameter.h
 * @brief  不揮発メモリパラメータの定義
 */
+
+#include <stdint.h>
 #include "non_volatile_memory_parameter.h"
 #include <src_core/Library/print.h>
 #include <src_core/Library/majority_vote_for3.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../Library/stdint.h"
 #include <string.h>
 #include <stdlib.h>
 

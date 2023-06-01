@@ -5,8 +5,8 @@
 #ifndef NON_VOLATILE_MEMORY_PARTITION_H_
 #define NON_VOLATILE_MEMORY_PARTITION_H_
 
+#include <stdint.h>
 #include "non_volatile_memory_manager.h"
-#include "../../../Library/stdint.h"
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 

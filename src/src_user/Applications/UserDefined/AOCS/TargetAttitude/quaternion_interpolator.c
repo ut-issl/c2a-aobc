@@ -6,6 +6,7 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/System/TimeManager/obc_time_config.h>
 #include "../../../app_registry.h"
 
 #include "quaternion_interpolator.h"

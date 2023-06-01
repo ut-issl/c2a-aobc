@@ -114,8 +114,8 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void
   //      CCP_EXEC_TYPE_TL_FROM_GS   <- GSからMOBCのキューに入らず直接転送されたもの
   //      CCP_EXEC_TYPE_BC    <- GSからMOBCのキューに入らず直接転送されたもの
   //      CCP_EXEC_TYPE_RT    <- これがGS→MOBCとの違いで，MOBCのTLC/BCキューに溜まって実行されたもの
-  // TCP_CMD_DEST_TYPE:
-  //      TCP_CMD_DEST_TYPE_TO_ME (TCP_CMD_DEST_TYPE_TO_AOBC の可能性はなくはないが，MEに上書きされているはず)
+  //  CCP_DEST_TYPE:
+  //      CCP_DEST_TYPE_TO_ME (CCP_DEST_TYPE_TO_APID, CCP_DEST_TYPE_TO_AOBC の可能性はなくはないが， ME に上書きされているはず)
 
   // 通信的にはOKなので， OK を返すのでいいという認識
   mobc_driver->info.c2a.ph_ack = PH_analyze_cmd_packet(&packet);
