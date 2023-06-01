@@ -145,7 +145,6 @@
     <ClCompile Include="src\src_core\Library\endian.c" />
     <ClCompile Include="src\src_core\Library\majority_vote_for3.c" />
     <ClCompile Include="src\src_core\Library\c2a_round.c" />
-    <ClCompile Include="src\src_core\System\AnomalyLogger\anomaly_logger.c" />
     <ClCompile Include="src\src_core\System\ApplicationManager\app_info.c" />
     <ClCompile Include="src\src_core\System\ApplicationManager\app_manager.c" />
     <ClCompile Include="src\src_core\System\EventManager\event_handler.c" />
@@ -262,7 +261,6 @@
     <ClCompile Include="src\src_user\IfWrapper\Arduino\UART_ARDUINO.c" />
     <ClCompile Include="src\src_user\IfWrapper\COMMON\WDT_TEMP.c" />
     <ClCompile Include="src\src_user\IfWrapper\IF_list.c" />
-    <ClCompile Include="src\src_user\Library\git_revision.c" />
     <ClCompile Include="src\src_user\Library\math_constants.c" />
     <ClCompile Include="src\src_user\Library\Orbit\kepler_orbit.c" />
     <ClCompile Include="src\src_user\Library\Orbit\sgp4.c" />
