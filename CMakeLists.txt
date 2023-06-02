@@ -50,6 +50,7 @@ add_subdirectory(${C2A_USER_DIR}/Drivers)
 add_subdirectory(${C2A_USER_DIR}/IfWrapper)
 add_subdirectory(${C2A_USER_DIR}/Library)
 add_subdirectory(${C2A_USER_DIR}/Settings)
+add_subdirectory(${C2A_USER_DIR}/Settings/SatelliteParameters)
 add_subdirectory(${C2A_USER_DIR}/TlmCmd)
 
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
