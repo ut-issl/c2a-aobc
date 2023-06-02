@@ -130,10 +130,10 @@ void BCL_load_reset_nanossoc_d60(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_register_combine(bc_cycle, BC_POWER_OFF_NANOSSOC_D60);  // 4.5sec
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60);  // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
 
-  BCL_tool_register_combine(bc_cycle, BC_POWER_ON_NANOSSOC_D60);
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60);
 }
 
 void BCL_load_activate_nanossoc_d60_eh(void)
