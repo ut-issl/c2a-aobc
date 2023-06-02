@@ -9,8 +9,9 @@ on:
     types: [opened, synchronize, reopened, labeled]
     paths:
       - '.github/workflows/build.yml'
-      - 'c2a-aobc/CMakeLists.txt'
-      - 'c2a-aobc/src/**'
+      - 'CMakeLists.txt'
+      - 'Examples/**'
+      - 'src/**'
 
 env:
   S2E_AOBC_VERSION: v2.0.1
