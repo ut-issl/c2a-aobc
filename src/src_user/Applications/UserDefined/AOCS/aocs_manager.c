@@ -18,6 +18,7 @@
 
 // SatelliteParameters
 #include "../../../Settings/SatelliteParameters/orbit_parameters.h"
+#include "../../../Settings/SatelliteParameters/structure_parameters.h"
 
 static AocsManager        aocs_manager_;
 const  AocsManager* const aocs_manager = &aocs_manager_;
@@ -44,7 +45,7 @@ static void APP_AOCS_MANAGER_init_(void)
   // 下記初期化値は物理的あり得る範囲でテキトウな値であり、全てsetter関数で意味のある値に変更されることを想定している
 
   // 衛星特性
-  aocs_manager_.mass_sc_kg = 10.0f;
+  aocs_manager_.mass_sc_kg = STRUCTURE_PARAMETERS_mass_sc_kg;
   VECTOR3_initialize(aocs_manager_.rmm_sc_body_Am2, 0.1f);
 
   aocs_manager_.inertia_tensor_sc_body_kgm2[0][0] =  0.1f;

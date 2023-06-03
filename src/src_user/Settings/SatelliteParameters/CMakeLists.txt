@@ -4,6 +4,7 @@ project(C2A_USER_SETTINGS_SATELLITE_PARAMETERS)
 
 set(C2A_SRCS
   Sample/orbit_parameters.c
+  Sample/structure_parameters.c
 )
 
 add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
