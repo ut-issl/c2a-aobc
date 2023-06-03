@@ -26,6 +26,7 @@ typedef enum
 typedef struct
 {
   APP_GPSR_SELECTOR_STATE state;
+  uint8_t leap_seconds[APP_GPSR_SELECTOR_STATE_OEM_IN_UNIT]; //!< うるう秒．出力時刻にうるう秒を含むか否かはGPSR依存なため，gpsr毎に定義だけしておく
 } GpsrSelector;
 
 extern const GpsrSelector* const gpsr_selector;

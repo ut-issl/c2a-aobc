@@ -51,22 +51,22 @@ static C2A_MATH_ERROR TIME_SPACE_nutation_(const double julian_century_terrestri
                                                  double nutation[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
                                                  double* epsilon_rad, double* delta_epsilon_rad, double* delta_psi_rad);
 
-double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, const uint32_t gps_time_msec)
+
+double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time, const float offset_sec)
 {
-  const double kJulianDayAtGpsTimeEpoch_day = 2444244.5;  //!< JulainDay at Origin of GPSTime (1980/1/6 00:00)
-  const double kMsecToSec     = 1.0e-3;                   //!< conversion from msec to sec
+  const double kMsecToSec = 1.0e-3;                       //!< conversion from msec to sec
   const double kDayOfWeek_day = 7.0;                      //!< days of a week
   const double kSecOfWeek_sec = kDayOfWeek_day * (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
-  double gps_time_sec = (double)(gps_time_msec) * kMsecToSec;
+  double gps_time_sec = (double)(gps_time.msec_of_week)*kMsecToSec;
 
-  if (gps_time_sec > kSecOfWeek_sec) return kJulianDayAtGpsTimeEpoch_day;
+  if (gps_time_sec > kSecOfWeek_sec) return ((double)GPS_TIME_OF_WEEK_JDAY_ORIGIN);
 
-  // Since both GPSTime and JulianDay have no leap seconds, they are directly converted to each other.
-  double elapsed_julian_day = (double)(gps_time_week) * kDayOfWeek_day +
-                               gps_time_sec / PHYSICAL_CONST_EARTH_SOLAR_DAY_s;
+  double elapsed_julian_day_sec_part = gps_time_sec + (double)(gps_time.leap_seconds) + (double)(offset_sec);
+  double elapsed_julian_day = (double)(gps_time.week_number)*kDayOfWeek_day +
+                               elapsed_julian_day_sec_part / (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
-  return (kJulianDayAtGpsTimeEpoch_day + elapsed_julian_day);
+  return ((double)GPS_TIME_OF_WEEK_JDAY_ORIGIN + elapsed_julian_day);
 }
 
 

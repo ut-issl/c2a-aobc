@@ -20,6 +20,7 @@ set(C2A_SRCS
   c2a_math.c
   quaternion.c
   crc8.c
+  gps_time_of_week.c
   Orbit/kepler_orbit.c
   Orbit/sgp4.c
   SignalProcess/z_filter.c

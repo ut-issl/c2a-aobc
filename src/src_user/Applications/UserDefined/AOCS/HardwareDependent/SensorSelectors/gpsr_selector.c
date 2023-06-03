@@ -25,6 +25,11 @@ AppInfo APP_GPSR_SELECTOR_create_app(void)
 static void APP_GPSR_SELECTOR_init_(void)
 {
   gpsr_selector_.state = APP_GPSR_SELECTOR_STATE_OEM_IN_UNIT;
+  for (uint8_t compo_id = 0; compo_id < APP_GPSR_SELECTOR_STATE_OEM_IN_UNIT; compo_id++)
+  {
+    gpsr_selector_.leap_seconds[compo_id] = 33; //ひとまず初期値は2023年時点でのうるう秒に指定
+  }
+
   return;
 }
 
@@ -38,9 +43,10 @@ static void APP_GPSR_SELECTOR_exec_(void)
   case APP_GPSR_SELECTOR_STATE_OEM_IN_UNIT:
     if (oem7600_driver[OEM7600_IDX_IN_UNIT]->info.num_of_visible_sats >= kEnoughNumberOfVisibleGps)
     {
-      AOCS_MANAGER_set_current_gps_time_obs(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms,
-                                            oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week,
-                                            oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.obct_gps_time_obs);
+      GPS_TIME_OF_WEEK obs_gps_time = GPS_TIME_OF_WEEK_create_gps_time(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week,
+                                                                       oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms,
+                                                                       gpsr_selector_.leap_seconds[APP_GPSR_SELECTOR_STATE_OEM_IN_UNIT]);
+      AOCS_MANAGER_set_current_gps_time_obs(obs_gps_time, oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.obct_gps_time_obs);
 
       AOCS_MANAGER_set_sat_pos_vel_obs_ecef_m(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m,
                                               oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s);

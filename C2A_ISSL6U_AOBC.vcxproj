@@ -110,6 +110,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="src\src_user\IfWrapper\Arduino\CHIPKIT\UART_CHIPKIT.h" />
+    <ClInclude Include="src\src_user\Library\gps_time_of_week.h" />
     <ClInclude Include="__vm\.c2a_issl6u_aobc.vsarduino.h" />
     <ClInclude Include="__vm\.src_user.vsarduino.h" />
   </ItemGroup>
@@ -282,6 +283,7 @@
     <ClCompile Include="src\src_user\Library\SignalProcess\spike_filter.c" />
     <ClCompile Include="src\src_user\Library\xxhash.c" />
     <ClCompile Include="src\src_user\Library\crc8.c" />
+    <ClCompile Include="src\src_user\Library\gps_time_of_week.c" />
     <ClCompile Include="src\src_user\Settings\Applications\NvmParams\non_volatile_memory_normal_parameters.c" />
     <ClCompile Include="src\src_user\Settings\Applications\NvmParams\non_volatile_memory_redundant_parameters.c" />
     <ClCompile Include="src\src_user\Settings\Modes\mode_definitions.c" />

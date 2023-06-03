@@ -61,22 +61,20 @@ static void APP_TIME_SPACE_CALC_exec_(void)
 
 static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
 {
-  uint32_t offset_time_msec  = (uint32_t)(time_space_calculator_.offset_sec * 1e3f);
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる方が他との統一性の観点でベターだが，
   // 現状では，GPSR情報は全てobsに入れる流れとなっており，estに値が入らないことから，ここではobsのままにする
-  uint32_t ref_gps_time_msec = aocs_manager->current_gps_time_obs_msec + offset_time_msec;
-  uint16_t ref_gps_time_week = aocs_manager->current_gps_time_obs_week;
+  GPS_TIME_OF_WEEK ref_gps_time = aocs_manager->current_gps_time;
 
   double week_of_msec = PHYSICAL_CONST_EARTH_SOLAR_DAY_s * 7.0 * 1e3;
 
   // check rollover
-  if ((double)(ref_gps_time_msec) > week_of_msec)
+  if ((double)(ref_gps_time.msec_of_week) > week_of_msec)
   {
-    ref_gps_time_msec = 0;
-    ref_gps_time_week += 1;
+    ref_gps_time.msec_of_week = 0;
+    ref_gps_time.week_number += 1;
   }
 
-  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time_week, ref_gps_time_msec);
+  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time, time_space_calculator_.offset_sec);
 
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる
   // 上の話と同様

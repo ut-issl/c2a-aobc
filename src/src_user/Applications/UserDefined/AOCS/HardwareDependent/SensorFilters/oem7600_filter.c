@@ -93,8 +93,8 @@ static void APP_OEM7600_FILTER_exec_(void)
 
   // EKF用の座標変換
   // ここではセンサ取得時のECEFをECIに戻すので，obsの時刻で座標変換行列を計算する
-  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(aocs_manager->current_gps_time_obs_week,
-                                                                   aocs_manager->current_gps_time_obs_msec);
+  float offset_time_s = 0.0f;
+  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(aocs_manager->current_gps_time, offset_time_s);
   double ref_gmst_rad = TIME_SPACE_calc_gmst_rad(reference_jday);
 
   double dcm_eci_to_ecef[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM];

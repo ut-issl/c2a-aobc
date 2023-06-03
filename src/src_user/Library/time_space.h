@@ -10,15 +10,16 @@
 #include "stdint.h"
 #include "physical_constants.h"
 #include "c2a_math.h"
+#include "gps_time_of_week.h"
 
 // 時刻換算関数
 /**
  * @brief  GPSTimeからJulian Dayへの変換
  * @param  gps_time_week : GPSTime週番号 [week] (should be larger than zero)
- * @param  gps_time_sec  : GPSTime週秒 [msec]   (should be in range of 0 ~ 7*24*60*60)
+ * @param  offset_sec    : Julian Day換算時に適用する，GPSTime週秒に対するオフセット [sec]
  * @return Julian Day [day] (returns Julian day at the origin of GPSTime when the input is out-of-range )
  */
-double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, const uint32_t gps_time_msec);
+double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time, const float offset_sec);
 
 /**
  * @brief  Julian DayからJulian Centuryへの変換
