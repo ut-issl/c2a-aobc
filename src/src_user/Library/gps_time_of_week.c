@@ -15,12 +15,3 @@ GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_create_gps_time(const uint16_t week_number, co
 
   return gps_time;
 }
-
-
-GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_count_up(const GPS_TIME_OF_WEEK current_gps_time)
-{
-  GPS_TIME_OF_WEEK updated_gps_time = current_gps_time;
-
-  return updated_gps_time;
-}
-

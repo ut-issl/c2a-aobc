@@ -74,12 +74,13 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
     ref_gps_time.week_number += 1;
   }
 
-  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time, time_space_calculator_.offset_sec);
+  // GPSRのTLM更新頻度よりも高頻度にこの関数が呼ばれる場合，以下の処理で補間が必要
+  ObcTime current_obct                = TMGR_get_master_clock();
+  float elapsed_time_from_observed_s  = time_space_calculator_.offset_sec + (float)OBCT_diff_in_sec(&aocs_manager->obct_gps_time_obs, &current_obct);
+  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time, elapsed_time_from_observed_s);
 
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる
-  // 上の話と同様
-  ObcTime obct_now = aocs_manager->obct_gps_time_obs;
-  AOCS_MANAGER_set_reference_jday(reference_jday, obct_now);
+  AOCS_MANAGER_set_reference_jday(reference_jday, current_obct);
 
   return reference_jday;
 }

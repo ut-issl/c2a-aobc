@@ -33,12 +33,4 @@ typedef struct
  */
 GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week, const uint8_t leap_seconds);
 
-/**
- * @brief      GPS時刻のカウントアップ
- * @param[in]  current_gps_time   : 定常トルクに足されるトルクベクトル[Nm]
- * @return     GPS_TIME_OF_WEEK
- */
-GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_count_up(const GPS_TIME_OF_WEEK current_gps_time);
-
-
 #endif
