@@ -55,7 +55,7 @@ void BCL_load_power_on_nanossoc_d60(void)
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
-  bc_cycle++;
+  bc_cycle++; 
 #endif
 
   // Enable EL
@@ -130,10 +130,10 @@ void BCL_load_reset_nanossoc_d60(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60);  // 4.5sec
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);  // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
 
-  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60);
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
 }
 
 void BCL_load_activate_nanossoc_d60_eh(void)
