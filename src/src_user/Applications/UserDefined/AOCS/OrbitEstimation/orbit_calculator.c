@@ -21,6 +21,9 @@
 #include "../../../../Library/matrix33.h"
 #include "../../../../Library/time_space.h"
 
+// SatelliteParameters
+#include "../../../../Settings/SatelliteParameters/orbit_parameters.h"
+
 static OrbitCalculator        orbit_calculator_;
 const  OrbitCalculator* const orbit_calculator = &orbit_calculator_;
 
@@ -34,7 +37,7 @@ AppInfo APP_ORBIT_CALC_create_app(void)
 
 static void APP_ORBIT_CALC_init_(void)
 {
-  orbit_calculator_.method = APP_ORBIT_CALC_METHOD_KEPLER;
+  orbit_calculator_.method = ORBIT_PARAMETERS_orbit_calculation_method;
   orbit_calculator_.gpsr_update = APP_ORBIT_CALC_GPSR_UPDATE_DISABLE;
   memset(&(orbit_calculator_.position_gpsr_kepler_eci_km), 0x00, sizeof(orbit_calculator_.position_gpsr_kepler_eci_km));
   memset(&(orbit_calculator_.velocity_gpsr_kepler_eci_km_s), 0x00, sizeof(orbit_calculator_.velocity_gpsr_kepler_eci_km_s));

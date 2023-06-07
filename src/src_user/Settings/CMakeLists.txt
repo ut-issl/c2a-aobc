@@ -45,6 +45,9 @@ set(C2A_SRCS
   # TlmCmd
   TlmCmd/common_cmd_packet_define.c
   TlmCmd/Ccsds/apid_define.c
+  # Satellite Parameters
+  ${C2A_SATELLITE_PARAMETERS_DIR}/orbit_parameters.c
+  ${C2A_SATELLITE_PARAMETERS_DIR}/structure_parameters.c
 )
 
 add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
