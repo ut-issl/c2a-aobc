@@ -110,7 +110,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="src\src_user\IfWrapper\Arduino\CHIPKIT\UART_CHIPKIT.h" />
-    <ClInclude Include="src\src_user\Library\gps_time_of_week.h" />
     <ClInclude Include="__vm\.c2a_issl6u_aobc.vsarduino.h" />
     <ClInclude Include="__vm\.src_user.vsarduino.h" />
   </ItemGroup>
