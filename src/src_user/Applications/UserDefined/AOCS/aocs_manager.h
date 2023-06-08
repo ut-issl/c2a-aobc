@@ -10,7 +10,7 @@
 #include "../../../Library/physical_constants.h"
 #include "../../../Library/quaternion.h"
 #include "../../../Library/stdint.h"
-#include "../../../Library/gps_time_of_week.h"
+#include "../../../Library/time_system/gps_time.h"
 #include "../../DriverInstances/di_rw0003.h"
 #include "../../DriverInstances/di_mtq_seiren.h"
 

@@ -1,9 +1,9 @@
 /**
- * @file   gps_time_of_week.h
+ * @file   gps_time.h
  * @brief  GPS時刻構造体と定数の定義
  */
-#ifndef GPS_TIME_OF_WEEK_H_
-#define GPS_TIME_OF_WEEK_H_
+#ifndef GPS_TIME_H_
+#define GPS_TIME_H_
 
 #include "stdint.h"
 
