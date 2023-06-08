@@ -14,6 +14,10 @@
 #include "matrix33.h"
 #include "vector3.h"
 
+
+//!< JulainDay at Origin of GPS Time of Week (1980/1/6 00:00)
+static const double GPS_TIME_OF_WEEK_JDAY_ORIGIN = 2444244.5;
+
 /**
  * @brief      日周運動を表すR行列の計算
  * @param[in]  gast_rad       : Greenwitch Apparent Sidereal Time [rad]
@@ -60,13 +64,13 @@ double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time,
 
   double gps_time_sec = (double)(gps_time.msec_of_week)*kMsecToSec;
 
-  if (gps_time_sec > kSecOfWeek_sec) return ((double)GPS_TIME_OF_WEEK_JDAY_ORIGIN);
+  if (gps_time_sec > kSecOfWeek_sec) return (GPS_TIME_OF_WEEK_JDAY_ORIGIN);
 
   double elapsed_julian_day_sec_part = gps_time_sec + (double)(gps_time.leap_seconds) + (double)(offset_sec);
   double elapsed_julian_day = (double)(gps_time.week_number)*kDayOfWeek_day +
                                elapsed_julian_day_sec_part / (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
-  return ((double)GPS_TIME_OF_WEEK_JDAY_ORIGIN + elapsed_julian_day);
+  return (GPS_TIME_OF_WEEK_JDAY_ORIGIN + elapsed_julian_day);
 }
 
 

@@ -7,9 +7,6 @@
 
 #include "stdint.h"
 
-#define GPS_TIME_OF_WEEK_JDAY_ORIGIN (2444244.5)   //!< JulainDay at Origin of GPS Time of Week (1980/1/6 00:00)
-
-
  /**
   * @struct   GPS_TIME_OF_WEEK
   * @brief    GPS時刻構造体
