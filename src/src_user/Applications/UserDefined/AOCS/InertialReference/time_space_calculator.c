@@ -63,7 +63,7 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
 {
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる方が他との統一性の観点でベターだが，
   // 現状では，GPSR情報は全てobsに入れる流れとなっており，estに値が入らないことから，ここではobsのままにする
-  GPS_TIME_OF_WEEK ref_gps_time = aocs_manager->current_gps_time;
+  GPS_TIME_OF_WEEK ref_gps_time = aocs_manager->current_gps_time_obs;
 
   double week_of_msec = PHYSICAL_CONST_EARTH_SOLAR_DAY_s * 7.0 * 1e3;
 

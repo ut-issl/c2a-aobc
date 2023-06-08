@@ -160,13 +160,13 @@ typedef struct
   float rw_rotation_direction_matrix[AOCS_MANAGER_NUM_OF_RW][PHYSICAL_CONST_THREE_DIM]; //!< RWの回転向きをRWの個数分まとめたもの
   float rw_distribution_matrix[PHYSICAL_CONST_THREE_DIM][AOCS_MANAGER_NUM_OF_RW];       //!< RW分配行列
   // 時刻
-  GPS_TIME_OF_WEEK current_gps_time;   //!< センサで観測されたGPS時刻
-  ObcTime  obct_gps_time_obs;          //!< 上記をセンサで観測したタイミングのC2Aマスタークロック [-]
+  GPS_TIME_OF_WEEK current_gps_time_obs;  //!< センサで観測されたGPS時刻
+  ObcTime  obct_gps_time_obs;             //!< 上記をセンサで観測したタイミングのC2Aマスタークロック [-]
   // uint32_t current_gps_time_est_msec;  //!< 推定系で推定されたGPS時刻の秒成分 [msec] : 22_08_24時点で使用箇所がないため，一旦コメントアウト
   // uint16_t current_gps_time_est_week;  //!< 推定系で推定されたGPS時刻の週成分 [week] : 22_08_24時点で使用箇所がないため，一旦コメントアウト
-  ObcTime  obct_gps_time_est;          //!< 上記を推定したタイミングのC2Aマスタークロック [-]
-  double   reference_jday;             //!< 慣性系計算の基準時刻として用いるユリウス日 [ユリウス日]
-  ObcTime  obct_reference;             //!< 慣性系計算の基準時刻として用いるユリウス日を更新した時のOBC時刻 [-]
+  ObcTime  obct_gps_time_est;             //!< 上記を推定したタイミングのC2Aマスタークロック [-]
+  double   reference_jday;                //!< 慣性系計算の基準時刻として用いるユリウス日 [ユリウス日]
+  ObcTime  obct_reference;                //!< 慣性系計算の基準時刻として用いるユリウス日を更新した時のOBC時刻 [-]
   // センサ状態
   AOCS_MANAGER_GPS_VISIBILITY gps_visibility;     //!< GPS情報の利用可否
   AOCS_MANAGER_SUN_VISIBILITY sun_visibility;     //!< 太陽がサンセンサから見えているかどうか
