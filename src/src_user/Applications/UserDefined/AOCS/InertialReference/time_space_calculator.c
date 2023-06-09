@@ -43,10 +43,16 @@ static void APP_TIME_SPACE_CALC_init_(void)
 
 static void APP_TIME_SPACE_CALC_exec_(void)
 {
+  static ObcTime obct_tag_for_last_gps_tlm = OBCT_create(0, 0, 0); //!< 最後にJday更新に用いたGPSテレメの取得時刻
+  ObcTime obct_tag_for_current_gps_tlm     = aocs_manager->obct_gps_time_obs;
+  uint32_t time_from_last_gps_tlm_update   = OBCT_diff_in_msec(&obct_tag_for_current_gps_tlm, &obct_tag_for_last_gps_tlm);
+
   double reference_jday;
-  if (aocs_manager->gps_visibility == AOCS_MANAGER_GPS_VISIBLE)
+  // GPSテレメの更新頻度よりも早いインターバルで更新される場合，AOCS_MANAGER_GPS_VISIBLEとテレメ時刻両方での判定が必要
+  if ((time_from_last_gps_tlm_update > 0) && (aocs_manager->gps_visibility == AOCS_MANAGER_GPS_VISIBLE))
   {
     reference_jday = APP_TIME_SPACE_CALC_update_current_jday_ref_();
+    obct_tag_for_last_gps_tlm = obct_tag_for_current_gps_tlm;
   }
   else
   {
@@ -74,10 +80,9 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
     ref_gps_time.week_number += 1;
   }
 
-  // GPSRのTLM更新頻度よりも高頻度にこの関数が呼ばれる場合，以下の処理で補間が必要
-  ObcTime current_obct                = TMGR_get_master_clock();
-  float elapsed_time_from_observed_s  = time_space_calculator_.offset_sec + (float)OBCT_diff_in_sec(&aocs_manager->obct_gps_time_obs, &current_obct);
+  ObcTime current_obct  = TMGR_get_master_clock();
   double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time);
+  reference_jday += (double)(time_space_calculator_.offset_sec) / (PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる
   AOCS_MANAGER_set_reference_jday(reference_jday, current_obct);

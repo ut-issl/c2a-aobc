@@ -63,6 +63,12 @@ void TIME_SPACE_trans_ned_to_ecef(float dcm_ned_to_ecef[][PHYSICAL_CONST_THREE_D
                             const float lat_rad, const float lon_rad);
 
 /**
+ * @brief      うるう秒 (GPSTime - UTC) の更新
+ * @param[in]  leap_seconds_updated   : 更新後のうるう秒 [s]
+ */
+void TIME_SPACE_update_leap_seconds(const float leap_seconds_updated);
+
+/**
  * @brief      ECIからECEFへの変換 R*N*P
  *
  *             歳差と章動を考慮した変換
