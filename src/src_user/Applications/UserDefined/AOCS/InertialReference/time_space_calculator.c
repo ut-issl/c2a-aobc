@@ -45,7 +45,7 @@ static void APP_TIME_SPACE_CALC_exec_(void)
 {
   static ObcTime obct_tag_for_last_gps_tlm = OBCT_create(0, 0, 0); //!< 最後にJday更新に用いたGPSテレメの取得時刻
   ObcTime obct_tag_for_current_gps_tlm     = aocs_manager->obct_gps_time_obs;
-  uint32_t time_from_last_gps_tlm_update   = OBCT_diff_in_msec(&obct_tag_for_current_gps_tlm, &obct_tag_for_last_gps_tlm);
+  uint32_t time_from_last_gps_tlm_update   = OBCT_diff_in_msec(&obct_tag_for_last_gps_tlm, &obct_tag_for_current_gps_tlm);
 
   double reference_jday;
   // GPSテレメの更新頻度よりも早いインターバルで更新される場合，AOCS_MANAGER_GPS_VISIBLEとテレメ時刻両方での判定が必要
