@@ -16,10 +16,9 @@
 /**
  * @brief  GPSTimeからJulian Dayへの変換
  * @param  gps_time_week : GPSTime週番号 [week] (should be larger than zero)
- * @param  offset_sec    : Julian Day換算時に適用する，GPSTime週秒に対するオフセット [sec]
  * @return Julian Day [day] (returns Julian day at the origin of GPSTime when the input is out-of-range )
  */
-double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time, const float offset_sec);
+double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time);
 
 /**
  * @brief  Julian DayからJulian Centuryへの変換

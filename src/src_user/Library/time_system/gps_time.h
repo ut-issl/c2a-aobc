@@ -17,7 +17,6 @@ typedef struct
 {
   uint16_t week_number;   //!< 週番号
   uint32_t msec_of_week;  //!< 週内の経過秒 [ミリ秒]
-  uint8_t  leap_seconds;  //!< うるう秒 [秒]（UTCやJdayへの換算時にはGPS時刻に対して加算する)
 } GPS_TIME_OF_WEEK;
 
 
@@ -28,6 +27,6 @@ typedef struct
  * @param[in]  leap_seconds   : うるう秒 [秒]
  * @return     GPS_TIME_OF_WEEK
  */
-GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week, const uint8_t leap_seconds);
+GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week);
 
 #endif

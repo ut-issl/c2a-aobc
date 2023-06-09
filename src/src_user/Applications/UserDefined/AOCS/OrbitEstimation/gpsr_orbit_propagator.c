@@ -113,8 +113,7 @@ C2A_MATH_ERROR GPSR_ORBIT_PROPAGATOR_calc_position(float position_eci_km[PHYSICA
     // gpsrテレメをもとに接触軌道要素を計算
     float position_eci_km_tmp[PHYSICAL_CONST_THREE_DIM];
     float velocity_eci_km_s_tmp[PHYSICAL_CONST_THREE_DIM];
-    float offset_seconds = 0.0f;  // 必要があれば，計算結果を使うタイミングとcurrent_gps_time更新タイミングの差分をこの変数で補正する
-    double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(aocs_manager->current_gps_time_obs, offset_seconds);
+    double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(aocs_manager->current_gps_time_obs);
     for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
     {
       position_eci_km_tmp[idx]   = (float)aocs_manager->sat_pos_obs_eci_m[idx]   / 1000.0f;

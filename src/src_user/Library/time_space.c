@@ -18,6 +18,8 @@
 //!< JulainDay at Origin of GPS Time of Week (1980/1/6 00:00)
 static const double GPS_TIME_OF_WEEK_JDAY_ORIGIN = 2444244.5;
 
+static float LEAP_SECONDS = 18;
+
 /**
  * @brief      日周運動を表すR行列の計算
  * @param[in]  gast_rad       : Greenwitch Apparent Sidereal Time [rad]
@@ -56,7 +58,7 @@ static C2A_MATH_ERROR TIME_SPACE_nutation_(const double julian_century_terrestri
                                                  double* epsilon_rad, double* delta_epsilon_rad, double* delta_psi_rad);
 
 
-double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time, const float offset_sec)
+double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time)
 {
   const double kMsecToSec = 1.0e-3;                       //!< conversion from msec to sec
   const double kDayOfWeek_day = 7.0;                      //!< days of a week
@@ -66,7 +68,8 @@ double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME_OF_WEEK gps_time,
 
   if (gps_time_sec > kSecOfWeek_sec) return (GPS_TIME_OF_WEEK_JDAY_ORIGIN);
 
-  double elapsed_julian_day_sec_part = gps_time_sec + (double)(gps_time.leap_seconds) + (double)(offset_sec);
+  // leap_secondsの分だけgps時刻の方が進んでいるため，leap_seconds分を差し引く．負値になり得るが，doubleにしているので許容可
+  double elapsed_julian_day_sec_part = gps_time_sec - (double)(LEAP_SECONDS);
   double elapsed_julian_day = (double)(gps_time.week_number)*kDayOfWeek_day +
                                elapsed_julian_day_sec_part / (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 

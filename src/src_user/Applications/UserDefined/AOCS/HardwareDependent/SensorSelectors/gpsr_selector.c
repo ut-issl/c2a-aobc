@@ -40,8 +40,7 @@ static void APP_GPSR_SELECTOR_exec_(void)
     if (oem7600_driver[OEM7600_IDX_IN_UNIT]->info.num_of_visible_sats >= kEnoughNumberOfVisibleGps)
     {
       GPS_TIME_OF_WEEK obs_gps_time = GPS_TIME_OF_WEEK_create_gps_time(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week,
-                                                                       oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms,
-                                                                       0);
+                                                                       oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms);
       AOCS_MANAGER_set_current_gps_time_obs(obs_gps_time, oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.obct_gps_time_obs);
 
       AOCS_MANAGER_set_sat_pos_vel_obs_ecef_m(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m,
