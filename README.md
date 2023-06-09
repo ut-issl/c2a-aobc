@@ -118,6 +118,7 @@ $ git submodule update
   - S2Eのcmakeキャッシュを削除する
 
 # 本リポジトリに対するユーザーサイドリポジトリの設定について
+- 同じAOCSユニットを使う場合でも、衛星固有でパラメータを調整する必要がある。これらのパラメータは`src/Settings/SatelliteParameters`に整理されており、衛星毎に別途値を定める必要がある。
 - 衛星固有の設定ファイルなどを含んだユーザーリポジトリを作成する際は、`Examples` のフォルダ構成を参考にすること。
 
 ## Brief history of development
