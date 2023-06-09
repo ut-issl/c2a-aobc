@@ -15,6 +15,9 @@
 #include "../../../../Library/time_space.h"
 #include <string.h>
 
+// SatelliteParameters
+#include "../../../../Settings/SatelliteParameters/orbit_parameters.h"
+
 // #define APP_SGP4_DEBUG_OUTPUT //!< デバッグ出力を表示させたいときに定義する
 
 static Sgp4OrbitPropagator        sgp4_orbit_propagator_;
@@ -33,16 +36,16 @@ static void APP_SGP4_init_(void)
   memset(&sgp4_orbit_propagator_, 0x00, sizeof(Sgp4OrbitPropagator));
 
   // 1行目
-  sgp4_orbit_propagator_.tle_input.epoch_year = 22;
-  sgp4_orbit_propagator_.tle_input.epoch_day = 352.00000000;
-  sgp4_orbit_propagator_.tle_input.b_star = 0.0f;
+  sgp4_orbit_propagator_.tle_input.epoch_year = ORBIT_PARAMETERS_tle_epoch_year;
+  sgp4_orbit_propagator_.tle_input.epoch_day = ORBIT_PARAMETERS_tle_epoch_day;
+  sgp4_orbit_propagator_.tle_input.b_star = ORBIT_PARAMETERS_tle_b_star;
   // 2行目
-  sgp4_orbit_propagator_.tle_input.inclination_deg = 97.5068f;
-  sgp4_orbit_propagator_.tle_input.raan_deg = 339.7118f;
-  sgp4_orbit_propagator_.tle_input.eccentricity = 0.0011775f;
-  sgp4_orbit_propagator_.tle_input.arg_perigee_deg = 245.9837f;
-  sgp4_orbit_propagator_.tle_input.mean_anomaly_deg = 114.0163f;
-  sgp4_orbit_propagator_.tle_input.mean_motion_rpd = 15.15782335f;
+  sgp4_orbit_propagator_.tle_input.inclination_deg = ORBIT_PARAMETERS_tle_inclination_deg;
+  sgp4_orbit_propagator_.tle_input.raan_deg = ORBIT_PARAMETERS_tle_raan_deg;
+  sgp4_orbit_propagator_.tle_input.eccentricity = ORBIT_PARAMETERS_tle_eccentricity;
+  sgp4_orbit_propagator_.tle_input.arg_perigee_deg = ORBIT_PARAMETERS_tle_arg_perigee_deg;
+  sgp4_orbit_propagator_.tle_input.mean_anomaly_deg = ORBIT_PARAMETERS_tle_mean_anomaly_deg;
+  sgp4_orbit_propagator_.tle_input.mean_motion_rpd = ORBIT_PARAMETERS_tle_mean_motion_rpd;
 
 #ifdef APP_SGP4_DEBUG_OUTPUT
   uint32_t start_time_ms = (uint32_t)TMGR_get_master_total_cycle_in_msec();
