@@ -9,15 +9,15 @@
 const APP_TARGET_ATT_CALC_MODE ATTITUDE_TARGET_PARAMETERS_mode = APP_TARGET_ATT_CALC_MODE_MANUAL;
 
 // Manual mode target
-const Quaternion ATTITUDE_TARGET_PARAMETERS_quaternion_target_i2t = {0.5f, 0.5f, 0.5f, 0.5f};
+const Quaternion ATTITUDE_TARGET_PARAMETERS_quaternion_target_i2t = { 0.5f, 0.5f, 0.5f, 0.5f };
 
 // Target calculation from orbit
 // Main target
 extern const APP_TAFO_TARGET_DIRECITON ATTITUDE_TARGET_PARAMETERS_main_target_direction = APP_TAFO_TARGET_DIRECITON_SUN;
-extern const float ATTITUDE_TARGET_PARAMETERS_vec_to_main_target_body[PHYSICAL_CONST_THREE_DIM] = {1.0f, 0.0f, 0.0f};
+extern const float ATTITUDE_TARGET_PARAMETERS_vec_to_main_target_body[PHYSICAL_CONST_THREE_DIM] = { 1.0f, 0.0f, 0.0f };
 // Sub target
 extern const APP_TAFO_TARGET_DIRECITON ATTITUDE_TARGET_PARAMETERS_sub_target_direction = APP_TAFO_TARGET_DIRECITON_EARTH_CENTER;
-extern const float ATTITUDE_TARGET_PARAMETERS_vec_to_sub_target_body[PHYSICAL_CONST_THREE_DIM] = {0.0f, 1.0f, 0.0f};
+extern const float ATTITUDE_TARGET_PARAMETERS_vec_to_sub_target_body[PHYSICAL_CONST_THREE_DIM] = { 0.0f, 1.0f, 0.0f };
 // Offset angle
 extern const MATRIX33_ROTATION_AXIS ATTITUDE_TARGET_PARAMETERS_offset_angle_axis = MATRIX33_ROTATION_AXIS_X;
 extern const float ATTITUDE_TARGET_PARAMETERS_offset_angle_rad = 0.0f;
