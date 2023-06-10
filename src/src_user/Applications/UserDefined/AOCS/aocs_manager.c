@@ -19,6 +19,7 @@
 // SatelliteParameters
 #include "../../../Settings/SatelliteParameters/orbit_parameters.h"
 #include "../../../Settings/SatelliteParameters/structure_parameters.h"
+#include "../../../Settings/SatelliteParameters/attitude_target_parameters.h"
 
 static AocsManager        aocs_manager_;
 const  AocsManager* const aocs_manager = &aocs_manager_;
@@ -66,7 +67,7 @@ static void APP_AOCS_MANAGER_init_(void)
   // Quaternion
   aocs_manager_.quaternion_obs_i2b = QUATERNION_make_unit();
   aocs_manager_.quaternion_est_i2b = QUATERNION_make_unit();
-  aocs_manager_.quaternion_target_i2t = QUATERNION_make_unit();
+  aocs_manager_.quaternion_target_i2t = ATTITUDE_TARGET_PARAMETERS_quaternion_target_i2t;
   aocs_manager_.quaternion_error_b2t = QUATERNION_make_unit();
   aocs_manager_.limit_maneuver_angle_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
   // 太陽方向
