@@ -24,4 +24,4 @@ extern const float ATTITUDE_TARGET_PARAMETERS_offset_angle_rad = 0.0f;
 // Target on earth surface
 extern const float ATTITUDE_TARGET_PARAMETERS_target_lla_rad_m[PHYSICAL_CONST_THREE_DIM] = { PHYSICAL_CONST_degree_to_radian(35.7130f),
                                                                                              PHYSICAL_CONST_degree_to_radian(139.7596f),
-                                                                                             23.0f};
+                                                                                             23.0f };
