@@ -71,5 +71,13 @@ extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_sample_freq_Hz;      
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_cutoff_freq_Hz;  //!< Three Axis Control output LPF cutoff frequency for cross spin axis [Hz]
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_damping_factor;  //!< Three Axis Control output LPF damping factor
 
+// Three Axis Control with RW
+// Gain
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_x; //!< Three Axis Control RW attitude gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_y; //!< Three Axis Control RW attitude gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_z; //!< Three Axis Control RW attitude gain body Z axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_x; //!< Three Axis Control RW attitude rate gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_y; //!< Three Axis Control RW attitude rate gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z; //!< Three Axis Control RW attitude rate gain body Z axis
 
 #endif // ATTITUDE_CONTROL_PARAMETERS_H_

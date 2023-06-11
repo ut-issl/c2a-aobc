@@ -64,3 +64,12 @@ extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_angle_to_run_integral
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_sample_freq_Hz = 10.0f;
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_cutoff_freq_Hz = 0.3f;
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_damping_factor = 1.0f;
+
+// Three Axis Control with MTQ
+// Gain
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_x = { 1.0e-3f, 0.0f, 1.0e-3f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_y = { 2.0f * 1.0e-3f, 0.0f, 2.0f * 1.0e-3f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_z = { 2.0f * 1.0e-3f, 0.0f, 2.0f * 1.0e-3f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_x = { 7.0e-2f, 0.0f, 2.0e-3f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_y = { 2.0f * 7.0e-2f, 0.0f, 2.0f * 2.0e-3f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z = { 2.0f * 7.0e-2f, 0.0f, 2.0f * 2.0e-3f };
