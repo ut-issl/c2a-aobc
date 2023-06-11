@@ -20,12 +20,12 @@ extern const uint32_t ATTITUDE_CONTROL_PARAMETERS_bdot_mtq_output_time_length_ms
 extern const SUN_POINTING_AXIS_ID ATTITUDE_CONTROL_PARAMETERS_sun_pointing_axis_id;     //!< Sun pointing target axis ID
 extern const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_spin_rate_around_sun_rad_s; //!< Sun pointing target spin rate around sun direction [rad/s]
 // Gain
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_x; //!< Sun pointing attitude gain body X axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_y; //!< Sun pointing attitude gain body Y axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_z; //!< Sun pointing attitude gain body Z axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_x; //!< Sun pointing attitude rate gain body X axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_y; //!< Sun pointing attitude rate gain body Y axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_z; //!< Sun pointing attitude rate gain body Z axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_x;       //!< Sun pointing attitude gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_y;       //!< Sun pointing attitude gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_z;       //!< Sun pointing attitude gain body Z axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_x;  //!< Sun pointing attitude rate gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_y;  //!< Sun pointing attitude rate gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_z;  //!< Sun pointing attitude rate gain body Z axis
 // MTQ control settings
 extern const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_direct_feedback_angle_rad;        //!< Sun pointing direct feedback max angle [rad]
 extern const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_direct_feedback_rate_rad_s;       //!< Sun pointing direct feedback max angular rate [rad_s]
@@ -50,9 +50,9 @@ extern const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_spin_rate_cutoff
 
 // Three Axis Control with MTQ
 // Gain
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_x; //!< Three Axis Control MTQ attitude gain body X axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_y; //!< Three Axis Control MTQ attitude gain body Y axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_z; //!< Three Axis Control MTQ attitude gain body Z axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_x;      //!< Three Axis Control MTQ attitude gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_y;      //!< Three Axis Control MTQ attitude gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_z;      //!< Three Axis Control MTQ attitude gain body Z axis
 extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_x; //!< Three Axis Control MTQ attitude rate gain body X axis
 extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_y; //!< Three Axis Control MTQ attitude rate gain body Y axis
 extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_z; //!< Three Axis Control MTQ attitude rate gain body Z axis
@@ -74,12 +74,12 @@ extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_damping_factor;  
 
 // Three Axis Control with RW
 // Gain
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_x; //!< Three Axis Control RW attitude gain body X axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_y; //!< Three Axis Control RW attitude gain body Y axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_z; //!< Three Axis Control RW attitude gain body Z axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_x; //!< Three Axis Control RW attitude rate gain body X axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_y; //!< Three Axis Control RW attitude rate gain body Y axis
-extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z; //!< Three Axis Control RW attitude rate gain body Z axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_x;       //!< Three Axis Control RW attitude gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_y;       //!< Three Axis Control RW attitude gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_z;       //!< Three Axis Control RW attitude gain body Z axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_x;  //!< Three Axis Control RW attitude rate gain body X axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_y;  //!< Three Axis Control RW attitude rate gain body Y axis
+extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z;  //!< Three Axis Control RW attitude rate gain body Z axis
 
 // Unloading
 
