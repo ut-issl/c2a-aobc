@@ -39,3 +39,28 @@ const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_cutoff_freq_Hz = 0.
 const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_damping_factor = 1.0f;
 const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_cutoff_freq_spin_axis_Hz = 0.03f;
 const float ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_spin_rate_cutoff_freq_Hz = 5e-4f;
+
+// Three Axis Control with MTQ
+// Gain
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_x = { 1.2e-4f, 0.0f, 0.0f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_y = { 2.0f * 1.2e-4f, 0.0f, 0.0f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_z = { 1.5f * 1.2e-4f, 0.0f, 0.0f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_x = { 2.5e-2f, 0.0f, 0.0f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_y = { 2.0f * 2.5e-2f, 0.0f, 0.0f };
+const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_z = { 1.5f * 2.5e-2f, 0.0f, 0.0f };
+// MTQ control settings
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_angle_rad = PHYSICAL_CONST_degree_to_radian(18.0f);
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_rate_rad_s = 5.0e-3f;
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_transient = 0.6f;
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_transient = 0.0f;
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_stable = 0.6f;
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_stable = 0.1f;
+const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_acceptable_angle_error_as_stable_rad = PHYSICAL_CONST_degree_to_radian(20.0f);
+
+// Integral control setting
+extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_integral_angle_rad = PHYSICAL_CONST_degree_to_radian(40.0f);
+extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_angle_to_run_integral_control_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
+// Output torque Low Pass Filter(LPF) setting
+extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_sample_freq_Hz = 10.0f;
+extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_cutoff_freq_Hz = 0.3f;
+extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_damping_factor = 1.0f;
