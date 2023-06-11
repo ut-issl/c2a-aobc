@@ -16,6 +16,9 @@
 #include "../../../app_registry.h"
 #include "../../../../Library/vector3.h"
 
+// SatelliteParameters
+#include "../../../../Settings/SatelliteParameters/attitude_target_parameters.h"
+
 static TargetAttitudeCalculator        target_attitude_calculator_;
 const  TargetAttitudeCalculator* const target_attitude_calculator = &target_attitude_calculator_;
 
@@ -46,8 +49,8 @@ AppInfo APP_TARGET_ATT_CALC_create_app(void)
 static void APP_TARGET_ATT_CALC_init_(void)
 {
   // デフォルトはMANUALモード
-  target_attitude_calculator_.mode = APP_TARGET_ATT_CALC_MODE_MANUAL;
-  target_attitude_calculator_.quaternion_target_i2t = QUATERNION_make_unit();
+  target_attitude_calculator_.mode = ATTITUDE_TARGET_PARAMETERS_mode;
+  target_attitude_calculator_.quaternion_target_i2t = ATTITUDE_TARGET_PARAMETERS_quaternion_target_i2t;
   target_attitude_calculator_.is_enabled = 0;
 }
 

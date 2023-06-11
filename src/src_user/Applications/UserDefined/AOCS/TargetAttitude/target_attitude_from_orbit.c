@@ -18,7 +18,6 @@
 // SatelliteParameters
 #include "../../../../Settings/SatelliteParameters/attitude_target_parameters.h"
 
-
 static TargetAttitudeFromOrbit        target_attitude_from_orbit_;
 const  TargetAttitudeFromOrbit* const target_attitude_from_orbit = &target_attitude_from_orbit_;
 
