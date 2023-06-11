@@ -36,4 +36,5 @@ const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_stt_standard_deviation_compo_r
 const float kOrbitPeriodSec = 5700.0f;
 const float kEkfComputationCycleSec = 0.1f;
 const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude = powf((MATH_CONST_2PI / kOrbitPeriodSec * kEkfComputationCycleSec), 2.0f);
+// The attitude rate process noise is not well tuned at this moment
 const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude_rate = powf((MATH_CONST_2PI / kOrbitPeriodSec * kEkfComputationCycleSec), 2.0f);
