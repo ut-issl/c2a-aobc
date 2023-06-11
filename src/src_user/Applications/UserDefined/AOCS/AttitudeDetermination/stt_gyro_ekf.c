@@ -20,6 +20,9 @@
 #include "../HardwareDependent/SensorFilters/sagitta_filter.h"
 #include "../../../../Library/math_constants.h"
 
+// Satellite parameters
+#include "../../../../Settings/SatelliteParameters/attitude_determination_parameters.h"
+
 MATRIX_DEFINE_MATRIX_SRTUCT(6, 3, float);
 MATRIX_DEFINE_MATRIX_SRTUCT(6, 1, float);
 MATRIX_DEFINE_MATRIX_SRTUCT(3, 6, float);
@@ -196,27 +199,7 @@ AppInfo APP_STT_GYRO_EKF_create_app(void)
 
 static void APP_STT_GYRO_EKF_init_(void)
 {
-  APP_STT_GYRO_EKF_process_noise_covariance_ = MATRIX_MAKE_INIT_MATRIX(6, 6, float);
-  // 姿勢変化は制御周期0.1秒間での軌道位相変化と同程度とし，分散はその2乗になる．
-  const float kOrbitPeriodSec = 5700.0f; //!< 軌道周期
-  stt_gyro_ekf_.process_noise_covariance.attitude_element =
-    powf((MATH_CONST_2PI / kOrbitPeriodSec * APP_STT_GYRO_EKF_kComputationCycle_), 2.0f);
-  // 姿勢レート変化はどの程度の値にするか未定．
-  stt_gyro_ekf_.process_noise_covariance.attitude_rate_element =
-    powf((MATH_CONST_2PI / kOrbitPeriodSec * APP_STT_GYRO_EKF_kComputationCycle_), 2.0f);
-  APP_STT_GYRO_EKF_process_noise_covariance_ = MATRIX_MAKE_INIT_MATRIX(6, 6, float);
-  for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
-  {
-    APP_STT_GYRO_EKF_process_noise_covariance_.data[i][i] = stt_gyro_ekf_.process_noise_covariance.attitude_element;
-    APP_STT_GYRO_EKF_process_noise_covariance_.data[i + 3][i + 3] = stt_gyro_ekf_.process_noise_covariance.attitude_rate_element;
-  }
-
-  APP_STT_GYRO_EKF_observation_matrix_ = MATRIX_MAKE_INIT_MATRIX(3, 6, float);
-  for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
-  {
-    APP_STT_GYRO_EKF_observation_matrix_.data[i][i] = 1.0f;
-  }
-
+  // General parameters
   APP_STT_GYRO_EKF_calculation_time_.previous = TMGR_get_master_clock();
   APP_STT_GYRO_EKF_calculation_time_.current = TMGR_get_master_clock();
   APP_STT_GYRO_EKF_before_stt_unix_time_ms_ = 0;
@@ -225,25 +208,49 @@ static void APP_STT_GYRO_EKF_init_(void)
   VECTOR3_initialize(stt_gyro_ekf_.estimated_result.angular_velocity_body_rad_s, 0.0f);
   VECTOR3_initialize(stt_gyro_ekf_.estimated_result.rate_bias_body_rad_s, 0.0f);
 
-  stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s[0] = 4.363323e-5f; // STIM210ランダムノイズN：15deg/sq(h)
-  stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s[1] = 4.363323e-5f; // STIM210ランダムノイズN：15deg/sq(h)
-  stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s[2] = 4.363323e-5f; // STIM210ランダムノイズN：15deg/sq(h)
+  stt_gyro_ekf_.use_ekf_estimated_attitude = APP_STT_GYRO_EKF_USE_ESTIMATED_ATTITUDE_DISABLE;
+  stt_gyro_ekf_.calculation_state = APP_STT_GYRO_EKF_CALCULATION_DIVERGED;
+
+  // Process noise model
+  stt_gyro_ekf_.process_noise_covariance.attitude_element = ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude;
+  stt_gyro_ekf_.process_noise_covariance.attitude_rate_element = ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude;
+  APP_STT_GYRO_EKF_process_noise_covariance_ = MATRIX_MAKE_INIT_MATRIX(6, 6, float);
+  for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
+  {
+    APP_STT_GYRO_EKF_process_noise_covariance_.data[i][i] = stt_gyro_ekf_.process_noise_covariance.attitude_element;
+    APP_STT_GYRO_EKF_process_noise_covariance_.data[i + 3][i + 3] = stt_gyro_ekf_.process_noise_covariance.attitude_rate_element;
+  }
+
+  // Observation model
+  APP_STT_GYRO_EKF_observation_matrix_ = MATRIX_MAKE_INIT_MATRIX(3, 6, float);
+  for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
+  {
+    APP_STT_GYRO_EKF_observation_matrix_.data[i][i] = 1.0f;
+  }
+
+  // Observation noise model for Gyro sensor
+  VECTOR3_copy(stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s,
+               ATTITUDE_DETERMINATION_PARAMETERS_ekf_gyro_random_noise_standard_deviation_compo_rad_s);
   QUATERNION_trans_coordinate(stt_gyro_ekf_.gyro_random_noise.standard_deviation_body_rad_s,
-    stim210_driver[STIM210_IDX_IN_UNIT]->info.frame_transform_c2b,
-    stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s);
+                              stim210_driver[STIM210_IDX_IN_UNIT]->info.frame_transform_c2b,
+                              stt_gyro_ekf_.gyro_random_noise.standard_deviation_compo_rad_s);
 
-  // ランダムウォークノイズ：STIM210 bias stability B = 0.3deg/h
-  stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2[0] = 7.272205e-8f; // K=3/2*B^2/Nとして計算
-  stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2[1] = 7.272205e-8f; // K=3/2*B^2/Nとして計算
-  stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2[2] = 7.272205e-8f; // K=3/2*B^2/Nとして計算
+  VECTOR3_copy(stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2,
+               ATTITUDE_DETERMINATION_PARAMETERS_ekf_gyro_random_walk_standard_deviation_compo_rad_s2);
   QUATERNION_trans_coordinate(stt_gyro_ekf_.gyro_random_walk.standard_deviation_body_rad_s2,
-    stim210_driver[STIM210_IDX_IN_UNIT]->info.frame_transform_c2b,
-    stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2);
+                              stim210_driver[STIM210_IDX_IN_UNIT]->info.frame_transform_c2b,
+                              stt_gyro_ekf_.gyro_random_walk.standard_deviation_compo_rad_s2);
 
-  // STIM210のノイズは，ECRVよりは単純なランダムウォークノイズとしてモデル化するのが適切．
-  // ECRV時定数->無限大の極限がランダムウォークノイズと一致するので，今回は大きな値として10^9で設定する．
-  stt_gyro_ekf_.gyro_random_walk.time_constant_s = 1.0E9f;
+  stt_gyro_ekf_.gyro_random_walk.time_constant_s = ATTITUDE_DETERMINATION_PARAMETERS_ekf_gyro_random_walk_time_constant_s;
 
+  // Observation noise model for Star sensor
+  VECTOR3_copy(stt_gyro_ekf_.stt_error.standard_deviation_compo_rad,
+               ATTITUDE_DETERMINATION_PARAMETERS_ekf_stt_standard_deviation_compo_rad);
+  QUATERNION_trans_coordinate(stt_gyro_ekf_.stt_error.standard_deviation_body_rad,
+                              sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.frame_transform_c2b,
+                              stt_gyro_ekf_.stt_error.standard_deviation_compo_rad);
+
+  // System matrix
   APP_STT_GYRO_EKF_system_matrix_.a = MATRIX_MAKE_INIT_MATRIX(6, 6, float);
   APP_STT_GYRO_EKF_system_matrix_.a.data[0][3] = -0.5f;
   APP_STT_GYRO_EKF_system_matrix_.a.data[1][4] = -0.5f;
@@ -260,13 +267,7 @@ static void APP_STT_GYRO_EKF_init_(void)
   APP_STT_GYRO_EKF_system_matrix_.b.data[4][4] = 1.0f;
   APP_STT_GYRO_EKF_system_matrix_.b.data[5][5] = 1.0f;
 
-  stt_gyro_ekf_.stt_error.standard_deviation_compo_rad[0] = 4.8481e-5f; // STT roll方向精度：10秒角
-  stt_gyro_ekf_.stt_error.standard_deviation_compo_rad[1] = 9.6963e-6f; // STT cross方向精度：2秒角
-  stt_gyro_ekf_.stt_error.standard_deviation_compo_rad[2] = 9.6963e-6f; // STT cross方向精度：2秒角
-  QUATERNION_trans_coordinate(stt_gyro_ekf_.stt_error.standard_deviation_body_rad,
-    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.frame_transform_c2b,
-    stt_gyro_ekf_.stt_error.standard_deviation_compo_rad);
-
+  // Covariance matrix
   stt_gyro_ekf_.initial_covariance.diagonal_component_stt[0] =
     powf(stt_gyro_ekf_.stt_error.standard_deviation_body_rad[0], 2.0f);
   stt_gyro_ekf_.initial_covariance.diagonal_component_stt[1] =
@@ -277,9 +278,7 @@ static void APP_STT_GYRO_EKF_init_(void)
     powf(stt_gyro_ekf_.gyro_random_noise.standard_deviation_body_rad_s[0], 2.0f);
   APP_STT_GYRO_EKF_initialize_covariance_matrix_();
 
-  stt_gyro_ekf_.use_ekf_estimated_attitude = APP_STT_GYRO_EKF_USE_ESTIMATED_ATTITUDE_DISABLE;
-  stt_gyro_ekf_.calculation_state = APP_STT_GYRO_EKF_CALCULATION_DIVERGED;
-
+  // Observation covariance
   APP_STT_GYRO_EKF_observation_noise_covariance_ = MATRIX_MAKE_INIT_MATRIX(3, 3, float);
   for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
