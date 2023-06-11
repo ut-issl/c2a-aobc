@@ -213,7 +213,7 @@ static void APP_STT_GYRO_EKF_init_(void)
 
   // Process noise model
   stt_gyro_ekf_.process_noise_covariance.attitude_element = ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude;
-  stt_gyro_ekf_.process_noise_covariance.attitude_rate_element = ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude;
+  stt_gyro_ekf_.process_noise_covariance.attitude_rate_element = ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude_rate;
   APP_STT_GYRO_EKF_process_noise_covariance_ = MATRIX_MAKE_INIT_MATRIX(6, 6, float);
   for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
