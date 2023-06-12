@@ -9,6 +9,7 @@
 #include <src_user/Applications/UserDefined/AOCS/AttitudeControl/bdot.h>
 #include <src_user/Applications/UserDefined/AOCS/AttitudeControl/sun_pointing.h>
 #include <src_user/Applications/UserDefined/AOCS/AttitudeControl/unloading.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 // Bdot
 extern const float ATTITUDE_CONTROL_PARAMETERS_bdot_control_gain[PHYSICAL_CONST_THREE_DIM]; //!< Control gain for B-dot
@@ -82,11 +83,20 @@ extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_bod
 extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z;  //!< Three Axis Control RW attitude rate gain body Z axis
 
 // Unloading
-
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;  //!< Unloading upper threshold [rad/s]
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;  //!< Unloading lower threshold [rad/s]
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;           //!< Unloading target [rad/s]
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;                            //!< Unloading gain
 extern const APP_UNLOADING_EXEC ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable;             //!< Unloading execution enable flag
+
+// Control Torques
+extern const AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION ATTITUDE_CONTROL_PARAMETERS_constant_torque_permission;  //!< Constant torque correction permission
+extern const float ATTITUDE_CONTROL_PARAMETERS_constant_torque_body_Nm[PHYSICAL_CONST_THREE_DIM];             //!< Constant torque [Nm]
+extern const float ATTITUDE_CONTROL_PARAMETERS_internal_torque_max_body_Nm[PHYSICAL_CONST_THREE_DIM];         //!< Maximum output torque for internal torque [Nm]
+extern const float ATTITUDE_CONTROL_PARAMETERS_external_torque_max_body_Nm[PHYSICAL_CONST_THREE_DIM];         //!< Maximum output torque for external torque [Nm]
+
+// Target Setting parameters
+extern const float ATTITUDE_CONTROL_PARAMETERS_limit_angular_velocity_rad_s;  //!< Limit of angular velocity target error [rad/s]
+extern const float ATTITUDE_CONTROL_PARAMETERS_limit_maneuver_angle_rad;      //!< Limit of angle target error [rad]
 
 #endif // ATTITUDE_CONTROL_PARAMETERS_H_

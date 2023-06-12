@@ -80,3 +80,13 @@ const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_thresho
 const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(0.0f);
 const float ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain = -1.0e-7f;
 const APP_UNLOADING_EXEC ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable = APP_UNLOADING_EXEC_DISABLE;
+
+// Control Torques
+const AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION ATTITUDE_CONTROL_PARAMETERS_constant_torque_permission = AOCS_MANAGER_CONSTANT_TORQUE_DISABLE;
+const float ATTITUDE_CONTROL_PARAMETERS_constant_torque_body_Nm[PHYSICAL_CONST_THREE_DIM] = { 0.0f, 0.0f, 0.0f };
+const float ATTITUDE_CONTROL_PARAMETERS_internal_torque_max_body_Nm[PHYSICAL_CONST_THREE_DIM] = { 5.0e-3f, 5.0e-3f, 5.0e-3f };
+const float ATTITUDE_CONTROL_PARAMETERS_external_torque_max_body_Nm[PHYSICAL_CONST_THREE_DIM] = { 3.0e-4f, 3.0e-4f, 3.0e-4f };
+
+// Target Setting parameters
+const float ATTITUDE_CONTROL_PARAMETERS_limit_angular_velocity_rad_s = PHYSICAL_CONST_degree_to_radian(0.8f);
+const float ATTITUDE_CONTROL_PARAMETERS_limit_maneuver_angle_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
