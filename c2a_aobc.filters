@@ -452,12 +452,6 @@
     <ClCompile Include="src\src_user\Settings\Modes\mode_definitions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\orbit_parameters.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\structure_parameters.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\src_core\c2a_core_main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
