@@ -122,7 +122,6 @@ static void APP_SUN_POINTING_init_(void)
   sun_pointing_.lpf_trq_cutoff_freq_spin_axis_Hz = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_cutoff_freq_spin_axis_Hz;
   sun_pointing_.lpf_spin_rate_cutoff_freq_Hz     = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_spin_rate_cutoff_freq_Hz;
 
-  // 下記の値はISS軌道を想定した値 (極軌道に近ければ緩めて良いはず)
   sun_pointing_.mtq_allowable_error_ratio_transient = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_mtq_allowable_error_ratio_transient;
   sun_pointing_.correction_gain_transient           = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_correction_gain_transient;
   sun_pointing_.mtq_allowable_error_ratio_stable    = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_mtq_allowable_error_ratio_stable;

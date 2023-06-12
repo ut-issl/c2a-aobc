@@ -83,7 +83,6 @@ static void APP_TAC_MTQ_init_(void)
   gains_omega[1] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_y;
   gains_omega[2] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_z;
 
-  // 下記値の変更時は，HW側の出力最大値にかからない様に留意しながら，ゲインと組み合わせて調整すること．
   three_axis_control_mtq_.max_direct_feedback_angle_mtq_rad     = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_angle_rad;
   three_axis_control_mtq_.max_direct_feedback_rate_mtq_rad_s    = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_rate_rad_s;
   three_axis_control_mtq_.max_integral_angle_mtq_rad            = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_integral_angle_rad;
@@ -93,7 +92,6 @@ static void APP_TAC_MTQ_init_(void)
   three_axis_control_mtq_.mtq_lpf_cutoff_freq_Hz = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_cutoff_freq_Hz;
   three_axis_control_mtq_.mtq_lpf_damping_factor = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_damping_factor;
 
-  // 下記の値はISS軌道を想定した値 (極軌道に近ければ緩めて良いはず)
   three_axis_control_mtq_.allowable_error_ratio_transient      = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_transient;
   three_axis_control_mtq_.correction_gain_transient            = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_transient;
   three_axis_control_mtq_.allowable_error_ratio_stable         = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_stable;

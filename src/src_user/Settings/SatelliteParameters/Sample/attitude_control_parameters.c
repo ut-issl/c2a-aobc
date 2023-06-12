@@ -49,6 +49,7 @@ const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_x = 
 const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_y = { 2.0f * 2.5e-2f, 0.0f, 0.0f };
 const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_z = { 1.5f * 2.5e-2f, 0.0f, 0.0f };
 // MTQ control settings
+// 下記の値はISS軌道を想定した値, 変更時は，HW側の出力最大値にかからない様に留意しながら，ゲインと組み合わせて調整すること．
 const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_angle_rad = PHYSICAL_CONST_degree_to_radian(18.0f);
 const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_rate_rad_s = 5.0e-3f;
 const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_transient = 0.6f;
@@ -56,7 +57,6 @@ const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_transient = 0.0f
 const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_stable = 0.6f;
 const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_stable = 0.1f;
 const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_acceptable_angle_error_as_stable_rad = PHYSICAL_CONST_degree_to_radian(20.0f);
-
 // Integral control setting
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_integral_angle_rad = PHYSICAL_CONST_degree_to_radian(40.0f);
 extern const float ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_angle_to_run_integral_control_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
