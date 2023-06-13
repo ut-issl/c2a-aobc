@@ -13,8 +13,6 @@
 // Constant value
 const uint8_t MPU9250_PARAMETERS_kNumCoeffTempCalib = 2; //!< Number of coefficient for calibration. This value cannot be changed since it relates Tlm/Cmd definition.
 
-// Communication port
-
 // Magnetometer bias
 extern const float MPU9250_PARAMETERS_mag_bias_compo_nT[PHYSICAL_CONST_THREE_DIM]; //!< Magnetic field observation bias @ component frame [nT]
 
@@ -39,7 +37,7 @@ extern const float MPU9250_PARAMETERS_mag_spike_amplitude_limit_to_accept_as_ste
 
 // Gyro filter
 // 1st order Low Pass Filter
-extern const float MPU9250_PARAMETERS_gyro_cut_off_freq_lpf_1st_Hz[PHYSICAL_CONST_THREE_DIM]; //!< Cut off frequency for magnetometer filter [Hz]
+extern const float MPU9250_PARAMETERS_gyro_cut_off_freq_lpf_1st_Hz[PHYSICAL_CONST_THREE_DIM]; //!< Cut off frequency for gyro filter [Hz]
 // Spike filter
 extern const uint8_t MPU9250_PARAMETERS_gyro_spike_count_limit_to_accept[PHYSICAL_CONST_THREE_DIM];                   //!< Count limit to accept
 extern const uint8_t MPU9250_PARAMETERS_gyro_spike_count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM]; //!< Count limit to reject continued warning
