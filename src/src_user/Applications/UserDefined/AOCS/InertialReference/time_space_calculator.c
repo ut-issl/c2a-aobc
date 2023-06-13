@@ -71,15 +71,6 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
   // 現状では，GPSR情報は全てobsに入れる流れとなっており，estに値が入らないことから，ここではobsのままにする
   GPS_TIME_OF_WEEK ref_gps_time = aocs_manager->current_gps_time_obs;
 
-  double week_of_msec = PHYSICAL_CONST_EARTH_SOLAR_DAY_s * 7.0 * 1e3;
-
-  // check rollover
-  if ((double)(ref_gps_time.msec_of_week) > week_of_msec)
-  {
-    ref_gps_time.msec_of_week = 0;
-    ref_gps_time.week_number += 1;
-  }
-
   ObcTime current_obct  = TMGR_get_master_clock();
   double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time);
   reference_jday += (double)(time_space_calculator_.offset_sec) / (PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
