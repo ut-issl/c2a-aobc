@@ -16,10 +16,10 @@
 
 
 //!< JulainDay at Origin of GPS Time of Week (1980/1/6 00:00)
-static const double gps_time_jday_origin_ = 2444244.5;
+static const double kGPSTimeJDayOrigin_day_ = 2444244.5;
 
 //!< leap seconds (GPSTime - UTC)
-static double leap_seconds_ = 18.0;
+static double gps_utc_leap_seconds_ = 18.0;
 
 /**
  * @brief      日周運動を表すR行列の計算
@@ -67,14 +67,14 @@ double TIME_SPACE_convert_gpstime_to_julian_day(const GPS_TIME gps_time)
 
   double gps_time_sec = (double)(gps_time.msec_of_week)*kMsecToSec;
 
-  if (gps_time_sec > kSecOfWeek_sec) return (gps_time_jday_origin_);
+  if (gps_time_sec > kSecOfWeek_sec) return (kGPSTimeJDayOrigin_day_);
 
   // leap_secondsの分だけgps時刻の方が進んでいるため，leap_seconds分を差し引く．負値になり得るが，doubleにしているので許容可
-  double elapsed_julian_day_sec_part = gps_time_sec - (double)(leap_seconds_);
+  double elapsed_julian_day_sec_part = gps_time_sec - (double)(gps_utc_leap_seconds_);
   double elapsed_julian_day = (double)(gps_time.week_number)*kDayOfWeek_day +
                                elapsed_julian_day_sec_part / (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
-  return (gps_time_jday_origin_ + elapsed_julian_day);
+  return (kGPSTimeJDayOrigin_day_ + elapsed_julian_day);
 }
 
 
@@ -172,9 +172,9 @@ void TIME_SPACE_calc_sun_direction_eci(const double julian_century, float sun_di
 }
 
 // ToDo: どこかのアプリでこれをCMDとして呼ぶ
-void TIME_SPACE_update_leap_seconds(const float leap_seconds_updated)
+void TIME_SPACE_update_gps_utc_leap_seconds(const float leap_seconds_updated)
 {
-  leap_seconds_ = (double)(leap_seconds_updated);
+  gps_utc_leap_seconds_ = (double)(leap_seconds_updated);
   return;
 }
 
