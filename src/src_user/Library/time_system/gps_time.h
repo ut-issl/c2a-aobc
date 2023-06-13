@@ -15,15 +15,15 @@ typedef struct
 {
   uint16_t week_number;   //!< 週番号
   uint32_t msec_of_week;  //!< 週内の経過秒 [ミリ秒]
-} GPS_TIME_OF_WEEK;
+} GPS_TIME;
 
 
 /**
  * @brief      uint変数からのGPS時刻構造体生成
  * @param[in]  week_number    : 週番号
  * @param[in]  msec_of_week   : 週内の経過秒 [ミリ秒]
- * @return     GPS_TIME_OF_WEEK
+ * @return     GPS_TIME
  */
-GPS_TIME_OF_WEEK GPS_TIME_OF_WEEK_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week);
+GPS_TIME GPS_TIME_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week);
 
 #endif

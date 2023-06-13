@@ -465,7 +465,7 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_rotation_direction_matrix(
 }
 
 // 時刻
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_obs(const GPS_TIME_OF_WEEK current_gps_time,
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_obs(const GPS_TIME current_gps_time,
                                                          const ObcTime  obct_gps_time_obs)
 {
   aocs_manager_.current_gps_time_obs = current_gps_time;
