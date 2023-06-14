@@ -13,6 +13,9 @@
 #include "../../../../Library/time_space.h"
 #include <string.h>
 
+// SatelliteParameters
+#include "../../../../Settings/SatelliteParameters/orbit_parameters.h"
+
 static KeplerOrbitPropagator        kepler_orbit_propagator_;
 const  KeplerOrbitPropagator* const kepler_orbit_propagator = &kepler_orbit_propagator_;
 
@@ -28,12 +31,12 @@ static void APP_KOP_init_(void)
 {
   memset(&kepler_orbit_propagator_, 0x00, sizeof(KeplerOrbitPropagator));
 
-  kepler_orbit_propagator_.orbital_elements.semi_major_axis_km = 6899.3234f;
-  kepler_orbit_propagator_.orbital_elements.eccentricity = 4.86396e-4f;
-  kepler_orbit_propagator_.orbital_elements.inclination_rad = PHYSICAL_CONST_degree_to_radian(97.50372f);
-  kepler_orbit_propagator_.orbital_elements.raan_rad = PHYSICAL_CONST_degree_to_radian(340.20189f);
-  kepler_orbit_propagator_.orbital_elements.arg_perigee_rad = PHYSICAL_CONST_degree_to_radian(221.60537f);
-  kepler_orbit_propagator_.orbital_elements.epoch_jday = 2.459931936719433e6;
+  kepler_orbit_propagator_.orbital_elements.semi_major_axis_km = ORBIT_PARAMETERS_kepler_semi_major_axis_km;
+  kepler_orbit_propagator_.orbital_elements.eccentricity = ORBIT_PARAMETERS_kepler_eccentricity;
+  kepler_orbit_propagator_.orbital_elements.inclination_rad = ORBIT_PARAMETERS_kepler_inclination_rad;
+  kepler_orbit_propagator_.orbital_elements.raan_rad = ORBIT_PARAMETERS_kepler_raan_rad;
+  kepler_orbit_propagator_.orbital_elements.arg_perigee_rad = ORBIT_PARAMETERS_kepler_arg_perigee_rad;
+  kepler_orbit_propagator_.orbital_elements.epoch_jday = ORBIT_PARAMETERS_kepler_epoch_jday;
 
   KEPLER_ORBIT_init_constants(&kepler_orbit_propagator_.orbit_constants,
                                kepler_orbit_propagator_.orbital_elements);

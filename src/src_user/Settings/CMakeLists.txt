@@ -48,8 +48,8 @@ set(C2A_SRCS
   # Satellite Parameters
   ${C2A_SATELLITE_PARAMETERS_DIR}/orbit_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/structure_parameters.c
-  # ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_target_parameters.c
-  # ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_determination_parameters.c
+  ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_target_parameters.c
+  ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_determination_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_control_parameters.c
   # ${C2A_SATELLITE_PARAMETERS_DIR}/fdir_parameters.c
   # ${C2A_SATELLITE_PARAMETERS_DIR}/mpu9250_parameters.c

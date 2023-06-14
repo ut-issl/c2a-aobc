@@ -15,6 +15,9 @@
 #include "../../../../Library/quaternion.h"
 #include "stt_gyro_ekf.h"
 
+// Satellite parameters
+#include "../../../../Settings/SatelliteParameters/attitude_determination_parameters.h"
+
 static FineThreeAxisDetermination        fine_three_axis_determination_;
 const  FineThreeAxisDetermination* const fine_three_axis_determination = &fine_three_axis_determination_;
 
@@ -35,7 +38,7 @@ AppInfo APP_FTAD_create_app(void)
 static void APP_FTAD_init_(void)
 {
   fine_three_axis_determination_.previous_obc_time = TMGR_get_master_clock();
-  fine_three_axis_determination_.method = APP_FTAD_METHOD_STT;
+  fine_three_axis_determination_.method = ATTITUDE_DETERMINATION_PARAMETERS_ftad_method;
 }
 
 static void APP_FTAD_exec_(void)
