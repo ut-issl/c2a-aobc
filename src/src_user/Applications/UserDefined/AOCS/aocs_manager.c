@@ -46,17 +46,11 @@ static void APP_AOCS_MANAGER_init_(void)
 
   // 衛星特性
   aocs_manager_.mass_sc_kg = STRUCTURE_PARAMETERS_mass_sc_kg;
-  VECTOR3_initialize(aocs_manager_.rmm_sc_body_Am2, 0.1f);
+  VECTOR3_copy(aocs_manager_.rmm_sc_body_Am2,
+               STRUCTURE_PARAMETERS_rmm_sc_body_Am2);
+  MATRIX33_copy(aocs_manager_.inertia_tensor_sc_body_kgm2,
+                STRUCTURE_PARAMETERS_inertia_tensor_sc_body_kgm2);
 
-  aocs_manager_.inertia_tensor_sc_body_kgm2[0][0] =  0.1f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[0][1] =  0.0e-4f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[0][2] =  0.0e-4f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[1][0] =  0.0e-4f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[1][1] =  0.2f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[1][2] =  0.0e-4f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[2][0] =  0.0e-4f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[2][1] =  0.0e-4f;
-  aocs_manager_.inertia_tensor_sc_body_kgm2[2][2] =  0.2f;
   // 角速度
   VECTOR3_initialize(aocs_manager_.ang_vel_obs_body_rad_s,    0.0f);
   VECTOR3_initialize(aocs_manager_.ang_vel_est_body_rad_s,    0.0f);
