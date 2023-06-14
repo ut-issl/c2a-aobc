@@ -20,6 +20,9 @@
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 
+// Satellite Parameters
+#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+
 static ThreeAxisControlRw        three_axis_control_rw_;
 const  ThreeAxisControlRw* const three_axis_control_rw = &three_axis_control_rw_;
 
@@ -53,31 +56,15 @@ static void APP_TAC_RW_init_(void)
     PID_CONTROL_init(&three_axis_control_rw_.pid_att[axis]);
   }
 
-  PidGains gains_omega[PHYSICAL_CONST_THREE_DIM];
-  gains_omega[0].p_gain = aocs_manager->inertia_tensor_sc_body_kgm2[0][0] * 7.0e-1f;
-  gains_omega[1].p_gain = aocs_manager->inertia_tensor_sc_body_kgm2[1][1] * 7.0e-1f;
-  gains_omega[2].p_gain = aocs_manager->inertia_tensor_sc_body_kgm2[2][2] * 7.0e-1f;
-
-  gains_omega[0].i_gain = aocs_manager->inertia_tensor_sc_body_kgm2[0][0] * 0.0e-1f;
-  gains_omega[1].i_gain = aocs_manager->inertia_tensor_sc_body_kgm2[1][1] * 0.0e-1f;
-  gains_omega[2].i_gain = aocs_manager->inertia_tensor_sc_body_kgm2[2][2] * 0.0e-1f;
-
-  gains_omega[0].d_gain = aocs_manager->inertia_tensor_sc_body_kgm2[0][0] * 2.0e-2f;
-  gains_omega[1].d_gain = aocs_manager->inertia_tensor_sc_body_kgm2[1][1] * 2.0e-2f;
-  gains_omega[2].d_gain = aocs_manager->inertia_tensor_sc_body_kgm2[2][2] * 2.0e-2f;
-
   PidGains gains_att[PHYSICAL_CONST_THREE_DIM];
-  gains_att[0].p_gain = aocs_manager->inertia_tensor_sc_body_kgm2[0][0] * 1.0e-2f;
-  gains_att[1].p_gain = aocs_manager->inertia_tensor_sc_body_kgm2[1][1] * 1.0e-2f;
-  gains_att[2].p_gain = aocs_manager->inertia_tensor_sc_body_kgm2[2][2] * 1.0e-2f;
+  gains_att[0] = ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_x;
+  gains_att[1] = ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_y;
+  gains_att[2] = ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_gains_body_z;
 
-  gains_att[0].i_gain = aocs_manager->inertia_tensor_sc_body_kgm2[0][0] * 0.0e-2f;
-  gains_att[1].i_gain = aocs_manager->inertia_tensor_sc_body_kgm2[1][1] * 0.0e-2f;
-  gains_att[2].i_gain = aocs_manager->inertia_tensor_sc_body_kgm2[2][2] * 0.0e-2f;
-
-  gains_att[0].d_gain = aocs_manager->inertia_tensor_sc_body_kgm2[0][0] * 1.0e-2f;
-  gains_att[1].d_gain = aocs_manager->inertia_tensor_sc_body_kgm2[1][1] * 1.0e-2f;
-  gains_att[2].d_gain = aocs_manager->inertia_tensor_sc_body_kgm2[2][2] * 1.0e-2f;
+  PidGains gains_omega[PHYSICAL_CONST_THREE_DIM];
+  gains_omega[0] = ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_x;
+  gains_omega[1] = ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_y;
+  gains_omega[2] = ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z;
 
   for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {

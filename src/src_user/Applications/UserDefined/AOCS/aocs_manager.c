@@ -19,6 +19,7 @@
 // SatelliteParameters
 #include "../../../Settings/SatelliteParameters/orbit_parameters.h"
 #include "../../../Settings/SatelliteParameters/structure_parameters.h"
+#include "../../../Settings/SatelliteParameters/attitude_control_parameters.h"
 #include "../../../Settings/SatelliteParameters/attitude_target_parameters.h"
 
 static AocsManager        aocs_manager_;
@@ -57,13 +58,13 @@ static void APP_AOCS_MANAGER_init_(void)
   VECTOR3_initialize(aocs_manager_.ang_vel_est_body_rad_s,    0.0f);
   VECTOR3_initialize(aocs_manager_.ang_vel_target_body_rad_s, 0.0f);
   VECTOR3_initialize(aocs_manager_.ang_vel_error_body_rad_s,  0.0f);
-  aocs_manager_.limit_angular_velocity_rad_s = PHYSICAL_CONST_degree_to_radian(0.8f);
+  aocs_manager_.limit_angular_velocity_rad_s = ATTITUDE_CONTROL_PARAMETERS_limit_angular_velocity_rad_s;
   // Quaternion
   aocs_manager_.quaternion_obs_i2b = QUATERNION_make_unit();
   aocs_manager_.quaternion_est_i2b = QUATERNION_make_unit();
   aocs_manager_.quaternion_target_i2t = ATTITUDE_TARGET_PARAMETERS_quaternion_target_i2t;
   aocs_manager_.quaternion_error_b2t = QUATERNION_make_unit();
-  aocs_manager_.limit_maneuver_angle_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
+  aocs_manager_.limit_maneuver_angle_rad = ATTITUDE_CONTROL_PARAMETERS_limit_maneuver_angle_rad;
   // 太陽方向
   const float kSqrtOneThird = 0.57735f; // ノルム1になる値
   VECTOR3_initialize(aocs_manager_.sun_vec_obs_body,    kSqrtOneThird);
@@ -79,10 +80,10 @@ static void APP_AOCS_MANAGER_init_(void)
   VECTOR3_initialize(aocs_manager_.internal_torque_target_body_Nm, 0.0f);
   VECTOR3_initialize(aocs_manager_.external_torque_target_body_Nm, 0.0f);
   VECTOR3_initialize(aocs_manager_.torque_est_body_Nm,             0.0f);
-  VECTOR3_initialize(aocs_manager_.internal_torque_max_body_Nm,    5e-3f);  // これで進めるが、必要になったら修正してよい
-  VECTOR3_initialize(aocs_manager_.external_torque_max_body_Nm,    3e-4f);  // これで進めるが、必要になったら修正してよい
-  VECTOR3_initialize(aocs_manager_.constant_torque_body_Nm,        0.0f);
-  aocs_manager_.constant_torque_permission = AOCS_MANAGER_CONSTANT_TORQUE_DISABLE;
+  VECTOR3_copy(aocs_manager_.internal_torque_max_body_Nm, ATTITUDE_CONTROL_PARAMETERS_internal_torque_max_body_Nm);
+  VECTOR3_copy(aocs_manager_.external_torque_max_body_Nm,  ATTITUDE_CONTROL_PARAMETERS_external_torque_max_body_Nm);
+  VECTOR3_copy(aocs_manager_.constant_torque_body_Nm, ATTITUDE_CONTROL_PARAMETERS_constant_torque_body_Nm);
+  aocs_manager_.constant_torque_permission = ATTITUDE_CONTROL_PARAMETERS_constant_torque_permission;
   // 磁気モーメント
   VECTOR3_initialize(aocs_manager_.mag_moment_target_body_Am2, 0.0f);
   // MTQ情報

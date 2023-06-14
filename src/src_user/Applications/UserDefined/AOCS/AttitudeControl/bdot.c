@@ -13,6 +13,9 @@
 #include "../aocs_manager.h"
 #include "../../../DriverInstances/di_mtq_seiren.h"
 
+// Satellite parameters
+#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+
 static Bdot        bdot_;
 const  Bdot* const bdot = &bdot_;
 
@@ -71,9 +74,9 @@ AppInfo APP_BDOT_create_app(void)
 
 static void APP_BDOT_init_(void)
 {
-  VECTOR3_initialize(bdot_.control_gain, -0.1f);
-  bdot_.minimum_time_derivative_step_ms = 100; // SILS試験で正しくレートダンプに成功したときの値を設定している
-  bdot_.mtq_output_time_length_ms = 1000;      // SILS試験で正しくレートダンプに成功したときの値を設定している
+  VECTOR3_copy(bdot_.control_gain, ATTITUDE_CONTROL_PARAMETERS_bdot_control_gain);
+  bdot_.minimum_time_derivative_step_ms = ATTITUDE_CONTROL_PARAMETERS_bdot_minimum_time_derivative_step_ms;
+  bdot_.mtq_output_time_length_ms = ATTITUDE_CONTROL_PARAMETERS_bdot_mtq_output_time_length_ms;
   bdot_.mtq_output_turned_on_obc_time = TMGR_get_master_clock();
 
   bdot_.time_derivative_variables.previous_obc_time = TMGR_get_master_clock();
