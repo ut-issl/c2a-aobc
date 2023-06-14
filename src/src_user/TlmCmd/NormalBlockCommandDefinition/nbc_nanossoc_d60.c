@@ -55,7 +55,7 @@ void BCL_load_power_on_nanossoc_d60(void)
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
-  bc_cycle++; 
+  bc_cycle++;
 #endif
 
   // Enable EL
