@@ -11,6 +11,9 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../aocs_manager.h"
 
+// Satellite Parameters
+#include "../../../../../Settings/SatelliteParameters/rm3100_parameters.h"
+
 static Rm3100Filter        rm3100_filter_;
 const  Rm3100Filter* const rm3100_filter = &rm3100_filter_;
 
@@ -20,12 +23,12 @@ static SpikeFilter APP_RM3100_FILTER_spike_[RM3100_IDX_MAX][PHYSICAL_CONST_THREE
 static void APP_RM3100_FILTER_init_(void);
 static void APP_RM3100_FILTER_exec_(void);
 
-static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, float cut_off_freq_Hz[PHYSICAL_CONST_THREE_DIM]);
+static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, const float cut_off_freq_Hz[PHYSICAL_CONST_THREE_DIM]);
 static int APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX rm3100_id,
-                                                uint8_t count_limit_to_accept[PHYSICAL_CONST_THREE_DIM],
-                                                uint8_t count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM],
-                                                double  reject_threshold_nT[PHYSICAL_CONST_THREE_DIM],
-                                                double  amplitude_limit_to_accept_as_step_nT[PHYSICAL_CONST_THREE_DIM]);
+                                                const uint8_t count_limit_to_accept[PHYSICAL_CONST_THREE_DIM],
+                                                const uint8_t count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM],
+                                                const float  reject_threshold_nT[PHYSICAL_CONST_THREE_DIM],
+                                                const float  amplitude_limit_to_accept_as_step_nT[PHYSICAL_CONST_THREE_DIM]);
 
 AppInfo APP_RM3100_FILTER_create_app(void)
 {
@@ -120,7 +123,7 @@ static void APP_RM3100_FILTER_exec_(void)
   return;
 }
 
-static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, float cut_off_freq_Hz[PHYSICAL_CONST_THREE_DIM])
+static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, const float cut_off_freq_Hz[PHYSICAL_CONST_THREE_DIM])
 {
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
@@ -150,10 +153,10 @@ static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, float cut_off_
 }
 
 static int APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX rm3100_id,
-                                                uint8_t count_limit_to_accept[PHYSICAL_CONST_THREE_DIM],
-                                                uint8_t count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM],
-                                                double  reject_threshold_nT[PHYSICAL_CONST_THREE_DIM],
-                                                double  amplitude_limit_to_accept_as_step_nT[PHYSICAL_CONST_THREE_DIM])
+                                                const uint8_t count_limit_to_accept[PHYSICAL_CONST_THREE_DIM],
+                                                const uint8_t count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM],
+                                                const float  reject_threshold_nT[PHYSICAL_CONST_THREE_DIM],
+                                                const float  amplitude_limit_to_accept_as_step_nT[PHYSICAL_CONST_THREE_DIM])
 {
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {

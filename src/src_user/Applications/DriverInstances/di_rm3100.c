@@ -30,6 +30,8 @@ static uint8_t DI_RM3100_rx_buffer_allocation_[RM3100_IDX_MAX][DS_STREAM_REC_BUF
 
 static uint8_t DI_RM3100_is_initialized_[RM3100_IDX_MAX] = { 0, 0 };  //!< 0 = not initialized, 1 = initialized
 
+static float DI_RM3100_default_bias_aobc_compo_nT_[PHYSICAL_CONST_THREE_DIM];
+static float DI_RM3100_default_bias_ext_compo_nT_[PHYSICAL_CONST_THREE_DIM];
 static float DI_RM3100_kBiasDiffMax_nT_ = 20000.0f; //!< 磁気バイアスAddコマンドでトータルバイアスがデフォルト値から離れすぎないようにするためのしきい値
 
 
@@ -74,7 +76,8 @@ static void DI_RM3100_init_(void)
     Printf("RM3100: q_aobc_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret = RM3100_set_mag_bias_compo_nT(&rm3100_driver_[RM3100_IDX_ON_AOBC], RM3100_PARAMETERS_mag_aobc_bias_compo_nT);
+  VECTOR3_copy(DI_RM3100_default_bias_aobc_compo_nT_, RM3100_PARAMETERS_mag_aobc_bias_compo_nT);
+  ret = RM3100_set_mag_bias_compo_nT(&rm3100_driver_[RM3100_IDX_ON_AOBC], DI_RM3100_default_bias_aobc_compo_nT_);
   if (ret != C2A_MATH_ERROR_OK)
   {
     Printf("RM3100: mag_aobc_bias set error.\n");
@@ -91,7 +94,8 @@ static void DI_RM3100_init_(void)
     Printf("RM3100: q_ext_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret = RM3100_set_mag_bias_compo_nT(&rm3100_driver_[RM3100_IDX_EXTERNAL], RM3100_PARAMETERS_mag_ext_bias_compo_nT);
+  VECTOR3_copy(DI_RM3100_default_bias_ext_compo_nT_, RM3100_PARAMETERS_mag_ext_bias_compo_nT);
+  ret = RM3100_set_mag_bias_compo_nT(&rm3100_driver_[RM3100_IDX_EXTERNAL], DI_RM3100_default_bias_ext_compo_nT_);
   if (ret != C2A_MATH_ERROR_OK)
   {
     Printf("RM3100: mag_ext_bias set error.\n");
