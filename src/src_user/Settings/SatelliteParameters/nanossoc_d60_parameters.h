@@ -20,4 +20,8 @@ extern uint8_t NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_reject
 extern float NANOSSOC_D60_PARAMETERS_spike_filter_config_reject_threshold_rad;                      //!< Reject threshold [rad]
 extern float NANOSSOC_D60_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_step_rad;     //!< Amplitude limit to accept as step input [rad]
 
+// Sun intensity threshold
+extern float NANOSSOC_D60_PARAMETERS_sun_intensity_lower_threshold_percent; //!< Sun intensity lower threshold [%]
+extern float NANOSSOC_D60_PARAMETERS_sun_intensity_upper_threshold_percent; //!< Sun intensity upper threshold [%]
+
 #endif // NANOSSOC_D60_PARAMETERS_H_

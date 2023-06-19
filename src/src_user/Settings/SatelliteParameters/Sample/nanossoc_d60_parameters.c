@@ -16,3 +16,7 @@ uint8_t NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_accept = 10;
 uint8_t NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_reject_continued_warning = 60;
 float NANOSSOC_D60_PARAMETERS_spike_filter_config_reject_threshold_rad = PHYSICAL_CONST_degree_to_radian(3);
 float NANOSSOC_D60_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_step_rad = PHYSICAL_CONST_degree_to_radian(180);
+
+// Sun intensity threshold
+float NANOSSOC_D60_PARAMETERS_sun_intensity_lower_threshold_percent = 80.0f;
+float NANOSSOC_D60_PARAMETERS_sun_intensity_upper_threshold_percent = 120.0f;
