@@ -127,7 +127,7 @@
 
 // Use user defined I2C address
 #ifdef USER_DEFINED_I2C_ADDRESS
-  #include <Settings/user_defined_i2c_address.h>
+#include <Settings/user_defined_i2c_address.h>
 #endif
 
 #endif
