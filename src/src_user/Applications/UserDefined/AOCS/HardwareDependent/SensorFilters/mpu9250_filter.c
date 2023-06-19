@@ -11,6 +11,10 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../../../DriverInstances/di_mpu9250.h"
 #include "../../aocs_manager.h"
+#include "../../../../../Library/vector3.h"
+
+// Satellite Parameters
+#include "../../../../../Settings/SatelliteParameters/mpu9250_parameters.h"
 
 static Mpu9250Filter        mpu9250_filter_;
 const  Mpu9250Filter* const mpu9250_filter = &mpu9250_filter_;
@@ -128,10 +132,7 @@ static void APP_MPU9250_FILTER_exec_(void)
 
 static int APP_MPU9250_FILTER_init_z_filter_mag_(void)
 {
-  // カットオフ周波数は今後調整してもよいが今の時点ではこれで進める
-  mpu9250_filter_.cut_off_freq_lpf_1st_mag_Hz[0] = 0.5f;
-  mpu9250_filter_.cut_off_freq_lpf_1st_mag_Hz[1] = 0.5f;
-  mpu9250_filter_.cut_off_freq_lpf_1st_mag_Hz[2] = 0.5f;
+  VECTOR3_copy(mpu9250_filter_.cut_off_freq_lpf_1st_mag_Hz, MPU9250_PARAMETERS_mag_cut_off_freq_lpf_1st_Hz);
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
@@ -155,11 +156,7 @@ static int APP_MPU9250_FILTER_init_z_filter_mag_(void)
 
 static int APP_MPU9250_FILTER_init_z_filter_gyro_(void)
 {
-  // カットオフ周波数は今後調整してもよいが今の時点ではこれで進める
-  // 広帯域制御を狙う場合にはコマンドなどで要調整
-  mpu9250_filter_.cut_off_freq_lpf_1st_gyro_Hz[0] = 0.05f;
-  mpu9250_filter_.cut_off_freq_lpf_1st_gyro_Hz[1] = 0.05f;
-  mpu9250_filter_.cut_off_freq_lpf_1st_gyro_Hz[2] = 0.05f;
+  VECTOR3_copy(mpu9250_filter_.cut_off_freq_lpf_1st_gyro_Hz, MPU9250_PARAMETERS_gyro_cut_off_freq_lpf_1st_Hz);
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
@@ -183,13 +180,13 @@ static int APP_MPU9250_FILTER_init_z_filter_gyro_(void)
 
 static int APP_MPU9250_FILTER_init_spike_filter_mag_(void)
 {
-  // 値は調整してよいが一旦これで進める
+
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_accept = 3;
-    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_reject_continued_warning = 60;
-    mpu9250_filter_.spike_filter_config_mag[axis_id].reject_threshold = 5000.0; // nT
-    mpu9250_filter_.spike_filter_config_mag[axis_id].amplitude_limit_to_accept_as_step = 1500.0; // nT
+    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_accept = MPU9250_PARAMETERS_mag_spike_count_limit_to_accept[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_reject_continued_warning = MPU9250_PARAMETERS_mag_spike_count_limit_to_reject_continued_warning[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].reject_threshold = MPU9250_PARAMETERS_mag_spike_reject_threshold_nT[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].amplitude_limit_to_accept_as_step = MPU9250_PARAMETERS_mag_spike_amplitude_limit_to_accept_as_step_nT[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
@@ -213,13 +210,12 @@ static int APP_MPU9250_FILTER_init_spike_filter_mag_(void)
 
 static int APP_MPU9250_FILTER_init_spike_filter_gyro_(void)
 {
-  // 値は調整してよいが一旦これで進める
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    mpu9250_filter_.spike_filter_config_gyro[axis_id].count_limit_to_accept = 3;
-    mpu9250_filter_.spike_filter_config_gyro[axis_id].count_limit_to_reject_continued_warning = 60;
-    mpu9250_filter_.spike_filter_config_gyro[axis_id].reject_threshold = 0.01; // rad/s
-    mpu9250_filter_.spike_filter_config_gyro[axis_id].amplitude_limit_to_accept_as_step = 0.005; // rad/s
+    mpu9250_filter_.spike_filter_config_gyro[axis_id].count_limit_to_accept = MPU9250_PARAMETERS_gyro_spike_count_limit_to_accept[axis_id];
+    mpu9250_filter_.spike_filter_config_gyro[axis_id].count_limit_to_reject_continued_warning = MPU9250_PARAMETERS_gyro_spike_count_limit_to_reject_continued_warning[axis_id];
+    mpu9250_filter_.spike_filter_config_gyro[axis_id].reject_threshold = MPU9250_PARAMETERS_gyro_spike_reject_threshold_rad_s[axis_id];
+    mpu9250_filter_.spike_filter_config_gyro[axis_id].amplitude_limit_to_accept_as_step = MPU9250_PARAMETERS_gyro_spike_amplitude_limit_to_accept_as_step_rad_s[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
