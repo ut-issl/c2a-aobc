@@ -32,6 +32,50 @@ const uint16_t FDIR_PARAMETERS_sw_oc_threshold_mtq_mA = 2000;
 const uint16_t FDIR_PARAMETERS_sw_oc_threshold_rw0003_x_mA = 2000;
 const uint16_t FDIR_PARAMETERS_sw_oc_threshold_rw0003_y_mA = 2000;
 const uint16_t FDIR_PARAMETERS_sw_oc_threshold_rw0003_z_mA = 2000;
+// Event handler settings
+// STIM210
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_stim210 = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_stim210_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_stim210 = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_stim210_ms = 0;
+// Sagitta
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_sagitta = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_sagitta_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_sagitta = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_sagitta_ms = 0;
+// OEM7600
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_oem7600 = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_oem7600_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_oem7600 = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_oem7600_ms = 0;
+// RM3100
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rm3100 = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rm3100_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rm3100 = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rm3100_ms = 0;
+// nanoSSOC D60
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_nanossoc_d60 = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_nanossoc_d60_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_nanossoc_d60 = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_nanossoc_d60_ms = 0;
+// MTQ
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_mtq = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_mtq_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_mtq = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_mtq_ms = 0;
+// RW
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rw0003_x = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rw0003_x_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rw0003_x = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rw0003_x_ms = 0;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rw0003_y = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rw0003_y_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rw0003_y = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rw0003_y_ms = 0;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rw0003_z = 10;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rw0003_z_ms = 5000;
+const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rw0003_z = 5;
+const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rw0003_z_ms = 0;
 
 // H/W over current detection
 // If the measured voltage is smaller than the following values, we assume that the H/W OC protection was executed by the INA260.
@@ -45,3 +89,47 @@ const float FDIR_PARAMETERS_hw_oc_detection_threshold_mtq_V = 0.5f;
 const float FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_x_V = 0.5f;
 const float FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_y_V = 0.5f;
 const float FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_z_V = 0.5f;
+// Event handler settings
+// STIM210
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_stim210 = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_stim210_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_stim210 = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_stim210_ms = 0;
+// Sagitta
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_sagitta = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_sagitta_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_sagitta = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_sagitta_ms = 0;
+// OEM7600
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_oem7600 = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_oem7600_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_oem7600 = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_oem7600_ms = 0;
+// RM3100
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rm3100 = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rm3100_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rm3100 = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rm3100_ms = 0;
+// nanoSSOC D60
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_nanossoc_d60 = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_nanossoc_d60_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_nanossoc_d60 = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_nanossoc_d60_ms = 0;
+// MTQ
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_mtq = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_mtq_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_mtq = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_mtq_ms = 0;
+// RW
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_x = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_x_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_x = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_x_ms = 0;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_y = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_y_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_y = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_y_ms = 0;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_z = 10;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_z_ms = 5000;
+const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_z = 5;
+const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_z_ms = 0;

@@ -36,6 +36,50 @@ extern const uint16_t FDIR_PARAMETERS_sw_oc_threshold_mtq_mA;          //!< S/W 
 extern const uint16_t FDIR_PARAMETERS_sw_oc_threshold_rw0003_x_mA;     //!< S/W over current detection threshold for RW003 X-axis [mA]
 extern const uint16_t FDIR_PARAMETERS_sw_oc_threshold_rw0003_y_mA;     //!< S/W over current detection threshold for RW003 Y-axis [mA]
 extern const uint16_t FDIR_PARAMETERS_sw_oc_threshold_rw0003_z_mA;     //!< S/W over current detection threshold for RW003 Z-axis [mA]
+// Event handler settings
+// STIM210
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_stim210;        //!< S/W over current detection event handler reset count threshold for STIM210
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_stim210_ms;      //!< S/W over current detection event handler reset time threshold for STIM210 [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_stim210;    //!< S/W over current detection event handler power off count threshold for STIM210
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_stim210_ms;  //!< S/W over current detection event handler power off time threshold for STIM210 [ms]
+// Sagitta
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_sagitta;        //!< S/W over current detection event handler reset count threshold for SAGITTA
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_sagitta_ms;      //!< S/W over current detection event handler reset time threshold for SAGITTA [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_sagitta;    //!< S/W over current detection event handler power off count threshold for SAGITTA
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_sagitta_ms;  //!< S/W over current detection event handler power off time threshold for SAGITTA [ms]
+// OEM7600
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_oem7600;        //!< S/W over current detection event handler reset count threshold for OEM7600
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_oem7600_ms;      //!< S/W over current detection event handler reset time threshold for OEM7600 [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_oem7600;    //!< S/W over current detection event handler power off count threshold for OEM7600
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_oem7600_ms;  //!< S/W over current detection event handler power off time threshold for OEM7600 [ms]
+// RM3100
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rm3100;       //!< S/W over current detection event handler reset count threshold for RM3100
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rm3100_ms;     //!< S/W over current detection event handler reset time threshold for RM3100 [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rm3100;   //!< S/W over current detection event handler power off count threshold for RM3100
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rm3100_ms; //!< S/W over current detection event handler power off time threshold for RM3100 [ms]
+// nanoSSOC D60
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_nanossoc_d60;       //!< S/W over current detection event handler reset count threshold for nanoSSOC D60
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_nanossoc_d60_ms;     //!< S/W over current detection event handler reset time threshold for nanoSSOC D60 [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_nanossoc_d60;   //!< S/W over current detection event handler power off count threshold for nanoSSOC D60
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_nanossoc_d60_ms; //!< S/W over current detection event handler power off time threshold for nanoSSOC D60 [ms]
+// MTQ
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_mtq;            //!< S/W over current detection event handler reset count threshold for MTQ
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_mtq_ms;          //!< S/W over current detection event handler reset time threshold for MTQ [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_mtq;            //!< S/W over current detection event handler power off count threshold for MTQ
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_mtq_ms;          //!< S/W over current detection event handler power off time threshold for MTQ [ms]
+// RW
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rw0003_x;       //!< S/W over current detection event handler reset count threshold for RW0003 X
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rw0003_x_ms;     //!< S/W over current detection event handler reset time threshold for RW0003 X [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rw0003_x;   //!< S/W over current detection event handler power off count threshold for RW0003 X
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rw0003_x_ms; //!< S/W over current detection event handler power off time threshold for RW0003 X [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rw0003_y;       //!< S/W over current detection event handler reset count threshold for RW0003 Y
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rw0003_y_ms;     //!< S/W over current detection event handler reset time threshold for RW0003 Y [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rw0003_y;   //!< S/W over current detection event handler power off count threshold for RW0003 Y
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rw0003_y_ms; //!< S/W over current detection event handler power off time threshold for RW0003 Y [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_rw0003_z;       //!< S/W over current detection event handler reset count threshold for RW0003 Z
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_rw0003_z_ms;     //!< S/W over current detection event handler reset time threshold for RW0003 Z [ms]
+extern const uint16_t FDIR_PARAMETERS_sw_oc_eh_power_off_count_threshold_rw0003_z;   //!< S/W over current detection event handler power off count threshold for RW0003 Z
+extern const uint32_t FDIR_PARAMETERS_sw_oc_eh_power_off_time_threshold_rw0003_z_ms; //!< S/W over current detection event handler power off time threshold for RW0003 Z [ms]
 
 // H/W over current detection
 // If the measured voltage is smaller than the following values, we assume that the H/W OC protection was executed by the INA260.
@@ -49,7 +93,50 @@ extern const float FDIR_PARAMETERS_hw_oc_detection_threshold_mtq_V;          //!
 extern const float FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_x_V;     //!< H/W over current detection threshold for RW003 X-axis [V]
 extern const float FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_y_V;     //!< H/W over current detection threshold for RW003 Y-axis [V]
 extern const float FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_z_V;     //!< H/W over current detection threshold for RW003 Z-axis [V]
-
+// Event handler settings
+// STIM210
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_stim210;        //!< H/W over current detection event handler reset count threshold for STIM210
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_stim210_ms;      //!< H/W over current detection event handler reset time threshold for STIM210 [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_stim210;    //!< H/W over current detection event handler power off count threshold for STIM210
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_stim210_ms;  //!< H/W over current detection event handler power off time threshold for STIM210 [ms]
+// Sagitta
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_sagitta;        //!< H/W over current detection event handler reset count threshold for SAGITTA
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_sagitta_ms;      //!< H/W over current detection event handler reset time threshold for SAGITTA [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_sagitta;    //!< H/W over current detection event handler power off count threshold for SAGITTA
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_sagitta_ms;  //!< H/W over current detection event handler power off time threshold for SAGITTA [ms]
+// OEM7600
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_oem7600;        //!< H/W over current detection event handler reset count threshold for OEM7600
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_oem7600_ms;      //!< H/W over current detection event handler reset time threshold for OEM7600 [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_oem7600;    //!< H/W over current detection event handler power off count threshold for OEM7600
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_oem7600_ms;  //!< H/W over current detection event handler power off time threshold for OEM7600 [ms]
+// RM3100
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rm3100;       //!< H/W over current detection event handler reset count threshold for RM3100
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rm3100_ms;     //!< H/W over current detection event handler reset time threshold for RM3100 [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rm3100;   //!< H/W over current detection event handler power off count threshold for RM3100
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rm3100_ms; //!< H/W over current detection event handler power off time threshold for RM3100 [ms]
+// nanoSSOC D60
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_nanossoc_d60;       //!< H/W over current detection event handler reset count threshold for nanoSSOC D60
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_nanossoc_d60_ms;     //!< H/W over current detection event handler reset time threshold for nanoSSOC D60 [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_nanossoc_d60;   //!< H/W over current detection event handler power off count threshold for nanoSSOC D60
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_nanossoc_d60_ms; //!< H/W over current detection event handler power off time threshold for nanoSSOC D60 [ms]
+// MTQ
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_mtq;            //!< H/W over current detection event handler reset count threshold for MTQ
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_mtq_ms;          //!< H/W over current detection event handler reset time threshold for MTQ [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_mtq;            //!< H/W over current detection event handler power off count threshold for MTQ
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_mtq_ms;          //!< H/W over current detection event handler power off time threshold for MTQ [ms]
+// RW
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_x;       //!< H/W over current detection event handler reset count threshold for RW0003 X
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_x_ms;     //!< H/W over current detection event handler reset time threshold for RW0003 X [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_x;   //!< H/W over current detection event handler power off count threshold for RW0003 X
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_x_ms; //!< H/W over current detection event handler power off time threshold for RW0003 X [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_y;       //!< H/W over current detection event handler reset count threshold for RW0003 Y
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_y_ms;     //!< H/W over current detection event handler reset time threshold for RW0003 Y [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_y;   //!< H/W over current detection event handler power off count threshold for RW0003 Y
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_y_ms; //!< H/W over current detection event handler power off time threshold for RW0003 Y [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_z;       //!< H/W over current detection event handler reset count threshold for RW0003 Z
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_z_ms;     //!< H/W over current detection event handler reset time threshold for RW0003 Z [ms]
+extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_z;   //!< H/W over current detection event handler power off count threshold for RW0003 Z
+extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_z_ms; //!< H/W over current detection event handler power off time threshold for RW0003 Z [ms]
 
 // Temperature anomaly
 // TBI
