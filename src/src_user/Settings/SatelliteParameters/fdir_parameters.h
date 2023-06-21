@@ -150,6 +150,40 @@ extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_z_ms;
 extern const uint16_t FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_z;   //!< H/W over current detection event handler power off count threshold for RW0003 Z
 extern const uint32_t FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_z_ms; //!< H/W over current detection event handler power off time threshold for RW0003 Z [ms]
 
+// Telemetry anomaly
+// MPU9250
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_mp9250;    //!< TLM error detection event handler reset count threshold for MPU9250
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_mp9250_ms;  //!< TLM error detection event handler reset time threshold for MPU9250 [ms]
+// RM3100
+// Use same value for all RM3100s (Users can also change the value with command for each RM3100)
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rm3100;           //!< TLM error detection event handler reset count threshold for RM3100 AOBC
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rm3100_ms;         //!< TLM error detection event handler reset time threshold for RM3100 AOBC [ms]
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_rm3100;   //!< TLM error detection event handler switch sensor count threshold for RM3100 AOBC
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_rm3100_ms; //!< TLM error detection event handler switch sensor time threshold for RM3100 AOBC [ms]
+// nanoSSOC D60
+// Use same value for all sun sensors (Users can also change the value with command for each sun sensors)
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;    //!< TLM error detection event handler reset count threshold for nanoSSOC D60
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;  //!< TLM error detection event handler reset time threshold for nanoSSOC D60 [ms]
+// STIM210
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_stim210;           //!< TLM error detection event handler reset count threshold for STIM210
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_stim210_ms;         //!< TLM error detection event handler reset time threshold for STIM210 [ms]
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_stim210;   //!< TLM error detection event handler switch sensor count threshold for STIM210
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_stim210_ms; //!< TLM error detection event handler switch sensor time threshold for STIM210 [ms]
+// Sagitta
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_sagitta;    //!< TLM error detection event handler reset count threshold for Sagitta
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_sagitta_ms;  //!< TLM error detection event handler reset time threshold for Sagitta [ms]
+// OEM7600
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_oem7600;    //!< TLM error detection event handler reset count threshold for OEM7600
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_oem7600_ms;  //!< TLM error detection event handler reset time threshold for OEM7600 [ms]
+// RW0003
+// Use same value for all RWs (Users can also change the value with command for each RW)
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;    //!< TLM error detection event handler reset count threshold for RW0003
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;  //!< TLM error detection event handler reset time threshold for RW0003 [ms]
+// INA260
+// Use same value for all current sensors (Users can also change the value with command for each current sensor)
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;    //!< TLM error detection event handler reset count threshold for INA260
+extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;  //!< TLM error detection event handler reset time threshold for INA260 [ms]
+
 // Temperature anomaly
 // TBI
 
