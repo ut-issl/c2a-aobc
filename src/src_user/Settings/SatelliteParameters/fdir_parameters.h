@@ -10,20 +10,26 @@
 #include <stdint.h>
 
 // Mode Manager
-extern const float FDIR_PARAMETERS_ang_vel_conv_limit_rad_s;    //!< Angular velocity convergence detection limit [rad/s]
-extern const float FDIR_PARAMETERS_ang_vel_conv_time_limit_s;   //!< Angular velocity convergence detection time limit [s]
-
+// Bdot
+extern const float FDIR_PARAMETERS_ang_vel_conv_limit_rad_s;            //!< Angular velocity convergence detection limit [rad/s]
+extern const float FDIR_PARAMETERS_ang_vel_conv_time_limit_s;           //!< Angular velocity convergence detection time limit [s]
 extern const float FDIR_PARAMETERS_ang_vel_norm_increase_limit_rad_s;   //!< Angular velocity increase anomaly detection limit [rad/s]
 extern const float FDIR_PARAMETERS_ang_vel_anomaly_detection_period_s;  //!< Angular velocity anomaly detection period [s]
-
+extern const uint32_t FDIR_PARAMETERS_bdot_start_mode_manager_time_s;   //!< Bdot start auto mode transition time [s]
+// Sun pointing control divergence anomaly
 extern const float FDIR_PARAMETERS_sun_angle_div_limit_rad;     //!< Sun pointing divergence detection limit [rad]
 extern const float FDIR_PARAMETERS_sun_angle_div_time_limit_s;  //!< Sun pointing divergence detection time limit [s]
-
+extern const uint32_t FDIR_PARAMETERS_sun_pointing_start_mode_manager_time_s;             //!< Sun pointing start auto mode transition time [s]
+// Three axis control divergence anomaly
 extern const float FDIR_PARAMETERS_three_axis_div_limit_rad;    //!< Three axis control divergence detection limit [rad]
 extern const float FDIR_PARAMETERS_three_axis_div_time_limit_s; //!< Three axis control divergence detection time limit [s]
-
+extern const uint32_t FDIR_PARAMETERS_rough_three_axis_mtq_start_mode_manager_time_s;     //!< Rough Three Axis with MTQ start auto mode transition time [s]
+extern const uint32_t FDIR_PARAMETERS_rough_three_axis_rw_bdot_start_mode_manager_time_s; //!< Rough Three Axis with RW start auto mode transition time [s]
+extern const uint32_t FDIR_PARAMETERS_fine_three_axis_bdot_start_mode_manager_time_s;     //!< Fine Three Axis with RW start auto mode transition time [s]
+// Sensor invisible anomaly
 extern const float FDIR_PARAMETERS_sun_invisible_time_limit_s;  //!< Sun invisible anomaly detection time limit [s]
 extern const float FDIR_PARAMETERS_stt_invisible_time_limit_s;  //!< STT invisible anomaly detection time limit [s]
+
 
 // S/W over current detection
 extern const uint16_t FDIR_PARAMETERS_sw_oc_threshold_pic_mA;          //!< S/W over current detection threshold for PIC [mA]

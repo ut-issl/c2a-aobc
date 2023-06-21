@@ -16,6 +16,9 @@
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
 
+// Satellite Parameters
+#include "../../../Settings/SatelliteParameters/fdir_parameters.h"
+
 void BCL_load_rough_three_axis_to_rough_three_axis_rw(void)
 {
   uint32_t timing_sec = 1;
@@ -57,7 +60,7 @@ void BCL_load_rough_three_axis_to_rough_three_axis_rw(void)
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_MM_FINISH_TRANSITION);
 
   // 自動モード遷移ON
-  timing_sec += (5 * 60);
+  timing_sec += FDIR_PARAMETERS_rough_three_axis_rw_bdot_start_mode_manager_time_s;
   BCL_tool_prepare_param_uint8(1);
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION);
 }
