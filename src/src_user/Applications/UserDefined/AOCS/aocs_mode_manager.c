@@ -106,8 +106,8 @@ static void APP_AOCS_MM_init_(void)
   aocs_mode_manager_.sun_angle_div_time_limit_s  = FDIR_PARAMETERS_sun_angle_div_time_limit_s;
 
   // Rough MTQを想定して初期値は大きめに設定、各モード遷移時に適切に設定することを想定
-  aocs_mode_manager_.three_axis_div_limit_rad    = FDIR_PARAMETERS_three_axis_div_limit_rad;
-  aocs_mode_manager_.three_axis_div_time_limit_s = FDIR_PARAMETERS_three_axis_div_time_limit_s;
+  aocs_mode_manager_.three_axis_div_limit_rad    = FDIR_PARAMETERS_rough_three_axis_mtq_div_limit_rad;
+  aocs_mode_manager_.three_axis_div_time_limit_s = FDIR_PARAMETERS_rough_three_axis_mtq_div_time_limit_s;
 
   aocs_mode_manager_.sun_invisible_time_limit_s = FDIR_PARAMETERS_sun_invisible_time_limit_s;
   aocs_mode_manager_.stt_invisible_time_limit_s = FDIR_PARAMETERS_stt_invisible_time_limit_s;

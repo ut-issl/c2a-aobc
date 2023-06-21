@@ -27,8 +27,8 @@ void BCL_load_rough_three_axis_rw_to_fine_three_axis(void)
   timing_sec++;
 
   // 自動モード遷移閾値変更
-  BCL_tool_prepare_param_float(PHYSICAL_CONST_degree_to_radian(5.0f));
-  BCL_tool_prepare_param_float(1.0f * 60.0f);
+  BCL_tool_prepare_param_float(FDIR_PARAMETERS_fine_three_axis_div_limit_rad);
+  BCL_tool_prepare_param_float(FDIR_PARAMETERS_fine_three_axis_div_time_limit_s);
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD);
   timing_sec++;
 
@@ -49,7 +49,7 @@ void BCL_load_rough_three_axis_rw_to_fine_three_axis(void)
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_MM_FINISH_TRANSITION);
 
   // 自動モード遷移ON
-  timing_sec += FDIR_PARAMETERS_fine_three_axis_bdot_start_mode_manager_time_s;
+  timing_sec += FDIR_PARAMETERS_fine_three_axis_start_mode_manager_time_s;
   BCL_tool_prepare_param_uint8(1);
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION);
 }

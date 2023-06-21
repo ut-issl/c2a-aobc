@@ -20,12 +20,18 @@ extern const uint32_t FDIR_PARAMETERS_bdot_start_mode_manager_time_s;   //!< Bdo
 extern const float FDIR_PARAMETERS_sun_angle_div_limit_rad;     //!< Sun pointing divergence detection limit [rad]
 extern const float FDIR_PARAMETERS_sun_angle_div_time_limit_s;  //!< Sun pointing divergence detection time limit [s]
 extern const uint32_t FDIR_PARAMETERS_sun_pointing_start_mode_manager_time_s;             //!< Sun pointing start auto mode transition time [s]
-// Three axis control divergence anomaly
-extern const float FDIR_PARAMETERS_three_axis_div_limit_rad;    //!< Three axis control divergence detection limit [rad]
-extern const float FDIR_PARAMETERS_three_axis_div_time_limit_s; //!< Three axis control divergence detection time limit [s]
+// Rough three axis control with MTQ divergence anomaly
+extern const float FDIR_PARAMETERS_rough_three_axis_mtq_div_limit_rad;    //!< Three axis control divergence detection limit [rad]
+extern const float FDIR_PARAMETERS_rough_three_axis_mtq_div_time_limit_s; //!< Three axis control divergence detection time limit [s]
 extern const uint32_t FDIR_PARAMETERS_rough_three_axis_mtq_start_mode_manager_time_s;     //!< Rough Three Axis with MTQ start auto mode transition time [s]
-extern const uint32_t FDIR_PARAMETERS_rough_three_axis_rw_bdot_start_mode_manager_time_s; //!< Rough Three Axis with RW start auto mode transition time [s]
-extern const uint32_t FDIR_PARAMETERS_fine_three_axis_bdot_start_mode_manager_time_s;     //!< Fine Three Axis with RW start auto mode transition time [s]
+// Rough three axis control with RW divergence anomaly
+extern const float FDIR_PARAMETERS_rough_three_axis_rw_div_limit_rad;    //!< Three axis control divergence detection limit [rad]
+extern const float FDIR_PARAMETERS_rough_three_axis_rw_div_time_limit_s; //!< Three axis control divergence detection time limit [s]
+extern const uint32_t FDIR_PARAMETERS_rough_three_axis_rw_start_mode_manager_time_s; //!< Rough Three Axis with RW start auto mode transition time [s]
+// Fine three axis control divergence anomaly
+extern const float FDIR_PARAMETERS_fine_three_axis_div_limit_rad;    //!< Three axis control divergence detection limit [rad]
+extern const float FDIR_PARAMETERS_fine_three_axis_div_time_limit_s; //!< Three axis control divergence detection time limit [s]
+extern const uint32_t FDIR_PARAMETERS_fine_three_axis_start_mode_manager_time_s;     //!< Fine Three Axis with RW start auto mode transition time [s]
 // Sensor invisible anomaly
 extern const float FDIR_PARAMETERS_sun_invisible_time_limit_s;  //!< Sun invisible anomaly detection time limit [s]
 extern const float FDIR_PARAMETERS_stt_invisible_time_limit_s;  //!< STT invisible anomaly detection time limit [s]
