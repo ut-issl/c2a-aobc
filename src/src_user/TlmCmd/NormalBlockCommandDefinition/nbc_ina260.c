@@ -13,6 +13,9 @@
 #include "../../Settings/System/EventHandlerRules/event_handler_rules.h"
 #include "../../Settings/System/event_logger_group.h"
 
+// Satellite Parameters
+#include "../../Settings/SatelliteParameters/ina260_parameters.h"
+
 void BCL_load_power_on_ina260()
 {
   cycle_t bc_cycle = 1;
@@ -24,72 +27,72 @@ void BCL_load_power_on_ina260()
 
   // Initialize
   BCL_tool_prepare_param_uint8(INA260_IDX_PIC);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_STIM210);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_stim210_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_stim210_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_stim210_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_SAGITTA);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_sagitta_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_sagitta_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_sagitta_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_OEM7600);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_oem7600_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_oem7600_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_oem7600_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RM3100);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_1MS);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_1MS);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rm3100_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rm3100_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rm3100_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_NANOSSOC_D60);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_nanossoc_d60_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_nanossoc_d60_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_nanossoc_d60_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_MTQ);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_mtq_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_mtq_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_mtq_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RW0003_X);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_x_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_x_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_x_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RW0003_Y);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_y_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_y_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_y_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RW0003_Z);
-  BCL_tool_prepare_param_uint8(INA260_AVERAGING_MODE_16);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
-  BCL_tool_prepare_param_uint8(INA260_CONVERSION_TIME_140US);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_z_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_z_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_rw0003_z_current_conversion_time);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
   bc_cycle++;
 
@@ -119,52 +122,52 @@ void BCL_load_set_ina260_oc_limit()
   cycle_t bc_cycle = 1;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_PIC);
-  BCL_tool_prepare_param_float(200.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_pic_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_STIM210);
-  BCL_tool_prepare_param_float(1000.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_stim210_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_SAGITTA);
-  BCL_tool_prepare_param_float(500.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_sagitta_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_OEM7600);
-  BCL_tool_prepare_param_float(1000.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_oem7600_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RM3100);
-  BCL_tool_prepare_param_float(200.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_rm3100_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_NANOSSOC_D60);
-  BCL_tool_prepare_param_float(150.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_nanossoc_d60_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_MTQ);
-  BCL_tool_prepare_param_float(2000.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_mtq_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RW0003_X);
-  BCL_tool_prepare_param_float(2000.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_rw0003_x_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RW0003_Y);
-  BCL_tool_prepare_param_float(2000.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_rw0003_y_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(INA260_IDX_RW0003_Z);
-  BCL_tool_prepare_param_float(2000.0f);  // mA
+  BCL_tool_prepare_param_float(INA260_PARAMETERS_rw0003_z_hw_over_current_threshold_mA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
