@@ -9,6 +9,9 @@
 #include "../event_logger_group.h"
 #include "../../../Applications/DriverInstances/di_ina260.h"
 
+// Satellite Parameters
+#include "../../../Settings/SatelliteParameters/fdir_parameters.h"
+
 void EH_load_rule_hw_oc(void)
 {
   EH_RuleSettings settings;
@@ -18,8 +21,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_stim210;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_stim210_ms;
   settings.deploy_bct_id = BC_RESET_STIM210;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_STIM210, &settings);
@@ -30,8 +33,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_stim210;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_stim210_ms;
   settings.deploy_bct_id = BC_POWER_OFF_STIM210;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_STIM210_BROKEN, &settings);
@@ -41,8 +44,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_sagitta;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_sagitta_ms;
   settings.deploy_bct_id = BC_RESET_SAGITTA;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_SAGITTA, &settings);
@@ -53,8 +56,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_sagitta;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_sagitta_ms;
   settings.deploy_bct_id = BC_POWER_OFF_SAGITTA;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_SAGITTA_BROKEN, &settings);
@@ -64,8 +67,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_oem7600;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_oem7600_ms;
   settings.deploy_bct_id = BC_RESET_OEM7600;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_OEM7600, &settings);
@@ -76,8 +79,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_oem7600;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_oem7600_ms;
   settings.deploy_bct_id = BC_POWER_OFF_OEM7600;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_OEM7600_BROKEN, &settings);
@@ -87,8 +90,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rm3100;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rm3100_ms;
   settings.deploy_bct_id = BC_RESET_RM3100;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RM3100, &settings);
@@ -99,8 +102,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rm3100;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rm3100_ms;
   settings.deploy_bct_id = BC_POWER_OFF_RM3100;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RM3100_BROKEN, &settings);
@@ -110,8 +113,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms =FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_NANOSSOC_D60, &settings);
@@ -122,8 +125,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_POWER_OFF_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_NANOSSOC_D60_BROKEN, &settings);
@@ -133,8 +136,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_mtq;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_mtq_ms;
   settings.deploy_bct_id = BC_RESET_MTQ;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_MTQ, &settings);
@@ -145,8 +148,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_mtq;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_mtq_ms;
   settings.deploy_bct_id = BC_POWER_OFF_MTQ;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_MTQ_BROKEN, &settings);
@@ -156,8 +159,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_x;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_x_ms;
   settings.deploy_bct_id = BC_RESET_RWX;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RW0003X, &settings);
@@ -168,8 +171,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_x;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_x_ms;
   settings.deploy_bct_id = BC_POWER_OFF_RWX;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RW0003X_BROKEN, &settings);
@@ -179,8 +182,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_y;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_y_ms;
   settings.deploy_bct_id = BC_RESET_RWY;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RW0003Y, &settings);
@@ -191,8 +194,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_y;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_y_ms;
   settings.deploy_bct_id = BC_POWER_OFF_RWY;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RW0003Y_BROKEN, &settings);
@@ -202,8 +205,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_reset_count_threshold_rw0003_z;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_reset_time_threshold_rw0003_z_ms;
   settings.deploy_bct_id = BC_RESET_RWZ;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RW0003Z, &settings);
@@ -214,8 +217,8 @@ void EH_load_rule_hw_oc(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_hw_oc_eh_power_off_count_threshold_rw0003_z;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_hw_oc_eh_power_off_time_threshold_rw0003_z_ms;
   settings.deploy_bct_id = BC_POWER_OFF_RWZ;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_HW_OC_RW0003Z_BROKEN, &settings);
