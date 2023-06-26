@@ -52,6 +52,7 @@ set(C2A_SRCS
   ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_determination_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/attitude_control_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/fdir_parameters.c
+  ${C2A_SATELLITE_PARAMETERS_DIR}/ina260_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/mpu9250_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/rm3100_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/nanossoc_d60_parameters.c
