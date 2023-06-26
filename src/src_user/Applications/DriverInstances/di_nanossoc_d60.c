@@ -14,6 +14,9 @@
 #include "../UserDefined/Power/power_switch_control.h"
 #include "../../IfWrapper/GPIO.h"
 
+// Satellite Parameters
+#include "../../Settings/SatelliteParameters/nanossoc_d60_parameters.h"
+
 static void DI_NANOSSOC_D60_init_(void);
 static void DI_NANOSSOC_D60_update_(void);
 static uint8_t DI_NANOSSOC_D60_conv_idx_to_i2c_address_(uint8_t idx);
@@ -69,41 +72,25 @@ static void DI_NANOSSOC_D60_init_(void)
   }
 
   C2A_MATH_ERROR ret_math;
-  Quaternion q_py_c2b;
-  q_py_c2b = QUATERNION_make_x_rot(PHYSICAL_CONST_degree_to_radian(90.0f));
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY], q_py_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY], NANOSSOC_D60_PARAMETERS_py_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  Quaternion q_my_c2b;
-  QUATERNION_make_from_euler_angles(&q_my_c2b,
-                                    PHYSICAL_CONST_degree_to_radian(90.0f),
-                                    PHYSICAL_CONST_degree_to_radian(0.0f),
-                                    PHYSICAL_CONST_degree_to_radian(180.0f),
-                                    EULER_ANGLE_ROTATION_ORDER_123);
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY], q_my_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY], NANOSSOC_D60_PARAMETERS_my_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  Quaternion q_pz_c2b;
-  q_pz_c2b = QUATERNION_make_z_rot(PHYSICAL_CONST_degree_to_radian(90.0f));
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ], q_pz_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ], NANOSSOC_D60_PARAMETERS_pz_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  Quaternion q_mz_c2b;
-  QUATERNION_make_from_euler_angles(&q_mz_c2b,
-                                    PHYSICAL_CONST_degree_to_radian(-90.0f),
-                                    PHYSICAL_CONST_degree_to_radian(0.0f),
-                                    PHYSICAL_CONST_degree_to_radian(180.0f),
-                                    EULER_ANGLE_ROTATION_ORDER_321);
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ], q_mz_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ], NANOSSOC_D60_PARAMETERS_mz_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
