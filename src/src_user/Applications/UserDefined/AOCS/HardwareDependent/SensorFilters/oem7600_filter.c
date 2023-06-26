@@ -16,6 +16,9 @@
 #include "../../../../../Library/time_space.h"
 #include "../../../../../Library/math_constants.h"
 
+// Satellite Parameters
+#include "../../../../../Settings/SatelliteParameters/oem7600_parameters.h"
+
 #define OEM7600_FILTER_POS_VEL_SIX_DIM (6)
 
 static Oem7600Filter        oem7600_filter_;
@@ -117,18 +120,17 @@ static void APP_OEM7600_FILTER_exec_(void)
 
 static int APP_OEM7600_FILTER_init_spike_filter_(void)
 {
-  // 値は調整してよいが一旦これで進める
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    oem7600_filter_.position_spike_filter_config[axis_id].count_limit_to_accept = 3;
-    oem7600_filter_.position_spike_filter_config[axis_id].count_limit_to_reject_continued_warning = 60;
-    oem7600_filter_.position_spike_filter_config[axis_id].reject_threshold = 10000.0; // m
-    oem7600_filter_.position_spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = 8000.0; // m
+    oem7600_filter_.position_spike_filter_config[axis_id].count_limit_to_accept = OEM7600_PARAMETERS_position_spike_filter_config_count_limit_to_accept;
+    oem7600_filter_.position_spike_filter_config[axis_id].count_limit_to_reject_continued_warning = OEM7600_PARAMETERS_position_spike_filter_config_count_limit_to_reject_continued_warning;
+    oem7600_filter_.position_spike_filter_config[axis_id].reject_threshold = OEM7600_PARAMETERS_position_spike_filter_config_reject_threshold_m;
+    oem7600_filter_.position_spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = OEM7600_PARAMETERS_position_spike_filter_config_amplitude_limit_to_accept_as_step_m;
 
-    oem7600_filter_.velocity_spike_filter_config[axis_id].count_limit_to_accept = 3;
-    oem7600_filter_.velocity_spike_filter_config[axis_id].count_limit_to_reject_continued_warning = 60;
-    oem7600_filter_.velocity_spike_filter_config[axis_id].reject_threshold = 1000.0; // m/s
-    oem7600_filter_.velocity_spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = 100; // m/s
+    oem7600_filter_.velocity_spike_filter_config[axis_id].count_limit_to_accept = OEM7600_PARAMETERS_velocity_spike_filter_config_count_limit_to_accept;
+    oem7600_filter_.velocity_spike_filter_config[axis_id].count_limit_to_reject_continued_warning = OEM7600_PARAMETERS_velocity_spike_filter_config_count_limit_to_reject_continued_warning;
+    oem7600_filter_.velocity_spike_filter_config[axis_id].reject_threshold = OEM7600_PARAMETERS_velocity_spike_filter_config_reject_threshold_m_s;
+    oem7600_filter_.velocity_spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = OEM7600_PARAMETERS_velocity_spike_filter_config_amplitude_limit_to_accept_as_step_m_s;
   }
 
   C2A_MATH_ERROR position_filter_setting_result = C2A_MATH_ERROR_OK;
