@@ -11,6 +11,9 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../aocs_manager.h"
 
+// Satellite Parameters
+#include "../../../../../Settings/SatelliteParameters/rm3100_parameters.h"
+
 static Rm3100Filter        rm3100_filter_;
 const  Rm3100Filter* const rm3100_filter = &rm3100_filter_;
 
@@ -20,12 +23,12 @@ static SpikeFilter APP_RM3100_FILTER_spike_[RM3100_IDX_MAX][PHYSICAL_CONST_THREE
 static void APP_RM3100_FILTER_init_(void);
 static void APP_RM3100_FILTER_exec_(void);
 
-static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, float cut_off_freq_Hz);
+static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, const float cut_off_freq_Hz[PHYSICAL_CONST_THREE_DIM]);
 static int APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX rm3100_id,
-                                                uint8_t count_limit_to_accept,
-                                                uint8_t count_limit_to_reject_continued_warning,
-                                                double  reject_threshold_nT,
-                                                double  amplitude_limit_to_accept_as_step_nT);
+                                                const uint8_t count_limit_to_accept[PHYSICAL_CONST_THREE_DIM],
+                                                const uint8_t count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM],
+                                                const float  reject_threshold_nT[PHYSICAL_CONST_THREE_DIM],
+                                                const float  amplitude_limit_to_accept_as_step_nT[PHYSICAL_CONST_THREE_DIM]);
 
 AppInfo APP_RM3100_FILTER_create_app(void)
 {
@@ -35,30 +38,36 @@ AppInfo APP_RM3100_FILTER_create_app(void)
 static void APP_RM3100_FILTER_init_(void)
 {
   // same sampling frequency is applied to all filters
-  // (since the frequency must be coincide with the call interval of this apllication)
+  // (since the frequency must be coincide with the call interval of this application)
   rm3100_filter_.sampling_freq_Hz = 10.0f;
 
-  int z_filter_aobc_init_result = APP_RM3100_FILTER_init_z_filter_(RM3100_IDX_ON_AOBC, 0.5f);
+  int z_filter_aobc_init_result = APP_RM3100_FILTER_init_z_filter_(RM3100_IDX_ON_AOBC, RM3100_PARAMETERS_mag_aobc_cut_off_freq_lpf_1st_Hz);
   if (z_filter_aobc_init_result != 0)
   {
     Printf("RM3100 on AOBC ZFilter init Failed ! \n");
   }
 
-  int z_filter_external_init_result = APP_RM3100_FILTER_init_z_filter_(RM3100_IDX_EXTERNAL, 0.5f);
+  int z_filter_external_init_result = APP_RM3100_FILTER_init_z_filter_(RM3100_IDX_EXTERNAL, RM3100_PARAMETERS_mag_ext_cut_off_freq_lpf_1st_Hz);
   if (z_filter_external_init_result != 0)
   {
     Printf("RM3100 external ZFilter init Failed ! \n");
   }
 
   int spike_filter_aobc_init_result = APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX_ON_AOBC,
-                                                                           3, 60, 5000.0, 1500.0);
+                                                                           RM3100_PARAMETERS_mag_aobc_spike_count_limit_to_accept,
+                                                                           RM3100_PARAMETERS_mag_aobc_spike_count_limit_to_reject_continued_warning,
+                                                                           RM3100_PARAMETERS_mag_aobc_spike_reject_threshold_nT,
+                                                                           RM3100_PARAMETERS_mag_aobc_spike_amplitude_limit_to_accept_as_step_nT);
   if (spike_filter_aobc_init_result != 0)
   {
     Printf("RM3100 on AOBC SpikeFilter init Failed ! \n");
   }
 
   int spike_filter_external_init_result = APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX_EXTERNAL,
-                                                                               3, 60, 5000.0, 1500.0);
+                                                                               RM3100_PARAMETERS_mag_ext_spike_count_limit_to_accept,
+                                                                               RM3100_PARAMETERS_mag_ext_spike_count_limit_to_reject_continued_warning,
+                                                                               RM3100_PARAMETERS_mag_ext_spike_reject_threshold_nT,
+                                                                               RM3100_PARAMETERS_mag_ext_spike_amplitude_limit_to_accept_as_step_nT);
   if (spike_filter_external_init_result != 0)
   {
     Printf("RM3100 external SpikeFilter init Failed ! \n");
@@ -114,11 +123,11 @@ static void APP_RM3100_FILTER_exec_(void)
   return;
 }
 
-static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, float cut_off_freq_Hz)
+static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, const float cut_off_freq_Hz[PHYSICAL_CONST_THREE_DIM])
 {
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    rm3100_filter_.cut_off_freq_lpf_1st_Hz[rm3100_id][axis_id] = cut_off_freq_Hz;
+    rm3100_filter_.cut_off_freq_lpf_1st_Hz[rm3100_id][axis_id] = cut_off_freq_Hz[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
@@ -144,20 +153,20 @@ static int APP_RM3100_FILTER_init_z_filter_(RM3100_IDX rm3100_id, float cut_off_
 }
 
 static int APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX rm3100_id,
-                                                uint8_t count_limit_to_accept,
-                                                uint8_t count_limit_to_reject_continued_warning,
-                                                double  reject_threshold_nT,
-                                                double  amplitude_limit_to_accept_as_step_nT)
+                                                const uint8_t count_limit_to_accept[PHYSICAL_CONST_THREE_DIM],
+                                                const uint8_t count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM],
+                                                const float  reject_threshold_nT[PHYSICAL_CONST_THREE_DIM],
+                                                const float  amplitude_limit_to_accept_as_step_nT[PHYSICAL_CONST_THREE_DIM])
 {
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
     rm3100_filter_.spike_filter_config[rm3100_id][axis_id].count_limit_to_accept =
-      count_limit_to_accept;
+      count_limit_to_accept[axis_id];
     rm3100_filter_.spike_filter_config[rm3100_id][axis_id].count_limit_to_reject_continued_warning =
-      count_limit_to_reject_continued_warning;
-    rm3100_filter_.spike_filter_config[rm3100_id][axis_id].reject_threshold = reject_threshold_nT;
+      count_limit_to_reject_continued_warning[axis_id];
+    rm3100_filter_.spike_filter_config[rm3100_id][axis_id].reject_threshold = reject_threshold_nT[axis_id];
     rm3100_filter_.spike_filter_config[rm3100_id][axis_id].amplitude_limit_to_accept_as_step =
-      amplitude_limit_to_accept_as_step_nT;
+      amplitude_limit_to_accept_as_step_nT[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
