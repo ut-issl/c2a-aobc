@@ -5,8 +5,6 @@
 
 #include <src_user/Settings/SatelliteParameters/oem7600_parameters.h>
 
-// Frame conversion: GPS-Rについては無し
-
 // Spike Filter
 uint8_t OEM7600_PARAMETERS_position_spike_filter_config_count_limit_to_accept = 3;
 uint8_t OEM7600_PARAMETERS_position_spike_filter_config_count_limit_to_reject_continued_warning = 60;
