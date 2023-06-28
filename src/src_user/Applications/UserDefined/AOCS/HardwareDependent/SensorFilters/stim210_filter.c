@@ -10,6 +10,10 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include "../../../../DriverInstances/di_stim210.h"
+#include "../../../../../Library/vector3.h"
+
+//Satellite Parameters
+#include "../../../../../Settings/SatelliteParameters/stim210_parameters.h"
 
 static Stim210Filter        stim210_filter_;
 const  Stim210Filter* const stim210_filter = &stim210_filter_;
@@ -85,10 +89,7 @@ static void APP_STIM210_FILTER_exec_(void)
 
 static int APP_STIM210_FILTER_init_z_filter_(void)
 {
-  // 値は調整してよいが一旦これで進める
-  stim210_filter_.cut_off_freq_lpf_1st_Hz[0] = 1.0f;
-  stim210_filter_.cut_off_freq_lpf_1st_Hz[1] = 1.0f;
-  stim210_filter_.cut_off_freq_lpf_1st_Hz[2] = 1.0f;
+  VECTOR3_copy(stim210_filter_.cut_off_freq_lpf_1st_Hz, STIM210_PARAMETERS_gyro_cut_off_freq_lpf_1st_Hz);
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
@@ -114,13 +115,12 @@ static int APP_STIM210_FILTER_init_z_filter_(void)
 
 static int APP_STIM210_FILTER_init_spike_filter_(void)
 {
-  // 値は調整してよいが一旦これで進める
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    stim210_filter_.spike_filter_config[axis_id].count_limit_to_accept = 3;
-    stim210_filter_.spike_filter_config[axis_id].count_limit_to_reject_continued_warning = 60;
-    stim210_filter_.spike_filter_config[axis_id].reject_threshold = 0.01; // rad/s
-    stim210_filter_.spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = 0.002; // rad/s
+    stim210_filter_.spike_filter_config[axis_id].count_limit_to_accept = STIM210_PARAMETERS_gyro_spike_count_limit_to_accept[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].count_limit_to_reject_continued_warning = STIM210_PARAMETERS_gyro_spike_count_limit_to_reject_continued_warning[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].reject_threshold = STIM210_PARAMETERS_gyro_spike_reject_threshold_rad_s[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = STIM210_PARAMETERS_gyro_spike_amplitude_limit_to_accept_as_step_rad_s[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;

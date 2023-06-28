@@ -57,7 +57,7 @@ set(C2A_SRCS
   ${C2A_SATELLITE_PARAMETERS_DIR}/rm3100_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/nanossoc_d60_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/oem7600_parameters.c
-  # ${C2A_SATELLITE_PARAMETERS_DIR}/stim210_parameters.c
+  ${C2A_SATELLITE_PARAMETERS_DIR}/stim210_parameters.c
   # ${C2A_SATELLITE_PARAMETERS_DIR}/sagitta_parameters.c
   # ${C2A_SATELLITE_PARAMETERS_DIR}/seiren_mtq_parameters.c
   # ${C2A_SATELLITE_PARAMETERS_DIR}/rw0003_parameters.c
