@@ -12,18 +12,15 @@
 // Constant value
 const uint8_t STIM210_PARAMETERS_kNumCoeffTempCalib = 2; //!< Number of coefficient for calibration. This value cannot be changed since it relates Tlm/Cmd definition.
 
-// Angular Velocity Bias
-extern const float STIM210_PARAMETERS_ang_vel_bias_compo_rad_s[PHYSICAL_CONST_THREE_DIM]; //!< Angular velocity bias @ component frame [rad/s]
-
 // Gyro Bias and scale factor temperature calibration
-extern const float STIM210_PARAMETERS_temperature_range_high_degC;                                        //!< Temperature range high [degC]
-extern const float STIM210_PARAMETERS_temperature_range_low_degC;                                         //!< Temperature range low [degC]
-extern const float STIM210_PARAMETERS_bias_coeff_compo_x[STIM210_PARAMETERS_kNumCoeffTempCalib];          //!< Bias coefficients @ component frame X axis
-extern const float STIM210_PARAMETERS_scale_factor_coeff_compo_x[STIM210_PARAMETERS_kNumCoeffTempCalib];  //!< Scale Factor coefficients @ component frame X axis
-extern const float STIM210_PARAMETERS_bias_coeff_compo_y[STIM210_PARAMETERS_kNumCoeffTempCalib];          //!< Bias coefficients @ component frame Y axis
-extern const float STIM210_PARAMETERS_scale_factor_coeff_compo_y[STIM210_PARAMETERS_kNumCoeffTempCalib];  //!< Scale Factor coefficients @ component frame Y axis
-extern const float STIM210_PARAMETERS_bias_coeff_compo_z[STIM210_PARAMETERS_kNumCoeffTempCalib];          //!< Bias coefficients @ component frame Z axis
-extern const float STIM210_PARAMETERS_scale_factor_coeff_compo_z[STIM210_PARAMETERS_kNumCoeffTempCalib];  //!< Scale Factor coefficients @ component frame Z axis
+extern const float STIM210_PARAMETERS_temperature_range_high_degC;                                       //!< Temperature range high [degC]
+extern const float STIM210_PARAMETERS_temperature_range_low_degC;                                        //!< Temperature range low [degC]
+extern const float STIM210_PARAMETERS_bias_coeff_compo_x[STIM210_PARAMETERS_kNumCoeffTempCalib];         //!< Bias coefficients @ component frame X axis
+extern const float STIM210_PARAMETERS_scale_factor_coeff_compo_x[STIM210_PARAMETERS_kNumCoeffTempCalib]; //!< Scale Factor coefficients @ component frame X axis
+extern const float STIM210_PARAMETERS_bias_coeff_compo_y[STIM210_PARAMETERS_kNumCoeffTempCalib];         //!< Bias coefficients @ component frame Y axis
+extern const float STIM210_PARAMETERS_scale_factor_coeff_compo_y[STIM210_PARAMETERS_kNumCoeffTempCalib]; //!< Scale Factor coefficients @ component frame Y axis
+extern const float STIM210_PARAMETERS_bias_coeff_compo_z[STIM210_PARAMETERS_kNumCoeffTempCalib];         //!< Bias coefficients @ component frame Z axis
+extern const float STIM210_PARAMETERS_scale_factor_coeff_compo_z[STIM210_PARAMETERS_kNumCoeffTempCalib]; //!< Scale Factor coefficients @ component frame Z axis
 
 // Gyro filter
 // 1st order Low Pass Filter

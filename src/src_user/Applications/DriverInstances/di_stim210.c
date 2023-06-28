@@ -74,15 +74,9 @@ static void DI_STIM210_init_(void)
     Printf("STIM210: q_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret_math = STIM210_set_ang_vel_bias_compo_rad_s(&stim210_driver_[STIM210_IDX_IN_UNIT], STIM210_PARAMETERS_ang_vel_bias_compo_rad_s);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("STIM210: ang_vel_bias set error.\n");
-  }
-
   // 温度補正
-  const float kRangeLow  = STIM210_PARAMETERS_temperature_range_low_degC; // degC
-  const float kRangeHigh = STIM210_PARAMETERS_temperature_range_high_degC; // degC
+  const float kRangeLow  = STIM210_PARAMETERS_temperature_range_low_degC;
+  const float kRangeHigh = STIM210_PARAMETERS_temperature_range_high_degC;
   // 計測値から設定するが温度依存性はかなり小さい
   // 特にSFは取付誤差と見分けづらいのでなしとする
   // SF,バイアスは y = SF*x - BIASという式を想定
