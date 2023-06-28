@@ -18,6 +18,7 @@
 
 // Satellite Parameters
 #include "../../../Settings/SatelliteParameters/fdir_parameters.h"
+#include "../../../Settings/SatelliteParameters/component_selector_parameters.h"
 
 void BCL_load_initial_to_bdot(void)
 {
@@ -100,8 +101,8 @@ void BCL_load_any_to_bdot(void)
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   time_sec += 1;
 
-  // 使う磁気センサをExternalに設定
-  BCL_tool_prepare_param_uint8(APP_MAG_SELECTOR_STATE_RM_EXT);
+  // 使う磁気センサを設定
+  BCL_tool_prepare_param_uint8(COMPONENT_SELECTOR_PARAMETERS_initial_selected_magnetometer);
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_APP_MAG_SELECTOR_SET_STATE);
   time_sec += 1;
 
