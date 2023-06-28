@@ -10,6 +10,9 @@ if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC "/MT")
   target_compile_options(${PROJECT_NAME} PUBLIC "/TP") #Compile C codes as C++
   target_compile_options(${PROJECT_NAME} PUBLIC "/source-charset:utf-8")
+  # warning
+  target_compile_options(${PROJECT_NAME} PRIVATE /wd4083) # disable #pragma SECTION REPRO warning
+  target_compile_options(${PROJECT_NAME} PRIVATE /wd4081) # disable #pragma section (EOF)
 else()
   target_compile_options(${PROJECT_NAME} PUBLIC "${CMAKE_CXX_FLAGS}-Wall")
   set(CMAKE_CXX_FLAGS "-m32 -rdynamic -Wall -g")  # SJIS, 32bit
