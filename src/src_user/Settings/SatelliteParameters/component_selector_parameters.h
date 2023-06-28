@@ -10,6 +10,5 @@
 #include "../../Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/gyro_selector.h"
 
 extern const APP_MAG_SELECTOR_STATE COMPONENT_SELECTOR_PARAMETERS_initial_selected_magnetometer;  //!< Initial selected magnetometer
-extern const APP_GYRO_SELECTOR_STATE COMPONENT_SELECTOR_PARAMETERS_initial_selected_gyro;         //!< Initial selected gyro
 
 #endif // COMPONENT_SELECTOR_PARAMETERS_H_

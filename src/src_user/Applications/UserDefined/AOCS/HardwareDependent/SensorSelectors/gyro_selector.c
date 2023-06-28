@@ -15,9 +15,6 @@
 #include "../SensorFilters/stim210_filter.h"
 #include "../../aocs_manager.h"
 
-// Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/component_selector_parameters.h"
-
 static GyroSelector        gyro_selector_;
 const  GyroSelector* const gyro_selector = &gyro_selector_;
 
@@ -34,7 +31,7 @@ AppInfo APP_GYRO_SELECTOR_create_app(void)
 
 static void APP_GYRO_SELECTOR_init_(void)
 {
-  gyro_selector_.state = COMPONENT_SELECTOR_PARAMETERS_initial_selected_gyro;
+  gyro_selector_.state = APP_GYRO_SELECTOR_STATE_MPU;
   gyro_selector_.auto_flag = 0;
   return;
 }
