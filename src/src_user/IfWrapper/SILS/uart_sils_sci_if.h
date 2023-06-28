@@ -10,6 +10,7 @@
 
 
 // 最初だけ初期化して、プログラム終了時にポートを閉じるようにしたい
+// TODO: ポート番号を外部ファイルから設定できるようにする
 #ifdef WIN32
 static SCIComPort SILS_SCI_IF_sci_com_uart_(11);
 #else
