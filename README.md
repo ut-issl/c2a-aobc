@@ -96,7 +96,7 @@ $ git submodule update
 
 
 # コーディング規則
-- 基本的にCDHが制定している[コーディング規則](https://gitlab.com/ut_issl/c2a/documents_oss/-/blob/master/General/CodingRule.md)に従う
+- 基本的にCDHが制定している[コーディング規則](https://github.com/ut-issl/c2a-core/blob/042cdfa15b0056880398e857cdd5d5a430562fd1/Docs/General/coding_rule.md)に従う
 - その他、AOCSとして特有な下記のことにも気をつける
   - 変数、関数命名時に単位がわかるように配慮する
     - 搭載S/W内では、系内で意思統一した単位系を用いる
