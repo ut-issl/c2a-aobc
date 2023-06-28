@@ -61,7 +61,7 @@ set(C2A_SRCS
   ${C2A_SATELLITE_PARAMETERS_DIR}/sagitta_parameters.c
   # ${C2A_SATELLITE_PARAMETERS_DIR}/seiren_mtq_parameters.c
   ${C2A_SATELLITE_PARAMETERS_DIR}/rw0003_parameters.c
-  # ${C2A_SATELLITE_PARAMETERS_DIR}/component_selector_parameters.c
+  ${C2A_SATELLITE_PARAMETERS_DIR}/component_selector_parameters.c
 )
 
 add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
