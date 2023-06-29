@@ -163,7 +163,7 @@ jobs:
         if: steps.cache-extlib.outputs.cache-hit != 'true'
         working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
-          cmake -DBUILD_64BIT=OFF -DEXT_LIB_DIR="$(pwd)" -DEXT_LIB_DIR="${extlib_dir}"
+          cmake -DBUILD_64BIT=OFF -DEXT_LIB_DIR="$(pwd)"
           cmake --build . --clean-first
 
       - name: install extlib
