@@ -1,5 +1,7 @@
 # C2A-AOBC
 
+[![Build](https://github.com/ut-issl/c2a-aobc/actions/workflows/build.yml/badge.svg)](https://github.com/ut-issl/c2a-aobc/actions/workflows/build.yml)
+
 ## Overview
 
 - `C2A-AOBC` is the flight software for the AOCS module developed by ISSL/UT, Seiren, and JAXA.
