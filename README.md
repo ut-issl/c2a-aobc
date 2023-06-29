@@ -8,7 +8,7 @@
 - Support environments
   - For real AOBC (Attitude On Board Computer)
     - [vMicro](https://www.visualmicro.com/) + Visual Studio 2019
-  - For SILS/HILS test
+  - For SILS test
     - [S2E-AOBC](https://github.com/ut-issl/s2e-aobc) v3.0.0
   - Telemetry/Command interface
     - [tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
@@ -32,7 +32,13 @@
 - Users can refer to the `c2a-aobc/Example` directory to make a directory construction of `c2a-aobc-hoge-satellite`.
   - **NOTE** Please rewrite the `example` to your project name.
   ```
-  TBW
+  - src-aobc (git submodule of c2a-aobc with rename)
+    - We recommend to use a released version of c2a-aobc.
+  - Build setting files
+    - CMake files, Visual Studio files, and others
+  - others
+    - git related files
+  - README.md
   ```
 - To use `git submodule` features, please see the reference [Git Tools Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
