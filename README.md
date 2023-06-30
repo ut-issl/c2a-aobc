@@ -6,6 +6,7 @@
   - SILS
     - S2E-AOBC: [`develop` branch](https://github.com/ut-issl/s2e-aobc)
     - WINGS: 最新の [`develop` branch](https://gitlab.com/ut_issl/wings/wings)
+  - test
 
 # clone方法
 - `C2A-CORE` がgit submoduleとして含まれているので，以下で一発．
