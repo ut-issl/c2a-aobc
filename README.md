@@ -28,9 +28,9 @@
 ## For general users
 ### How to make a project-specific repository
 
-- We recommend making a project-specific repository named `c2a-aobc-hoge-satellite`.
-- Users can refer to the `c2a-aobc/Example` directory to make a directory construction of `c2a-aobc-hoge-satellite`.
-  - **NOTE** Please rewrite the `example` to your project name.
+- We recommend making a project-specific repository named `c2a-aobc-project-name`.
+- Users can refer to the `c2a-aobc/Examples` directory to make a directory construction of `c2a-aobc-project-name`.
+  - **NOTE** Please change all words `example, EXAMPLE, or Example` in the files in this directory to suit your project name.
   ```
   - src-aobc (git submodule of c2a-aobc with rename)
     - We recommend to use a released version of c2a-aobc.
@@ -44,12 +44,12 @@
 
 ### How to build and execute the project-specific repository
 
-- Please see the [README.md](./Example/README.md) in the `Example` directly.
+- Please see the [README.md](./Examples/README.md) in the `Examples` directly.
 
 ### How to join the development of this repository
 
 - When general users add new features or remove this repository's bugs, please make upstream pull requests from a forked repository.
-- Before making PRs, please carefully read the following `Development style`.
+- Before making PRs, please carefully read the following `Development style` for main developers.
 - If you have any questions, please feel free to ask us.
 
 
@@ -157,7 +157,7 @@
 - Please also care about the AOCS-specific rules as follows.
   - Add unit information in the name of variables and functions
   - Add frame information in the name of variables and functions
-    - `eci`: ECI frame
+    - `eci`: Earth Center Inertia frame
     - `body`: Body-fixed frame
     - `compo`: Component frame
   - For abbreviations, please see the ISSL internal [document](https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/77#note_568506174).
@@ -166,7 +166,7 @@
 - When using `vMicro`, setting the `Visual Studio` to display by folders instead of filters makes it easier to use.
 - For build errors when SILS test with `S2E`, try the following operations first.
   - Perform `git submodule update`.
-  - Delete cmake cache of S2E.
+  - Delete CMake cache of S2E.
 
 ## Brief history of development
 ### History
