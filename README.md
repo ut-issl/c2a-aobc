@@ -40,7 +40,8 @@
     - git related files
   - README.md
   ```
-- To use `git submodule` features, please see the reference [Git Tools Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+- To construct the `src-aobc` directory, we recommend to use `git submodule` to take in the `c2a-aobc` repository with renaming to `src-aobc`.
+  - Reference: [Git Tools Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ### How to build and execute the project-specific repository
 
