@@ -1,0 +1,45 @@
+############################################################
+
+MXL795a.name=PIC32MX795F512L(30MHz)
+MXL795a.group=SAT
+
+# new items
+MXL795a.platform=pic32
+MXL795a.board=_BOARD_MEGA_
+MXL795a.ldscript=chipKIT-application-32MX795F512.ld
+# end of new items
+
+MXL795a.upload.protocol=stk500v2
+MXL795a.upload.maximum_size=520192
+MXL795a.upload.maximum_data_size=131072
+MXL795a.upload.speed=115200
+MXL795a.upload.tool=pic32prog
+
+MXL795a.build.mcu=32MX795F512L
+MXL795a.build.f_cpu=30000000L
+MXL795a.build.core=pic32
+MXL795a.build.variant=MXL795
+
+############################################################
+
+MXL795b.name=PIC32MX795F512L(80MHz)	
+MXL795b.group=SAT
+
+# new items
+MXL795b.platform=pic32
+MXL795b.board=_BOARD_MEGA_
+MXL795b.ldscript=chipKIT-application-32MX795F512.ld
+# end of new items
+
+MXL795b.upload.protocol=stk500v2
+MXL795b.upload.maximum_size=520192
+MXL795b.upload.maximum_data_size=131072
+MXL795b.upload.speed=115200
+MXL795b.upload.tool=pic32prog
+
+MXL795b.build.mcu=32MX795F512L
+MXL795b.build.f_cpu=80000000L
+MXL795b.build.core=pic32
+MXL795b.build.variant=MXL795
+
+############################################################
