@@ -58,15 +58,16 @@ jobs:
         uses: actions/cache@v3
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-aobc/s2e-core/ExtLibraries/**') }}
-          path: ExtLibraries
+          path: ./s2e-aobc/s2e-core/ExtLibraries
 
       - name: build extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
         shell: powershell
         working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
-          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug"
-          cmake --build .
+          $extlib_dir=(pwd).Path
+          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR="${extlib_dir}"
+          cmake --build . --clean-first
 
       - name: install extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
@@ -77,7 +78,7 @@ jobs:
 
       - name: check extlib
         shell: powershell
-        working-directory: ./s2e-aobc/ExtLibraries
+        working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
           ls cspice
           ls cspice/cspice_msvs/lib
@@ -94,8 +95,8 @@ jobs:
         working-directory: ./s2e-aobc/s2e-aocs-core
         run: |
           cl.exe
-          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
-          cmake --build .
+          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
+          cmake --build . --clean-first
 
   build_c2a_with_s2e_linux:
     name: Build C2A with S2E on Linux
@@ -130,6 +131,7 @@ jobs:
           read -r -a COMPILER <<< "$COMPILER"
           echo "CC=${COMPILER[0]}" >> "$GITHUB_OUTPUT"
           echo "CXX=${COMPILER[1]}" >> "$GITHUB_OUTPUT"
+
       - name: install deps
         run: |
           # FIXME: temporary install gcc-11 in ubuntu:focal
@@ -143,31 +145,35 @@ jobs:
           else
             sudo apt-get install -y gcc-multilib g++-multilib
           fi
+
       - name: show tools version
         run: |
           cmake --version
           ${{ steps.compiler.outputs.CC  }} --version
           ${{ steps.compiler.outputs.CXX }} --version
+
       - name: cache extlib
         id: cache-extlib
         uses: actions/cache@v3
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-aobc/s2e-core/ExtLibraries/**') }}-BUILD_64BIT=OFF
-          path: ExtLibraries
+          path: ./s2e-aobc/s2e-core/ExtLibraries
 
       - name: build extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
         working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
-          cmake -DBUILD_64BIT=OFF
-          cmake --build .
+          cmake -DBUILD_64BIT=OFF -DEXT_LIB_DIR="$(pwd)"
+          cmake --build . --clean-first
+
       - name: install extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
         working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
           cmake --install .
+
       - name: check extlib
-        working-directory: ./s2e-aobc/ExtLibraries
+        working-directory: ./s2e-aobc/s2e-core/ExtLibraries
         run: |
           ls cspice
           ls cspice/cspice_unix*
@@ -178,11 +184,12 @@ jobs:
           ls nrlmsise00/lib*
           ls nrlmsise00/lib*/libnrlmsise00.a
           ls nrlmsise00/src
+
       - name: build
         working-directory: ./s2e-aobc/s2e-aocs-core
         env:
           CC:  ${{ steps.compiler.outputs.CC  }}
           CXX: ${{ steps.compiler.outputs.CXX }}
         run: |
-          cmake . -DBUILD_64BIT=OFF -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
-          cmake --build .
+          cmake . -DBUILD_64BIT=OFF -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
+          cmake --build . --clean-first

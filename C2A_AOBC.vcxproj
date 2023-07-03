@@ -309,6 +309,8 @@
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_rough_sun_pointing.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_rough_three_axis.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_rough_three_axis_rw.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\orbit_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\structure_parameters.c" />
     <ClCompile Include="src\src_user\Settings\System\EventHandlerRules\event_handler_rules.c" />
     <ClCompile Include="src\src_user\Settings\System\EventHandlerRules\event_handler_rule_hw_oc.c" />
     <ClCompile Include="src\src_user\Settings\System\EventHandlerRules\event_handler_rule_sw_oc.c" />
