@@ -12,12 +12,12 @@
 #include "target_attitude_calculator.h"
 #include "quaternion_interpolator.h"
 #include "target_attitude_from_orbit.h"
-#include "../aocs_manager.h"
-#include "../../../app_registry.h"
-#include "../../../../Library/vector3.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/app_registry.h>
+#include <src_user/Library/vector3.h>
 
 // SatelliteParameters
-#include "../../../../Settings/SatelliteParameters/attitude_target_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
 
 static TargetAttitudeCalculator        target_attitude_calculator_;
 const  TargetAttitudeCalculator* const target_attitude_calculator = &target_attitude_calculator_;
