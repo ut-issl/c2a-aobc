@@ -9,13 +9,13 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../../Library/matrix33.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Library/matrix33.h>
 
 // Satellite Parameters
-#include "../../Settings/SatelliteParameters/stim210_parameters.h"
+#include <src_user/Settings/SatelliteParameters/stim210_parameters.h>
 
 static void DI_STIM210_init_(void);
 static void DI_STIM210_update_(void);

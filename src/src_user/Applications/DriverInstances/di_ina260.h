@@ -5,7 +5,7 @@
 #ifndef DI_INA260_H_
 #define DI_INA260_H_
 
-#include "../../Drivers/Power/ina260.h"
+#include <src_user/Drivers/Power/ina260.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**

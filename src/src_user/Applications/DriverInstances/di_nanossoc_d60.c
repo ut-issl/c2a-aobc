@@ -9,13 +9,13 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../../IfWrapper/GPIO.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/IfWrapper/GPIO.h>
 
 // Satellite Parameters
-#include "../../Settings/SatelliteParameters/nanossoc_d60_parameters.h"
+#include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
 
 static void DI_NANOSSOC_D60_init_(void);
 static void DI_NANOSSOC_D60_update_(void);
