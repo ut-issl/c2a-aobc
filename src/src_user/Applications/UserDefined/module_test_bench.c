@@ -5,9 +5,9 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/TimeManager/obc_time.h>
-#include "../../Library/c2a_math.h"
-#include "../../Library/math_constants.h"
-#include "../../Library/physical_constants.h"
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/physical_constants.h>
 #include "AOCS/aocs_manager.h"
 
 // #define RUN_EXAMPLE //!< Enable test of the test bench
