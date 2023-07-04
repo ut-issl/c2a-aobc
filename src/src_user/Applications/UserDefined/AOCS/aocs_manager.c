@@ -7,20 +7,20 @@
 #include "aocs_manager.h"
 #include <math.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../Library/c2a_math.h"
-#include "../../../Library/math_constants.h"
-#include "../../../Library/vector3.h"
-#include "../../../Library/matrix33.h"
-#include "../../../Library/ControlUtility/gyroscopic_effect.h"
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/ControlUtility/gyroscopic_effect.h>
 
 #include "AttitudeControl/unloading.h"
 #include "aocs_mode_manager.h"
 
 // SatelliteParameters
-#include "../../../Settings/SatelliteParameters/orbit_parameters.h"
-#include "../../../Settings/SatelliteParameters/structure_parameters.h"
-#include "../../../Settings/SatelliteParameters/attitude_control_parameters.h"
-#include "../../../Settings/SatelliteParameters/attitude_target_parameters.h"
+#include <src_user/Settings/SatelliteParameters/orbit_parameters.h>
+#include <src_user/Settings/SatelliteParameters/structure_parameters.h>
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
+#include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
 
 static AocsManager        aocs_manager_;
 const  AocsManager* const aocs_manager = &aocs_manager_;
