@@ -9,12 +9,12 @@
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../../DriverInstances/di_mpu9250.h"
-#include "../../aocs_manager.h"
-#include "../../../../../Library/vector3.h"
+#include <src_user/Applications/DriverInstances/di_mpu9250.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/vector3.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/mpu9250_parameters.h"
+#include <src_user/Settings/SatelliteParameters/mpu9250_parameters.h>
 
 static Mpu9250Filter        mpu9250_filter_;
 const  Mpu9250Filter* const mpu9250_filter = &mpu9250_filter_;

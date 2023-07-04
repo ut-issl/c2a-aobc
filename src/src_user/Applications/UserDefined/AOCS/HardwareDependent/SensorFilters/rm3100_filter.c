@@ -9,10 +9,10 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../aocs_manager.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/rm3100_parameters.h"
+#include <src_user/Settings/SatelliteParameters/rm3100_parameters.h>
 
 static Rm3100Filter        rm3100_filter_;
 const  Rm3100Filter* const rm3100_filter = &rm3100_filter_;

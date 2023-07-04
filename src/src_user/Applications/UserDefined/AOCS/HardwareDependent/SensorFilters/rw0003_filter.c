@@ -9,10 +9,10 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../aocs_manager.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/rw0003_parameters.h"
+#include <src_user/Settings/SatelliteParameters/rw0003_parameters.h>
 
 static Rw0003Filter        rw0003_filter_;
 const  Rw0003Filter* const rw0003_filter = &rw0003_filter_;

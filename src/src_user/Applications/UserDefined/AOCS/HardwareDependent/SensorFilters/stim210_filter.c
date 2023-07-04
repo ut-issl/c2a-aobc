@@ -9,11 +9,11 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../../DriverInstances/di_stim210.h"
-#include "../../../../../Library/vector3.h"
+#include <src_user/Applications/DriverInstances/di_stim210.h>
+#include <src_user/Library/vector3.h>
 
 //Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/stim210_parameters.h"
+#include <src_user/Settings/SatelliteParameters/stim210_parameters.h>
 
 static Stim210Filter        stim210_filter_;
 const  Stim210Filter* const stim210_filter = &stim210_filter_;

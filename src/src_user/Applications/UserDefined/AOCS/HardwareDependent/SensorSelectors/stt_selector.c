@@ -8,8 +8,8 @@
 #include "stt_selector.h"
 
 #include <src_core/Library/print.h>
-#include "../../../../DriverInstances/di_sagitta.h"
-#include "../../aocs_manager.h"
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static SttSelector        stt_selector_;
 const  SttSelector* const stt_selector = &stt_selector_;

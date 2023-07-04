@@ -9,11 +9,11 @@
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/TlmCmd/packet_handler.h>
-#include "../../../../DriverInstances/di_nanossoc_d60.h"
-#include "../../aocs_manager.h"
+#include <src_user/Applications/DriverInstances/di_nanossoc_d60.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/nanossoc_d60_parameters.h"
+#include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
 
 static SunSensorSelector        sun_sensor_selector_;
 const  SunSensorSelector* const sun_sensor_selector = &sun_sensor_selector_;
