@@ -4,11 +4,11 @@
 * @brief  MPU9250のDriver
 */
 
-#include "./mpu9250.h"
+#include "mpu9250.h"
 #include <string.h>
-#include "../../Library/physical_constants.h"
-#include "../../Library/vector3.h"
-#include "../../Library/matrix33.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
 
 #define MPU9250_STREAM_TLM_CMD         (0)  //!< テレコマで使うストリーム
 #define MPU9250_TX_FOR_REC_FRAME_SIZE  (1)  //!< 観測時の1回の送信データ長（バイト）

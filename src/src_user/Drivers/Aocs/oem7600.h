@@ -7,7 +7,7 @@
 #define OEM7600_H_
 
 #include <src_core/IfWrapper/uart.h>
-#include "../../IfWrapper/GPIO.h"
+#include <src_user/IfWrapper/GPIO.h>
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/System/TimeManager/obc_time.h>
 

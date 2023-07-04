@@ -3,14 +3,14 @@
 * @file   sagitta.c
 * @brief  SAGITTAのDriver
 */
-#include "./sagitta.h"
+#include "sagitta.h"
 
 #include <src_core/Library/print.h>
 #include <string.h> // for memcpy
 
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../Library/xxhash.h"
-#include "../../Library/physical_constants.h"
+#include <src_user/Library/xxhash.h>
+#include <src_user/Library/physical_constants.h>
 
 // #define DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
 

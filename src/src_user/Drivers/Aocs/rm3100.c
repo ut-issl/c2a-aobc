@@ -4,10 +4,10 @@
 * @brief  RM3100のDriver
 */
 
-#include "./rm3100.h"
-#include "../../Library/matrix33.h"
-#include "../../Library/vector3.h"
-#include "../../Library/c2a_math.h"
+#include "rm3100.h"
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/c2a_math.h>
 
 #define RM3100_STREAM_TLM_CMD  (0)
 #define RM3100_RX_FRAME_SIZE   (9)  //!< RM3100の場合この値で固定

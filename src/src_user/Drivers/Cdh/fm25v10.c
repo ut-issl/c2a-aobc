@@ -4,7 +4,7 @@
 */
 #pragma section REPRO
 
-#include "./fm25v10.h"
+#include "fm25v10.h"
 
 #include <string.h>
 #include <src_core/Library/print.h>

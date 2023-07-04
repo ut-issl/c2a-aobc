@@ -4,10 +4,10 @@
 * @brief  MTQ_SEIRENのDriver
 */
 
-#include "./mtq_seiren.h"
+#include "mtq_seiren.h"
 
 #include  <src_core/System/TimeManager/time_manager.h>
-#include "../../Library/vector3.h"
+#include <src_user/Library/vector3.h>
 
 
 static uint32_t MTQ_SEIREN_pwm_period_ms_ = 1000; // TODO_L: 今はコマンドで自由に変更が効くようになっているが、const化するかどうか検討が必要
