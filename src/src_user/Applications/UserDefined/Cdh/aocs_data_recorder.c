@@ -11,7 +11,7 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../Library/vector3.h"
+#include <src_user/Library/vector3.h>
 
 #define APP_AOCS_DR_ALGORITHM_TLM_SIZE (104) //!< テレメトリ構造体サイズ(念のため実機で確認済み)
 
