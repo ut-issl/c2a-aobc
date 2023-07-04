@@ -6,19 +6,19 @@
 #pragma section REPRO
 #include "sl_bdot.h"
 
-#include "../../../TlmCmd/block_command_definitions.h"
-#include "../../../TlmCmd/command_definitions.h"
-#include "../../../Applications/UserDefined/Power/power_switch_control.h"
-#include "../../../Applications/DriverInstances/di_rm3100.h"
-#include "../../../Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Applications/DriverInstances/di_rm3100.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
 
 // Satellite Parameters
-#include "../../../Settings/SatelliteParameters/fdir_parameters.h"
-#include "../../../Settings/SatelliteParameters/component_selector_parameters.h"
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
+#include <src_user/Settings/SatelliteParameters/component_selector_parameters.h>
 
 void BCL_load_initial_to_bdot(void)
 {
