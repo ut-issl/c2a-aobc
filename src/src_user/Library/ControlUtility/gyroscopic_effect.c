@@ -6,8 +6,8 @@
 
 #include "gyroscopic_effect.h"
 
-#include "../vector3.h"
-#include "../matrix33.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
 
 
 void GYROSCOPIC_EFFECT_calculate_gyroscopic_torque(float gyroscopic_trq_Nm[PHYSICAL_CONST_THREE_DIM],

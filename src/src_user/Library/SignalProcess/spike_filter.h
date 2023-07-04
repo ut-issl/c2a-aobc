@@ -7,8 +7,8 @@
 #define SPIKE_FILTER_H_
 
 #include <stdint.h>
-#include "../c2a_math.h"
-#include "../physical_constants.h"
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/physical_constants.h>
 
 /**
  * @struct SpikeFilter_Config

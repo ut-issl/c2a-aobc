@@ -9,10 +9,10 @@
 #include "sgp4.h"
 
 #include <math.h>
-#include "../physical_constants.h"
-#include "../math_constants.h"
-#include "../matrix33.h"
-#include "../vector3.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/vector3.h>
 #include <src_core/Library/print.h>
 
 // SGP4内での使う定数

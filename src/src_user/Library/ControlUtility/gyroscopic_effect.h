@@ -6,7 +6,7 @@
 #ifndef GYROSCOPIC_EFFECT_H_
 #define GYROSCOPIC_EFFECT_H_
 
-#include "../physical_constants.h"
+#include <src_user/Library/physical_constants.h>
 
 
  /**
