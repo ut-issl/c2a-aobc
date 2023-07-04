@@ -9,14 +9,14 @@
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "kepler_orbit_propagator.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/time_space.h>
 #include <string.h>
 
 // SatelliteParameters
-#include "../../../../Settings/SatelliteParameters/orbit_parameters.h"
+#include <src_user/Settings/SatelliteParameters/orbit_parameters.h>
 
 static GpsrOrbitPropagator        gpsr_orbit_propagator_;
 const  GpsrOrbitPropagator* const gpsr_orbit_propagator = &gpsr_orbit_propagator_;

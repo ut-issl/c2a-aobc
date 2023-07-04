@@ -9,14 +9,14 @@
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/Library/print.h>
-#include "../../../app_registry.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/app_registry.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/time_space.h>
 #include <string.h>
 
 // SatelliteParameters
-#include "../../../../Settings/SatelliteParameters/orbit_parameters.h"
+#include <src_user/Settings/SatelliteParameters/orbit_parameters.h>
 
 // #define APP_SGP4_DEBUG_OUTPUT //!< デバッグ出力を表示させたいときに定義する
 
