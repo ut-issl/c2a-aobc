@@ -10,7 +10,7 @@
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/telemetry_frame.h>
 #include "telemetry_definitions.h"
-#include "../Settings/TlmCmd/Ccsds/apid_define.h"
+#include <src_user/Settings/TlmCmd/Ccsds/apid_define.h>
 
 /**
  * @brief  PH のユーザー固有部初期化処理

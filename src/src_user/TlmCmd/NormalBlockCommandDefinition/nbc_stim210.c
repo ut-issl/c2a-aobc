@@ -1,21 +1,21 @@
 #pragma section REPRO
 #include "nbc_header.h"
 
-#include "../block_command_definitions.h"
-#include "../command_definitions.h"
-#include "../telemetry_definitions.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/TlmCmd/telemetry_definitions.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/EventManager/event_handler.h>
 
-#include "../../Applications/UserDefined/Power/power_switch_control.h"
-#include "../../Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/gyro_selector.h"
-#include "../../Applications/DriverInstances/di_ina260.h"
-#include "../../Applications/DriverInstances/di_rm3100.h"
-#include "../../Settings/System/EventHandlerRules/event_handler_rules.h"
-#include "../../Settings/System/event_logger_group.h"
-#include "../../Applications/DriverInstances/di_stim210.h"
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/gyro_selector.h>
+#include <src_user/Applications/DriverInstances/di_ina260.h>
+#include <src_user/Applications/DriverInstances/di_rm3100.h>
+#include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
+#include <src_user/Settings/System/event_logger_group.h>
+#include <src_user/Applications/DriverInstances/di_stim210.h>
 
 
 void BCL_load_power_on_stim210(void)

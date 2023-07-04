@@ -5,33 +5,33 @@
 #include <string.h> // for memcpy
 #include "command_definitions.h"
 
-#include "../Settings/Modes/Transitions/sl_nop.h"
-#include "../Settings/Modes/Transitions/sl_initial.h"
-#include "../Settings/Modes/Transitions/sl_bdot.h"
-#include "../Settings/Modes/Transitions/sl_rough_sun_pointing.h"
-#include "../Settings/Modes/Transitions/sl_rough_three_axis.h"
-#include "../Settings/Modes/Transitions/sl_rough_three_axis_rw.h"
-#include "../Settings/Modes/Transitions/sl_fine_three_axis.h"
+#include <src_user/Settings/Modes/Transitions/sl_nop.h>
+#include <src_user/Settings/Modes/Transitions/sl_initial.h>
+#include <src_user/Settings/Modes/Transitions/sl_bdot.h>
+#include <src_user/Settings/Modes/Transitions/sl_rough_sun_pointing.h>
+#include <src_user/Settings/Modes/Transitions/sl_rough_three_axis.h>
+#include <src_user/Settings/Modes/Transitions/sl_rough_three_axis_rw.h>
+#include <src_user/Settings/Modes/Transitions/sl_fine_three_axis.h>
 
-#include "../Settings/Modes/TaskLists/tl_initial.h"
-#include "../Settings/Modes/TaskLists/tl_bdot.h"
-#include "../Settings/Modes/TaskLists/tl_rough_sun_pointing.h"
-#include "../Settings/Modes/TaskLists/tl_rough_three_axis.h"
-#include "../Settings/Modes/TaskLists/tl_rough_three_axis_rw.h"
-#include "../Settings/Modes/TaskLists/tl_fine_three_axis.h"
-#include "../Settings/Modes/TaskLists/tl_gpsr_range_observe.h"
+#include <src_user/Settings/Modes/TaskLists/tl_initial.h>
+#include <src_user/Settings/Modes/TaskLists/tl_bdot.h>
+#include <src_user/Settings/Modes/TaskLists/tl_rough_sun_pointing.h>
+#include <src_user/Settings/Modes/TaskLists/tl_rough_three_axis.h>
+#include <src_user/Settings/Modes/TaskLists/tl_rough_three_axis_rw.h>
+#include <src_user/Settings/Modes/TaskLists/tl_fine_three_axis.h>
+#include <src_user/Settings/Modes/TaskLists/tl_gpsr_range_observe.h>
 
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_cdh_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_drivers_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_inertial_ref_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_sun_vector_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_mtq_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_basic_sensor_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_rw_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_rm3100_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_stim210_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_oem7600_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_stt_update.h"
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_cdh_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_drivers_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_inertial_ref_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_sun_vector_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_mtq_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_basic_sensor_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_rw_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_rm3100_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_stim210_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_oem7600_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_stt_update.h>
 
 #include "./NormalBlockCommandDefinition/nbc_header.h"
 

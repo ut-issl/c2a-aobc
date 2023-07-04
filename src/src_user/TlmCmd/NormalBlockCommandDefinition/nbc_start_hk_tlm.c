@@ -1,9 +1,9 @@
 #pragma section REPRO
 #include "nbc_header.h"
 
-#include "../block_command_definitions.h"
-#include "../command_definitions.h"
-#include "../telemetry_definitions.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/TlmCmd/telemetry_definitions.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
