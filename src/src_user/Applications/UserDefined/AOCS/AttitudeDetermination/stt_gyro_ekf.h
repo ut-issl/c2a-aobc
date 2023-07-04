@@ -8,9 +8,9 @@
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include  <src_core/System/TimeManager/time_manager.h>
-#include "../../../../Library/quaternion.h"
-#include "../../../../Library/matrix.h"
-#include "../../../../Library/vector3.h"
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/matrix.h>
+#include <src_user/Library/vector3.h>
 
 MATRIX_DEFINE_MATRIX_SRTUCT(6, 6, float);
 
