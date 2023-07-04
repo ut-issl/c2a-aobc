@@ -10,18 +10,18 @@
 #include <math.h>
 #include <string.h>
 
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/quaternion.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/ControlUtility/gyroscopic_effect.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/ControlUtility/gyroscopic_effect.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 
 // Satellite Parameters
-#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static ThreeAxisControlRw        three_axis_control_rw_;
 const  ThreeAxisControlRw* const three_axis_control_rw = &three_axis_control_rw_;

@@ -10,21 +10,21 @@
 #include <math.h>
 #include <string.h>
 
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/quaternion.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/c2a_math.h"
-#include "../../../../Library/ControlUtility/gyroscopic_effect.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/ControlUtility/gyroscopic_effect.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/endian.h>
 
 // Satellite Parameters
-#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static ThreeAxisControlMtq        three_axis_control_mtq_;
 const  ThreeAxisControlMtq* const three_axis_control_mtq = &three_axis_control_mtq_;
