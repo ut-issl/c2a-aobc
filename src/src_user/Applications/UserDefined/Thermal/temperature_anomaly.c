@@ -7,13 +7,13 @@
 
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../Library/c2a_math.h"
+#include <src_user/Library/c2a_math.h>
 #include "thermo_sensor.h"
-#include "../../DriverInstances/di_mpu9250.h"
-#include "../../DriverInstances/di_stim210.h"
-#include "../../DriverInstances/di_sagitta.h"
-#include "../../DriverInstances/di_rw0003.h"
-#include "../../DriverInstances/di_oem7600.h"
+#include <src_user/Applications/DriverInstances/di_mpu9250.h>
+#include <src_user/Applications/DriverInstances/di_stim210.h>
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/DriverInstances/di_rw0003.h>
+#include <src_user/Applications/DriverInstances/di_oem7600.h>
 
 
 static TemperatureAnomaly        temperature_anomaly_;
