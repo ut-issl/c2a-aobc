@@ -1,7 +1,7 @@
 #ifndef GPIO_CHIPKIT_H_
 #define GPIO_CHIPKIT_H_
 
-#include "../../GPIO.h"
+#include <src_user/IfWrapper/GPIO.h>
 
 #ifdef __cplusplus
 extern "C" {
