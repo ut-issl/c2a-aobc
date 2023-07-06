@@ -4,7 +4,7 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
-#include <src_user/Settings/SatelliteParameters/Sample/parameter_setting_macro.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Mode Manager
 // Bdot

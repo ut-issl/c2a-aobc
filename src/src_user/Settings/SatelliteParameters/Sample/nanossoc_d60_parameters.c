@@ -4,7 +4,7 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
-#include <src_user/Settings/SatelliteParameters/Sample/parameter_setting_macro.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Frame conversion
 const Quaternion NANOSSOC_D60_PARAMETERS_py_quaternion_c2b = { 0.70710665f, 0.0f, 0.0f, 0.70710665f };

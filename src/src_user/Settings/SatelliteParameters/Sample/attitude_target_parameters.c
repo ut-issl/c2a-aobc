@@ -4,7 +4,7 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
-#include <src_user/Settings/SatelliteParameters/Sample/parameter_setting_macro.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Target Calculation Mode
 const APP_TARGET_ATT_CALC_MODE ATTITUDE_TARGET_PARAMETERS_mode = APP_TARGET_ATT_CALC_MODE_MANUAL;

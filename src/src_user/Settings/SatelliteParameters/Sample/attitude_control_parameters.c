@@ -4,7 +4,7 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
-#include <src_user/Settings/SatelliteParameters/Sample/parameter_setting_macro.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Bdot
 const float ATTITUDE_CONTROL_PARAMETERS_bdot_control_gain[PHYSICAL_CONST_THREE_DIM] = { -0.1f, -0.1f, -0.1f };

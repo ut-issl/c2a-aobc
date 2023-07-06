@@ -4,7 +4,7 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/sagitta_parameters.h>
-#include <src_user/Settings/SatelliteParameters/Sample/parameter_setting_macro.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Spike Filter
 uint8_t SAGITTA_PARAMETERS_q_i2b_spike_filter_config_count_limit_to_accept = 20;
