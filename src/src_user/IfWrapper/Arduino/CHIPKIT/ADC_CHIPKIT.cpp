@@ -4,7 +4,7 @@
  */
 
 #include "./ADC_CHIPKIT.h"
-#include "../../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 #include <arduino.h>
 
 int ADC_CHIPKIT_initialize(unsigned int init_param)

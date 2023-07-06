@@ -8,8 +8,8 @@
 #define SGP4_H_
 
 #include <stdint.h>
-#include "../physical_constants.h"
-#include "../c2a_math.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/c2a_math.h>
 
 #define SGP4_NUM_COEFF_C (5)  //!< C係数の要素数
 #define SGP4_NUM_COEFF_D (4)  //!< D係数の要素数

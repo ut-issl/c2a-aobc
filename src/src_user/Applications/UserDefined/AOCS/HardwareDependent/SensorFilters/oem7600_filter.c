@@ -9,15 +9,15 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../../DriverInstances/di_oem7600.h"
-#include "../../aocs_manager.h"
-#include "../../../../../Library/vector3.h"
-#include "../../../../../Library/matrix33.h"
-#include "../../../../../Library/time_space.h"
-#include "../../../../../Library/math_constants.h"
+#include <src_user/Applications/DriverInstances/di_oem7600.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/time_space.h>
+#include <src_user/Library/math_constants.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/oem7600_parameters.h"
+#include <src_user/Settings/SatelliteParameters/oem7600_parameters.h>
 
 #define OEM7600_FILTER_POS_VEL_SIX_DIM (6)
 

@@ -8,10 +8,10 @@
 #include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../../Library/physical_constants.h"
-#include "../../../../../Library/SignalProcess/z_filter.h"
-#include "../../../../../Library/SignalProcess/spike_filter.h"
-#include "../../../../DriverInstances/di_nanossoc_d60.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/SignalProcess/z_filter.h>
+#include <src_user/Library/SignalProcess/spike_filter.h>
+#include <src_user/Applications/DriverInstances/di_nanossoc_d60.h>
 
 /**
  * @struct NanoSsocD60Filter

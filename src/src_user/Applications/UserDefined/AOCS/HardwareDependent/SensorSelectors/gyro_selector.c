@@ -9,11 +9,11 @@
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 
-#include "../../../../DriverInstances/di_mpu9250.h"
-#include "../../../../DriverInstances/di_stim210.h"
-#include "../SensorFilters/mpu9250_filter.h"
-#include "../SensorFilters/stim210_filter.h"
-#include "../../aocs_manager.h"
+#include <src_user/Applications/DriverInstances/di_mpu9250.h>
+#include <src_user/Applications/DriverInstances/di_stim210.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorFilters/mpu9250_filter.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorFilters/stim210_filter.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static GyroSelector        gyro_selector_;
 const  GyroSelector* const gyro_selector = &gyro_selector_;

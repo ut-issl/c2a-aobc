@@ -4,12 +4,12 @@
 #include <stddef.h> // for NULL
 
 #include <src_core/Library/print.h>
-#include "../../Library/vt100.h"
+#include <src_user/Library/vt100.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/TlmCmd/packet_handler.h>
-#include "../../TlmCmd/telemetry_definitions.h"
+#include <src_user/TlmCmd/telemetry_definitions.h>
 #include <src_core/TlmCmd/block_command_table.h>
 #include <src_core/Applications/memory_dump.h>
 #include <src_core/Applications/gs_command_dispatcher.h>

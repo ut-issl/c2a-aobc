@@ -7,14 +7,14 @@
 #include "bdot.h"
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../aocs_manager.h"
-#include "../../../DriverInstances/di_mtq_seiren.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 
 // Satellite parameters
-#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static Bdot        bdot_;
 const  Bdot* const bdot = &bdot_;

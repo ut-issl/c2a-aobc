@@ -6,17 +6,17 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../app_registry.h"
+#include <src_user/Applications/app_registry.h>
 
 #include "target_attitude_from_orbit.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/c2a_math.h"
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/time_space.h>
 
 // SatelliteParameters
-#include "../../../../Settings/SatelliteParameters/attitude_target_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
 
 static TargetAttitudeFromOrbit        target_attitude_from_orbit_;
 const  TargetAttitudeFromOrbit* const target_attitude_from_orbit = &target_attitude_from_orbit_;

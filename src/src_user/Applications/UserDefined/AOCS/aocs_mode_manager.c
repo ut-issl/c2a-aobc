@@ -13,13 +13,13 @@
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "./aocs_manager.h"
-#include "../../../Library/vector3.h"
-#include "../../../Library/physical_constants.h"
-#include "../../../Library/math_constants.h"
+#include "aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/math_constants.h>
 
 // SatelliteParameters
-#include "../../../Settings/SatelliteParameters/fdir_parameters.h"
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 // #define APP_AOCS_MM_TEST_WITH_S2E //!< S2Eでテストするときにコメントを外すと実行後Bdotモードに遷移する
 #ifdef SILS_FW

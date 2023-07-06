@@ -8,8 +8,8 @@
 #include "gpsr_selector.h"
 
 #include <src_core/Library/print.h>
-#include "../../../../DriverInstances/di_oem7600.h"
-#include "../../aocs_manager.h"
+#include <src_user/Applications/DriverInstances/di_oem7600.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static GpsrSelector        gpsr_selector_;
 const  GpsrSelector* const gpsr_selector = &gpsr_selector_;

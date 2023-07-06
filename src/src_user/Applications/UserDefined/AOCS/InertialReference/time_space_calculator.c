@@ -9,9 +9,9 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/TimeManager/obc_time.h>
-#include "../aocs_manager.h"
-#include "../../../../Library/time_space.h"
-#include "../../../../Library/c2a_math.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/time_space.h>
+#include <src_user/Library/c2a_math.h>
 
 
 static TimeSpaceCalculator        time_space_calculator_;

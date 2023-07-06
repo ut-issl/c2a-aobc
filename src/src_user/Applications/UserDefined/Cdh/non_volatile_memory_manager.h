@@ -9,7 +9,8 @@
 #include <src_core/TlmCmd/common_cmd_packet.h>
 
 // 下記は使うH/Wによって修正する
-#include "../../DriverInstances/di_fm25v10.h"
+#include <src_user/Applications/DriverInstances/di_fm25v10.h>
+
 #define APP_NVM_MANAGER_STOP_ADDRESS (DI_FM25V10_STOP_GLOBAL_ADDRESS)  //!< 不揮発メモリ管理アプリで扱う最大アドレス
 #define APP_NVM_MANAGER_MAX_LENGTH  (DI_FM25V10_MAX_LENGTH)            //!< 不揮発メモリ管理アプリで扱う最大アドレス
 

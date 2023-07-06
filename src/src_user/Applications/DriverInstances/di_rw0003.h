@@ -5,8 +5,8 @@
 #ifndef DI_RW0003_H_
 #define DI_RW0003_H_
 
-#include "../../Drivers/Aocs/rw0003.h"
-#include "../UserDefined/AOCS/aocs_error.h"
+#include <src_user/Drivers/Aocs/rw0003.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**

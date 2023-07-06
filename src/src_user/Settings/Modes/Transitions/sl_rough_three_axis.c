@@ -6,15 +6,15 @@
 #pragma section REPRO
 #include "sl_rough_three_axis.h"
 
-#include "../../../TlmCmd/block_command_definitions.h"
-#include "../../../TlmCmd/command_definitions.h"
-#include "../../../Library/physical_constants.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/Library/physical_constants.h>
 
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
 
 // Satellite Parameters
-#include "../../../Settings/SatelliteParameters/fdir_parameters.h"
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 void BCL_load_rough_sun_pointing_to_rough_three_axis(void)
 {

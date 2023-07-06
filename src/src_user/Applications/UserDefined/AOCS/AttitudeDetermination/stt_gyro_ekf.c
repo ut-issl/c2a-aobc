@@ -12,16 +12,16 @@
 #include <src_core/System/EventManager/event_logger.h>
 
 #include "stt_gyro_ekf.h"
-#include "../aocs_manager.h"
-#include "../../../app_registry.h"
-#include "../../../../Library/vector3.h"
-#include "../../../DriverInstances/di_stim210.h"
-#include "../../../DriverInstances/di_sagitta.h"
-#include "../HardwareDependent/SensorFilters/sagitta_filter.h"
-#include "../../../../Library/math_constants.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/app_registry.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Applications/DriverInstances/di_stim210.h>
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorFilters/sagitta_filter.h>
+#include <src_user/Library/math_constants.h>
 
 // Satellite parameters
-#include "../../../../Settings/SatelliteParameters/attitude_determination_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
 MATRIX_DEFINE_MATRIX_SRTUCT(6, 3, float);
 MATRIX_DEFINE_MATRIX_SRTUCT(6, 1, float);

@@ -5,8 +5,8 @@
 */
 
 #include "inertial_sun_direction_calculator.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/time_space.h>
 
 
 static void APP_SUN_DIR_ECI_CALC_init_(void);

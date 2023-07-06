@@ -5,7 +5,7 @@
 
 // user side
 #include "DI_i2c_example.h"
-#include "../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 
 static I2C_Config I2C_EXAMPLE_port_;
 

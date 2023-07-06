@@ -9,9 +9,9 @@
 #include <stdint.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
-#include "../UserDefined/AOCS/aocs_manager.h"
-#include "../../Settings/port_config.h"
-#include "../../Library/vector3.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Settings/port_config.h>
+#include <src_user/Library/vector3.h>
 
 
 static MTQ_SEIREN_Driver mtq_seiren_driver_[MTQ_SEIREN_IDX_MAX];

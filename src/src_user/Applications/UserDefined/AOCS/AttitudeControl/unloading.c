@@ -10,11 +10,11 @@
 
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../Library/vector3.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
 
 // Satellite Parameters
-#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static Unloading        unloading_;
 const  Unloading* const unloading = &unloading_;

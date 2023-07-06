@@ -8,8 +8,8 @@
 
 #include <src_core/IfWrapper/i2c.h>
 #include <src_core/Drivers/Super/driver_super.h>
-#include "../../Library/physical_constants.h"
-#include "../../Library/c2a_math.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/c2a_math.h>
 
 extern const float RW0003_kMaxTorqueNm;         //!< 出力可能最大トルク [Nm]
 extern const float RW0003_kMomentOfInertiaKgm2; //!< ホイール慣性モーメント [kgm2]

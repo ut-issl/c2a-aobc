@@ -7,7 +7,7 @@
 
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/Orbit/sgp4.h"
+#include <src_user/Library/Orbit/sgp4.h>
 
 /**
  * @struct Sgp4OrbitPropagator

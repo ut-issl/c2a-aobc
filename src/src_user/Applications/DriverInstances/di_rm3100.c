@@ -10,10 +10,10 @@
 #include <src_core/Library/endian.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../../Library/vector3.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Library/vector3.h>
 
 // Satellite Parameters
 #include "../../Settings/SatelliteParameters/rm3100_parameters.h"

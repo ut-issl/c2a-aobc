@@ -5,12 +5,12 @@
  */
 #include "event_handler_rules.h"
 #include <src_core/System/EventManager/event_handler.h>
-#include "../../../TlmCmd/block_command_definitions.h"
-#include "../event_logger_group.h"
-#include "../../../Applications/DriverInstances/di_ina260.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/Settings/System/event_logger_group.h>
+#include <src_user/Applications/DriverInstances/di_ina260.h>
 
 // Satellite Parameters
-#include "../../../Settings/SatelliteParameters/fdir_parameters.h"
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 void EH_load_rule_hw_oc(void)
 {

@@ -1,7 +1,7 @@
 #ifndef ADC_CHIPKIT_H_
 #define ADC_CHIPKIT_H_
 
-#include "../../ADC.h"
+#include <src_user/IfWrapper/ADC.h>
 
 #ifdef __cplusplus
 extern "C" {

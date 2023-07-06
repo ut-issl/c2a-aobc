@@ -5,8 +5,8 @@
 #pragma section REPRO
 #include "tl_bdot.h"
 
-#include "../../../Applications/app_registry.h"
-#include "../../../TlmCmd/block_command_definitions.h"
+#include <src_user/Applications/app_registry.h>
+#include <src_user/TlmCmd/block_command_definitions.h>
 
 #include <src_core/TlmCmd/block_command_loader.h>
 

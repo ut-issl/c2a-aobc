@@ -10,16 +10,16 @@
 
 #include <math.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../aocs_manager.h"
-#include "../aocs_error.h"
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/quaternion.h"
-#include "../../../../Library/physical_constants.h"
-#include "../../../../Library/math_constants.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/math_constants.h>
 
 // Satellite parameters
-#include "../../../../Settings/SatelliteParameters/attitude_determination_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
 static RoughThreeAxisDetermination        rough_three_axis_determination_;
 const  RoughThreeAxisDetermination* const rough_three_axis_determination = &rough_three_axis_determination_;

@@ -7,7 +7,7 @@
 
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../DriverInstances/di_ina260.h"
+#include <src_user/Applications/DriverInstances/di_ina260.h>
 
 /**
  * @struct CurrentAnomaly

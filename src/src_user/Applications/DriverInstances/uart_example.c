@@ -2,7 +2,7 @@
 
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/Library/print.h>
-#include "../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 
 static UART_Config uart_debug_;
 

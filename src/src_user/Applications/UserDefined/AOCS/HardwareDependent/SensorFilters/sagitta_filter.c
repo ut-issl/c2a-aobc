@@ -9,12 +9,12 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../DriverInstances/di_sagitta.h"
-#include "../../aocs_manager.h"
-#include "../../../../../Library/physical_constants.h"
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/physical_constants.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/sagitta_parameters.h"
+#include <src_user/Settings/SatelliteParameters/sagitta_parameters.h>
 
 static SagittaFilter        sagitta_filter_;
 const  SagittaFilter* const sagitta_filter = &sagitta_filter_;

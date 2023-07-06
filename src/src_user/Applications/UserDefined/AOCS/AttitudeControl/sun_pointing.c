@@ -11,20 +11,20 @@
 #include <math.h>
 #include <string.h>
 
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/ControlUtility/gyroscopic_effect.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
-#include "../../../../Library/ControlUtility/cross_product_control.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/ControlUtility/gyroscopic_effect.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
+#include <src_user/Library/ControlUtility/cross_product_control.h>
+#include <src_user/Applications/Userdefined/AOCS/aocs_manager.h>
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/endian.h>
 
 // Satellite Parameters
-#include "../../../../Settings/SatelliteParameters/attitude_control_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static SunPointing        sun_pointing_;
 const  SunPointing* const sun_pointing = &sun_pointing_;

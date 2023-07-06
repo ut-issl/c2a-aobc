@@ -7,9 +7,9 @@
 
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/physical_constants.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/quaternion.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/quaternion.h>
 
 /**
  * @enum   APP_TAFO_TARGET_DIRECITON

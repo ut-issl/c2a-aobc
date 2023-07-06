@@ -8,10 +8,10 @@
 
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../Power/power_switch_control.h"
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/fdir_parameters.h"
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 static CurrentAnomaly        current_anomaly_;
 const  CurrentAnomaly* const current_anomaly = &current_anomaly_;

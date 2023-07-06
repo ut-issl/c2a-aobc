@@ -8,8 +8,8 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
-#include "../../../IfWrapper/GPIO.h"
-#include "../../../Settings/port_config.h"
+#include <src_user/IfWrapper/GPIO.h>
+#include <src_user/Settings/port_config.h>
 
 /**
  * @enum   APP_PSC_OUTPUT_LOGIC

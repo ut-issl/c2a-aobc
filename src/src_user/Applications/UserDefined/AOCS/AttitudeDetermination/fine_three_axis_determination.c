@@ -10,13 +10,13 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/TlmCmd/packet_handler.h>
-#include "../aocs_manager.h"
-#include "../aocs_error.h"
-#include "../../../../Library/quaternion.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
+#include <src_user/Library/quaternion.h>
 #include "stt_gyro_ekf.h"
 
 // Satellite parameters
-#include "../../../../Settings/SatelliteParameters/attitude_determination_parameters.h"
+#include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
 static FineThreeAxisDetermination        fine_three_axis_determination_;
 const  FineThreeAxisDetermination* const fine_three_axis_determination = &fine_three_axis_determination_;

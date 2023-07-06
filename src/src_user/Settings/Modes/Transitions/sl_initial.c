@@ -5,10 +5,10 @@
 #pragma section REPRO
 #include "sl_initial.h"
 
-#include "../../../TlmCmd/block_command_definitions.h"
-#include "../../../TlmCmd/command_definitions.h"
-#include "../../../Applications/UserDefined/Power/power_switch_control.h"
-#include "../../../Applications/DriverInstances/di_ina260.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Applications/DriverInstances/di_ina260.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>

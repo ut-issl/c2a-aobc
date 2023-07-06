@@ -7,9 +7,9 @@
 #include "kepler_orbit.h"
 
 #include <math.h>
-#include "../matrix33.h"
-#include "../vector3.h"
-#include "../math_constants.h"
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/math_constants.h>
 #include <src_core/Library/print.h>
 
 #define KEPLER_ORBIT_ECCENTRICITY_THRESHOLD (1.0e-5f) //!< 円軌道とみなす離心率閾値

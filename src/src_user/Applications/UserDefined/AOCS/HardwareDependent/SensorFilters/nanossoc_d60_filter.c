@@ -8,13 +8,13 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../aocs_manager.h"
-#include "../../../../../Library/vector3.h"
-#include "../../../../../Library/c2a_math.h"
-#include "../../../../../Library/math_constants.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/math_constants.h>
 
 // Satellite Parameters
-#include "../../../../../Settings/SatelliteParameters/nanossoc_d60_parameters.h"
+#include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
 
 static NanoSsocD60Filter        nanossoc_d60_filter_;
 const  NanoSsocD60Filter* const nanossoc_d60_filter = &nanossoc_d60_filter_;
