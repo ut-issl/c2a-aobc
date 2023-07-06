@@ -738,7 +738,7 @@ DS_CMD_ERR_CODE SAGITTA_change_camera(SAGITTA_Driver* sagitta_driver, uint8_t pa
     sagitta_driver->info.set_parameter.camera.interval_s = value;
     break;
   case 4:
-    sagitta_driver->info.set_parameter.camera.offset_pix = (uint16_t)value;
+    sagitta_driver->info.set_parameter.camera.offset_pix = (int16_t)value;
     break;
   case 5:
     sagitta_driver->info.set_parameter.camera.pga_gain = (uint8_t)value;
