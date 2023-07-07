@@ -4,6 +4,7 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Target Calculation Mode
 const APP_TARGET_ATT_CALC_MODE ATTITUDE_TARGET_PARAMETERS_mode = APP_TARGET_ATT_CALC_MODE_MANUAL;
@@ -22,6 +23,6 @@ extern const float ATTITUDE_TARGET_PARAMETERS_vec_to_sub_target_body[PHYSICAL_CO
 extern const MATRIX33_ROTATION_AXIS ATTITUDE_TARGET_PARAMETERS_offset_angle_axis = MATRIX33_ROTATION_AXIS_X;
 extern const float ATTITUDE_TARGET_PARAMETERS_offset_angle_rad = 0.0f;
 // Target on earth surface
-extern const float ATTITUDE_TARGET_PARAMETERS_target_lla_rad_m[PHYSICAL_CONST_THREE_DIM] = { PHYSICAL_CONST_degree_to_radian(35.7130f),
-                                                                                             PHYSICAL_CONST_degree_to_radian(139.7596f),
+extern const float ATTITUDE_TARGET_PARAMETERS_target_lla_rad_m[PHYSICAL_CONST_THREE_DIM] = { PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(35.7130f),
+                                                                                             PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(139.7596f),
                                                                                              23.0f };
