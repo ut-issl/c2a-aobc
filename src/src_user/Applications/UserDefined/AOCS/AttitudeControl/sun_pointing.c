@@ -308,7 +308,6 @@ CCP_CmdRet Cmd_APP_SUN_POINTING_SET_GAIN(const CommonCmdPacket* packet)
   ENDIAN_memcpy(&gains.d_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
-  C2A_MATH_ERROR ret;
   if (att_omega_flag == 0)
   {
     sun_pointing_.gains_omega_cmd_tmp[axis] = gains;

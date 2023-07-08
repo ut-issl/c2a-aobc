@@ -225,7 +225,6 @@ CCP_CmdRet Cmd_APP_TAC_MTQ_SET_GAIN(const CommonCmdPacket* packet)
   ENDIAN_memcpy(&gains.d_gain, param + param_id, sizeof(float));
   param_id += (int)sizeof(float);
 
-  C2A_MATH_ERROR ret;
   if (att_omega_flag == 0)
   {
     three_axis_control_mtq_.gains_omega_cmd_tmp[axis] = gains;
