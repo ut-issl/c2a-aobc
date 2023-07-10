@@ -4,7 +4,7 @@
 * @brief  INA260のDriver
 */
 
-#include "./ina260.h"
+#include "ina260.h"
 
 #include <string.h>
 #include <src_core/Library/print.h>

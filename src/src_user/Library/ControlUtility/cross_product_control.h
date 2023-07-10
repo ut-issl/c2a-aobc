@@ -5,8 +5,8 @@
 #ifndef CROSS_PRODUCT_CONTROL_H_
 #define CROSS_PRODUCT_CONTROL_H_
 
-#include "../physical_constants.h"
-#include "../c2a_math.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/c2a_math.h>
 
 /**
  * @enum   CROSS_PRODUCT_CONTROL_ERROR

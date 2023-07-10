@@ -7,8 +7,8 @@
 
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/Drivers/Super/driver_super.h>
-#include "../../Library/physical_constants.h"
-#include "../../Library/quaternion.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/quaternion.h>
 
 #define SAGITTA_PARAMETER_LOG_LEVEL_LENGTH                (16)
 #define SAGITTA_PARAMETER_LIMITS_LENGTH                   (10)

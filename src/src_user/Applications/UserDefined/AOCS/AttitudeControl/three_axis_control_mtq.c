@@ -10,18 +10,21 @@
 #include <math.h>
 #include <string.h>
 
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/quaternion.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/c2a_math.h"
-#include "../../../../Library/ControlUtility/gyroscopic_effect.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/ControlUtility/gyroscopic_effect.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/endian.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static ThreeAxisControlMtq        three_axis_control_mtq_;
 const  ThreeAxisControlMtq* const three_axis_control_mtq = &three_axis_control_mtq_;
@@ -71,47 +74,29 @@ static void APP_TAC_MTQ_init_(void)
   CROSS_PRODUCT_CONTROL_init(&three_axis_control_mtq_.cross_product_cntrl);
 
   PidGains gains_att[PHYSICAL_CONST_THREE_DIM];
-  gains_att[0].p_gain = 1.2e-4f;
-  gains_att[1].p_gain = 2.0f * 1.2e-4f;
-  gains_att[2].p_gain = 1.5f * 1.2e-4f;
-
-  gains_att[0].i_gain = 0.0f;
-  gains_att[1].i_gain = 0.0f;
-  gains_att[2].i_gain = 0.0f;
-
-  gains_att[0].d_gain = 0.0f;
-  gains_att[1].d_gain = 0.0f;
-  gains_att[2].d_gain = 0.0f;
+  gains_att[0] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_x;
+  gains_att[1] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_y;
+  gains_att[2] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_gains_body_z;
 
   PidGains gains_omega[PHYSICAL_CONST_THREE_DIM];
-  gains_omega[0].p_gain = 2.5e-2f;
-  gains_omega[1].p_gain = 2.0f * 2.5e-2f;
-  gains_omega[2].p_gain = 1.5f * 2.5e-2f;
+  gains_omega[0] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_x;
+  gains_omega[1] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_y;
+  gains_omega[2] = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_attitude_rate_gains_body_z;
 
-  gains_omega[0].i_gain = 0.0f;
-  gains_omega[1].i_gain = 0.0f;
-  gains_omega[2].i_gain = 0.0f;
+  three_axis_control_mtq_.max_direct_feedback_angle_mtq_rad     = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_angle_rad;
+  three_axis_control_mtq_.max_direct_feedback_rate_mtq_rad_s    = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_direct_feedback_rate_rad_s;
+  three_axis_control_mtq_.max_integral_angle_mtq_rad            = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_integral_angle_rad;
+  three_axis_control_mtq_.max_angle_to_run_integral_control_rad = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_max_angle_to_run_integral_control_rad;
 
-  gains_omega[0].d_gain = 0.0f;
-  gains_omega[1].d_gain = 0.0f;
-  gains_omega[2].d_gain = 0.0f;
+  three_axis_control_mtq_.mtq_lpf_sample_freq_Hz = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_sample_freq_Hz;
+  three_axis_control_mtq_.mtq_lpf_cutoff_freq_Hz = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_cutoff_freq_Hz;
+  three_axis_control_mtq_.mtq_lpf_damping_factor = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_lpf_trq_damping_factor;
 
-  // 下記値の変更時は，HW側の出力最大値にかからない様に留意しながら，ゲインと組み合わせて調整すること．
-  three_axis_control_mtq_.max_direct_feedback_angle_mtq_rad     = PHYSICAL_CONST_degree_to_radian(18.0f);
-  three_axis_control_mtq_.max_direct_feedback_rate_mtq_rad_s    = 5.0e-3f;
-  three_axis_control_mtq_.max_integral_angle_mtq_rad            = PHYSICAL_CONST_degree_to_radian(40.0f);
-  three_axis_control_mtq_.max_angle_to_run_integral_control_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
-
-  three_axis_control_mtq_.mtq_lpf_sample_freq_Hz = 10.0f;
-  three_axis_control_mtq_.mtq_lpf_cutoff_freq_Hz = 0.30f;
-  three_axis_control_mtq_.mtq_lpf_damping_factor = 1.0f;
-
-  // 下記の値はISS軌道を想定した値 (極軌道に近ければ緩めて良いはず)
-  three_axis_control_mtq_.allowable_error_ratio_transient      = 0.6f;
-  three_axis_control_mtq_.correction_gain_transient            = 0.0f;
-  three_axis_control_mtq_.allowable_error_ratio_stable         = 0.60f;
-  three_axis_control_mtq_.correction_gain_stable               = 0.1f;
-  three_axis_control_mtq_.acceptable_angle_error_as_stable_rad = PHYSICAL_CONST_degree_to_radian(20.0f);
+  three_axis_control_mtq_.allowable_error_ratio_transient      = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_transient;
+  three_axis_control_mtq_.correction_gain_transient            = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_transient;
+  three_axis_control_mtq_.allowable_error_ratio_stable         = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_mtq_allowable_error_ratio_stable;
+  three_axis_control_mtq_.correction_gain_stable               = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_correction_gain_stable ;
+  three_axis_control_mtq_.acceptable_angle_error_as_stable_rad = ATTITUDE_CONTROL_PARAMETERS_tac_mtq_acceptable_angle_error_as_stable_rad;
 
   for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {

@@ -14,15 +14,15 @@
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../app_registry.h"
+#include <src_user/Applications/app_registry.h>
 #include <src_core/Library/print.h>
-#include "../aocs_manager.h"
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/time_space.h>
 
 // SatelliteParameters
-#include "../../../../Settings/SatelliteParameters/orbit_parameters.h"
+#include <src_user/Settings/SatelliteParameters/orbit_parameters.h>
 
 static OrbitCalculator        orbit_calculator_;
 const  OrbitCalculator* const orbit_calculator = &orbit_calculator_;

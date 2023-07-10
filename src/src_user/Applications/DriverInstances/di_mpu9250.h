@@ -5,9 +5,9 @@
 #ifndef DI_MPU9250_H_
 #define DI_MPU9250_H_
 
-#include "../../Drivers/Aocs/mpu9250.h"
+#include <src_user/Drivers/Aocs/mpu9250.h>
 #include <src_core/System/ApplicationManager/app_info.h>
-#include "../../Library/SignalProcess/polynomial_approximation.h"
+#include <src_user/Library/SignalProcess/polynomial_approximation.h>
 
 /**
  * @enum  MPU9250_IDX

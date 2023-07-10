@@ -8,9 +8,9 @@
 
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/System/TimeManager/time_manager.h>
-#include "../../IfWrapper/GPIO.h"
-#include "../../Library/physical_constants.h"
-#include "../../Library/c2a_math.h"
+#include <src_user/IfWrapper/GPIO.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/c2a_math.h>
 
 /**
  * @struct MTQ_SEIREN_POLARITY

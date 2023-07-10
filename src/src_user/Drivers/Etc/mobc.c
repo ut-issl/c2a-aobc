@@ -6,7 +6,7 @@
 
 // TODO_L: DS側のTCPが整理されたら，TCP関連を撲滅し，CTCPに統一する
 
-#include "./mobc.h"
+#include "mobc.h"
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/Library/endian.h>
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>

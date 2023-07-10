@@ -10,13 +10,16 @@
 
 #include <math.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../aocs_manager.h"
-#include "../aocs_error.h"
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/quaternion.h"
-#include "../../../../Library/physical_constants.h"
-#include "../../../../Library/math_constants.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/math_constants.h>
+
+// Satellite parameters
+#include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
 static RoughThreeAxisDetermination        rough_three_axis_determination_;
 const  RoughThreeAxisDetermination* const rough_three_axis_determination = &rough_three_axis_determination_;
@@ -169,9 +172,9 @@ AppInfo APP_RTAD_create_app(void)
 static void APP_RTAD_init_(void)
 {
   rough_three_axis_determination_.previous_obc_time = TMGR_get_master_clock();
-  rough_three_axis_determination_.method = APP_RTAD_METHOD_TRIAD;
-  rough_three_axis_determination_.q_method_info.sun_vec_weight = 0.5f; // TODO_L: サンセンサの観測分散と磁気センサの観測分散で決める
-  rough_three_axis_determination_.q_method_info.mag_vec_weight = 1.0f - rough_three_axis_determination_.q_method_info.sun_vec_weight; // TODO_L: サンセンサの観測分散と磁気センサの観測分散で決める
+  rough_three_axis_determination_.method = ATTITUDE_DETERMINATION_PARAMETERS_rtad_method;
+  rough_three_axis_determination_.q_method_info.sun_vec_weight = ATTITUDE_DETERMINATION_PARAMETERS_q_method_sun_vec_weight;
+  rough_three_axis_determination_.q_method_info.mag_vec_weight = 1.0f - rough_three_axis_determination_.q_method_info.sun_vec_weight;
 }
 
 static void APP_RTAD_exec_(void)

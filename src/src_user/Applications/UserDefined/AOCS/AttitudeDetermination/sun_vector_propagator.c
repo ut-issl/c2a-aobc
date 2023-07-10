@@ -8,10 +8,10 @@
 
 #include "sun_vector_propagator.h"
 
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/quaternion.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static SunVectorPropagator        sun_vector_propagator_;
 const  SunVectorPropagator* const sun_vector_propagator = &sun_vector_propagator_;

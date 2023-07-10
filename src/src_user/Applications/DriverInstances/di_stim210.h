@@ -5,9 +5,9 @@
 #ifndef DI_STIM210_H_
 #define DI_STIM210_H_
 
-#include "../../Drivers/Aocs/stim210.h"
+#include <src_user/Drivers/Aocs/stim210.h>
 #include <src_core/System/ApplicationManager/app_info.h>
-#include "../../Library/SignalProcess/polynomial_approximation.h"
+#include <src_user/Library/SignalProcess/polynomial_approximation.h>
 
 /**
  * @enum  STIM210_IDX

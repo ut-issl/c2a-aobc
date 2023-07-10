@@ -125,4 +125,9 @@
 #define I2C_DEVICE_ADDR_INA_RWY      (0x48)  //!< RW_Y軸用のINA260電流センサ
 #define I2C_DEVICE_ADDR_INA_RWZ      (0x49)  //!< RW_Z軸用のINA260電流センサ
 
+// Use user defined I2C address
+#ifdef USER_DEFINED_I2C_ADDRESS
+#include <Settings/user_defined_i2c_address.h>
+#endif
+
 #endif

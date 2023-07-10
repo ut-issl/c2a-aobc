@@ -8,11 +8,11 @@
 #include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/physical_constants.h"
-#include "../../../../Library/ControlUtility/cross_product_control.h";
-#include "../../../../Library/pid_control.h"
-#include "../../../../Library/SignalProcess/z_filter.h"
-#include "../../AOCS/aocs_error.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/ControlUtility/cross_product_control.h>
+#include <src_user/Library/pid_control.h>
+#include <src_user/Library/SignalProcess/z_filter.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
 
 /**
  * @enum   SUN_POINTING_AXIS_ID

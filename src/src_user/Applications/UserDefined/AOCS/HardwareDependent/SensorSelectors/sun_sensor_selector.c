@@ -9,8 +9,11 @@
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/TlmCmd/packet_handler.h>
-#include "../../../../DriverInstances/di_nanossoc_d60.h"
-#include "../../aocs_manager.h"
+#include <src_user/Applications/DriverInstances/di_nanossoc_d60.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
 
 static SunSensorSelector        sun_sensor_selector_;
 const  SunSensorSelector* const sun_sensor_selector = &sun_sensor_selector_;
@@ -43,8 +46,8 @@ AppInfo APP_SS_SELECTOR_create_app(void)
 
 static void APP_SS_SELECTOR_init_(void)
 {
-  sun_sensor_selector_.sun_intensity_lower_threshold_percent = 80.0;
-  sun_sensor_selector_.sun_intensity_upper_threshold_percent = 120.0;
+  sun_sensor_selector_.sun_intensity_lower_threshold_percent = NANOSSOC_D60_PARAMETERS_sun_intensity_lower_threshold_percent;
+  sun_sensor_selector_.sun_intensity_upper_threshold_percent = NANOSSOC_D60_PARAMETERS_sun_intensity_upper_threshold_percent;
   for (int idx = 0; idx < NANOSSOC_D60_IDX_MAX; idx++)
   {
     APP_SS_SELECTOR_available_sun_sensor_list_[idx] = NANOSSOC_D60_IDX_MAX;

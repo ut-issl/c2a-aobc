@@ -11,17 +11,20 @@
 #include <math.h>
 #include <string.h>
 
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/ControlUtility/gyroscopic_effect.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
-#include "../../../../Library/ControlUtility/cross_product_control.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/ControlUtility/gyroscopic_effect.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
+#include <src_user/Library/ControlUtility/cross_product_control.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/endian.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static SunPointing        sun_pointing_;
 const  SunPointing* const sun_pointing = &sun_pointing_;
@@ -85,7 +88,7 @@ static void APP_SUN_POINTING_init_(void)
 
   CROSS_PRODUCT_CONTROL_init(&sun_pointing_.cross_product_cntrl);
 
-  sun_pointing_.sun_pointing_axis_id = SUN_POINTING_AXIS_ID_Z;
+  sun_pointing_.sun_pointing_axis_id = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_axis_id;
   sun_pointing_.control_state        = SUN_POINTING_CONTROL_STATE_TRANSIENT;
 
   float sun_vec_target_body[PHYSICAL_CONST_THREE_DIM] = { 0.0f, 0.0f, 0.0f };
@@ -94,52 +97,35 @@ static void APP_SUN_POINTING_init_(void)
 
   // ノミナルのスピン軸 (Z軸) 周りの姿勢制御はフリーとし，スピン軸周りはレートのみPD制御する
   PidGains gains_att[PHYSICAL_CONST_THREE_DIM];
-  gains_att[0].p_gain = 5.0e-5f;
-  gains_att[1].p_gain = 10.0e-5f;
-  gains_att[2].p_gain = 0.0f;
-
-  gains_att[0].i_gain = 0.0f;
-  gains_att[1].i_gain = 0.0f;
-  gains_att[2].i_gain = 0.0f;
-
-  gains_att[0].d_gain = 0.0f;
-  gains_att[1].d_gain = 0.0f;
-  gains_att[2].d_gain = 0.0f;
+  gains_att[0] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_x;
+  gains_att[1] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_y;
+  gains_att[2] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_gains_body_z;
 
   PidGains gains_omega[PHYSICAL_CONST_THREE_DIM];
-  gains_omega[0].p_gain = 1.0e-2f;
-  gains_omega[1].p_gain = 2.0e-2f;
-  gains_omega[2].p_gain = 7.0e-3f;
+  gains_omega[0] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_x;
+  gains_omega[1] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_y;
+  gains_omega[2] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_z;
+  
+  sun_pointing_.max_direct_feedback_angle_rad         = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_direct_feedback_angle_rad;
+  sun_pointing_.max_direct_feedback_rate_rad_s        = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_direct_feedback_rate_rad_s;
+  sun_pointing_.max_integral_angle_rad                = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_integral_angle_rad;
+  sun_pointing_.max_angle_to_run_integral_control_rad = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_angle_to_run_integral_control_rad;
+  sun_pointing_.integral_control_permission_angle_rad = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_integral_control_permission_angle_rad;
 
-  gains_omega[0].i_gain = 0.0f;
-  gains_omega[1].i_gain = 0.0f;
-  gains_omega[2].i_gain = 0.0f;
+  sun_pointing_.acceptable_angle_error_to_spin_up_rad = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_acceptable_angle_error_to_spin_up_rad;
+  sun_pointing_.spin_rate_around_sun_rad_s            = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_spin_rate_around_sun_rad_s;
 
-  gains_omega[0].d_gain = 0.0f;
-  gains_omega[1].d_gain = 0.0f;
-  gains_omega[2].d_gain = 2.0e-2f;
+  sun_pointing_.lpf_sample_freq_Hz     = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_sample_freq_Hz;
+  sun_pointing_.lpf_trq_cutoff_freq_Hz = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_cutoff_freq_Hz;
+  sun_pointing_.lpf_trq_damping_factor = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_damping_factor;
 
-  sun_pointing_.max_direct_feedback_angle_rad         = PHYSICAL_CONST_degree_to_radian(20.0f);
-  sun_pointing_.max_direct_feedback_rate_rad_s        = 1.6e-3f;
-  sun_pointing_.max_integral_angle_rad                = PHYSICAL_CONST_degree_to_radian(20.0f);
-  sun_pointing_.max_angle_to_run_integral_control_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
-  sun_pointing_.integral_control_permission_angle_rad = PHYSICAL_CONST_degree_to_radian(40.0f);
+  sun_pointing_.lpf_trq_cutoff_freq_spin_axis_Hz = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_trq_cutoff_freq_spin_axis_Hz;
+  sun_pointing_.lpf_spin_rate_cutoff_freq_Hz     = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_lpf_spin_rate_cutoff_freq_Hz;
 
-  sun_pointing_.acceptable_angle_error_to_spin_up_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
-  sun_pointing_.spin_rate_around_sun_rad_s            = 1.4e-2f;
-
-  sun_pointing_.lpf_sample_freq_Hz           = 10.0f;
-  sun_pointing_.lpf_trq_cutoff_freq_Hz       = 0.10f;
-  sun_pointing_.lpf_trq_damping_factor       = 1.0f;
-
-  sun_pointing_.lpf_trq_cutoff_freq_spin_axis_Hz         = 0.03f;
-  sun_pointing_.lpf_spin_rate_cutoff_freq_Hz             = 5e-4f;
-
-  // 下記の値はISS軌道を想定した値 (極軌道に近ければ緩めて良いはず)
-  sun_pointing_.mtq_allowable_error_ratio_transient = 0.6f;
-  sun_pointing_.correction_gain_transient           = 0.0f;
-  sun_pointing_.mtq_allowable_error_ratio_stable    = 0.8f;
-  sun_pointing_.correction_gain_stable              = 0.25f;
+  sun_pointing_.mtq_allowable_error_ratio_transient = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_mtq_allowable_error_ratio_transient;
+  sun_pointing_.correction_gain_transient           = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_correction_gain_transient;
+  sun_pointing_.mtq_allowable_error_ratio_stable    = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_mtq_allowable_error_ratio_stable;
+  sun_pointing_.correction_gain_stable              = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_correction_gain_stable;
 
   for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {

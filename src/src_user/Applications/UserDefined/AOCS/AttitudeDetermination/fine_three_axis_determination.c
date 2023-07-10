@@ -10,10 +10,13 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/TlmCmd/packet_handler.h>
-#include "../aocs_manager.h"
-#include "../aocs_error.h"
-#include "../../../../Library/quaternion.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
+#include <src_user/Library/quaternion.h>
 #include "stt_gyro_ekf.h"
+
+// Satellite parameters
+#include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
 static FineThreeAxisDetermination        fine_three_axis_determination_;
 const  FineThreeAxisDetermination* const fine_three_axis_determination = &fine_three_axis_determination_;
@@ -35,7 +38,7 @@ AppInfo APP_FTAD_create_app(void)
 static void APP_FTAD_init_(void)
 {
   fine_three_axis_determination_.previous_obc_time = TMGR_get_master_clock();
-  fine_three_axis_determination_.method = APP_FTAD_METHOD_STT;
+  fine_three_axis_determination_.method = ATTITUDE_DETERMINATION_PARAMETERS_ftad_method;
 }
 
 static void APP_FTAD_exec_(void)

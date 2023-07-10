@@ -6,14 +6,17 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../app_registry.h"
+#include <src_user/Applications/app_registry.h>
 
 #include "target_attitude_from_orbit.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/c2a_math.h"
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/time_space.h>
+
+// SatelliteParameters
+#include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
 
 static TargetAttitudeFromOrbit        target_attitude_from_orbit_;
 const  TargetAttitudeFromOrbit* const target_attitude_from_orbit = &target_attitude_from_orbit_;
@@ -60,21 +63,15 @@ AppInfo APP_TAFO_create_app(void)
 
 static void APP_TAFO_init_(void)
 {
-  target_attitude_from_orbit_.main_target_direction = APP_TAFO_TARGET_DIRECITON_SUN;
-  target_attitude_from_orbit_.sub_target_direction = APP_TAFO_TARGET_DIRECITON_EARTH_CENTER;
-  target_attitude_from_orbit_.vec_to_main_target_body[0] = 1.0f;
-  target_attitude_from_orbit_.vec_to_main_target_body[1] = 0.0f;
-  target_attitude_from_orbit_.vec_to_main_target_body[2] = 0.0f;
-  target_attitude_from_orbit_.vec_to_sub_target_body[0] = 0.0f;
-  target_attitude_from_orbit_.vec_to_sub_target_body[1] = 1.0f;
-  target_attitude_from_orbit_.vec_to_sub_target_body[2] = 0.0f;
-  target_attitude_from_orbit_.offset_angle_axis = MATRIX33_ROTATION_AXIS_X;
-  target_attitude_from_orbit_.offset_angle_rad = 0.0f;
+  target_attitude_from_orbit_.main_target_direction = ATTITUDE_TARGET_PARAMETERS_main_target_direction;
+  target_attitude_from_orbit_.sub_target_direction = ATTITUDE_TARGET_PARAMETERS_sub_target_direction;
+  VECTOR3_copy(target_attitude_from_orbit_.vec_to_main_target_body, ATTITUDE_TARGET_PARAMETERS_vec_to_main_target_body);
+  VECTOR3_copy(target_attitude_from_orbit_.vec_to_sub_target_body, ATTITUDE_TARGET_PARAMETERS_vec_to_sub_target_body);
 
-  // 東大正門
-  target_attitude_from_orbit_.target_lla_rad_m[0] = PHYSICAL_CONST_degree_to_radian(35.7130f);
-  target_attitude_from_orbit_.target_lla_rad_m[1] = PHYSICAL_CONST_degree_to_radian(139.7596f);
-  target_attitude_from_orbit_.target_lla_rad_m[2] = 23.0f;
+  target_attitude_from_orbit_.offset_angle_axis = ATTITUDE_TARGET_PARAMETERS_offset_angle_axis;
+  target_attitude_from_orbit_.offset_angle_rad = ATTITUDE_TARGET_PARAMETERS_offset_angle_rad;
+
+  VECTOR3_copy(target_attitude_from_orbit_.target_lla_rad_m, ATTITUDE_TARGET_PARAMETERS_target_lla_rad_m);
 }
 
 

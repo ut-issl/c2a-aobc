@@ -4,8 +4,8 @@
 * @brief  OEM7600のDriver
 */
 
-#include "./oem7600.h"
-#include "../../Library/physical_constants.h"
+#include "oem7600.h"
+#include <src_user/Library/physical_constants.h>
 #include <string.h> // for memcpy
 #include <stdio.h>  // for snprintf
 

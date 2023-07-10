@@ -4,8 +4,8 @@
 * @brief  nanoSSOC_D60のDriver
 */
 
-#include "./nanossoc_d60.h"
-#include "../../Library/vector3.h"
+#include "nanossoc_d60.h"
+#include <src_user/Library/vector3.h>
 #include <string.h> // for memcpy
 #include <math.h>
 

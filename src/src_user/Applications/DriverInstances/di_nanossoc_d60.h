@@ -5,7 +5,7 @@
 #ifndef DI_NANOSSOC_D60_H_
 #define DI_NANOSSOC_D60_H_
 
-#include "../../Drivers/Aocs/nanossoc_d60.h"
+#include <src_user/Drivers/Aocs/nanossoc_d60.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**
