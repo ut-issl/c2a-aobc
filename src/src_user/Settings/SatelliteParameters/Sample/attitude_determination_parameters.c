@@ -33,8 +33,10 @@ const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_stt_standard_deviation_compo_r
                                                                                                                  9.6963e-6f };
 // Process noise model
 // We assume the attitude target is operated to synchronize with orbit.
-const float kOrbitPeriodSec = 5700.0f;
-const float kEkfComputationCycleSec = 0.1f;
-const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude = powf((MATH_CONST_2PI / kOrbitPeriodSec * kEkfComputationCycleSec), 2.0f);
+#define ATTITUDE_PARAMETER_ORBIT_PERIOD_SEC (5700.0f)
+#define ATTITUDE_PARAMETER_COMPUTATION_CYCLE_SEC (0.1f)
+const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude = ((MATH_CONST_2PI / ATTITUDE_PARAMETER_ORBIT_PERIOD_SEC * ATTITUDE_PARAMETER_COMPUTATION_CYCLE_SEC))
+                                                                                    * ((MATH_CONST_2PI / ATTITUDE_PARAMETER_ORBIT_PERIOD_SEC * ATTITUDE_PARAMETER_COMPUTATION_CYCLE_SEC));
 // The attitude rate process noise is not well tuned at this moment
-const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude_rate = powf((MATH_CONST_2PI / kOrbitPeriodSec * kEkfComputationCycleSec), 2.0f);
+const float ATTITUDE_DETERMINATION_PARAMETERS_ekf_process_noise_covariance_attitude_rate = ((MATH_CONST_2PI / ATTITUDE_PARAMETER_ORBIT_PERIOD_SEC * ATTITUDE_PARAMETER_COMPUTATION_CYCLE_SEC))
+                                                                                         * ((MATH_CONST_2PI / ATTITUDE_PARAMETER_ORBIT_PERIOD_SEC * ATTITUDE_PARAMETER_COMPUTATION_CYCLE_SEC));

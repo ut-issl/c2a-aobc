@@ -11,7 +11,7 @@
 #include <src_user/Library/physical_constants.h>
 
 // Constant value
-const uint8_t MPU9250_PARAMETERS_kNumCoeffTempCalib = 2; //!< Number of coefficient for calibration. This value cannot be changed since it relates Tlm/Cmd definition.
+#define MPU9250_PARAMETERS_kNumCoeffTempCalib (2)  //!< Number of coefficient for calibration. This value cannot be changed since it relates Tlm/Cmd definition.
 
 // Magnetometer bias
 extern const float MPU9250_PARAMETERS_mag_bias_compo_nT[PHYSICAL_CONST_THREE_DIM]; //!< Magnetic field observation bias @ component frame [nT]
