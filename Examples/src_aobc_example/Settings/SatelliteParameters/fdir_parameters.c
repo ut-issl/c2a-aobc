@@ -4,28 +4,29 @@
  */
 
 #include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
+#include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Mode Manager
 // Bdot
-const float FDIR_PARAMETERS_ang_vel_conv_limit_rad_s = PHYSICAL_CONST_degree_to_radian(0.5f);
+const float FDIR_PARAMETERS_ang_vel_conv_limit_rad_s = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(0.5f);
 const float FDIR_PARAMETERS_ang_vel_conv_time_limit_s = 5.0f * 60.0f;
-const float FDIR_PARAMETERS_ang_vel_norm_increase_limit_rad_s = PHYSICAL_CONST_degree_to_radian(0.5f);
+const float FDIR_PARAMETERS_ang_vel_norm_increase_limit_rad_s = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(0.5f);
 const float FDIR_PARAMETERS_ang_vel_anomaly_detection_period_s = 200.0f;
 const uint32_t FDIR_PARAMETERS_bdot_start_mode_manager_time_s = 5 * 60;
 // Sun pointing control divergence anomaly
-const float FDIR_PARAMETERS_sun_angle_div_limit_rad = PHYSICAL_CONST_degree_to_radian(45.0f);
+const float FDIR_PARAMETERS_sun_angle_div_limit_rad = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(45.0f);
 const float FDIR_PARAMETERS_sun_angle_div_time_limit_s = 50.0f * 60.0f;
 const uint32_t FDIR_PARAMETERS_sun_pointing_start_mode_manager_time_s = 25 * 60;
 // Rough three axis control with MTQ divergence anomaly
-const float FDIR_PARAMETERS_rough_three_axis_mtq_div_limit_rad = PHYSICAL_CONST_degree_to_radian(30.0f);
+const float FDIR_PARAMETERS_rough_three_axis_mtq_div_limit_rad = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(30.0f);
 const float FDIR_PARAMETERS_rough_three_axis_mtq_div_time_limit_s = 5.0f * 60.0f;
 const uint32_t FDIR_PARAMETERS_rough_three_axis_mtq_start_mode_manager_time_s = 35 * 60;
 // Rough three axis control with RW divergence anomaly
-const float FDIR_PARAMETERS_rough_three_axis_rw_div_limit_rad = PHYSICAL_CONST_degree_to_radian(10.0f);
+const float FDIR_PARAMETERS_rough_three_axis_rw_div_limit_rad = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(10.0f);
 const float FDIR_PARAMETERS_rough_three_axis_rw_div_time_limit_s = 1.0f * 60.0f;
 const uint32_t FDIR_PARAMETERS_rough_three_axis_rw_start_mode_manager_time_s = 5 * 60;
 // Fine three axis control divergence anomaly
-const float FDIR_PARAMETERS_fine_three_axis_div_limit_rad = PHYSICAL_CONST_degree_to_radian(5.0f);
+const float FDIR_PARAMETERS_fine_three_axis_div_limit_rad = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(5.0f);
 const float FDIR_PARAMETERS_fine_three_axis_div_time_limit_s = 1.0f * 60.0f;
 const uint32_t FDIR_PARAMETERS_fine_three_axis_start_mode_manager_time_s = 5 * 60;
 // Sensor invisible anomaly

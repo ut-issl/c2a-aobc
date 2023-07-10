@@ -316,6 +316,20 @@
     <ClCompile Include="src_aobc\src\src_user\Settings\System\EventHandlerRules\event_handler_rule_sw_oc.c" />
     <ClCompile Include="src_aobc\src\src_user\Settings\System\EventHandlerRules\event_handler_rule_tlmcmd.c" />
     <ClCompile Include="src_aobc\src\src_user\Settings\System\event_logger_settings.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\attitude_control_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\attitude_determination_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\attitude_target_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\component_selector_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\fdir_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\ina260_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\mpu9250_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\nanossoc_d60_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\oem7600_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\orbit_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\rm3100_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\rw0003_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\sagitta_parameters.c" />
+    <ClCompile Include="src_aobc_example\Settings\SatelliteParameters\Sample\stim210_parameters.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="c2a_aobc_example.ino" />

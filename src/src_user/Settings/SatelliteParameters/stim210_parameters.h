@@ -10,7 +10,7 @@
 #include <src_user/Library/physical_constants.h>
 
 // Constant value
-const uint8_t STIM210_PARAMETERS_kNumCoeffTempCalib = 2; //!< Number of coefficient for calibration. This value cannot be changed since it relates Tlm/Cmd definition.
+#define STIM210_PARAMETERS_kNumCoeffTempCalib (2)  //!< Number of coefficient for calibration. This value cannot be changed since it relates Tlm/Cmd definition.
 
 // Gyro Bias and scale factor temperature calibration
 extern const float STIM210_PARAMETERS_temperature_range_high_degC;                                       //!< Temperature range high [degC]
