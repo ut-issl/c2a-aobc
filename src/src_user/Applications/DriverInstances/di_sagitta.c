@@ -140,8 +140,6 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_UNIX_TIME_US(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
 {
-  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   DS_CMD_ERR_CODE ret;
@@ -244,8 +242,6 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet)
 {
-  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-
   DS_CMD_ERR_CODE ret;
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 
