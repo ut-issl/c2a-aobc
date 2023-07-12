@@ -52,8 +52,6 @@ static void APP_FTAD_exec_(void)
   Quaternion q_eci_to_body;
   switch (fine_three_axis_determination_.method)
   {
-  CommonCmdPacket packet;
-
   case APP_FTAD_METHOD_STT:
     q_eci_to_body = APP_FTAD_stt_direct_(time_step_s);
     AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);

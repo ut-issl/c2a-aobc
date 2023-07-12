@@ -111,7 +111,7 @@ static void DI_SAGITTA_update_(void)
 CCP_CmdRet Cmd_DI_SAGITTA_BOOT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
-  const uint8_t* param = CCP_get_param_head(packet);
+  (void)packet;
 
   if (DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 

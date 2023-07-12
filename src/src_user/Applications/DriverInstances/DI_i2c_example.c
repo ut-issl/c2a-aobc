@@ -19,7 +19,6 @@ AppInfo I2C_EXAMPLE_update(void)
 
 static void I2C_EXAMPLE_init_(void)
 {
-  int i_ret = 0;
   I2C_EXAMPLE_port_.ch = PORT_CH_I2C_SENSORS;
   I2C_EXAMPLE_port_.frequency_khz = 100;
   I2C_EXAMPLE_port_.device_address = I2C_DEVICE_ADDR_AOBC_RM;
