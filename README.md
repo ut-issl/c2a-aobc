@@ -173,6 +173,7 @@
 ### History
 - 21st Jan. 2021: Development started in a private repository at GitLab.
 - 03rd Mar. 2023: Move to a private repository at GitHub to prepare to publish as OSS
+- 14th Jul. 2023: Convert to a public repository.
 
 ### Contributors in the GitLab repository
 - ISSL, UT
