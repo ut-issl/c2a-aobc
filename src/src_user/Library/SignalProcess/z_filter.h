@@ -6,8 +6,8 @@
 #ifndef Z_FILTER_H_
 #define Z_FILTER_H_
 
-#include "../stdint.h"
-#include "../c2a_math.h"
+#include <stdint.h>
+#include <src_user/Library/c2a_math.h>
 
 
 #define Z_FILTER_ORDER_MAX 2  //!< 離散フィルタ最高次数

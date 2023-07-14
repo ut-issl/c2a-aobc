@@ -7,7 +7,7 @@
 
 #include <src_core/System/ModeManager/mode_manager.h>
 
-#include "../../TlmCmd/block_command_definitions.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
 
 // モードごとのTLを指定
 void MD_load_mode_list(void)

@@ -1,6 +1,6 @@
 
 #include "./CHIPKIT/UART_CHIPKIT.h"
-#include "../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 
 int UART_init(void* my_uart_v)
 {

@@ -5,11 +5,11 @@
 #ifndef OEM7600_FILTER_H_
 #define OEM7600_FILTER_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../../Library/stdint.h"
-#include "../../../../../Library/physical_constants.h"
-#include "../../../../../Library/SignalProcess/spike_filter.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/SignalProcess/spike_filter.h>
 
 /**
  * @struct Oem7600Filter

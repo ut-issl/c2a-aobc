@@ -7,7 +7,7 @@
 #ifndef C2A_MATH_H_
 #define C2A_MATH_H_
 
-#include "stdint.h"
+#include <stdint.h>
 
 /**
  * @enum   C2A_MATH_ERROR

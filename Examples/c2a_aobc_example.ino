@@ -1,5 +1,5 @@
 /*
- Name:		C2A_ISSL6U_AOBC.ino
+ Name:  c2a_aobc_example.ino
 */
 
 extern "C" 
@@ -20,8 +20,8 @@ static void __USER_ISR C2A_timer1_handler_(void);
 // Arduino functions
 void setup() 
 {
-  // TODO: ‚±‚±‚Å‚¢‚¢‚Ì‚©êŠ‚Í—vŒŸ“¢
-  Serial.begin(115200);   // Debugƒ|[ƒg
+  // TODO: ã“ã“ã§ã„ã„ã®ã‹å ´æ‰€ã¯è¦æ¤œè¨
+  Serial.begin(115200);   // Debugãƒãƒ¼ãƒˆ
 
   C2A_init_();
 
@@ -42,28 +42,28 @@ static void C2A_main_(void)
   while (1)
   {
     C2A_core_main();
-    // ƒ†[ƒU[’è‹`loopˆ—‚Í‚±‚±‚É“ü‚ê‚é
+    // ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©loopå‡¦ç†ã¯ã“ã“ã«å…¥ã‚Œã‚‹
   }
 
   return;
 }
 
-// C2AŠÖ˜A‚Ì‰Šú‰»
-// HWŠÖ˜A•”•ªiƒ^ƒCƒ}[CŠ„‚è‚İİ’è‚È‚Çj‚Ì‚İ“Æ©‚É‰Šú‰»
-// Printf“à•”‚Å WDT_clear_wdt(); ‚ªŒÄ‚Î‚ê‚Ä‚é‚±‚Æ‚É’ˆÓI
+// C2Aé–¢é€£ã®åˆæœŸåŒ–
+// HWé–¢é€£éƒ¨åˆ†ï¼ˆã‚¿ã‚¤ãƒãƒ¼ï¼Œå‰²ã‚Šè¾¼ã¿è¨­å®šãªã©ï¼‰ã®ã¿ç‹¬è‡ªã«åˆæœŸåŒ–
+// Printfå†…éƒ¨ã§ WDT_clear_wdt(); ãŒå‘¼ã°ã‚Œã¦ã‚‹ã“ã¨ã«æ³¨æ„ï¼
 static void C2A_init_(void)
 {
   TMGR_init();                // Time Manager
-                              // AM_initialize_all_apps ‚Å‚ÌŠÔŒv‘ª‚Ì‚½‚ß‚É‚±‚±‚Å‰Šú‰»
+                              // AM_initialize_all_apps ã§ã®æ™‚é–“è¨ˆæ¸¬ã®ãŸã‚ã«ã“ã“ã§åˆæœŸåŒ–
   Printf("C2A_init: TMGR_init done.\n");
 
-  // ƒ^ƒCƒ}Š„‚İŠÖ˜A
+  // ã‚¿ã‚¤ãƒå‰²è¾¼ã¿é–¢é€£
   C2A_timer_setting_();
   Printf("C2A_init: timer_setting_ done.\n");
 
   C2A_core_init();
 
-  TMGR_clear(); // TODO: user_oss‚Æ‘µ‚¦‚ÄÄ“x‰Šú‰»‚µ‚Ä‚¢‚é‚ªC‚±‚ÌŠ„‚è‚İ‚ğ~‚ß‚é‚×‚«‚©‚È‚Ç—vŒŸ“¢
+  TMGR_clear(); // TODO: user_ossã¨æƒãˆã¦å†åº¦åˆæœŸåŒ–ã—ã¦ã„ã‚‹ãŒï¼Œã“ã®æ™‚å‰²ã‚Šè¾¼ã¿ã‚’æ­¢ã‚ã‚‹ã¹ãã‹ãªã©è¦æ¤œè¨
 
   return;
 }
@@ -75,7 +75,7 @@ static void C2A_timer_setting_(void)
   setIntPriority(_TIMER_1_VECTOR, _T1_IPL_IPC, _T1_SPL_IPC);
   setIntEnable(_TIMER_1_IRQ);
   TMR1 = 0; // clear timer
-  // Ÿ‚Ì’l‚Í1ms‚ÌƒNƒƒbƒNƒAƒbƒv‚É‚È‚è‚©‚ÂAŒë·’~Ï‚ªÅ¬‚É‚È‚é‚æ‚¤‚ÉÀŒ±‚ğs‚¤è“®’²®‚µ‚½’l
+  // æ¬¡ã®å€¤ã¯1msã®ã‚¯ãƒ­ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã«ãªã‚Šã‹ã¤ã€æ™‚åˆ»èª¤å·®è“„ç©ãŒæœ€å°ã«ãªã‚‹ã‚ˆã†ã«å®Ÿé¨“ã‚’è¡Œã†æ‰‹å‹•èª¿æ•´ã—ãŸå€¤
   T1CON = TACON_PS_8; // set prescaler
   PR1 = (unsigned int)(10001);
 

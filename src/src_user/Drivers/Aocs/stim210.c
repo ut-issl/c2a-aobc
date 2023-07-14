@@ -4,13 +4,13 @@
 * @brief  STIM210のDriver
 */
 
-#include "./stim210.h"
+#include "stim210.h"
 #include <src_core/Library/endian.h>
 #include <src_core/Library/print.h>
 #include <string.h>
-#include "../../Library/vector3.h"
-#include "../../Library/matrix33.h"
-#include "../../Library/crc8.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/crc8.h>
 
 
 #define STIM210_STREAM_TLM_CMD (0)       //!< テレコマで使うストリーム

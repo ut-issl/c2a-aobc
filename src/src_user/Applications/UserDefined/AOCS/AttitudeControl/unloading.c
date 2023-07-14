@@ -10,8 +10,11 @@
 
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../Library/vector3.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static Unloading        unloading_;
 const  Unloading* const unloading = &unloading_;
@@ -43,13 +46,13 @@ AppInfo APP_UNLOADING_create_app(void)
 
 static void APP_UNLOADING_init_(void)
 {
-  unloading_.angular_velocity_upper_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(7000.0f);
-  unloading_.angular_velocity_lower_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(-7000.0f);
-  unloading_.angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(0.0f);
+  unloading_.angular_velocity_upper_threshold_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;
+  unloading_.angular_velocity_lower_threshold_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;
+  unloading_.angular_velocity_target_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;
 
-  unloading_.control_gain = -1.0e-7f;
+  unloading_.control_gain = ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;
 
-  unloading_.exec_is_enable = APP_UNLOADING_EXEC_DISABLE;
+  unloading_.exec_is_enable = ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable;
 
   for (int idx = 0; idx < AOCS_MANAGER_NUM_OF_RW; idx++)
   {

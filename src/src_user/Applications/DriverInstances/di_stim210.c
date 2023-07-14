@@ -9,10 +9,13 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../../Library/matrix33.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Library/matrix33.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/stim210_parameters.h>
 
 static void DI_STIM210_init_(void);
 static void DI_STIM210_update_(void);
@@ -28,9 +31,6 @@ const  DiStim210* const di_stim210 [STIM210_IDX_MAX] = {&di_stim210_[STIM210_IDX
 // 面倒くさいので要素数一つと仮定してバッファを確保する
 static DS_StreamRecBuffer DI_STIM210_rx_buffer_;
 static uint8_t DI_STIM210_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
-
-static const uint8_t DI_STIM210_kNumCoeffTempCalib_ = 2;
-
 
 AppInfo DI_STIM210_update(void)
 {
@@ -74,55 +74,34 @@ static void DI_STIM210_init_(void)
     Printf("STIM210: q_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  float ang_vel_bias_compo_rad_s[PHYSICAL_CONST_THREE_DIM] = { -2.27E-04f, 2.80E-04f, -3.37E-04f }; // TODO_L: 温度補正されるので、削除しても良い
-  ret_math = STIM210_set_ang_vel_bias_compo_rad_s(&stim210_driver_[STIM210_IDX_IN_UNIT], ang_vel_bias_compo_rad_s);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("STIM210: ang_vel_bias set error.\n");
-  }
-
   // 温度補正
-  const float kRangeLow = -50.0f; // degC
-  const float kRangeHigh = 50.0f; // degC
-  float bias_coeff[DI_STIM210_kNumCoeffTempCalib_];
-  float scale_factor_coeff[DI_STIM210_kNumCoeffTempCalib_];
+  const float kRangeLow  = STIM210_PARAMETERS_temperature_range_low_degC;
+  const float kRangeHigh = STIM210_PARAMETERS_temperature_range_high_degC;
   // 計測値から設定するが温度依存性はかなり小さい
   // 特にSFは取付誤差と見分けづらいのでなしとする
   // SF,バイアスは y = SF*x - BIASという式を想定
   // X軸
-  bias_coeff[0] = -1.698E-04f;
-  bias_coeff[1] = 1.309E-06f;
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[0]),
-                                     DI_STIM210_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
+                                     STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_bias_coeff_compo_x, kRangeLow, kRangeHigh);
   if (ret < 0) Printf("STIM210 Gyro-X Bias Temperature Caliblation init Failed ! \n");
-  scale_factor_coeff[0] = 1.0f;
-  scale_factor_coeff[1] = 0.0f;
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[0]),
-                                     DI_STIM210_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
+                                     STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_scale_factor_coeff_compo_x, kRangeLow, kRangeHigh);
   if (ret < 0) Printf("STIM210 Gyro-X SF Temperature Caliblation init Failed ! \n");
 
   // Y軸
-  bias_coeff[0] = 2.990E-04f;
-  bias_coeff[1] = -6.060E-07f;
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[1]),
-                                     DI_STIM210_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
+                                     STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_bias_coeff_compo_y, kRangeLow, kRangeHigh);
   if (ret < 0) Printf("STIM210 Gyro-Y Bias Temperature Caliblation init Failed ! \n");
-  scale_factor_coeff[0] = 1.0f;
-  scale_factor_coeff[1] = 0.0f;
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[1]),
-                                     DI_STIM210_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
+                                     STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_scale_factor_coeff_compo_y, kRangeLow, kRangeHigh);
   if (ret < 0) Printf("STIM210 Gyro-Y SF Temperature Caliblation init Failed ! \n");
 
   // Z軸
-  bias_coeff[0] = -2.306E-04f;
-  bias_coeff[1] = -6.303E-07f;
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[2]),
-                                     DI_STIM210_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
+                                     STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_bias_coeff_compo_z, kRangeLow, kRangeHigh);
   if (ret < 0) Printf("STIM210 Gyro-Z Bias Temperature Caliblation init Failed ! \n");
-  scale_factor_coeff[0] = 1.0f;
-  scale_factor_coeff[1] = 0.0f;
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[2]),
-                                     DI_STIM210_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
+                                     STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_scale_factor_coeff_compo_z, kRangeLow, kRangeHigh);
   if (ret < 0) Printf("STIM210 Gyro-Z SF Temperature Caliblation init Failed ! \n");
 
   return;
@@ -366,15 +345,15 @@ CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* pac
   ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
-  float coeff[DI_STIM210_kNumCoeffTempCalib_];
-  for (uint8_t coeff_idx = 0; coeff_idx < DI_STIM210_kNumCoeffTempCalib_; coeff_idx++)
+  float coeff[STIM210_PARAMETERS_kNumCoeffTempCalib];
+  for (uint8_t coeff_idx = 0; coeff_idx < STIM210_PARAMETERS_kNumCoeffTempCalib; coeff_idx++)
   {
     ENDIAN_memcpy(&coeff[coeff_idx], param + offset, sizeof(float));
     offset += sizeof(float);
   }
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[axis]),
-                                         DI_STIM210_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
+                                         STIM210_PARAMETERS_kNumCoeffTempCalib, coeff, range_low_degC, range_high_degC);
   if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
@@ -397,15 +376,15 @@ CCP_CmdRet Cmd_DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packe
   ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
-  float coeff[DI_STIM210_kNumCoeffTempCalib_];
-  for (uint8_t coeff_idx = 0; coeff_idx < DI_STIM210_kNumCoeffTempCalib_; coeff_idx++)
+  float coeff[STIM210_PARAMETERS_kNumCoeffTempCalib];
+  for (uint8_t coeff_idx = 0; coeff_idx < STIM210_PARAMETERS_kNumCoeffTempCalib; coeff_idx++)
   {
     ENDIAN_memcpy(&coeff[coeff_idx], param + offset, sizeof(float));
     offset += sizeof(float);
   }
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[axis]),
-                                         DI_STIM210_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
+                                         STIM210_PARAMETERS_kNumCoeffTempCalib, coeff, range_low_degC, range_high_degC);
   if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);

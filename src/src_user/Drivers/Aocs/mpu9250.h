@@ -8,8 +8,8 @@
 
 #include <src_core/IfWrapper/i2c.h>
 #include <src_core/Drivers/Super/driver_super.h>
-#include "../../Library/quaternion.h"
-#include "../../Library/physical_constants.h"
+#include <src_user/Library/quaternion.h>
+#include <src_user/Library/physical_constants.h>
 
 /**
  * @enum   MPU9250_ANG_VEL_RANGE

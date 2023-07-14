@@ -5,7 +5,7 @@
 
 // user side
 #include "DI_i2c_example.h"
-#include "../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 
 static I2C_Config I2C_EXAMPLE_port_;
 
@@ -19,7 +19,6 @@ AppInfo I2C_EXAMPLE_update(void)
 
 static void I2C_EXAMPLE_init_(void)
 {
-  int i_ret = 0;
   I2C_EXAMPLE_port_.ch = PORT_CH_I2C_SENSORS;
   I2C_EXAMPLE_port_.frequency_khz = 100;
   I2C_EXAMPLE_port_.device_address = I2C_DEVICE_ADDR_AOBC_RM;

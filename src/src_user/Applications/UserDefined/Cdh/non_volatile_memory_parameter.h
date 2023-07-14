@@ -5,10 +5,10 @@
 #ifndef NON_VOLATILE_MEMORY_PARAMETER_H_
 #define NON_VOLATILE_MEMORY_PARAMETER_H_
 
+#include <stdint.h>
 #include "non_volatile_memory_partition.h"
-#include "../../../Settings/Applications/NvmParams/non_volatile_memory_normal_parameters.h"
-#include "../../../Settings/Applications/NvmParams/non_volatile_memory_redundant_parameters.h"
-#include "../../../Library/stdint.h"
+#include <src_user/Settings/Applications/NvmParams/non_volatile_memory_normal_parameters.h>
+#include <src_user/Settings/Applications/NvmParams/non_volatile_memory_redundant_parameters.h>
 
 /**
  * @enum  APP_NVM_PARAM_TYPE

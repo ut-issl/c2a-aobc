@@ -5,13 +5,13 @@
 #ifndef AOCS_MANAGER_H_
 #define AOCS_MANAGER_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/System/TimeManager/obc_time.h>
-#include "../../../Library/physical_constants.h"
-#include "../../../Library/quaternion.h"
-#include "../../../Library/stdint.h"
-#include "../../DriverInstances/di_rw0003.h"
-#include "../../DriverInstances/di_mtq_seiren.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Applications/DriverInstances/di_rw0003.h>
+#include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 
 /**
  * @enum   AOCS_MANAGER_ERROR

@@ -3,14 +3,14 @@
 * @file   sagitta.c
 * @brief  SAGITTAのDriver
 */
-#include "./sagitta.h"
+#include "sagitta.h"
 
 #include <src_core/Library/print.h>
 #include <string.h> // for memcpy
 
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../Library/xxhash.h"
-#include "../../Library/physical_constants.h"
+#include <src_user/Library/xxhash.h>
+#include <src_user/Library/physical_constants.h>
 
 // #define DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
 
@@ -738,7 +738,7 @@ DS_CMD_ERR_CODE SAGITTA_change_camera(SAGITTA_Driver* sagitta_driver, uint8_t pa
     sagitta_driver->info.set_parameter.camera.interval_s = value;
     break;
   case 4:
-    sagitta_driver->info.set_parameter.camera.offset_pix = (uint16_t)value;
+    sagitta_driver->info.set_parameter.camera.offset_pix = (int16_t)value;
     break;
   case 5:
     sagitta_driver->info.set_parameter.camera.pga_gain = (uint8_t)value;

@@ -12,8 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C5F80730-F44F-4478-BDAE-6634EFC2CA88}</ProjectGuid>
-    <RootNamespace>c2a_issl6u_aobc</RootNamespace>
-    <ProjectName>c2a_issl6u_aobc</ProjectName>
+    <RootNamespace>c2a_aobc</RootNamespace>
+    <ProjectName>c2a_aobc</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,8 +77,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MinSpace</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\c2a_issl6u_aobc;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DTWI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DSPI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\avr;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\pps;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\util;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\variants\MXL795;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\tools\pic32-tools\1.43-pic32gcc\pic32mx\include;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(ProjectDir)__vm\.c2a_issl6u_aobc.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\c2a_aobc;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DTWI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DSPI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\avr;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\pps;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\util;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\variants\MXL795;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\tools\pic32-tools\1.43-pic32gcc\pic32mx\include;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.c2a_aobc.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>__PIC32_32MX795F512L__;_VMDEBUG=1;ARDUINO_ARCH_PIC32;F_CPU=80000000L;ARDUINO=108013;PIC32_CHIPKIT_MXL795B;MPIDEVER=16777998;MPIDE=150;IDE=Arduino;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -110,7 +110,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="src\src_user\IfWrapper\Arduino\CHIPKIT\UART_CHIPKIT.h" />
-    <ClInclude Include="__vm\.c2a_issl6u_aobc.vsarduino.h" />
+    <ClInclude Include="__vm\.c2a_aobc.vsarduino.h" />
     <ClInclude Include="__vm\.src_user.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +145,6 @@
     <ClCompile Include="src\src_core\Library\endian.c" />
     <ClCompile Include="src\src_core\Library\majority_vote_for3.c" />
     <ClCompile Include="src\src_core\Library\c2a_round.c" />
-    <ClCompile Include="src\src_core\System\AnomalyLogger\anomaly_logger.c" />
     <ClCompile Include="src\src_core\System\ApplicationManager\app_info.c" />
     <ClCompile Include="src\src_core\System\ApplicationManager\app_manager.c" />
     <ClCompile Include="src\src_core\System\EventManager\event_handler.c" />
@@ -262,7 +261,6 @@
     <ClCompile Include="src\src_user\IfWrapper\Arduino\UART_ARDUINO.c" />
     <ClCompile Include="src\src_user\IfWrapper\COMMON\WDT_TEMP.c" />
     <ClCompile Include="src\src_user\IfWrapper\IF_list.c" />
-    <ClCompile Include="src\src_user\Library\git_revision.c" />
     <ClCompile Include="src\src_user\Library\math_constants.c" />
     <ClCompile Include="src\src_user\Library\Orbit\kepler_orbit.c" />
     <ClCompile Include="src\src_user\Library\Orbit\sgp4.c" />
@@ -311,6 +309,21 @@
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_rough_sun_pointing.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_rough_three_axis.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_rough_three_axis_rw.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\attitude_control_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\attitude_determination_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\attitude_target_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\component_selector_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\fdir_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\ina260_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\mpu9250_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\nanossoc_d60_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\oem7600_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\orbit_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\rm3100_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\rw0003_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\sagitta_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\stim210_parameters.c" />
+    <ClCompile Include="src\src_user\Settings\SatelliteParameters\Sample\structure_parameters.c" />
     <ClCompile Include="src\src_user\Settings\System\EventHandlerRules\event_handler_rules.c" />
     <ClCompile Include="src\src_user\Settings\System\EventHandlerRules\event_handler_rule_hw_oc.c" />
     <ClCompile Include="src\src_user\Settings\System\EventHandlerRules\event_handler_rule_sw_oc.c" />
@@ -318,7 +331,7 @@
     <ClCompile Include="src\src_user\Settings\System\event_logger_settings.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="c2a_issl6u_aobc.ino" />
+    <None Include="c2a_aobc.ino" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

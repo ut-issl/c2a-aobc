@@ -6,15 +6,19 @@
 #pragma section REPRO
 #include "sl_bdot.h"
 
-#include "../../../TlmCmd/block_command_definitions.h"
-#include "../../../TlmCmd/command_definitions.h"
-#include "../../../Applications/UserDefined/Power/power_switch_control.h"
-#include "../../../Applications/DriverInstances/di_rm3100.h"
-#include "../../../Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Applications/DriverInstances/di_rm3100.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
+#include <src_user/Settings/SatelliteParameters/component_selector_parameters.h>
 
 void BCL_load_initial_to_bdot(void)
 {
@@ -97,15 +101,15 @@ void BCL_load_any_to_bdot(void)
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   time_sec += 1;
 
-  // 使う磁気センサをExternalに設定
-  BCL_tool_prepare_param_uint8(APP_MAG_SELECTOR_STATE_RM_EXT);
+  // 使う磁気センサを設定
+  BCL_tool_prepare_param_uint8(COMPONENT_SELECTOR_PARAMETERS_initial_selected_magnetometer);
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_APP_MAG_SELECTOR_SET_STATE);
   time_sec += 1;
 
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_MM_FINISH_TRANSITION);
 
   // 自動モード遷移ON
-  time_sec += 5 * 60;
+  time_sec += FDIR_PARAMETERS_bdot_start_mode_manager_time_s;
   BCL_tool_prepare_param_uint8(1);
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_APP_AOCS_MM_SET_AUTO_MODE_TRANSITION);
 

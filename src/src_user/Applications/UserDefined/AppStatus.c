@@ -3,8 +3,8 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
-#include "../../Library/vt100.h"
-#include "../../TlmCmd/command_definitions.h"
+#include <src_user/Library/vt100.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include <src_core/System/ApplicationManager/app_manager.h>
 
 static ASInfo asi_;

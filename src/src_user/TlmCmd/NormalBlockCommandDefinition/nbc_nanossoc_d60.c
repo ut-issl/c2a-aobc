@@ -1,18 +1,18 @@
 #pragma section REPRO
 #include "nbc_header.h"
 
-#include "../block_command_definitions.h"
-#include "../command_definitions.h"
-#include "../telemetry_definitions.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
+#include <src_user/TlmCmd/telemetry_definitions.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
 
-#include "../../Applications/UserDefined/Power/power_switch_control.h"
-#include "../../Applications/DriverInstances/di_ina260.h"
-#include "../../Applications/DriverInstances/di_rm3100.h"
-#include "../../Settings/System/EventHandlerRules/event_handler_rules.h"
-#include "../../Settings/System/event_logger_group.h"
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Applications/DriverInstances/di_ina260.h>
+#include <src_user/Applications/DriverInstances/di_rm3100.h>
+#include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
+#include <src_user/Settings/System/event_logger_group.h>
 
 void BCL_load_power_on_nanossoc_d60(void)
 {
@@ -130,10 +130,10 @@ void BCL_load_reset_nanossoc_d60(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_register_combine(bc_cycle, BC_POWER_OFF_NANOSSOC_D60);  // 4.5sec
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);  // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
 
-  BCL_tool_register_combine(bc_cycle, BC_POWER_ON_NANOSSOC_D60);
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
 }
 
 void BCL_load_activate_nanossoc_d60_eh(void)

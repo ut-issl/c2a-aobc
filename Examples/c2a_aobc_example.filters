@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.c2a_aobc_example.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.src_user.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\gs_command_dispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\memory_dump.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\nop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\realtime_command_dispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\timeline_command_dispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\UtilityCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Applications\UtilityCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\block_command_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\command_analyze.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\CommandDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\common_tlm_cmd_packet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\packet_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\PacketList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\telemetry_frame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\TlmCmd\telemetry_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Drivers\Super\driver_super.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Drivers\Super\driver_super_issl_format.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\ascii_conv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\CRC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\endian_conv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\endian_memcpy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\exor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\majority_vote_for3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\print.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\c2a_round.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\Library\sum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\AnomalyLogger\anomaly_logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\ApplicationManager\app_info.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\ApplicationManager\app_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\ModeManager\mode_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\TaskManager\task_dispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\TimeManager\obc_time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\TimeManager\time_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\System\WatchdogTimer\WatchdogTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Applications\DriverInstances\gstos_packet_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Applications\Middleware\DCMW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Applications\UserDefined\AppStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Applications\UserDefined\VT100.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Applications\app_headers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Applications\app_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\CCSDS\TCPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\NormalBlockCommandDefinition\NormalBCLoadHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\block_command_definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\command_definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\command_source.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\telemetry_definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\telemetry_source.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\TlmCmd\user_packet_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\IfWrapper\IF_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Library\git_revision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Library\stdint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Library\utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\AnomalyHandlerRules\ah_rules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\AnomalyLogger\al_default_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\AnomalyLogger\anomaly_group.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\TlmCmd\BlockCommandTableParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\TlmCmd\CommandAnalyzeParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\TlmCmd\common_tlm_cmd_packet_params.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\TlmCmd\PacketHandlerParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\TlmCmd\telemetry_frame_params.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\DriverSuper\driver_super_params.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\debug_display.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\drivers_update.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\gs_related_process.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\tlm_cmd_hirate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\TaskLists\GroundTestTL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\TaskLists\InitialTL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\Transitions\GroundTestSL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\Transitions\InitialSL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\Transitions\NopSL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\Transitions\SequenceItems.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\Modes\mode_definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\System\anomaly_logger_params.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\System\AppManagerParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\System\obc_time_params.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\INITIAL_SETTING.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\port_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_core\c2a_core_main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src_aobc\src\src_user\Settings\sils_define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src_aobc\src\src_core\Applications\AnomalyHandler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\GSCommandDispatcher.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\MemoryDump.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\nop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\RealtimeCommandDispatcher.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\TimelineCommandDispatcher.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\UtilityCommand.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Applications\UtilityCounter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\block_command_table.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\CommandAnalyze.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\CommandDispatcher.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\PacketHandler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\PacketList.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\TelemetryFrame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\TlmCmd\TelemetryGenerator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Drivers\Super\DriverSuper.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Drivers\Super\DriverSuperIsslFormat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\ascii_conv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\CRC.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\endian_conv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\endian_memcpy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\exor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\majority_vote_for3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\matrix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\c2a_round.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\Library\sum.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\AnomalyLogger\AnomalyLogger.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\ApplicationManager\AppInfo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\ApplicationManager\AppManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\ModeManager\ModeManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\TaskManager\TaskDispatcher.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\TimeManager\OBCTime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\TimeManager\TimeManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\System\WatchdogTimer\WatchdogTimer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Applications\DriverInstances\gstos_packet_handler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Applications\Middleware\DCMW.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Applications\UserDefined\AppStatus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Applications\UserDefined\VT100.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Applications\app_registry.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\TlmCmd\CCSDS\TCPacket.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\TlmCmd\NormalBlockCommandDefinition\BC_LOAD_StartHKTlm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\TlmCmd\block_command_definitions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\TlmCmd\command_definitions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\TlmCmd\telemetry_definitions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\TlmCmd\user_packet_handler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\IfWrapper\IF_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Library\git_revision.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Library\print.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Library\utility.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\AnomalyHandlerRules\AH_Rule_AL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\AnomalyHandlerRules\AH_Rule_default_load.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\AnomalyLogger\al_default_settings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\debug_display.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\drivers_update.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\gs_related_process.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\TaskLists\Composition\tlm_cmd_hirate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\TaskLists\GroundTestTL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\TaskLists\InitialTL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\Transitions\GroundTestSL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\Transitions\InitialSL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\Transitions\NopSL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\Transitions\SequenceItems.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_user\Settings\Modes\mode_definitions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src_aobc\src\src_core\c2a_core_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="c2a_aobc_example.ino" />
+  </ItemGroup>
+</Project>

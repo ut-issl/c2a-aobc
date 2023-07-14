@@ -9,9 +9,9 @@
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/Drivers/Super/driver_super.h>
 
-#include "../../IfWrapper/GPIO.h"
-#include "../../Library/physical_constants.h"
-#include "../../Library/quaternion.h"
+#include <src_user/IfWrapper/GPIO.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/quaternion.h>
 
 /**
  * @enum   STIM210_OPERATION_MODE

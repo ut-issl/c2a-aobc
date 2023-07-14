@@ -7,9 +7,9 @@
 #include "kepler_orbit.h"
 
 #include <math.h>
-#include "../matrix33.h"
-#include "../vector3.h"
-#include "../math_constants.h"
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/math_constants.h>
 #include <src_core/Library/print.h>
 
 #define KEPLER_ORBIT_ECCENTRICITY_THRESHOLD (1.0e-5f) //!< 円軌道とみなす離心率閾値
@@ -136,7 +136,6 @@ C2A_MATH_ERROR KEPLER_ORBIT_calc_oe_from_pos_vel(KeplerOrbitalElements* orbital_
 
   // eccentricity
   float h[PHYSICAL_CONST_THREE_DIM];
-  float h_norm;
   VECTOR3_outer_product(h, position_eci_km, velocity_eci_km_s);
   float v_temp1[PHYSICAL_CONST_THREE_DIM];
   float v_temp2[PHYSICAL_CONST_THREE_DIM];

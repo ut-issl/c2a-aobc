@@ -7,7 +7,7 @@
 #ifndef TIME_SPACE_H_
 #define TIME_SPACE_H_
 
-#include "stdint.h"
+#include <stdint.h>
 #include "physical_constants.h"
 #include "c2a_math.h"
 

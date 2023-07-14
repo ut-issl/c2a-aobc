@@ -5,7 +5,7 @@
 #ifndef DI_RM3100_H_
 #define DI_RM3100_H_
 
-#include "../../Drivers/Aocs/rm3100.h"
+#include <src_user/Drivers/Aocs/rm3100.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**

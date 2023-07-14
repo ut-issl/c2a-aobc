@@ -738,7 +738,7 @@ MATRIX_ERROR MATRIX_determinant(double* determinant, const void* mat)
   const MATRIX_Parameter* parameter_mat = (const MATRIX_Parameter*)mat;
 
   ret = MATRIX_validate_size_(mat);
-  if (ret != C2A_MATH_ERROR_OK) return ret;
+  if (ret != MATRIX_ERROR_OK) return ret;
 
   if (parameter_mat->row != parameter_mat->col) return MATRIX_ERROR_SIZE_MISMATCH;
 

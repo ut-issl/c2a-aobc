@@ -5,12 +5,12 @@
 #ifndef UNLOADING_H_
 #define UNLOADING_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/physical_constants.h"
-#include "../../../../Library/ControlUtility/cross_product_control.h"
-#include "../../../../Library/stdint.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/ControlUtility/cross_product_control.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 /**
  * @enum   APP_UNLOADING_STATE

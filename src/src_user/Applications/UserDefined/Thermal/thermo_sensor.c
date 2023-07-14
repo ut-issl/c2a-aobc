@@ -5,10 +5,10 @@
 */
 #include "thermo_sensor.h"
 
-#include "../../../IfWrapper/ADC.h"
-#include "../../../Settings/port_config.h"
-#include "../../../Library/stdint.h"
-#include "../../../Library/physical_constants.h"
+#include <stdint.h>
+#include <src_user/IfWrapper/ADC.h>
+#include <src_user/Settings/port_config.h>
+#include <src_user/Library/physical_constants.h>
 
 
 static ThermoSensor        thermo_sensor_;

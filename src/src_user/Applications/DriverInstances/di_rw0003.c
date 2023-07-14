@@ -11,11 +11,11 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
 
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/AOCS/aocs_manager.h"
-#include "../../Library/vector3.h"
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/vector3.h>
 
 static void DI_RW0003_init_(void);
 static void DI_RW0003_update_(void);
@@ -283,6 +283,70 @@ CCP_CmdRet Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet)
   if (speed_rad_s < -1.0f * rw0003_driver_[idx].info.speed_limit1_rad_s) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = RW0003_drive_speed(&rw0003_driver_[idx], speed_rad_s);
+
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+}
+
+CCP_CmdRet Cmd_DI_RW0003_READ_VDD(const CommonCmdPacket* packet)
+{
+  const uint8_t* param = CCP_get_param_head(packet);
+  RW0003_IDX idx;
+  DS_CMD_ERR_CODE ret;
+
+  idx = (RW0003_IDX)param[0];
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  ret = RW0003_read_vdd(&rw0003_driver_[idx]);
+
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+}
+
+CCP_CmdRet Cmd_DI_RW0003_READ_SEU_COUNT(const CommonCmdPacket* packet)
+{
+  const uint8_t* param = CCP_get_param_head(packet);
+  RW0003_IDX idx;
+  DS_CMD_ERR_CODE ret;
+
+  idx = (RW0003_IDX)param[0];
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  ret = RW0003_read_seu_count(&rw0003_driver_[idx]);
+
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+}
+
+CCP_CmdRet Cmd_DI_RW0003_READ_FAULT_STATE(const CommonCmdPacket* packet)
+{
+  const uint8_t* param = CCP_get_param_head(packet);
+  RW0003_IDX idx;
+  DS_CMD_ERR_CODE ret;
+
+  idx = (RW0003_IDX)param[0];
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  ret = RW0003_read_fault_state(&rw0003_driver_[idx]);
+
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+}
+
+CCP_CmdRet Cmd_DI_RW0003_DIAGNOSTIC(const CommonCmdPacket* packet)
+{
+  const uint8_t* param = CCP_get_param_head(packet);
+  RW0003_IDX idx;
+  DS_CMD_ERR_CODE ret;
+
+  idx = (RW0003_IDX)param[0];
+  if (idx >= RW0003_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+
+  if (DI_RW0003_is_initialized_[idx] != 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  ret = RW0003_diagnostic(&rw0003_driver_[idx]);
 
   return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }

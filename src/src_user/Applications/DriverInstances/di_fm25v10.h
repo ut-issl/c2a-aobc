@@ -5,7 +5,7 @@
 #ifndef DI_FM25V10_H_
 #define DI_FM25V10_H_
 
-#include "../../Drivers/Cdh/fm25v10.h"
+#include <src_user/Drivers/Cdh/fm25v10.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**

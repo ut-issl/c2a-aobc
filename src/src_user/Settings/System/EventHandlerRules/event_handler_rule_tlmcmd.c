@@ -5,16 +5,19 @@
  */
 #include "event_handler_rules.h"
 #include <src_core/System/EventManager/event_handler.h>
-#include "../../../TlmCmd/block_command_definitions.h"
-#include "../event_logger_group.h"
-#include "../../../Applications/DriverInstances/di_mpu9250.h"
-#include "../../../Applications/DriverInstances/di_rm3100.h"
-#include "../../../Applications/DriverInstances/di_nanossoc_d60.h"
-#include "../../../Applications/DriverInstances/di_stim210.h"
-#include "../../../Applications/DriverInstances/di_sagitta.h"
-#include "../../../Applications/DriverInstances/di_oem7600.h"
-#include "../../../Applications/DriverInstances/di_rw0003.h"
-#include "../../../Applications/DriverInstances/di_ina260.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/Settings/System/event_logger_group.h>
+#include <src_user/Applications/DriverInstances/di_mpu9250.h>
+#include <src_user/Applications/DriverInstances/di_rm3100.h>
+#include <src_user/Applications/DriverInstances/di_nanossoc_d60.h>
+#include <src_user/Applications/DriverInstances/di_stim210.h>
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/DriverInstances/di_oem7600.h>
+#include <src_user/Applications/DriverInstances/di_rw0003.h>
+#include <src_user/Applications/DriverInstances/di_ina260.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 void EH_load_rule_tlmcmd(void)
 {
@@ -26,8 +29,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_mp9250;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_mp9250_ms;
   settings.deploy_bct_id = BC_RESET_MPU9250;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_MPU9250, &settings);
@@ -38,8 +41,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rm3100;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rm3100_ms;
   settings.deploy_bct_id = BC_RESET_RM3100;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RM3100_ON_AOBC, &settings);
@@ -50,8 +53,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_rm3100;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_rm3100_ms;
   settings.deploy_bct_id = BC_SELECT_RM3100_EXTERNAL;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RM3100_ON_AOBC_BROKEN, &settings);
@@ -62,8 +65,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 1000;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rm3100;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rm3100_ms;
   settings.deploy_bct_id = BC_RESET_RM3100;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RM3100_EXTERNAL, &settings);
@@ -74,8 +77,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_rm3100;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_rm3100_ms;
   settings.deploy_bct_id = BC_SELECT_RM3100_ON_AOBC;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RM3100_EXTERNAL_BROKEN, &settings);
@@ -86,8 +89,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_PY, &settings);
@@ -98,8 +101,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_MY, &settings);
@@ -110,8 +113,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_PZ, &settings);
@@ -122,8 +125,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_MZ, &settings);
@@ -134,8 +137,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_stim210;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_stim210_ms;
   settings.deploy_bct_id = BC_RESET_STIM210;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_STIM210, &settings);
@@ -146,8 +149,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_stim210;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_stim210_ms;
   settings.deploy_bct_id = BC_POWER_OFF_STIM210;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_STIM210_BROKEN, &settings);
@@ -158,8 +161,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_sagitta;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_sagitta_ms;
   settings.deploy_bct_id = BC_RESET_SAGITTA;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_SAGITTA, &settings);
@@ -170,8 +173,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_oem7600;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_oem7600_ms;
   settings.deploy_bct_id = BC_RESET_OEM7600;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_OEM7600, &settings);
@@ -182,8 +185,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;
   settings.deploy_bct_id = BC_RESET_RWX;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RWX, &settings);
@@ -194,8 +197,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;
   settings.deploy_bct_id = BC_RESET_RWY;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RWY, &settings);
@@ -206,8 +209,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 10;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;
   settings.deploy_bct_id = BC_RESET_RWZ;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_RWZ, &settings);
@@ -218,8 +221,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_PIC, &settings);
@@ -229,8 +232,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_STIM210, &settings);
@@ -240,8 +243,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_SAGITTA, &settings);
@@ -251,8 +254,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_OEM7600, &settings);
@@ -262,8 +265,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_RM3100, &settings);
@@ -273,8 +276,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_NANOSSOC_D60, &settings);
@@ -284,8 +287,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_MTQ, &settings);
@@ -295,8 +298,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_RW0003_X, &settings);
@@ -306,8 +309,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_RW0003_Y, &settings);
@@ -317,8 +320,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 5000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_ina260;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_ina260_ms;
   settings.deploy_bct_id = BC_RESET_INA260;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_RW0003_Z, &settings);
@@ -329,8 +332,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_PY, &settings);
@@ -341,8 +344,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_MY, &settings);
@@ -353,8 +356,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_PZ, &settings);
@@ -365,8 +368,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 250;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_MZ, &settings);
@@ -377,8 +380,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_stim210;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_stim210_ms;
   settings.deploy_bct_id = BC_RESET_STIM210;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CRC_ERROR_STIM210, &settings);
@@ -389,8 +392,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_EH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CUMULATIVE;
-  settings.condition.count_threshold = 5;
-  settings.condition.time_threshold_ms = 0;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_stim210;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_stim210_ms;
   settings.deploy_bct_id = BC_POWER_OFF_STIM210;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CRC_ERROR_STIM210_BROKEN, &settings);
@@ -401,8 +404,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_sagitta;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_sagitta_ms;
   settings.deploy_bct_id = BC_RESET_SAGITTA;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_XXHASH_ERROR_SAGITTA, &settings);
@@ -413,8 +416,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_oem7600;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_oem7600_ms;
   settings.deploy_bct_id = BC_RESET_OEM7600;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CRC_ERROR_OEM7600, &settings);
@@ -425,8 +428,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;
   settings.deploy_bct_id = BC_RESET_RWX;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CRC_ERROR_RWX, &settings);
@@ -437,8 +440,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;
   settings.deploy_bct_id = BC_RESET_RWY;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CRC_ERROR_RWY, &settings);
@@ -449,8 +452,8 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = 100;
-  settings.condition.time_threshold_ms = 2000;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_rw0003;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rw0003_ms;
   settings.deploy_bct_id = BC_RESET_RWZ;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_CRC_ERROR_RWZ, &settings);

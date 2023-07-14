@@ -9,10 +9,13 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../../Library/matrix33.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Library/matrix33.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/mpu9250_parameters.h>
 
 static void DI_MPU9250_init_(void);
 static void DI_MPU9250_update_(void);
@@ -29,8 +32,6 @@ static DS_StreamRecBuffer DI_MPU9250_rx_buffer_;
 static DS_StreamRecBuffer DI_AK8963_rx_buffer_;
 static uint8_t DI_MPU9250_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 static uint8_t DI_AK8963_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
-
-static const uint8_t DI_MPU9250_kNumCoeffTempCalib_ = 2;
 
 static uint8_t DI_MPU9250_is_initialized_[MPU9250_IDX_MAX] = { 0 };  //!< 0 = not initialized, 1 = initialized
 
@@ -93,54 +94,50 @@ static void DI_MPU9250_init_(void)
     Printf("MPU9250: ang_vel_bias set error.\n");
   }
 
-  float mag_bias_compo_nT[PHYSICAL_CONST_THREE_DIM] = { -18417.53f, -30423.31f, 20969.18f }; // 実機計測値
-  ret_math = MPU9250_set_mag_bias_compo_nT(&mpu9250_driver_[MPU9250_IDX_ON_AOBC], mag_bias_compo_nT);
+  ret_math = MPU9250_set_mag_bias_compo_nT(&mpu9250_driver_[MPU9250_IDX_ON_AOBC], MPU9250_PARAMETERS_mag_bias_compo_nT);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("MPU9250: mag_bias set error.\n");
   }
 
   // 温度補正
-  const float kRangeLow = -50.0f; // degC
-  const float kRangeHigh = 50.0f; // degC
-  float bias_coeff[DI_MPU9250_kNumCoeffTempCalib_];
-  float scale_factor_coeff[DI_MPU9250_kNumCoeffTempCalib_];
+  const float kRangeLow = MPU9250_PARAMETERS_temperature_range_low_degC;
+  const float kRangeHigh = MPU9250_PARAMETERS_temperature_range_high_degC;
   // 切片は実機計測値、切片はOPT-1, RWASATでの測定値を利用
   // 特にSFは小さいのでなしとする
   // SF,バイアスは y = SF*x - BIASという式を想定
   // X軸
-  bias_coeff[0] = -0.024f;
-  bias_coeff[1] = 0.0002f;
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[0]),
-                                     DI_MPU9250_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
+                                      MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_bias_coeff_compo_x,
+                                      kRangeLow, kRangeHigh);
   if (ret3 < 0) Printf("MPU9250 Gyro-X Bias Temperature Caliblation init Failed ! \n");
-  scale_factor_coeff[0] = 1.0f;
-  scale_factor_coeff[1] = 0.0f;
+
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[0]),
-                                     DI_MPU9250_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
-  if (ret3 < 0) Printf("MPU9250 Gyro-X SF Temperature Caliblation init Failed ! \n");
+                                      MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_scale_factor_coeff_compo_x,
+                                      kRangeLow, kRangeHigh);
+  if (ret3 < 0) Printf("MPU9250 Gyro-X SF Temperature Calibration init Failed ! \n");
+
   // Y軸
-  bias_coeff[0] = 0.0058f;
-  bias_coeff[1] = -0.0005f;
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[1]),
-                                     DI_MPU9250_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
-  if (ret3 < 0) Printf("MPU9250 Gyro-Y Bias Temperature Caliblation init Failed ! \n");
-  scale_factor_coeff[0] = 1.0f;
-  scale_factor_coeff[1] = 0.0f;
+                                      MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_bias_coeff_compo_y,
+                                      kRangeLow, kRangeHigh);
+  if (ret3 < 0) Printf("MPU9250 Gyro-Y Bias Temperature Calibration init Failed ! \n");
+
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[1]),
-                                     DI_MPU9250_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
-  if (ret3 < 0) Printf("MPU9250 Gyro-Y SF Temperature Caliblation init Failed ! \n");
+                                      MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_scale_factor_coeff_compo_x,
+                                      kRangeLow, kRangeHigh);
+  if (ret3 < 0) Printf("MPU9250 Gyro-Y SF Temperature Calibration init Failed ! \n");
+
   // Z軸
-  bias_coeff[0] = 0.0179f;
-  bias_coeff[1] = 0.0001f;
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[2]),
-                                     DI_MPU9250_kNumCoeffTempCalib_, bias_coeff, kRangeLow, kRangeHigh);
-  if (ret3 < 0) Printf("MPU9250 Gyro-Z Bias Temperature Caliblation init Failed ! \n");
-  scale_factor_coeff[0] = 1.0f;
-  scale_factor_coeff[1] = 0.0f;
+                                      MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_bias_coeff_compo_z,
+                                      kRangeLow, kRangeHigh);
+  if (ret3 < 0) Printf("MPU9250 Gyro-Z Bias Temperature Calibration init Failed ! \n");
+
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[2]),
-                                     DI_MPU9250_kNumCoeffTempCalib_, scale_factor_coeff, kRangeLow, kRangeHigh);
-  if (ret3 < 0) Printf("MPU9250 Gyro-Z SF Temperature Caliblation init Failed ! \n");
+                                      MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_scale_factor_coeff_compo_x,
+                                      kRangeLow, kRangeHigh);
+  if (ret3 < 0) Printf("MPU9250 Gyro-Z SF Temperature Calibration init Failed ! \n");
 
   return;
 }
@@ -320,14 +317,14 @@ CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB(const CommonCmdPacket* pac
   ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
-  float coeff[DI_MPU9250_kNumCoeffTempCalib_];
+  float coeff[MPU9250_PARAMETERS_kNumCoeffTempCalib];
   ENDIAN_memcpy(&coeff[0], param + offset, sizeof(float));
   offset += sizeof(float);
   ENDIAN_memcpy(&coeff[1], param + offset, sizeof(float));
   offset += sizeof(float);
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[axis]),
-                                         DI_MPU9250_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
+                                         MPU9250_PARAMETERS_kNumCoeffTempCalib, coeff, range_low_degC, range_high_degC);
   if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
@@ -350,14 +347,14 @@ CCP_CmdRet Cmd_DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB(const CommonCmdPacket* packe
   ENDIAN_memcpy(&range_high_degC, param + offset, sizeof(float));
   offset += sizeof(float);
 
-  float coeff[DI_MPU9250_kNumCoeffTempCalib_];
+  float coeff[MPU9250_PARAMETERS_kNumCoeffTempCalib];
   ENDIAN_memcpy(&coeff[0], param + offset, sizeof(float));
   offset += sizeof(float);
   ENDIAN_memcpy(&coeff[1], param + offset, sizeof(float));
   offset += sizeof(float);
 
   int ret = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[axis]),
-                                         DI_MPU9250_kNumCoeffTempCalib_, coeff, range_low_degC, range_high_degC);
+                                         MPU9250_PARAMETERS_kNumCoeffTempCalib, coeff, range_low_degC, range_high_degC);
   if (ret < 0)  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);

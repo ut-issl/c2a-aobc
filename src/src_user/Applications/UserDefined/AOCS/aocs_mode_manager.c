@@ -13,10 +13,13 @@
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "./aocs_manager.h"
-#include "../../../Library/vector3.h"
-#include "../../../Library/physical_constants.h"
-#include "../../../Library/math_constants.h"
+#include "aocs_manager.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/math_constants.h>
+
+// SatelliteParameters
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 // #define APP_AOCS_MM_TEST_WITH_S2E //!< S2Eでテストするときにコメントを外すと実行後Bdotモードに遷移する
 #ifdef SILS_FW
@@ -93,21 +96,21 @@ static void APP_AOCS_MM_init_(void)
   aocs_mode_manager_.bdot_retry_count = 0;
   aocs_mode_manager_.is_control_error_small = 0;
 
-  aocs_mode_manager_.ang_vel_conv_limit_rad_s    = PHYSICAL_CONST_degree_to_radian(0.5f);
-  aocs_mode_manager_.ang_vel_conv_time_limit_s   = 5.0f * 60.0f;
+  aocs_mode_manager_.ang_vel_conv_limit_rad_s    = FDIR_PARAMETERS_ang_vel_conv_limit_rad_s;
+  aocs_mode_manager_.ang_vel_conv_time_limit_s   = FDIR_PARAMETERS_ang_vel_conv_time_limit_s;
 
-  aocs_mode_manager_.ang_vel_norm_increase_limit_rad_s = PHYSICAL_CONST_degree_to_radian(0.5f);
-  aocs_mode_manager_.ang_vel_anomaly_detection_period_s = 200.0f;
+  aocs_mode_manager_.ang_vel_norm_increase_limit_rad_s = FDIR_PARAMETERS_ang_vel_norm_increase_limit_rad_s;
+  aocs_mode_manager_.ang_vel_anomaly_detection_period_s = FDIR_PARAMETERS_ang_vel_anomaly_detection_period_s;
 
-  aocs_mode_manager_.sun_angle_div_limit_rad     = PHYSICAL_CONST_degree_to_radian(45.0f);
-  aocs_mode_manager_.sun_angle_div_time_limit_s  = 50.0f * 60.0f;
+  aocs_mode_manager_.sun_angle_div_limit_rad     = FDIR_PARAMETERS_sun_angle_div_limit_rad;
+  aocs_mode_manager_.sun_angle_div_time_limit_s  = FDIR_PARAMETERS_sun_angle_div_time_limit_s;
 
   // Rough MTQを想定して初期値は大きめに設定、各モード遷移時に適切に設定することを想定
-  aocs_mode_manager_.three_axis_div_limit_rad    = PHYSICAL_CONST_degree_to_radian(30.0f);
-  aocs_mode_manager_.three_axis_div_time_limit_s = 5.0f * 60.0f;
+  aocs_mode_manager_.three_axis_div_limit_rad    = FDIR_PARAMETERS_rough_three_axis_mtq_div_limit_rad;
+  aocs_mode_manager_.three_axis_div_time_limit_s = FDIR_PARAMETERS_rough_three_axis_mtq_div_time_limit_s;
 
-  aocs_mode_manager_.sun_invisible_time_limit_s = 50.0f * 60.0f;
-  aocs_mode_manager_.stt_invisible_time_limit_s = 10.0f * 60.0f;
+  aocs_mode_manager_.sun_invisible_time_limit_s = FDIR_PARAMETERS_sun_invisible_time_limit_s;
+  aocs_mode_manager_.stt_invisible_time_limit_s = FDIR_PARAMETERS_stt_invisible_time_limit_s;
 
   return;
 }

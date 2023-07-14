@@ -6,10 +6,11 @@
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../app_registry.h"
+#include <src_core/System/TimeManager/obc_time_config.h>
+#include <src_user/Applications/app_registry.h>
 
 #include "quaternion_interpolator.h"
-#include "../aocs_manager.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static QuaternionInterpolator        quaternion_interpolator_;
 const  QuaternionInterpolator* const quaternion_interpolator = &quaternion_interpolator_;

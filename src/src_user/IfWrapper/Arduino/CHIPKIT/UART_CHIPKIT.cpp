@@ -2,7 +2,7 @@
 // Arduino(C++)のSerialポートををCで使えるようにするためのラッパ関数
 
 #include "./UART_CHIPKIT.h"
-#include "../../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 
 #include <arduino.h>
 

@@ -15,7 +15,7 @@
 #include <src_core/TlmCmd/block_command_executor.h>
 #include <src_core/TlmCmd/telemetry_generator.h>
 #include <src_core/TlmCmd/telemetry_frame.h>
-#include "../Applications/app_headers.h"
+#include <src_user/Applications/app_headers.h>
 // #include "telemetry_definitions.h"
 
 #endif

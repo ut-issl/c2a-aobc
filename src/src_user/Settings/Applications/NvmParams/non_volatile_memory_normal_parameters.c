@@ -6,7 +6,7 @@
 *          https://docs.google.com/spreadsheets/d/1JWxLqdwr3IzQBAkYI4zkRBb0jKZwCUtGaSDt9z3XXPQ/edit#gid=1413802869
 */
 #include "non_volatile_memory_normal_parameters.h"
-#include "../../../Applications/UserDefined/Cdh/non_volatile_memory_parameter.h"
+#include <src_user/Applications/UserDefined/Cdh/non_volatile_memory_parameter.h>
 
 void NVM_NORMAL_PARAMS_register(void)
 {
