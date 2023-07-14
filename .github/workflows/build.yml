@@ -91,7 +91,7 @@ jobs:
 
       - name: build
         shell: cmd
-        working-directory: ./s2e-aobc/s2e-aocs-core
+        working-directory: ./s2e-aobc
         run: |
           cl.exe
           cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
@@ -184,7 +184,7 @@ jobs:
           ls nrlmsise00/src
 
       - name: build
-        working-directory: ./s2e-aobc/s2e-aocs-core
+        working-directory: ./s2e-aobc
         env:
           CC:  ${{ steps.compiler.outputs.CC  }}
           CXX: ${{ steps.compiler.outputs.CXX }}
