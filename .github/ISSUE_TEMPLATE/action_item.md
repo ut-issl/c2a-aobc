@@ -7,9 +7,6 @@ assignees: ''
 
 ---
 
-## 概要
-ひとことで
-
 ## 詳細
 詳しく
 
@@ -20,7 +17,15 @@ assignees: ''
 なにかあれば
 
 ## 注意
-- 関連する Projects が存在する場合，それの紐付けを行うこと
-- 可能ならば `priority` ラベルを付けること
-- 可能ならば Assignees を設定すること
-- close するときは結論を明記すること
+- 割り当てれるなら`Assignees`を割り当てる
+- `Projects`として`6U AOCS team (private)`を設定する
+  - `Status`を`ToDo`などに設定する
+- 必ず`priority` ラベルを付けること
+  - high: 試験などの関係ですぐさま対応してほしい
+  - middle: 通常これ
+  - low: ゆっくりで良いもの
+- 必ず`update`ラベルをつけること
+  - major: 後方互換性なしのI/F変更
+  - minor: 後方互換性ありのI/F変更
+  - patch: I/F変更なし
+- テンプレート記述は残さず、削除したり`NA`と書き換えたりする
