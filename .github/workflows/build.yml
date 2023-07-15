@@ -15,7 +15,7 @@ on:
       - 'src/**'
 
 env:
-  S2E_AOBC_VERSION: v2.0.1
+  S2E_AOBC_VERSION: v3.0.1
 
 jobs:
   build_c2a_with_s2e_win:
@@ -40,7 +40,6 @@ jobs:
           repository: ut-issl/s2e-aobc
           ref: '${{ env.S2E_AOBC_VERSION }}'
           submodules: recursive
-          ssh-key: ${{ secrets.S2E_AOBC_SSH_KEY }}
           fetch-depth: 1
 
       - name: Configure build for x86
@@ -92,10 +91,10 @@ jobs:
 
       - name: build
         shell: cmd
-        working-directory: ./s2e-aobc/s2e-aocs-core
+        working-directory: ./s2e-aobc
         run: |
           cl.exe
-          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
+          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
           cmake --build . --clean-first
 
   build_c2a_with_s2e_linux:
@@ -121,7 +120,6 @@ jobs:
           repository: ut-issl/s2e-aobc
           ref: '${{ env.S2E_AOBC_VERSION }}'
           submodules: recursive
-          ssh-key: ${{ secrets.S2E_AOBC_SSH_KEY }}
           fetch-depth: 1
 
       - name: set compiler
@@ -186,10 +184,10 @@ jobs:
           ls nrlmsise00/src
 
       - name: build
-        working-directory: ./s2e-aobc/s2e-aocs-core
+        working-directory: ./s2e-aobc
         env:
           CC:  ${{ steps.compiler.outputs.CC  }}
           CXX: ${{ steps.compiler.outputs.CXX }}
         run: |
-          cmake . -DBUILD_64BIT=OFF -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
+          cmake . -DBUILD_64BIT=OFF -DEXT_LIB_DIR=s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../../ -DC2A_NAME=c2a-aobc -DUSE_C2A=ON
           cmake --build . --clean-first
