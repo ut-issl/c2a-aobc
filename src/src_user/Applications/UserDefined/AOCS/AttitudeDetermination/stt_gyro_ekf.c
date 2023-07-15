@@ -295,8 +295,10 @@ static void APP_STT_GYRO_EKF_exec_(void)
   // 時間刻みを計算する
   APP_STT_GYRO_EKF_calculation_time_.current = TMGR_get_master_clock();
   float time_step_s = (float)OBCT_diff_in_sec(&(APP_STT_GYRO_EKF_calculation_time_.previous),
-    &(APP_STT_GYRO_EKF_calculation_time_.current));
+                                              &(APP_STT_GYRO_EKF_calculation_time_.current));
   APP_STT_GYRO_EKF_calculation_time_.previous = APP_STT_GYRO_EKF_calculation_time_.current;
+  if (time_step_s < 0.0f) return;  // 時間差が負の場合は一旦飛ばす
+  if (time_step_s > 10.0f) return; // 時間差が大きすぎる場合は一旦飛ばす
 
   APP_STT_GYRO_EKF_execute_estimation(time_step_s);
 }
