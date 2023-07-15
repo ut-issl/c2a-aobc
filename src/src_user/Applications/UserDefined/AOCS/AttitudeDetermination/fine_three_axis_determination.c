@@ -48,7 +48,7 @@ static void APP_FTAD_exec_(void)
   float time_step_s = (float)OBCT_diff_in_sec(&(fine_three_axis_determination_.previous_obc_time), &current_obc_time);
   fine_three_axis_determination_.previous_obc_time = current_obc_time;
   if (time_step_s < 0.0f) return;  // 時間差が負の場合は一旦飛ばす
-  if (time_step_s > 10.0f) return; // 時間差が大きすぎる場合は一旦飛ばす
+  if (time_step_s > aocs_manager->obct_diff_max_limit_s) return; // 時間差が大きすぎる場合は一旦飛ばす
 
   Quaternion q_eci_to_body;
   switch (fine_three_axis_determination_.method)

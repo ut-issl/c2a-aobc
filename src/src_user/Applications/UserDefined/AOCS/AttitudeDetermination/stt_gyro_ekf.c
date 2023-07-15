@@ -298,7 +298,7 @@ static void APP_STT_GYRO_EKF_exec_(void)
                                               &(APP_STT_GYRO_EKF_calculation_time_.current));
   APP_STT_GYRO_EKF_calculation_time_.previous = APP_STT_GYRO_EKF_calculation_time_.current;
   if (time_step_s < 0.0f) return;  // 時間差が負の場合は一旦飛ばす
-  if (time_step_s > 10.0f) return; // 時間差が大きすぎる場合は一旦飛ばす
+  if (time_step_s > aocs_manager->obct_diff_max_limit_s) return; // 時間差が大きすぎる場合は一旦飛ばす
 
   APP_STT_GYRO_EKF_execute_estimation(time_step_s);
 }
