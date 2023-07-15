@@ -183,6 +183,7 @@ static void APP_AOCS_MM_bdot_exec_(void)
     ObcTime current_obc_time = TMGR_get_master_clock();
     float diff_time_s = (float)OBCT_diff_in_sec(&aocs_mode_manager_.previous_obc_time, &current_obc_time);
     // (初回など)時間差が大きすぎたら異常なので足さない
+    // TODO: 時間アサーションが正しいかどうか検討する
     if (diff_time_s < APP_AOCS_MM_kLimitDiffTime_s_)
     {
       APP_AOCS_MM_ang_vel_update_timing_s_ += diff_time_s;
@@ -358,6 +359,7 @@ static uint8_t APP_AOCS_MM_judge_condition_(const uint8_t condition_flag, const 
   {
     float diff_time_s = (float)OBCT_diff_in_sec(&prev_obc_time, &current_obc_time);
     // (初回など)時間差が大きすぎたら異常なので足さない
+    // TODO: 時間アサーションが正しいかどうか検討する
     if (diff_time_s < APP_AOCS_MM_kLimitDiffTime_s_)
     {
       *counter_s += diff_time_s;

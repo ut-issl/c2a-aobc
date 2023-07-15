@@ -111,6 +111,7 @@ static C2A_MATH_ERROR APP_TARGET_ATT_CALC_calc_target_angular_velocity_(void)
 
   // Quaternion差より角速度計算
   float time_diff_sec = (float)OBCT_diff_in_sec(&target_attitude_calculator_.obctime, &obctime_current);
+  // TODO: 時間アサーションを入れるかどうか検討する
   C2A_MATH_ERROR ret = QUATERNION_calc_angular_velocity(target_attitude_calculator_.ang_vel_target_body_rad_s,
                                                         q_target_previous,
                                                         q_target_current,

@@ -91,6 +91,7 @@ static double APP_TIME_SPACE_CALC_propagate_current_jday_ref_(void)
 {
   ObcTime obct_now     = TMGR_get_master_clock();
   float elapsed_ti_sec = (float)OBCT_diff_in_sec(&aocs_manager->obct_reference, &obct_now);
+  // TODO: 時間アサーションを入れるかどうか検討する
 
   double reference_jday = (double)(elapsed_ti_sec) / (PHYSICAL_CONST_EARTH_SOLAR_DAY_s) + aocs_manager->reference_jday;
 

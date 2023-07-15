@@ -242,6 +242,7 @@ void APP_MTQ_SEIREN_CONTROLLER_maintain_mtq_output_()
   ObcTime current_obc_time = TMGR_get_master_clock();
   uint32_t mtq_driving_time_ms = OBCT_diff_in_msec(&(mtq_seiren_controller->mtq_output_turned_on_obc_time), &current_obc_time);
   // 目標の時間長さだけMTQに磁気モーメントを出力させたら，MTQの出力を切り，消磁に入る
+  // TODO: 時間アサーションが正しいかどうか検討する
   if (mtq_driving_time_ms >= mtq_seiren_controller->mtq_output_time_length_ms)
   {
     float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
