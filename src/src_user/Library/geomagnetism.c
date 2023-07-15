@@ -423,7 +423,7 @@ static void GEOMAGNETISM_calc_gauss_coeffs_(float gnm[GEOMAGNETISM_IGRF_ORDER_MA
   gnm[0] = geomag_coeff_.igrf_gnm_nT[n - 1][0] + decimal_year * geomag_coeff_.igrf_gtnm_nT[n - 1][0];
   hnm[0] = geomag_coeff_.igrf_hnm_nT[n - 1][0] + decimal_year * geomag_coeff_.igrf_htnm_nT[n - 1][0];
 
-  float factorial_coeff = sqrtf(2.0f); //!< factorial_coeff(n,m) = [2(n-m)!/(n+m)!]^(1/2) (for m >0)
+  float factorial_coeff = C2A_MATH_sqrtf(2.0f); //!< factorial_coeff(n,m) = [2(n-m)!/(n+m)!]^(1/2) (for m >0)
   float devide_coeff    = 0.0;
   for (uint8_t m = 1; m <= n; m++)
   {
@@ -431,11 +431,11 @@ static void GEOMAGNETISM_calc_gauss_coeffs_(float gnm[GEOMAGNETISM_IGRF_ORDER_MA
     // factorial_coeff(m) = factorial_coeff(m-1)/[(n+m)]^(1/2) (for m = n)
     if (m == n)
     {
-      devide_coeff = sqrtf((float)((n + m)));
+      devide_coeff = C2A_MATH_sqrtf((float)((n + m)));
     }
     else
     {
-      devide_coeff = sqrtf((float)((n + m)*(n - m + 1)));
+      devide_coeff = C2A_MATH_sqrtf((float)((n + m)*(n - m + 1)));
     }
     factorial_coeff = factorial_coeff / devide_coeff;
 

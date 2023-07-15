@@ -16,7 +16,7 @@
 #include <src_core/Library/print.h>
 
 // SGP4内での使う定数
-static const float SGP4_kKe_s = sqrtf(PHYSICAL_CONST_EARTH_GRAVITY_CONST_km3_s2 / powf(PHYSICAL_CONST_EARTH_RADIUS_km, 3.0f));
+static const float SGP4_kKe_s = C2A_MATH_sqrtf(PHYSICAL_CONST_EARTH_GRAVITY_CONST_km3_s2 / powf(PHYSICAL_CONST_EARTH_RADIUS_km, 3.0f));
 static const float SGP4_kDensityFunc = 1.012229f;  //!< 密度関数パラメータ s
 static const float SGP4_kQMS4 = 1.880279e-9f;      //!< (q - s)^4
 
@@ -306,7 +306,7 @@ static C2A_MATH_ERROR SGP4_calc_secular_constants_(Sgp4SecularConstants* secular
   if (fabsf(ao - SGP4_kDensityFunc) < MATH_CONST_PROHIBIT_DIVISION_VALUE) return C2A_MATH_ERROR_SINGULAR;
   float xi = 1.0f / (ao - SGP4_kDensityFunc);
 
-  float beta = sqrtf(1.0f - e * e);
+  float beta = C2A_MATH_sqrtf(1.0f - e * e);
   if (fabsf(beta) < MATH_CONST_PROHIBIT_DIVISION_VALUE) return C2A_MATH_ERROR_SINGULAR;
 
   float eta = ao * e * xi;
@@ -598,10 +598,10 @@ static C2A_MATH_ERROR SGP4_calc_short_period_term_(Sgp4DerivedElement* derived_e
 
   float position = a * (1.0f - e_cos);
   if (fabs(position) < MATH_CONST_PROHIBIT_DIVISION_VALUE) return C2A_MATH_ERROR_SINGULAR;
-  float velocity = sqrtf(a) / position * e_sin;
-  float velocity_f = sqrtf(p_l) / position;
+  float velocity = C2A_MATH_sqrtf(a) / position * e_sin;
+  float velocity_f = C2A_MATH_sqrtf(p_l) / position;
 
-  float coeff_temp = e_sin / (1.0f + sqrtf(1.0f - e_l2));
+  float coeff_temp = e_sin / (1.0f + C2A_MATH_sqrtf(1.0f - e_l2));
   float cos_u = cosf(eo) - a_x_n + a_y_n * coeff_temp;  // sin_uと割り算取るのでどちらもa/rはかけない
   float sin_u = sinf(eo) - a_y_n - a_x_n * coeff_temp;
   float u = atan2f(sin_u, cos_u);
@@ -622,7 +622,7 @@ static C2A_MATH_ERROR SGP4_calc_short_period_term_(Sgp4DerivedElement* derived_e
 
   // 補正後の値
   derived_element->position_ = d_position + position * (1.0f - 0.75f * j2 * (3.0f * cos_i2 - 1.0f) *
-                                                       sqrtf(1.0f - e_l2) / (p_l * p_l));
+                                                       C2A_MATH_sqrtf(1.0f - e_l2) / (p_l * p_l));
   derived_element->true_anomaly_rad_ = u - d_true_anomaly_rad;
   derived_element->raan_rad_ = raan_rad + d_raan_rad;
   derived_element->inclination_rad_ = inclination_rad + d_inclination_rad;

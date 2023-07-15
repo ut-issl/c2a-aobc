@@ -502,7 +502,7 @@ static UpdatedStateVariable APP_STT_GYRO_EKF_update_state_variable_(MATRIX_T(6, 
     delta_quaternion_i2b_ref_to_true.vector_part[i] = updated_state_variable_matrix_form.data[i][0];
     delta_rate_bias_ref_to_true_rad_s[i] = updated_state_variable_matrix_form.data[i + 3][0];
   }
-  delta_quaternion_i2b_ref_to_true.scalar_part = sqrtf(1.0f - VECTOR3_norm(delta_quaternion_i2b_ref_to_true.vector_part));
+  delta_quaternion_i2b_ref_to_true.scalar_part =C2A_MATH_sqrtf(1.0f - VECTOR3_norm(delta_quaternion_i2b_ref_to_true.vector_part));
 
   UpdatedStateVariable updated_state_variable;
   updated_state_variable.quaternion_i2b =
