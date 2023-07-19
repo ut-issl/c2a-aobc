@@ -53,7 +53,9 @@ void APP_SUN_VEC_PROPAGATOR_exec_(void)
   ObcTime current_obc_time = TMGR_get_master_clock();
   float time_step_s = (float)OBCT_diff_in_sec(&(sun_vector_propagator_.previous_obc_time), &current_obc_time);
   sun_vector_propagator_.previous_obc_time = current_obc_time;
-
+  if (time_step_s < 0.0f) return;  // 時間差が負の場合は一旦飛ばす
+  if (time_step_s > aocs_manager->obct_diff_max_limit_s) return; // 時間差が大きすぎる場合は一旦飛ばす
+  
   // Quaternionライブラリにはスカラー倍や和がないので，q + dqを計算するために一度配列にしてから計算する
   float quaternion_previous_array[PHYSICAL_CONST_QUATERNION_DIM];        //!< 前回のquaternion_sun_ref_to_body
   float quaternion_time_derivative_array[PHYSICAL_CONST_QUATERNION_DIM]; //!< quaternion_sun_ref_to_bodyの時間微分
