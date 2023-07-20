@@ -151,4 +151,11 @@ C2A_MATH_ERROR C2A_MATH_calculate_time_derivative(float out,
  */
 float C2A_MATH_acos_rad(const float input_cos);
 
+/**
+ * @brief  負値が入力されたら0を返す様に拡張したsqrtf関数
+ * @param  input  : 入力値
+ * @return 平方根を取った値
+ */
+float C2A_MATH_sqrtf(const float input);
+
 #endif
