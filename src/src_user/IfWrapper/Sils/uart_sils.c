@@ -5,7 +5,7 @@
 // #include "../../../../../../s2e_core_oss/src/Component/CDH/OBC_C2A.h" //It is difficut to include S2E file because of the difference of character codes
 
 #ifdef USE_SCI_COM_UART
-#include "uart_sils_sci_if.h"
+#include "uart_sils_if.h"
 #endif
 
 int OBC_C2A_SendFromObc(int port_id, unsigned char* buffer, int offset, int count);
@@ -23,7 +23,7 @@ int UART_rx(void* my_uart_v, void* data_v, int buffer_size)
 #ifdef USE_SCI_COM_UART
   if (my_uart->ch == PORT_CH_UART_MOBC)
   {
-    return SILS_SCI_UART_IF_rx((unsigned char*)data_v, buffer_size);
+    return uart_sils_if_rx((unsigned char*)data_v, buffer_size);
   }
   else
   {
@@ -41,7 +41,7 @@ int UART_tx(void* my_uart_v, void* data_v, int data_size)
 #ifdef USE_SCI_COM_UART
   if (my_uart->ch == PORT_CH_UART_MOBC)
   {
-    SILS_SCI_UART_IF_tx((unsigned char*)data_v, data_size);
+    uart_sils_if_tx((unsigned char*)data_v, data_size);
   }
   else
   {
