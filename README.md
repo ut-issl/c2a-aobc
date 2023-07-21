@@ -12,7 +12,7 @@
     - [S2E-AOBC](https://github.com/ut-issl/s2e-aobc) v3.0.0
   - Telemetry/Command interface
     - [tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
-      - Version: [ISSL Branch](https://github.com/ut-issl/c2a-tlm-cmd-code-generator/tree/feature/issl) 
+      - Version: [ISSL Branch](https://github.com/ut-issl/c2a-tlm-cmd-code-generator/tree/feature/issl)
     - [WINGS](https://gitlab.com/ut_issl/wings/wings)
 - How to use
   - `The main developers` of the AOCS module directly use this repository to add new features and improve the module.
@@ -154,7 +154,7 @@
     - Images for markdown document files are allowable when the file size is smaller than 200K Bytes.
 
 ### Coding conventions
-- Please follow the [Coding rule of c2a-core](https://github.com/ut-issl/c2a-core/blob/042cdfa15b0056880398e857cdd5d5a430562fd1/Docs/General/coding_rule.md)に従う
+- Please follow the [Coding rule of c2a-core](https://github.com/ut-issl/c2a-core/blob/042cdfa15b0056880398e857cdd5d5a430562fd1/Docs/General/coding_rule.md)
 - Please also care about the AOCS-specific rules as follows.
   - Add unit information in the name of variables and functions
   - Add frame information in the name of variables and functions
