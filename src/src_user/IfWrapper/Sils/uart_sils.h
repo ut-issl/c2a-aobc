@@ -1,3 +1,8 @@
+/**
+ * @file uart_sils.h
+ * @brief SILS用UART Interface Wrapper
+ */
+
 #ifndef UART_SILS_H_
 #define UART_SILS_H_
 

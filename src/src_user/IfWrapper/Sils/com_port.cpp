@@ -19,6 +19,7 @@ ComPort::ComPort(int port)
   }
 
   // ポートのボーレート、パリティ等を設定
+  // TODO: 外部ファイルから設定できるようにする
   config_.BaudRate = 115200;
   config_.Parity   = PARITY_NONE;
   config_.ByteSize = 8;
@@ -100,6 +101,7 @@ ComPort::ComPort(int port)
     return;
   }
 
+  // TODO: 外部ファイルから設定できるようにする
   cfsetispeed(&config_, 115200);
   cfsetospeed(&config_, 115200);
   config_.c_cflag &= ~PARENB; // No Parity

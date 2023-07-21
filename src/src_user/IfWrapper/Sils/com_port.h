@@ -1,3 +1,8 @@
+/**
+ * @file com_port.h
+ * @brief SILSにおけるポート操作
+ */
+
 #ifndef COM_PORT_H_
 #define COM_PORT_H_
 
