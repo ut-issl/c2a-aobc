@@ -1,15 +1,10 @@
-
 #pragma section REPRO
+
+#include "uart_sils.h"
+
 #include <src_core/IfWrapper/uart.h>
 #include "../../Settings/port_config.h"
-// #include "../../../../../../s2e_core_oss/src/Component/CDH/OBC_C2A.h" //It is difficut to include S2E file because of the difference of character codes
 
-#ifdef USE_UART_COM
-#include "uart_sils_if.h"
-#endif
-
-int OBC_C2A_SendFromObc(int port_id, unsigned char* buffer, int offset, int count);
-int OBC_C2A_ReceivedByObc(int port_id, unsigned char* buffer, int offset, int count);
 
 int UART_init(void* my_uart_v)
 {
@@ -23,7 +18,7 @@ int UART_rx(void* my_uart_v, void* data_v, int buffer_size)
 #ifdef USE_UART_COM
   if (my_uart->ch == PORT_CH_UART_MOBC)
   {
-    return uart_sils_if_rx((unsigned char*)data_v, buffer_size);
+    return uart_sils_com_port.receive((unsigned char*)data_v, 0, buffer_size);
   }
   else
   {
@@ -41,7 +36,7 @@ int UART_tx(void* my_uart_v, void* data_v, int data_size)
 #ifdef USE_UART_COM
   if (my_uart->ch == PORT_CH_UART_MOBC)
   {
-    uart_sils_if_tx((unsigned char*)data_v, data_size);
+    uart_sils_com_port.send((unsigned char*)data_v, 0, data_size);
   }
   else
   {
