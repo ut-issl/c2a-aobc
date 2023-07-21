@@ -3,7 +3,14 @@
 #include "uart_sils.h"
 
 #include <src_core/IfWrapper/uart.h>
+
+
+#ifdef USE_UART_COM
+#include "com_port.h"
 #include "../../Settings/port_config.h"
+
+static ComPort uart_sils_com_port(COM_PORT_SILS);
+#endif
 
 
 int UART_init(void* my_uart_v)
