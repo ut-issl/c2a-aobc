@@ -8,6 +8,7 @@
 #ifdef USE_UART_COM
 #include "com_port.h"
 #include "../../Settings/port_config.h"
+#include "../../Settings/sils_port_config.h"
 
 static ComPort uart_sils_com_port(COM_PORT_SILS);
 #endif
