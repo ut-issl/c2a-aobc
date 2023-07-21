@@ -4,7 +4,7 @@
 #include "../../Settings/port_config.h"
 // #include "../../../../../../s2e_core_oss/src/Component/CDH/OBC_C2A.h" //It is difficut to include S2E file because of the difference of character codes
 
-#ifdef USE_SCI_COM_UART
+#ifdef USE_UART_COM
 #include "uart_sils_if.h"
 #endif
 
@@ -20,7 +20,7 @@ int UART_rx(void* my_uart_v, void* data_v, int buffer_size)
 {
   UART_Config* my_uart = (UART_Config*)my_uart_v;
 
-#ifdef USE_SCI_COM_UART
+#ifdef USE_UART_COM
   if (my_uart->ch == PORT_CH_UART_MOBC)
   {
     return uart_sils_if_rx((unsigned char*)data_v, buffer_size);
@@ -38,7 +38,7 @@ int UART_tx(void* my_uart_v, void* data_v, int data_size)
 {
   UART_Config* my_uart = (UART_Config*)my_uart_v;
 
-#ifdef USE_SCI_COM_UART
+#ifdef USE_UART_COM
   if (my_uart->ch == PORT_CH_UART_MOBC)
   {
     uart_sils_if_tx((unsigned char*)data_v, data_size);

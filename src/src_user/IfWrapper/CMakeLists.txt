@@ -12,22 +12,13 @@ set(C2A_SRCS
   Sils/gpio_sils.c
 )
 
-if(USE_SCI_COM)
-  add_definitions(-DUSE_SCI_COM)
-  list(APPEND C2A_SRCS
-    Sils/com_port.cpp
-    Sils/ccsds_sils_if.cpp
-  )
-  message("USE SCI_COM")
-endif()
-
-if(USE_SCI_COM_UART)
-  add_definitions(-DUSE_SCI_COM_UART)
+if(USE_UART_COM)
+  add_definitions(-DUSE_UART_COM)
   list(APPEND C2A_SRCS
     Sils/com_port.cpp
     Sils/uart_sils_if.cpp
   )
-  message("USE SCI_COM")
+  message("Use UART COM")
 endif()
 
 add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
