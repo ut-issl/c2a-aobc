@@ -77,7 +77,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MinSpace</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\c2a_aobc_example;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DTWI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DSPI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\avr;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\pps;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\util;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\variants\MXL795;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\tools\pic32-tools\1.43-pic32gcc\pic32mx\include;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Examples;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DTWI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\libraries\DSPI;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\avr;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\pps;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\cores\pic32\util;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32\2.1.0\variants\MXL795;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\tools\pic32-tools\1.43-pic32gcc\pic32mx\include;C:\Users\USERNAME\AppData\Local\arduino15\packages\chipKIT\hardware\pic32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.Examples.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>__PIC32_32MX795F512L__;_VMDEBUG=1;ARDUINO_ARCH_PIC32;F_CPU=80000000L;ARDUINO=108013;PIC32_CHIPKIT_MXL795B;MPIDEVER=16777998;MPIDE=150;IDE=Arduino;__cplusplus=201103L;_VMICRO_INTELLISENSE;USER_DEFINED_I2C_ADDRESS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -110,7 +110,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="src_aobc\src\src_user\IfWrapper\Arduino\CHIPKIT\UART_CHIPKIT.h" />
-    <ClInclude Include="__vm\.c2a_aobc_example.vsarduino.h" />
+    <ClInclude Include="__vm\.Examples.vsarduino.h" />
     <ClInclude Include="__vm\.src_user.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
