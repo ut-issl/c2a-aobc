@@ -142,7 +142,7 @@ typedef struct
  */
 typedef struct
 {
-  // calibrated_quaternion_i2cは、quaternion_i2cとして、SAGITTA_Info直下に定義
+  Quaternion quaternion_i2c;       //!< Quaternion ECI -> Component Frame
   float track_confidence;          //!< Tracker Confidence Value
   Quaternion track_quaternion_i2c; //!< Quaternion tracking solution
   uint8_t num_stars_removed;       //!< Number of stars removed from trackgin solution
@@ -152,7 +152,7 @@ typedef struct
   float lisa_percentage_close;     //!< Percentage of close stars in LISA solution
   uint8_t num_stars_lisa_close;    //!< Number of close stars in LISA solution
   uint8_t star_tracker_mode;       //!< Star tracker state: LISA = 1, Tracking = 0
-  // IsTrustworthyは、is_valid_quaternionとして、SAGITTA_Info直下に定義
+  uint8_t is_valid_quaternion;     //!< Status of attitude determination (0: not valid, 1: valid)
   uint32_t stable_count;           //!< Number of consecutive stable solutions
   SAGITTA_SOLUTION_STRATEGY solution_strategy; //!< Algorithm path that was followed to determine the attitude
 } SAGITTA_TELEMETRY_SOLUTION;
@@ -380,8 +380,6 @@ typedef struct
  */
 typedef struct
 {
-  uint8_t is_valid_quaternion;    //!< Status of attitude determination (0: not valid, 1: valid)
-  Quaternion quaternion_i2c;      //!< Quaternion ECI -> Component Frame
   Quaternion quaternion_i2b;      //!< Quaternion ECI -> Body
   Quaternion frame_transform_c2b; //!< frame transformation quaternion from component frame to body frame
 

@@ -115,10 +115,7 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
                 SAGITTA_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
-  sagitta_driver->info.is_valid_quaternion = 0;
-  sagitta_driver->info.quaternion_i2c = QUATERNION_make_unit();
-  sagitta_driver->info.quaternion_i2b = QUATERNION_product(sagitta_driver->info.quaternion_i2c,
-                                                           sagitta_driver->info.frame_transform_c2b);
+  sagitta_driver->info.quaternion_i2b = QUATERNION_make_unit();
   sagitta_driver->info.frame_transform_c2b = QUATERNION_make_unit();
 
   sagitta_driver->info.tlm_type = SAGITTA_TLM_TYPE_SET_PARAMETER_REPLY;
@@ -1653,8 +1650,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
   offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_lisa_close);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.star_tracker_mode), offset);
   offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.star_tracker_mode);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.is_valid_quaternion), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.is_valid_quaternion);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.is_valid_quaternion), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.is_valid_quaternion);
   SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.stable_count), offset);
   offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.stable_count);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_((uint8_t*)(&(sagitta_driver->info.telemetry.solution.solution_strategy)), offset);
@@ -1663,10 +1660,10 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
   C2A_MATH_ERROR ret;
-  ret = QUATERNION_make_from_array(&sagitta_driver->info.quaternion_i2c, quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
-  if (sagitta_driver->info.is_valid_quaternion == 1 && ret != C2A_MATH_ERROR_OK) return DS_ERR_CODE_ERR;
+  ret = QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.quaternion_i2c, quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  if (sagitta_driver->info.telemetry.solution.is_valid_quaternion == 1 && ret != C2A_MATH_ERROR_OK) return DS_ERR_CODE_ERR;
 
-  sagitta_driver->info.quaternion_i2b = QUATERNION_product(sagitta_driver->info.quaternion_i2c,
+  sagitta_driver->info.quaternion_i2b = QUATERNION_product(sagitta_driver->info.telemetry.solution.quaternion_i2c,
                                                            sagitta_driver->info.frame_transform_c2b);
 
   return DS_ERR_CODE_OK;
@@ -1694,8 +1691,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_histogram_(SAGITTA_Driver* sagitta_d
 
   for (uint8_t i = 0; i < SAGITTA_TELEMETRY_HISTOGRAM_LENGTH; i++)
   {
-    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram.histogram_pix[i]), offset);
-    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram.histogram_pix[i]);
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram_pix[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram_pix[i]);
   }
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
@@ -1751,8 +1748,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_auto_blob_(SAGITTA_Driver* sagitta_d
 {
   uint8_t offset = SAGITTA_kTlmOffsetData_;
 
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.auto_blob.threshold), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.auto_blob.threshold);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.auto_blob_threshold), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.auto_blob_threshold);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
