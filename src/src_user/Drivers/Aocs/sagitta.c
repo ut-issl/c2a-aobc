@@ -47,8 +47,6 @@ static const uint8_t SAGITTA_kTlmOffsetTlmStatus_ = 4;
 static const uint8_t SAGITTA_kTlmOffsetUnixTime_  = 9;
 static const uint8_t SAGITTA_kTlmOffsetData_      = 17;
 static const uint8_t SAGITTA_kTlmSizeSetParameterReply_  = 8;
-static const uint8_t SAGITTA_kTlmSizeSolution_    = 87;
-static const uint8_t SAGITTA_kTlmSizeTemperature_ = 32;
 
 static const uint16_t SAGITTA_kXxhashSeed_ = 1425; //!< Reference: DATA INTERFACE CONTROL DOCUMENT Ver.1.2: 2.3 Transport layer
 
@@ -74,9 +72,15 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_subscription_(SAGITTA_Driv
 static DS_ERR_CODE SAGITTA_analyze_rec_data_action_reply_(SAGITTA_Driver* sagitta_driver);
 // telemetry
 static DS_ERR_CODE SAGITTA_analyze_rec_data_telemetry_(SAGITTA_Driver* sagitta_driver);
-static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_unix_time_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_power_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_temperature_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_histogram_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_blobs_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_centroids_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_auto_blob_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_matched_centroids_(SAGITTA_Driver* sagitta_driver);
 
 static void SAGITTA_analyze_rec_data_xxhash_(SAGITTA_Driver* sagitta_driver, uint8_t rx_data_len);
 static SAGITTA_REC_ERR_CODE SAGITTA_decode_rx_frame_(SAGITTA_Driver* sagitta_driver,
@@ -111,29 +115,22 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
                 SAGITTA_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
+  sagitta_driver->info.is_valid_quaternion = 0;
   sagitta_driver->info.quaternion_i2c = QUATERNION_make_unit();
-  sagitta_driver->info.frame_transform_c2b = QUATERNION_make_unit();
   sagitta_driver->info.quaternion_i2b = QUATERNION_product(sagitta_driver->info.quaternion_i2c,
                                                            sagitta_driver->info.frame_transform_c2b);
-  sagitta_driver->info.track_confidence = 0.0f;
-  sagitta_driver->info.num_stars_removed = 0;
-  sagitta_driver->info.num_stars_centroided = 0;
-  sagitta_driver->info.num_stars_matched = 0;
-  sagitta_driver->info.lisa_percentage_close = 0.0f;
-  sagitta_driver->info.num_stars_lisa_close = 0;
-  sagitta_driver->info.star_tracker_mode = 0;
-  sagitta_driver->info.stable_count = 0;
-  sagitta_driver->info.solution_strategy = SAGITTA_SOLUTION_STRATEGY_ONLY_LISA;
+  sagitta_driver->info.frame_transform_c2b = QUATERNION_make_unit();
 
   sagitta_driver->info.tlm_type = SAGITTA_TLM_TYPE_SET_PARAMETER_REPLY;
   sagitta_driver->info.tlm_id = (uint8_t)SAGITTA_TLM_ID_TEMPERATURE;
   sagitta_driver->info.tlm_status = 0;
   sagitta_driver->info.unix_time_ms = 0;
-  sagitta_driver->info.temperature_mcu_degC = 0.0f;
-  sagitta_driver->info.temperature_fpga_degC = 0.0f;
   sagitta_driver->info.err_status = SAGITTA_REC_ERR_CODE_OK;
+  sagitta_driver->info.xxhash = 0;
   sagitta_driver->info.xxhash_state = SAGITTA_XXHASH_STATE_OK;
-  sagitta_driver->info.is_valid_quaternion = 0;
+
+  // Initialize telemetry
+  memset(&(sagitta_driver->info.telemetry), 0x00, sizeof(sagitta_driver->info.telemetry));
 
   // Initialize read_parameter
   memset(&(sagitta_driver->info.read_parameter), 0x00, sizeof(sagitta_driver->info.read_parameter));
@@ -1580,20 +1577,47 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_telemetry_(SAGITTA_Driver* sagitta_d
 
   switch ((SAGITTA_TLM_ID)sagitta_driver->info.tlm_id)
   {
+  case SAGITTA_TLM_ID_POWER:
+    return SAGITTA_analyze_rec_data_power_(sagitta_driver);
   case SAGITTA_TLM_ID_SOLUTION:
     return SAGITTA_analyze_rec_data_quaternion_(sagitta_driver);
   case SAGITTA_TLM_ID_TEMPERATURE:
     return SAGITTA_analyze_rec_data_temperature_(sagitta_driver);
+  case SAGITTA_TLM_ID_HISTOGRAM:
+    return SAGITTA_analyze_rec_data_histogram_(sagitta_driver);
+  case SAGITTA_TLM_ID_BLOBS:
+    return SAGITTA_analyze_rec_data_blobs_(sagitta_driver);
+  case SAGITTA_TLM_ID_CENTROIDS:
+    return SAGITTA_analyze_rec_data_centroids_(sagitta_driver);
+  case SAGITTA_TLM_ID_AUTO_BLOB:
+    return SAGITTA_analyze_rec_data_auto_blob_(sagitta_driver);
+  case SAGITTA_TLM_ID_MATCHED_CENTROIDS:
+    return SAGITTA_analyze_rec_data_matched_centroids_(sagitta_driver);
   default:
     return DS_ERR_CODE_ERR;
   }
 }
 
+static DS_ERR_CODE SAGITTA_analyze_rec_data_power_(SAGITTA_Driver* sagitta_driver)
+{
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
+
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
+  {
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.current_voltage[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.current_voltage[i]);
+  }
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
 static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_driver)
 {
-  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, SAGITTA_kTlmSizeSolution_);
-
   float quaternion_array_i2c[PHYSICAL_CONST_QUATERNION_DIM];
+  float track_quaternion_array_i2c[PHYSICAL_CONST_QUATERNION_DIM];
+  float lisa_quaternion_array_i2c[PHYSICAL_CONST_QUATERNION_DIM];
   uint8_t offset = SAGITTA_kTlmOffsetData_;
 
   for (uint8_t i = 0; i < PHYSICAL_CONST_QUATERNION_DIM; i++)
@@ -1601,27 +1625,40 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
     SAGITTA_memcpy_float_from_rx_frame_decoded_(&(quaternion_array_i2c[i]), offset);
     offset += (uint8_t)sizeof(quaternion_array_i2c[i]);
   }
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.track_confidence), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.track_confidence);
-  offset += (uint8_t)sizeof(float) * PHYSICAL_CONST_QUATERNION_DIM; // Skip the quaternion solution of the tracking algorithm
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.num_stars_removed), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.num_stars_removed);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.num_stars_centroided), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.num_stars_centroided);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.num_stars_matched), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.num_stars_matched);
-  offset += (uint8_t)sizeof(float) * PHYSICAL_CONST_QUATERNION_DIM; // Skip the quaternion solution of the LISA
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.lisa_percentage_close), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.lisa_percentage_close);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.num_stars_lisa_close), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.num_stars_lisa_close);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.star_tracker_mode), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.star_tracker_mode);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.track_confidence), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.track_confidence);
+  for (uint8_t i = 0; i < PHYSICAL_CONST_QUATERNION_DIM; i++)
+  {
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(track_quaternion_array_i2c[i]), offset);
+    offset += (uint8_t)sizeof(track_quaternion_array_i2c[i]);
+  }
+  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.track_quaternion_i2c, track_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_removed), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_removed);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_centroided), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_centroided);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_matched), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_matched);
+  for (uint8_t i = 0; i < PHYSICAL_CONST_QUATERNION_DIM; i++)
+  {
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(lisa_quaternion_array_i2c[i]), offset);
+    offset += (uint8_t)sizeof(lisa_quaternion_array_i2c[i]);
+  }
+  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.lisa_quaternion_i2c, lisa_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.lisa_percentage_close), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.lisa_percentage_close);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_lisa_close), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_lisa_close);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.star_tracker_mode), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.star_tracker_mode);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.is_valid_quaternion), offset);
   offset += (uint8_t)sizeof(sagitta_driver->info.is_valid_quaternion);
-  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.stable_count), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.stable_count);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_((uint8_t*)(&(sagitta_driver->info.solution_strategy)), offset);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.stable_count), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.stable_count);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_((uint8_t*)(&(sagitta_driver->info.telemetry.solution.solution_strategy)), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.solution.solution_strategy);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
   C2A_MATH_ERROR ret;
   ret = QUATERNION_make_from_array(&sagitta_driver->info.quaternion_i2c, quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
@@ -1635,10 +1672,112 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
 
 static DS_ERR_CODE SAGITTA_analyze_rec_data_temperature_(SAGITTA_Driver* sagitta_driver)
 {
-  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, SAGITTA_kTlmSizeTemperature_);
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
 
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.temperature_mcu_degC), SAGITTA_kTlmOffsetData_);
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.temperature_fpga_degC), SAGITTA_kTlmOffsetData_ + (uint8_t)sizeof(float) * 2);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.temperature_mcu_degC), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.temperature_mcu_degC);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.temperature_cmos_degC), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.temperature_cmos_degC);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.temperature_fpga_degC), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.temperature_fpga_degC);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_histogram_(SAGITTA_Driver* sagitta_driver)
+{
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
+
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_HISTOGRAM_LENGTH; i++)
+  {
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram.histogram_pix[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram.histogram_pix[i]);
+  }
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_blobs_(SAGITTA_Driver* sagitta_driver)
+{
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
+
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.blobs.count), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.blobs.count);
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.blobs.count_used), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.blobs.count_used);
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.blobs.four_lines_skipped), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.blobs.four_lines_skipped);
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_BLOBS_LENGTH; i++)
+  {
+    SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.blobs.x_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.blobs.x_coordinate[i]);
+    SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.blobs.y_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.blobs.y_coordinate[i]);
+  }
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_centroids_(SAGITTA_Driver* sagitta_driver)
+{
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
+
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.centroids.count), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.centroids.count);
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
+  {
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.centroids.x_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.centroids.x_coordinate[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.centroids.y_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.centroids.y_coordinate[i]);
+    SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.centroids.magnitude[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.centroids.magnitude[i]);
+  }
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_auto_blob_(SAGITTA_Driver* sagitta_driver)
+{
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
+
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.auto_blob.threshold), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.auto_blob.threshold);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_matched_centroids_(SAGITTA_Driver* sagitta_driver)
+{
+  uint8_t offset = SAGITTA_kTlmOffsetData_;
+
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.count), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.count);
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
+  {
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.id[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.id[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.x_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.x_coordinate[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.y_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.y_coordinate[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.error_x_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.error_x_coordinate[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.error_y_coordinate[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.error_y_coordinate[i]);
+  }
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
   return DS_ERR_CODE_OK;
 }
