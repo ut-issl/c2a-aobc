@@ -1,4 +1,4 @@
-
+#include <stdbool.h>
 #include "../GPIO.h"
 
 int  OBC_C2A_GpioWrite(int port_id, const bool is_high);
