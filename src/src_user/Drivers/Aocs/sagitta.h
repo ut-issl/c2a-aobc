@@ -10,7 +10,7 @@
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/quaternion.h>
 
-#define SAGITTA_TELEMETRY_POWER_LENGTH                    (16)
+#define SAGITTA_TELEMETRY_POWER_LENGTH                    (8)
 #define SAGITTA_TELEMETRY_HISTOGRAM_LENGTH                (36)
 #define SAGITTA_TELEMETRY_BLOBS_LENGTH                    (8)
 #define SAGITTA_TELEMETRY_CENTROIDS_LENGTH                (16)
@@ -132,7 +132,8 @@ typedef enum
  */
 typedef struct
 {
-  float current_voltage[SAGITTA_TELEMETRY_POWER_LENGTH]; //!< Measured current and voltage
+  float current[SAGITTA_TELEMETRY_POWER_LENGTH]; //!< Measured current
+  float voltage[SAGITTA_TELEMETRY_POWER_LENGTH]; //!< Measured voltage
 } SAGITTA_TELEMETRY_POWER;
 
 /**
@@ -162,19 +163,10 @@ typedef struct
  */
 typedef struct
 {
-  float temperature_mcu_degC;  //!< Temperature of the MCU [0 ~ 100 degC]
-  float temperature_cmos_degC; //!< Temperature of the image sensor [0 ~ 100 degC]
-  float temperature_fpga_degC; //!< Temperature of the FPGA [0 ~ 100 degC]
+  float mcu_degC;  //!< Temperature of the MCU [0 ~ 100 degC]
+  float cmos_degC; //!< Temperature of the image sensor [0 ~ 100 degC]
+  float fpga_degC; //!< Temperature of the FPGA [0 ~ 100 degC]
 } SAGITTA_TELEMETRY_TEMPERATURE;
-
-/**
- * @struct SAGITTA_TELEMETRY_HISTOGRAM
- * @brief  SagittaのHistogramテレメトリを格納する
- */
-typedef struct
-{
-  uint32_t histogram_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section A-D
-} SAGITTA_TELEMETRY_HISTOGRAM;
 
 /**
  * @struct SAGITTA_TELEMETRY_BLOBS
@@ -202,15 +194,6 @@ typedef struct
 } SAGITTA_TELEMETRY_CENTROIDS;
 
 /**
- * @struct SAGITTA_TELEMETRY_AUTO_BLOB
- * @brief  SagittaのAutoBlobテレメトリを格納する
- */
-typedef struct
-{
-  float threshold; //!< Automatically determined signal threshold value used in the blob algorithm
-} SAGITTA_TELEMETRY_AUTO_BLOB;
-
-/**
  * @struct SAGITTA_TELEMETRY_MATCHED_CENTROIDS
  * @brief  SagittaのMatchedCentroidsテレメトリを格納する
  */
@@ -233,10 +216,10 @@ typedef struct
   SAGITTA_TELEMETRY_POWER power;
   SAGITTA_TELEMETRY_SOLUTION solution;
   SAGITTA_TELEMETRY_TEMPERATURE temperature;
-  SAGITTA_TELEMETRY_HISTOGRAM histogram;
+  uint32_t histogram_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section A-D
   SAGITTA_TELEMETRY_BLOBS blobs;
   SAGITTA_TELEMETRY_CENTROIDS centroids;
-  SAGITTA_TELEMETRY_AUTO_BLOB auto_blob;
+  float auto_blob_threshold; //!< Automatically determined signal threshold value used in the blob algorithm
   SAGITTA_TELEMETRY_MATCHED_CENTROIDS matched_centroids;
 } SAGITTA_TELEMETRY;
 

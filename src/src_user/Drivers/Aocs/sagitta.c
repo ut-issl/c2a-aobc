@@ -1604,8 +1604,10 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_power_(SAGITTA_Driver* sagitta_drive
 
   for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
   {
-    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.current_voltage[i]), offset);
-    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.current_voltage[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.current[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.current[i]);
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.voltage[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.voltage[i]);
   }
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
@@ -1674,12 +1676,12 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_temperature_(SAGITTA_Driver* sagitta
 {
   uint8_t offset = SAGITTA_kTlmOffsetData_;
 
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.temperature_mcu_degC), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.temperature_mcu_degC);
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.temperature_cmos_degC), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.temperature_cmos_degC);
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.temperature_fpga_degC), offset);
-  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.temperature_fpga_degC);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.mcu_degC), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.mcu_degC);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.cmos_degC), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.cmos_degC);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.temperature.fpga_degC), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.temperature.fpga_degC);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 

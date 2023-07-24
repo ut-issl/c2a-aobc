@@ -91,9 +91,9 @@ static void APP_TEMPERATURE_ANOMALY_update_temperature_(void)
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_FINE_GYRO_Z] =
     stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[2];
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_STT_MCU] =
-    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.temperature_mcu_degC;
+    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC;
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_STT_FPGA] =
-    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.temperature_fpga_degC;
+    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC;
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_RW_X] =
     rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC;
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_RW_Y] =
