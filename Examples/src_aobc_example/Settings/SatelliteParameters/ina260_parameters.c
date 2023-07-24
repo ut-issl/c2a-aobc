@@ -20,7 +20,7 @@ const float INA260_PARAMETERS_stim210_hw_over_current_threshold_mA = 1000.0f;
 // SAGITTA
 const INA260_AVERAGING_MODE  INA260_PARAMETERS_sagitta_averaging_mode = INA260_AVERAGING_MODE_16;
 const INA260_CONVERSION_TIME INA260_PARAMETERS_sagitta_voltage_conversion_time = INA260_CONVERSION_TIME_140US;
-const INA260_CONVERSION_TIME INA260_PARAMETERS_sagitta_current_conversion_time = INA260_CONVERSION_TIME_140US;
+const INA260_CONVERSION_TIME INA260_PARAMETERS_sagitta_current_conversion_time = INA260_CONVERSION_TIME_204US;
 const float INA260_PARAMETERS_sagitta_hw_over_current_threshold_mA = 500.0f;
 
 // OEM7600
