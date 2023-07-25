@@ -176,7 +176,7 @@ C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float
   float rp_earth_sin_lat = PHYSICAL_CONST_EARTH_POLAR_RADIUS_m * sinf(lat_rad);
   //!< Rm^2 = (Re*cos_lat)^2 + (Rp*sin_lat)^2
   float pow2_radius_mean = re_earth_cos_lat * re_earth_cos_lat + rp_earth_sin_lat * rp_earth_sin_lat;
-  float radius_mean      = sqrtf(pow2_radius_mean); //!< mean radius at the interest point
+  float radius_mean      = C2A_MATH_sqrtf(pow2_radius_mean); //!< mean radius at the interest point
 
   //!< Re^2
   float pow2_earth_re = PHYSICAL_CONST_EARTH_RADIUS_m * PHYSICAL_CONST_EARTH_RADIUS_m;
@@ -193,7 +193,7 @@ C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float
 
   //!< r^2 = 1st_term of r^2 + 2h*Rm + h^2
   float pow2_radius_m = pow2_radious_m_1st_term + 2.0f * height_m * radius_mean + height_m * height_m;
-  *radious_m = sqrtf(pow2_radius_m);
+  *radious_m = C2A_MATH_sqrtf(pow2_radius_m);
 
   //!< cos(colat) = (sin_lat/r)*(h + (Rp^2)/Rm)
   float cos_colat = (sinf(lat_rad) / *radious_m) * (height_m + pow2_earth_rp / radius_mean);

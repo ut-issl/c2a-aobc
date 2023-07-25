@@ -192,7 +192,7 @@ void VECTOR3_copy_double(double out[PHYSICAL_CONST_THREE_DIM],
 
 float VECTOR3_norm(const float vec[PHYSICAL_CONST_THREE_DIM])
 {
-  return sqrtf(VECTOR3_inner_product(vec, vec));
+  return C2A_MATH_sqrtf(VECTOR3_inner_product(vec, vec));
 }
 
 C2A_MATH_ERROR VECTOR3_normalize(float out[PHYSICAL_CONST_THREE_DIM],

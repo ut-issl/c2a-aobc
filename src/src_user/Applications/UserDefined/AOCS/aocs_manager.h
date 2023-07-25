@@ -167,6 +167,7 @@ typedef struct
   ObcTime  obct_gps_time_est;          //!< 上記を推定したタイミングのC2Aマスタークロック [-]
   double   reference_jday;             //!< 慣性系計算の基準時刻として用いるユリウス日 [ユリウス日]
   ObcTime  obct_reference;             //!< 慣性系計算の基準時刻として用いるユリウス日を更新した時のOBC時刻 [-]
+  float obct_diff_max_limit_s;         //!< OBC時刻差計算時のアサーションに使う上限 [s]
   // センサ状態
   AOCS_MANAGER_GPS_VISIBILITY gps_visibility;     //!< GPS情報の利用可否
   AOCS_MANAGER_SUN_VISIBILITY sun_visibility;     //!< 太陽がサンセンサから見えているかどうか

@@ -295,8 +295,10 @@ static void APP_STT_GYRO_EKF_exec_(void)
   // 時間刻みを計算する
   APP_STT_GYRO_EKF_calculation_time_.current = TMGR_get_master_clock();
   float time_step_s = (float)OBCT_diff_in_sec(&(APP_STT_GYRO_EKF_calculation_time_.previous),
-    &(APP_STT_GYRO_EKF_calculation_time_.current));
+                                              &(APP_STT_GYRO_EKF_calculation_time_.current));
   APP_STT_GYRO_EKF_calculation_time_.previous = APP_STT_GYRO_EKF_calculation_time_.current;
+  if (time_step_s < 0.0f) return;  // 時間差が負の場合は一旦飛ばす
+  if (time_step_s > aocs_manager->obct_diff_max_limit_s) return; // 時間差が大きすぎる場合は一旦飛ばす
 
   APP_STT_GYRO_EKF_execute_estimation(time_step_s);
 }
@@ -502,7 +504,7 @@ static UpdatedStateVariable APP_STT_GYRO_EKF_update_state_variable_(MATRIX_T(6, 
     delta_quaternion_i2b_ref_to_true.vector_part[i] = updated_state_variable_matrix_form.data[i][0];
     delta_rate_bias_ref_to_true_rad_s[i] = updated_state_variable_matrix_form.data[i + 3][0];
   }
-  delta_quaternion_i2b_ref_to_true.scalar_part = sqrtf(1.0f - VECTOR3_norm(delta_quaternion_i2b_ref_to_true.vector_part));
+  delta_quaternion_i2b_ref_to_true.scalar_part = C2A_MATH_sqrtf(1.0f - VECTOR3_norm(delta_quaternion_i2b_ref_to_true.vector_part));
 
   UpdatedStateVariable updated_state_variable;
   updated_state_variable.quaternion_i2b =

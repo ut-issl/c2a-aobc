@@ -7,15 +7,9 @@ option(BUILD_C2A_AS_CXX "Build C2A as C++" ON)
 
 option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
 
-# SCI COM for connection to WINGS TMTC IF
-option(USE_SCI_COM "Use SCI_COM" OFF)
-
-# SCI COM for connection to PC UART
-# ！！！注意！！！
-# これをONにした状態で，SCIの受け口がない場合（TMTC_IFが動いていない状態）
-# そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
-
-option(USE_SCI_COM_UART "Use SCI_COM_UART" OFF)
+# UART COM for connection to PC UART
+# これをONにした状態でTMTC_IFが動いていない場合，そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
+option(USE_UART_COM "Use UART COM" OFF)
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_core)
 set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user)

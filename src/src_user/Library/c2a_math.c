@@ -165,4 +165,13 @@ float C2A_MATH_acos_rad(const float input_cos)
   return acosf(limited_input);
 }
 
+float C2A_MATH_sqrtf(const float input)
+{
+  if (input <= 0.0f)
+  {
+    return 0.0f;
+  }
+  return sqrtf(input);
+}
+
 #pragma section
