@@ -218,12 +218,14 @@ DS_REC_ERR_CODE SAGITTA_rec(SAGITTA_Driver* sagitta_driver)
   ret = DS_receive(&(sagitta_driver->driver.super));
 
 #ifdef DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
-  if (sagitta_driver->driver.super.config.rec_status_.ret_from_if_rx > 0)
+  if (sagitta_driver->driver.super.config.info.rec_status_.ret_from_if_rx > 0)
   {
-    Printf("sagitta rx_frame_: %d Bytes \n", sagitta_driver->driver.super.config.rec_status_.ret_from_if_rx);
-    for (int i = 0; i < sagitta_driver->driver.super.config.rec_status_.ret_from_if_rx; i++)
+    Printf("sagitta_rx_data: %d Bytes \n", sagitta_driver->driver.super.config.info.rec_status_.ret_from_if_rx);
+    for (int i = 0; i < sagitta_driver->driver.super.config.info.rec_status_.ret_from_if_rx; i++)
     {
-      Printf("%02x ", sagitta_driver->driver.super.stream_config[0].rx_frame_[i]);
+      stream_config = &(sagitta_driver->driver.super.stream_config[SAGITTA_STREAM_TLM_CMD]);
+      const uint8_t* sagitta_rx_data = DSSC_get_rx_frame(stream_config);
+      Printf("%02x ", sagitta_rx_data[i]);
       if (i % 4 == 3) Printf("   ");
     }
     Printf("\n");
@@ -238,7 +240,7 @@ DS_REC_ERR_CODE SAGITTA_rec(SAGITTA_Driver* sagitta_driver)
 
   stream_config = &(sagitta_driver->driver.super.stream_config[SAGITTA_STREAM_TLM_CMD]);
 #ifdef DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
-  if (sagitta_driver->driver.super.config.rec_status_.ret_from_if_rx > 0)
+  if (sagitta_driver->driver.super.config.info.rec_status_.ret_from_if_rx > 0)
   {
     Printf("DSSC_get_rec_status(stream_config)->status_code: %d\n", DSSC_get_rec_status(stream_config)->status_code);
   }
@@ -1058,10 +1060,10 @@ static DS_CMD_ERR_CODE SAGITTA_send_cmd_(SAGITTA_Driver* sagitta_driver, const u
   ret_super = DS_send_req_tlm_cmd(&(sagitta_driver->driver.super), SAGITTA_STREAM_TLM_CMD);
 
 #ifdef DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
-  Printf("SAGITTA_tx_data_frame_: %d Bytes \n", cmd_data_len);
-  for (int i = 0; i < cmd_data_len; i++)
+  Printf("SAGITTA_tx_frame_: %d Bytes \n", SAGITTA_tx_frame_length_);
+  for (int i = 0; i < SAGITTA_tx_frame_length_; i++)
   {
-    Printf("%02x ", SAGITTA_tx_data_frame_[i]);
+    Printf("%02x ", SAGITTA_tx_frame_[i]);
     if (i % 4 == 3) Printf("   ");
   }
   Printf("\n");
