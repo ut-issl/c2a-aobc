@@ -20,6 +20,7 @@ typedef enum
   BC_SL_ROUGH_THREE_AXIS_TO_ROUGH_THREE_AXIS_RW = 5,
   BC_SL_ROUGH_THREE_AXIS_RW_TO_FINE_THREE_AXIS = 6,
   BC_SL_ANY_TO_BDOT = 7,
+  BC_SL_BDOT_TO_INITIAL = 8,
 
   // Block Cmds for TaskList (タスクリスト)
   // ./src_user/Settings/Modes/TaskLists/ で定義

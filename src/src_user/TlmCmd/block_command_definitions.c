@@ -52,6 +52,7 @@ void BC_load_defaults(void)
   BCL_load_bc(BC_SL_ROUGH_THREE_AXIS_TO_ROUGH_THREE_AXIS_RW, BCL_load_rough_three_axis_to_rough_three_axis_rw);
   BCL_load_bc(BC_SL_ROUGH_THREE_AXIS_RW_TO_FINE_THREE_AXIS,  BCL_load_rough_three_axis_rw_to_fine_three_axis);
   BCL_load_bc(BC_SL_ANY_TO_BDOT,                             BCL_load_any_to_bdot);
+  BCL_load_bc(BC_SL_BDOT_TO_INITIAL,                         BCL_load_bdot_to_initial);
 
   // Block Cmds for TaskList
   // こいつは TDSP_initialize() で展開される

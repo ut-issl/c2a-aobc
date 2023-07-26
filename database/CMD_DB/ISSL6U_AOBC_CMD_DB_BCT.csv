@@ -10,6 +10,7 @@ Comment,Name,ShortName,BCID,エイリアス,,,,,Danger Flag,Description,Note
 ,BC_SL_ROUGH_THREE_AXIS_TO_ROUGH_THREE_AXIS_RW,,5,,,,,,danger,,
 ,BC_SL_ROUGH_THREE_AXIS_RW_TO_FINE_THREE_AXIS,,6,,,,,,danger,,
 ,BC_SL_ANY_TO_BDOT,,7,,,,,,danger,,
+,BC_SL_BDOT_TO_INITIAL,,8,,,,,,danger,,
 **,Block Cmds for TaskList (タスクリスト),,,,,,,,,,
 *,./src_user/Settings/Modes/TaskLists/ で定義,,,,,,,,,,
 ,BC_TL_START_UP,,10,,,,,,danger,,
