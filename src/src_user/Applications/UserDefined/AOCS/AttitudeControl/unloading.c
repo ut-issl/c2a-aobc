@@ -152,27 +152,23 @@ void APP_UNLOADING_calc_output_torque(void)
     if (unloading_.unloading_state[idx] != APP_UNLOADING_STATE_OFF)
     {
       float exceed_angular_velocity_rad_s = aocs_manager->rw_angular_velocity_rad_s[idx] - unloading_.angular_velocity_target_rad_s;
-      float exceed_angular_velocity_vec_rad_s[PHYSICAL_CONST_THREE_DIM]; //!< 目標回転角速度に対して、余分に持っている回転角速度ベクトル
-      VECTOR3_scalar_product(exceed_angular_velocity_vec_rad_s, exceed_angular_velocity_rad_s, aocs_manager->rw_rotation_direction_matrix[idx]);
+      float scalar_output_torque_Nm = exceed_angular_velocity_rad_s * unloading_.control_gain;
+      // Check sign
+      float sign = 1.0f;
+      if (scalar_output_torque_Nm < 0.0f)
+      {
+        sign = -1.0f;
+      }
+      // Check minimum value
+      float abs_output_torque_Nm = fabsf(scalar_output_torque_Nm);
+      if (abs_output_torque_Nm < ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm)
+      {
+        scalar_output_torque_Nm = sign * ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm;
+      }
+
       float output_torque_tmp_Nm[PHYSICAL_CONST_THREE_DIM]; //!< その軸のRWをアンローディングするのに必要な出力トルク
-      VECTOR3_scalar_product(output_torque_tmp_Nm, unloading_.control_gain, exceed_angular_velocity_vec_rad_s);
+      VECTOR3_scalar_product(output_torque_tmp_Nm, scalar_output_torque_Nm, aocs_manager->rw_rotation_direction_matrix[idx]);
       VECTOR3_add(unloading_.output_torque_body_Nm, unloading_.output_torque_body_Nm, output_torque_tmp_Nm);
-    }
-  }
-  // Set minimum torque
-  for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
-  {
-    // Check sign
-    float sign = 1.0f;
-    if (unloading_.output_torque_body_Nm[axis] < 0.0f)
-    {
-      sign = -1.0f;
-    }
-    // Check minimum value
-    float abs_output_torque_Nm = fabsf(unloading_.output_torque_body_Nm[axis]);
-    if (abs_output_torque_Nm < ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm)
-    {
-      unloading_.output_torque_body_Nm[axis] = sign * ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm;
     }
   }
 }
