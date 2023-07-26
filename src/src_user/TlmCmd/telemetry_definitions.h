@@ -58,7 +58,6 @@ typedef enum
   Tlm_CODE_AOBC_DR_ALGORITHM = 0xce,
   Tlm_CODE_AOBC_DEBUG = 0xcf,
   Tlm_CODE_AOBC_SAGITTA1 = 0xd0,
-  Tlm_CODE_AOBC_SAGITTA2 = 0xd1,
   Tlm_CODE_AOBC_SAGITTA3 = 0xd2,
   Tlm_CODE_AOBC_SAGITTA4 = 0xd3,
 

@@ -163,14 +163,15 @@ typedef struct
  */
 typedef struct
 {
-  float mcu_degC;  //!< Temperature of the MCU [0 ~ 100 degC]
-  float cmos_degC; //!< Temperature of the image sensor [0 ~ 100 degC]
-  float fpga_degC; //!< Temperature of the FPGA [0 ~ 100 degC]
+  float mcu_degC;  //!< Temperature of the MCU
+  float cmos_degC; //!< Temperature of the image sensor
+  float fpga_degC; //!< Temperature of the FPGA
 } SAGITTA_TELEMETRY_TEMPERATURE;
 
 /**
  * @struct SAGITTA_TELEMETRY_BLOBS
  * @brief  SagittaのBlobsテレメトリを格納する
+ * @note   blob: a collection of pixels with a value higher than a specified threshold level
  */
 typedef struct
 {
