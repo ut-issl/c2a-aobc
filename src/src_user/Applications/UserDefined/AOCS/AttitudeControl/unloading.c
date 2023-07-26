@@ -159,6 +159,22 @@ void APP_UNLOADING_calc_output_torque(void)
       VECTOR3_add(unloading_.output_torque_body_Nm, unloading_.output_torque_body_Nm, output_torque_tmp_Nm);
     }
   }
+  // Set minimum torque
+  for (uint8_t axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
+  {
+    // Check sign
+    float sign = 1.0f;
+    if (unloading_.output_torque_body_Nm[axis] < 0.0f)
+    {
+      sign = -1.0f;
+    }
+    // Check minimum value
+    float abs_output_torque_Nm = fabsf(unloading_.output_torque_body_Nm[axis]);
+    if (abs_output_torque_Nm < ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm)
+    {
+      unloading_.output_torque_body_Nm[axis] = sign * ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm;
+    }
+  }
 }
 
 CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet)
