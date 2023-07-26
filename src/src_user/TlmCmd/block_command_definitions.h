@@ -37,7 +37,7 @@ typedef enum
   // ./src_user/Settings/Modes/TaskLists/Elements/ で定義
   // BC_AR_DEBUG_DISPLAY_INI
   // BC_AR_DEBUG_DISPLAY_MINIMUM
-  BC_AR_DRIVERS_UPDATE_INI = 18,
+  // BC_AR_DRIVERS_UPDATE_INI
   BC_AC_CDH_UPDATE = 19,
   BC_AC_INERTIAL_REF_UPDATE = 20,
   BC_AC_SUN_VECTOR_UPDATE = 21,
