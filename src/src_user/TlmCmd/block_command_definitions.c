@@ -67,8 +67,7 @@ void BC_load_defaults(void)
 
   // Block Cmds for Application Rotation / Combination
   // === CDH ===
-  BCL_load_bc(BC_AR_DRIVERS_UPDATE_INI, BCL_load_drivers_update_initial);
-  BCL_load_bc(BC_AC_CDH_UPDATE,         BCL_load_cdh_update);
+  BCL_load_bc(BC_AC_CDH_UPDATE, BCL_load_cdh_update);
 
   // === AOCS ===
   BCL_load_bc(BC_AC_INERTIAL_REF_UPDATE, BCL_load_inertial_ref_update);
