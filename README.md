@@ -104,15 +104,16 @@
 
 
 ### How to edit TLM/CMD (Telemetry/Command)
-1. Open TLM/CMD DB
+1. Edit TLM/CMD DB in `c2a-aobc/database/`
    - Please find detailed information on [How to use TLM/CMD DB](https://github.com/ut-issl/tlm-cmd-db).
 2. Execute `tlm-cmd-generator` and generate source codes.
    - [How to use tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
+   - Checkout to the latest [feature/issl](https://github.com/ut-issl/c2a-tlm-cmd-code-generator/tree/feature/issl) branch.
    - Edit the `settings.json` as follows.
      ```
      {
-       "c2a_root_dir" : "Relative path to c2a-aobc/src/",
-       "db_path" : "Relative path to c2a-aobc/src/src_user/Settings/TlmCmd/DataBase/",
+       "path_to_src" : "Relative path to c2a-aobc/src/",
+       "path_to_db" : "Relative path to c2a-aobc/database/",
        "db_prefix" : "ISSL6U_AOBC",
        "tlm_id_range" : ["0x00", "0x100"],
        "is_cmd_prefixed_in_db" : 1,
