@@ -23,7 +23,7 @@ void BCL_load_initial_mode(void)
   BCL_tool_register_combine(36, BC_AC_RM3100_UPDATE);  // 4step以上
   BCL_tool_register_combine(41, BC_AC_STIM210_UPDATE); // 1step以上
 
-  BCL_tool_register_combine(45, BC_AC_MTQ_UPDATE);     // 1step以上, MTQ駆動時間カウンタを20 [Hz]周期にするため入れている
+  BCL_tool_register_app    (45, AR_DI_MTQ_SEIREN);     // 1step以上, MTQ駆動時間カウンタを20 [Hz]周期にするため入れている
 
   BCL_tool_register_combine(47, BC_AC_SUN_VECTOR_UPDATE);   // 合計4step以上必要ある？
   BCL_tool_register_combine(51, BC_AC_INERTIAL_REF_UPDATE); // 11step以上
@@ -36,7 +36,7 @@ void BCL_load_initial_mode(void)
 
   // BCL_tool_register_app   (90, AR_APP_MODULE_TEST_BENCH);  // 打ち上げ時は必ずコメントアウトする
 
-  BCL_tool_register_combine(95, BC_AC_MTQ_UPDATE); // 1step以上
+  BCL_tool_register_app    (95, AR_DI_MTQ_SEIREN); // 1step以上
 }
 
 #pragma section
