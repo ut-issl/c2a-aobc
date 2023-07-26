@@ -54,7 +54,7 @@
 - If you have any questions, please feel free to ask us.
 
 ### Note
-- The `body-fixed frame` in this code means `the body-fixed frame of the AOCS module`. It does not necessarily coincide with the body-fixed frame of your satellite.
+- The term `body-fixed frame` in the codes and tlm/cmd database means `the body-fixed frame of the AOCS module`. It does not necessarily coincide with the body-fixed frame of your satellite.
 
 ## For main developers
 ## How to clone the repository
