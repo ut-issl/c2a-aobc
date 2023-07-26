@@ -53,6 +53,8 @@
 - Before making PRs, please carefully read the following `Development style` for main developers.
 - If you have any questions, please feel free to ask us.
 
+### Note
+- The `body-fixed frame` in this code means `the body-fixed frame of the AOCS module`. It does not necessarily coincide with the body-fixed frame of your satellite.
 
 ## For main developers
 ## How to clone the repository
@@ -159,7 +161,7 @@
   - Add unit information in the name of variables and functions
   - Add frame information in the name of variables and functions
     - `eci`: Earth Center Inertia frame
-    - `body`: Body-fixed frame
+    - `body`: Body-fixed frame (**body frame of AOBC module**)
     - `compo`: Component frame
   - For abbreviations, please see the ISSL internal [document](https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/77#note_568506174).
 
