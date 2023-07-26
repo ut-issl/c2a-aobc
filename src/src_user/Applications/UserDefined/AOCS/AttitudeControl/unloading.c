@@ -74,7 +74,7 @@ void APP_UNLOADING_exec_(void)
   APP_UNLOADING_update_unloading_state_();
   APP_UNLOADING_calc_output_torque();
 
-  // アンローディング処理がenableになっているときのみ，出力目標トルクをAOCS Manegerにセットする
+  // アンローディング処理がenableになっているときのみ，出力目標トルクをAOCS Managerにセットする
   // disableのときは，出力目標トルクのセットはしないが，トルク計算自体はcalc_torque_outputで行われている．
   if (unloading_.exec_is_enable == APP_UNLOADING_EXEC_ENABLE)
   {
