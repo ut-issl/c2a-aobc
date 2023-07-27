@@ -109,8 +109,8 @@
 
 // PORT_CH_I2C_RWS
 #define I2C_DEVICE_ADDR_RW_X         (0x11)  //!< X軸RW-FM
-#define I2C_DEVICE_ADDR_RW_Y         (0x37)  //!< Y軸RW-FM
-#define I2C_DEVICE_ADDR_RW_Z         (0x39)  //!< Z軸RW-FM
+#define I2C_DEVICE_ADDR_RW_Y         (0x12)  //!< Y軸RW-FM
+#define I2C_DEVICE_ADDR_RW_Z         (0x13)  //!< Z軸RW-FM
 #define I2C_DEVICE_ADDR_RW_EM        (0x35)  //!< RW-EM 試験時にのみ使う
 
 // PORT_CH_I2C_INAS

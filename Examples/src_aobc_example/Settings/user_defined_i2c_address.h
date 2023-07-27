@@ -26,7 +26,7 @@
 
 // RWs
 #define I2C_DEVICE_ADDR_RW_X         (0x11)  //!< RW on X-axis
-#define I2C_DEVICE_ADDR_RW_Y         (0x37)  //!< RW on Y-axis
-#define I2C_DEVICE_ADDR_RW_Z         (0x39)  //!< RW on Z-axis
+#define I2C_DEVICE_ADDR_RW_Y         (0x12)  //!< RW on Y-axis
+#define I2C_DEVICE_ADDR_RW_Z         (0x13)  //!< RW on Z-axis
 
 #endif // USER_DEFINED_I2C_ADDRESS_H_
