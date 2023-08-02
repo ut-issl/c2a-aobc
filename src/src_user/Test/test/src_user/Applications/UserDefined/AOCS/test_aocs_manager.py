@@ -7,6 +7,8 @@ import sys
 import isslwings as wings
 import pytest
 
+import time
+
 ROOT_PATH = "../../../../../"
 sys.path.append(os.path.dirname(__file__) + "/" + ROOT_PATH + "utils")
 import c2a_enum_utils
@@ -25,6 +27,7 @@ def test_target_quaternion():
         (0.0, 0.0, 0.0, 1.0),
         c2a_enum.Tlm_CODE_AOBC_HK_GEN,
     )
+    time.sleep(1.0)
     tlm_AOBC_HK_ALGO = ope.get_latest_tlm(c2a_enum.Tlm_CODE_AOBC_HK_ALGO)[0]
     assert tlm_AOBC_HK_ALGO["AOBC_HK_ALGO.QUATERNION.TARGET_I2T_X"] == 0.0
     assert tlm_AOBC_HK_ALGO["AOBC_HK_ALGO.QUATERNION.TARGET_I2T_Y"] == 0.0
