@@ -25,6 +25,11 @@ def test_target_quaternion():
         (0.0, 0.0, 0.0, 1.0),
         c2a_enum.Tlm_CODE_AOBC_HK_GEN,
     )
+    tlm_AOBC_HK_ALGO = ope.get_latest_tlm(c2a_enum.Tlm_CODE_AOBC_HK_ALGO)[0]
+    assert tlm_AOBC_HK_ALGO["AOBC_HK_ALGO.QUATERNION.TARGET_I2T_X"] == 0.0
+    assert tlm_AOBC_HK_ALGO["AOBC_HK_ALGO.QUATERNION.TARGET_I2T_Y"] == 0.0
+    assert tlm_AOBC_HK_ALGO["AOBC_HK_ALGO.QUATERNION.TARGET_I2T_Z"] == 0.0
+    assert tlm_AOBC_HK_ALGO["AOBC_HK_ALGO.QUATERNION.TARGET_I2T_W"] == 1.0
 
 if __name__ == "__main__":
     pass
