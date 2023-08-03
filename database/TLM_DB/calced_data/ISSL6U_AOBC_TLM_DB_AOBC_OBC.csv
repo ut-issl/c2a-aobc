@@ -95,8 +95,8 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,BCT_CMD_PTR,uint8_t,(uint8_t)(block_command_table->pos.cmd),PACKET,208,0,8,NONE,,,,,,,,BCT コマンドポインタ,
 ,BCT_REGD_TIME,uint32_t,((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,209,0,32,NONE,,,,,,,,BCT 登録コマンド時刻,変数指定が大変なことに…
 ,BCT_REGD_ID,uint16_t,(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,213,0,16,NONE,,,,,,,,BCT 登録コマンドID,変数指定が大変なことに…
-,MS_TLM_COUNTER,uint32_t,PH_ms_tlm_list.executed_nodes_,PACKET,215,0,32,NONE,,,,,,,,TL0コマンドカウンタ,
-,MS_TLM_QUEUED,uint8_t,(uint8_t)(PH_ms_tlm_list.active_nodes_),PACKET,219,0,8,NONE,,,,,,,,TL0登録コマンド数,
+,RT_TLM_COUNTER,uint32_t,PH_rt_tlm_list.executed_nodes_,PACKET,215,0,32,NONE,,,,,,,,TL0コマンドカウンタ,
+,RT_TLM_QUEUED,uint8_t,(uint8_t)(PH_rt_tlm_list.active_nodes_),PACKET,219,0,8,NONE,,,,,,,,TL0登録コマンド数,
 *,ST_TLM_COUNTER,uint32_t,PH_st_tlm_list.executed_nodes_,PACKET,220,0,32,NONE,,,,,,,,TL0コマンドカウンタ,
 *,ST_TLM_QUEUED,uint8_t,(uint8_t)(PH_st_tlm_list.active_nodes_),PACKET,224,0,8,NONE,,,,,,,,TL0登録コマンド数,
 *,RP_TLM_COUNTER,uint32_t,PH_rp_tlm_list.executed_nodes_,PACKET,225,0,32,NONE,,,,,,,,TL0コマンドカウンタ,

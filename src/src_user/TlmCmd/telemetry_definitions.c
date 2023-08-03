@@ -197,8 +197,8 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_OBC_(uint8_t* packet, uint16_t* len, uint16_t ma
   TF_copy_u8(&packet[208], (uint8_t)(block_command_table->pos.cmd));
   TF_copy_u32(&packet[209], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u16(&packet[213], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
-  TF_copy_u32(&packet[215], PH_ms_tlm_list.executed_nodes_);
-  TF_copy_u8(&packet[219], (uint8_t)(PH_ms_tlm_list.active_nodes_));
+  TF_copy_u32(&packet[215], PH_rt_tlm_list.executed_nodes_);
+  TF_copy_u8(&packet[219], (uint8_t)(PH_rt_tlm_list.active_nodes_));
 #endif
 
   *len = 220;
