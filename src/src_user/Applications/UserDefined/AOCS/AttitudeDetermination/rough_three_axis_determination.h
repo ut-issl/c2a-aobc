@@ -18,8 +18,10 @@
 */
 typedef enum
 {
-  APP_RTAD_METHOD_TRIAD = 0, //!< TRIADを使って姿勢決定する
-  APP_RTAD_METHOD_Q_METHOD,  //!< Qmethodを使って姿勢決定する
+  APP_RTAD_METHOD_TRIAD = 0,                     //!< TRIADを使って姿勢決定する
+  APP_RTAD_METHOD_Q_METHOD,                      //!< Qmethodを使って姿勢決定する
+  APP_RTAD_METHOD_TRIAD_SUN_VEC_PROPAGATION,     //!< 太陽センサが見えないときに太陽方向伝搬遅を使ったTRIAD
+  APP_RTAD_METHOD_Q_METHOD_SUN_VEC_PROPAGATION,  //!< 太陽センサが見えないときに太陽方向伝搬遅を使ったQmethod  
   APP_RTAD_METHOD_MAX
 } APP_RTAD_METHOD;
 
