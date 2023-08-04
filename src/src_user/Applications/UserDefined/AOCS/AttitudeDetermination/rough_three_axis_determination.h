@@ -12,18 +12,28 @@
 #include <src_core/System/TimeManager/time_manager.h>
 
 /**
-* @enum  ROUGH_THREE_AXIS_DETERMINATION_METHOD
+* @enum  APP_RTAD_METHOD
 * @brief 使用する三軸姿勢決定の手法
 * @note  uint_8を想定
 */
 typedef enum
 {
-  APP_RTAD_METHOD_TRIAD = 0,                     //!< TRIADを使って姿勢決定する
-  APP_RTAD_METHOD_Q_METHOD,                      //!< Qmethodを使って姿勢決定する
-  APP_RTAD_METHOD_TRIAD_SUN_VEC_PROPAGATION,     //!< 太陽センサが見えないときに太陽方向伝搬遅を使ったTRIAD
-  APP_RTAD_METHOD_Q_METHOD_SUN_VEC_PROPAGATION,  //!< 太陽センサが見えないときに太陽方向伝搬遅を使ったQmethod  
+  APP_RTAD_METHOD_TRIAD = 0,  //!< TRIADを使って姿勢決定する
+  APP_RTAD_METHOD_Q_METHOD,   //!< Qmethodを使って姿勢決定する
   APP_RTAD_METHOD_MAX
 } APP_RTAD_METHOD;
+
+/**
+* @enum  APP_RTAD_SUN_INVISIBLE_PROPAGATION
+* @brief 太陽センサ非可視時にどのあたいを伝搬するかの設定
+* @note  uint_8を想定
+*/
+typedef enum
+{
+  APP_RTAD_SUN_INVISIBLE_PROPAGATION_SUN_VECTOR = 0,  //!< 伝搬した太陽ベクトルを利用する
+  APP_RTAD_SUN_INVISIBLE_PROPAGATION_QUATERNION,      //!< Quaternionを伝搬する
+  APP_RTAD_SUN_INVISIBLE_PROPAGATION_MAX
+} APP_RTAD_SUN_INVISIBLE_PROPAGATION;
 
 /**
 * @struct QMethod
