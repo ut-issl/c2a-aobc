@@ -207,14 +207,14 @@ static void APP_RTAD_exec_(void)
   {
     if (rough_three_axis_determination_.sun_invisible_propagation == APP_RTAD_SUN_INVISIBLE_PROPAGATION_QUATERNION)
     {
-      // Quaternion伝播を行う
+      // 三軸姿勢決定はせずにQuaternion伝播を行う
       q_eci_to_body =  QUATERNION_euler_propagate(aocs_manager->quaternion_est_i2b, aocs_manager->ang_vel_obs_body_rad_s, time_step_s);
       AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
       return;
     }
     else
     {
-      // 伝搬した太陽ベクトルを使う
+      // 伝搬した太陽ベクトルと観測した磁場情報をつかって三軸姿勢決定を行う
       // 代入時にsun_vec_estを使っているので、ここでは何もする必要はない
     }
   }
