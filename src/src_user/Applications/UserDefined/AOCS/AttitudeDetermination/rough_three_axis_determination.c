@@ -173,6 +173,7 @@ static void APP_RTAD_init_(void)
 {
   rough_three_axis_determination_.previous_obc_time = TMGR_get_master_clock();
   rough_three_axis_determination_.method = ATTITUDE_DETERMINATION_PARAMETERS_rtad_method;
+  rough_three_axis_determination_.sun_invisible_propagation = ATTITUDE_DETERMINATION_PARAMETERS_rtad_sun_invisible_propagation;
   rough_three_axis_determination_.q_method_info.sun_vec_weight = ATTITUDE_DETERMINATION_PARAMETERS_q_method_sun_vec_weight;
   rough_three_axis_determination_.q_method_info.mag_vec_weight = 1.0f - rough_three_axis_determination_.q_method_info.sun_vec_weight;
 }
@@ -201,12 +202,21 @@ static void APP_RTAD_exec_(void)
 
   Quaternion q_eci_to_body;
 
-  // 三軸姿勢決定メソッドが使えない状況では，代わりに姿勢伝播を行う
+  // 太陽センサ非可視時の対応
   if (sensor_availability != AOCS_ERROR_OK)
   {
-    q_eci_to_body =  QUATERNION_euler_propagate(aocs_manager->quaternion_est_i2b, aocs_manager->ang_vel_obs_body_rad_s, time_step_s);
-    AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
-    return;
+    if (rough_three_axis_determination_.sun_invisible_propagation == APP_RTAD_SUN_INVISIBLE_PROPAGATION_QUATERNION)
+    {
+      // Quaternion伝播を行う
+      q_eci_to_body =  QUATERNION_euler_propagate(aocs_manager->quaternion_est_i2b, aocs_manager->ang_vel_obs_body_rad_s, time_step_s);
+      AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
+      return;
+    }
+    else
+    {
+      // 伝搬した太陽ベクトルを使う
+      // 代入時にsun_vec_estを使っているので、ここでは何もする必要はない
+    }
   }
 
   if (rough_three_axis_determination_.method == APP_RTAD_METHOD_TRIAD)

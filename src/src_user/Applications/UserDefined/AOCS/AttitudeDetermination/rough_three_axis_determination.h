@@ -53,6 +53,7 @@ typedef struct
 {
   ObcTime previous_obc_time; //!< 前回粗三軸姿勢決定アプリが呼び出された時の時刻情報
   APP_RTAD_METHOD method;
+  APP_RTAD_SUN_INVISIBLE_PROPAGATION sun_invisible_propagation; //!< 太陽センサ非可視時にどのあたいを伝搬するかの設定
   QMethodInfo q_method_info;
 } RoughThreeAxisDetermination;
 
