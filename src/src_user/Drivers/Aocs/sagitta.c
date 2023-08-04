@@ -1600,13 +1600,38 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_power_(SAGITTA_Driver* sagitta_drive
 {
   uint8_t offset = SAGITTA_kTlmOffsetData_;
 
-  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
-  {
-    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.current[i]), offset);
-    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.current[i]);
-    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.voltage[i]), offset);
-    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.voltage[i]);
-  }
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.mcu_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.mcu_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.mcu_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.mcu_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.fpga_core_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.fpga_core_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.fpga_core_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.fpga_core_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.fpga_18_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.fpga_18_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.fpga_18_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.fpga_18_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.fpga_25_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.fpga_25_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.fpga_25_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.fpga_25_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_21_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_21_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_21_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_21_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_pix_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_pix_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_pix_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_pix_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_33_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_33_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_33_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_33_voltage_V);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_res_current_A), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_res_current_A);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.power.cmv_res_voltage_V), offset);
+  offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.power.cmv_res_voltage_V);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
@@ -1692,8 +1717,23 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_histogram_(SAGITTA_Driver* sagitta_d
 
   for (uint8_t i = 0; i < SAGITTA_TELEMETRY_HISTOGRAM_LENGTH; i++)
   {
-    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram_pix[i]), offset);
-    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram_pix[i]);
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram_a_pix[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram_a_pix[i]);
+  }
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_HISTOGRAM_LENGTH; i++)
+  {
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram_b_pix[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram_b_pix[i]);
+  }
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_HISTOGRAM_LENGTH; i++)
+  {
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram_c_pix[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram_c_pix[i]);
+  }
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_HISTOGRAM_LENGTH; i++)
+  {
+    SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.histogram_d_pix[i]), offset);
+    offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.histogram_d_pix[i]);
   }
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
@@ -1730,7 +1770,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_centroids_(SAGITTA_Driver* sagitta_d
 
   SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.centroids.count), offset);
   offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.centroids.count);
-  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_CENTROIDS_LENGTH; i++)
   {
     SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.centroids.x_coordinate[i]), offset);
     offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.centroids.x_coordinate[i]);
@@ -1763,7 +1803,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_matched_centroids_(SAGITTA_Driver* s
 
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.count), offset);
   offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.count);
-  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_POWER_LENGTH; i++)
+  for (uint8_t i = 0; i < SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH; i++)
   {
     SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.matched_centroids.id[i]), offset);
     offset += (uint8_t)sizeof(sagitta_driver->info.telemetry.matched_centroids.id[i]);

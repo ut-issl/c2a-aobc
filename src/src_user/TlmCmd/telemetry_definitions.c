@@ -3721,7 +3721,6 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA3_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_u16(&packet[62], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.blobs.y_coordinate[7]));
   TF_copy_float(&packet[210], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.auto_blob_threshold));
   TF_copy_float(&packet[214], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
-  TF_copy_float(&packet[218], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.cmos_degC));
   TF_copy_float(&packet[222], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
 #endif
 
@@ -3734,22 +3733,22 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16
   if (234 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_float(&packet[170], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[0]));
-  TF_copy_float(&packet[174], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[0]));
-  TF_copy_float(&packet[178], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[1]));
-  TF_copy_float(&packet[182], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[1]));
-  TF_copy_float(&packet[186], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[2]));
-  TF_copy_float(&packet[190], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[2]));
-  TF_copy_float(&packet[194], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[3]));
-  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[3]));
-  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[4]));
-  TF_copy_float(&packet[206], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[4]));
-  TF_copy_float(&packet[210], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[5]));
-  TF_copy_float(&packet[214], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[5]));
-  TF_copy_float(&packet[218], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[6]));
-  TF_copy_float(&packet[222], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[6]));
-  TF_copy_float(&packet[226], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.current[7]));
-  TF_copy_float(&packet[230], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.voltage[7]));
+  TF_copy_float(&packet[170], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.mcu_current_A));
+  TF_copy_float(&packet[174], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.mcu_voltage_V));
+  TF_copy_float(&packet[178], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_core_current_A));
+  TF_copy_float(&packet[182], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_core_voltage_V));
+  TF_copy_float(&packet[186], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_18_current_A));
+  TF_copy_float(&packet[190], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_18_voltage_V));
+  TF_copy_float(&packet[194], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_25_current_A));
+  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_25_voltage_V));
+  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_21_current_A));
+  TF_copy_float(&packet[206], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_21_voltage_V));
+  TF_copy_float(&packet[210], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_pix_current_A));
+  TF_copy_float(&packet[214], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_pix_voltage_V));
+  TF_copy_float(&packet[218], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_33_current_A));
+  TF_copy_float(&packet[222], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_33_voltage_V));
+  TF_copy_float(&packet[226], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_res_current_A));
+  TF_copy_float(&packet[230], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.cmv_res_voltage_V));
 #endif
 
   *len = 234;

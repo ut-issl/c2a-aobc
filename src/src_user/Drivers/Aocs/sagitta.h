@@ -10,8 +10,7 @@
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/quaternion.h>
 
-#define SAGITTA_TELEMETRY_POWER_LENGTH                    (8)
-#define SAGITTA_TELEMETRY_HISTOGRAM_LENGTH                (36)
+#define SAGITTA_TELEMETRY_HISTOGRAM_LENGTH                (9)
 #define SAGITTA_TELEMETRY_BLOBS_LENGTH                    (8)
 #define SAGITTA_TELEMETRY_CENTROIDS_LENGTH                (16)
 #define SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH        (16)
@@ -132,8 +131,22 @@ typedef enum
  */
 typedef struct
 {
-  float current[SAGITTA_TELEMETRY_POWER_LENGTH]; //!< Measured current
-  float voltage[SAGITTA_TELEMETRY_POWER_LENGTH]; //!< Measured voltage
+  float mcu_current_A; //!< Current used by the MCU [A]
+  float mcu_voltage_V; //!< Voltage over the MCU [V]
+  float fpga_core_current_A; //!< Current used by the FPGA core [A]
+  float fpga_core_voltage_V; //!< Voltage over the FPGA core [V]
+  float fpga_18_current_A; //!< Current used by the FPGA18 [A]
+  float fpga_18_voltage_V; //!< Voltage over the FPGA18 [V]
+  float fpga_25_current_A; //!< Current used by the FPGA25 [A]
+  float fpga_25_voltage_V; //!< Voltage over the FPGA25 [V]
+  float cmv_21_current_A; //!< Current used by the CMV21 [A]
+  float cmv_21_voltage_V; //!< Voltage over the CMV21 [V]
+  float cmv_pix_current_A; //!< Current used by the CMV VDDPix [A]
+  float cmv_pix_voltage_V; //!< Voltage over the CMV VDDPix [V]
+  float cmv_33_current_A; //!< Current used by the CMV VDD33 [A]
+  float cmv_33_voltage_V; //!< Voltage over the CMV VDD33 [V]
+  float cmv_res_current_A; //!< Current used by the CMV VResh [A]
+  float cmv_res_voltage_V; //!< Voltage over the CMV Resh [V]
 } SAGITTA_TELEMETRY_POWER;
 
 /**
@@ -217,7 +230,10 @@ typedef struct
   SAGITTA_TELEMETRY_POWER power;
   SAGITTA_TELEMETRY_SOLUTION solution;
   SAGITTA_TELEMETRY_TEMPERATURE temperature;
-  uint32_t histogram_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section A-D
+  uint32_t histogram_a_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section A
+  uint32_t histogram_b_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section B
+  uint32_t histogram_c_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section C
+  uint32_t histogram_d_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section D
   SAGITTA_TELEMETRY_BLOBS blobs;
   SAGITTA_TELEMETRY_CENTROIDS centroids;
   float auto_blob_threshold; //!< Automatically determined signal threshold value used in the blob algorithm
