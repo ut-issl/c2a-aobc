@@ -51,10 +51,10 @@ typedef struct
  */
 typedef struct
 {
-  ObcTime previous_obc_time; //!< 前回粗三軸姿勢決定アプリが呼び出された時の時刻情報
-  APP_RTAD_METHOD method;
+  ObcTime previous_obc_time;                                    //!< 前回粗三軸姿勢決定アプリが呼び出された時の時刻情報
+  APP_RTAD_METHOD method;                                       //!< 粗三軸姿勢決定手法
   APP_RTAD_SUN_INVISIBLE_PROPAGATION sun_invisible_propagation; //!< 太陽センサ非可視時にどのあたいを伝搬するかの設定
-  QMethodInfo q_method_info;
+  QMethodInfo q_method_info;                                    //!< Q methodパラメータ
 } RoughThreeAxisDetermination;
 
 extern const RoughThreeAxisDetermination* const rough_three_axis_determination;

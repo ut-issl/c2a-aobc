@@ -12,7 +12,7 @@
 
 // Rough Three Axis Determination
 extern const APP_RTAD_METHOD ATTITUDE_DETERMINATION_PARAMETERS_rtad_method;                                        //!< Rough three axis determination method
-extern const APP_RTAD_SUN_INVISIBLE_PROPAGATION ATTITUDE_DETERMINATION_PARAMETERS_rtad_sun_invisible_propagation;  //!< Rough three axis determination method
+extern const APP_RTAD_SUN_INVISIBLE_PROPAGATION ATTITUDE_DETERMINATION_PARAMETERS_rtad_sun_invisible_propagation;  //!< Rough three axis determination sun invisible propagation method
 extern const float ATTITUDE_DETERMINATION_PARAMETERS_q_method_sun_vec_weight;                                      //!< Q-method sun vector weight (0.0f ~ 1.0f)
 
 // Fine Three Axis Determination
