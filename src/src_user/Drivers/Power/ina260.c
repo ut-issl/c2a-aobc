@@ -8,6 +8,7 @@
 
 #include <string.h>
 #include <src_core/Library/print.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
 
 #define INA260_STREAM_TLM_CMD  (0)
 #define INA260_RX_FRAME_SIZE   (2)
@@ -197,8 +198,10 @@ static DS_ERR_CODE INA260_load_driver_super_init_settings_(DriverSuper* super)
   super->interface = I2C;
 
   stream_config = &(super->stream_config[INA260_STREAM_TLM_CMD]);
-  DSSC_enable(stream_config);
 
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_I2C);
+
+  DSSC_enable(stream_config);
   DSSC_set_rx_frame_size(stream_config, INA260_RX_FRAME_SIZE);
   DSSC_set_data_analyzer(stream_config, INA260_analyze_rec_data_);
 
