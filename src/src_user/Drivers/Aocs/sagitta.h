@@ -131,22 +131,22 @@ typedef enum
  */
 typedef struct
 {
-  float mcu_current_A; //!< Current used by the MCU [A]
-  float mcu_voltage_V; //!< Voltage over the MCU [V]
+  float mcu_current_A;       //!< Current used by the MCU [A]
+  float mcu_voltage_V;       //!< Voltage over the MCU [V]
   float fpga_core_current_A; //!< Current used by the FPGA core [A]
   float fpga_core_voltage_V; //!< Voltage over the FPGA core [V]
-  float fpga_18_current_A; //!< Current used by the FPGA18 [A]
-  float fpga_18_voltage_V; //!< Voltage over the FPGA18 [V]
-  float fpga_25_current_A; //!< Current used by the FPGA25 [A]
-  float fpga_25_voltage_V; //!< Voltage over the FPGA25 [V]
-  float cmv_21_current_A; //!< Current used by the CMV21 [A]
-  float cmv_21_voltage_V; //!< Voltage over the CMV21 [V]
-  float cmv_pix_current_A; //!< Current used by the CMV VDDPix [A]
-  float cmv_pix_voltage_V; //!< Voltage over the CMV VDDPix [V]
-  float cmv_33_current_A; //!< Current used by the CMV VDD33 [A]
-  float cmv_33_voltage_V; //!< Voltage over the CMV VDD33 [V]
-  float cmv_res_current_A; //!< Current used by the CMV VResh [A]
-  float cmv_res_voltage_V; //!< Voltage over the CMV Resh [V]
+  float fpga_18_current_A;   //!< Current used by the FPGA18 [A]
+  float fpga_18_voltage_V;   //!< Voltage over the FPGA18 [V]
+  float fpga_25_current_A;   //!< Current used by the FPGA25 [A]
+  float fpga_25_voltage_V;   //!< Voltage over the FPGA25 [V]
+  float cmv_21_current_A;    //!< Current used by the CMV21 [A]
+  float cmv_21_voltage_V;    //!< Voltage over the CMV21 [V]
+  float cmv_pix_current_A;   //!< Current used by the CMV VDDPix [A]
+  float cmv_pix_voltage_V;   //!< Voltage over the CMV VDDPix [V]
+  float cmv_33_current_A;    //!< Current used by the CMV VDD33 [A]
+  float cmv_33_voltage_V;    //!< Voltage over the CMV VDD33 [V]
+  float cmv_res_current_A;   //!< Current used by the CMV VResh [A]
+  float cmv_res_voltage_V;   //!< Voltage over the CMV Resh [V]
 } SAGITTA_TELEMETRY_POWER;
 
 /**
