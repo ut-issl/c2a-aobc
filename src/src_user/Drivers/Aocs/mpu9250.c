@@ -9,6 +9,7 @@
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/vector3.h>
 #include <src_user/Library/matrix33.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
 
 #define MPU9250_STREAM_TLM_CMD         (0)  //!< テレコマで使うストリーム
 #define MPU9250_TX_FOR_REC_FRAME_SIZE  (1)  //!< 観測時の1回の送信データ長（バイト）
@@ -151,6 +152,8 @@ static DS_ERR_CODE MPU9250_gyro_load_driver_super_init_settings_(DriverSuper* su
 
   stream_config = &(super->stream_config[MPU9250_STREAM_TLM_CMD]);
 
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_I2C);
+
   DSSC_enable(stream_config);
   DSSC_set_rx_frame_size(stream_config, MPU9250_GYRO_RX_FRAME_SIZE);
   DSSC_set_data_analyzer(stream_config, MPU9250_gyro_analyze_rec_data_);
@@ -165,6 +168,8 @@ static DS_ERR_CODE MPU9250_mag_load_driver_super_init_settings_(DriverSuper* sup
   super->interface = I2C;
 
   stream_config = &(super->stream_config[MPU9250_STREAM_TLM_CMD]);
+
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_I2C);
 
   DSSC_enable(stream_config);
   DSSC_set_rx_frame_size(stream_config, MPU9250_MAG_RX_FRAME_SIZE);
