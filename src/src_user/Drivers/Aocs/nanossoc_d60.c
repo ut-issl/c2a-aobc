@@ -5,9 +5,10 @@
 */
 
 #include "nanossoc_d60.h"
-#include <src_user/Library/vector3.h>
-#include <string.h> // for memcpy
 #include <math.h>
+#include <string.h> // for memcpy
+#include <src_user/Library/vector3.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
 
 #define NANOSSOC_D60_STREAM_TLM_CMD (0)  //!< テレコマで使うストリーム
 #define NANOSSOC_D60_RX_FRAME_SIZE  (15) //!< 1回の受信で取得するデータ長（バイト）
@@ -61,6 +62,9 @@ static DS_ERR_CODE NANOSSOC_D60_load_driver_super_init_settings_(DriverSuper* su
 
   // streamは0のみ
   stream_config = &(super->stream_config[NANOSSOC_D60_STREAM_TLM_CMD]);
+
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_I2C);
+
   DSSC_enable(stream_config);
 
   // 送信
