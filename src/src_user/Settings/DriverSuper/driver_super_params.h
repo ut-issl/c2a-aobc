@@ -11,7 +11,7 @@
 #define DS_STREAM_MAX         (1)
 
 // TODO: 適切な値を考える
-// OEM7600Driverに合わせて64から144に変更した
-#define DS_IF_RX_BUFFER_SIZE  (144)
+// Sagittaに合わせて144から343に変更した
+#define DS_IF_RX_BUFFER_SIZE  (343)
 
 #endif
