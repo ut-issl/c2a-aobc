@@ -12,6 +12,8 @@
 #include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include <src_core/TlmCmd/packet_handler.h>
 
+#define DS_IF_RX_BUFFER_SIZE_MOBC (128)  //!< IF_RXのバッファサイズ
+
 /**
  * @enum   MOBC_TX_ERR_CODE
  * @brief  MOBCのコマンド送信（MOBCからみたらテレメ）エラーコード

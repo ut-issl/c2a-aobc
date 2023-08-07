@@ -10,6 +10,8 @@
 #include <src_user/Settings/port_config.h>
 #include <src_user/Settings/DriverSuper/driver_buffer_define.h>
 
+#define DS_STREAM_REC_BUFFER_SIZE_MOBC (DS_IF_RX_BUFFER_SIZE_MOBC * 2)  //!< DS_StreamRecBuffer のバッファサイズ（非同期通信なので2倍している）
+
 static void DI_MOBC_init_(void);
 static void DI_MOBC_update_(void);
 static void DI_MOBC_ms_tlm_packet_handler_init_(void);
@@ -20,7 +22,7 @@ const MOBC_Driver* const mobc_driver = &mobc_driver_;
 
 // バッファ
 static DS_StreamRecBuffer DI_MOBC_rx_buffer_;
-static uint8_t DI_MOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_MOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_MOBC];
 
 /**
  * 一度に送出する最大テレメ数
