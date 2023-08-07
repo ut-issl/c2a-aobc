@@ -115,9 +115,6 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
                 SAGITTA_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
 
-  sagitta_driver->info.quaternion_i2b = QUATERNION_make_unit();
-  sagitta_driver->info.frame_transform_c2b = QUATERNION_make_unit();
-
   sagitta_driver->info.tlm_type = SAGITTA_TLM_TYPE_SET_PARAMETER_REPLY;
   sagitta_driver->info.tlm_id = (uint8_t)SAGITTA_TLM_ID_TEMPERATURE;
   sagitta_driver->info.tlm_status = 0;
@@ -128,6 +125,13 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
 
   // Initialize telemetry
   memset(&(sagitta_driver->info.telemetry), 0x00, sizeof(sagitta_driver->info.telemetry));
+
+  sagitta_driver->info.telemetry.solution.quaternion_i2c = QUATERNION_make_unit();
+  sagitta_driver->info.telemetry.solution.track_quaternion_i2c = QUATERNION_make_unit();
+  sagitta_driver->info.telemetry.solution.lisa_quaternion_i2c = QUATERNION_make_unit();
+  sagitta_driver->info.frame_transform_c2b = QUATERNION_make_unit();
+  sagitta_driver->info.quaternion_i2b = QUATERNION_product(sagitta_driver->info.telemetry.solution.quaternion_i2c,
+                                                           sagitta_driver->info.frame_transform_c2b);
 
   // Initialize read_parameter
   memset(&(sagitta_driver->info.read_parameter), 0x00, sizeof(sagitta_driver->info.read_parameter));
