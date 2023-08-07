@@ -84,7 +84,7 @@ static void DI_SAGITTA_update_(void)
     // 電源OFF直前の可視状態で残りつづけ，他所で参照されることを避ける
     for (uint8_t stt_id = 0; stt_id < SAGITTA_IDX_MAX; stt_id++)
     {
-      sagitta_driver_[stt_id].info.is_valid_quaternion = 0;
+      sagitta_driver_[stt_id].info.telemetry.solution.is_valid_quaternion = 0;
     }
   }
   else
