@@ -63,7 +63,7 @@ static DS_ERR_CODE NANOSSOC_D60_load_driver_super_init_settings_(DriverSuper* su
   // streamは0のみ
   stream_config = &(super->stream_config[NANOSSOC_D60_STREAM_TLM_CMD]);
 
-  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_I2C);
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL);
 
   DSSC_enable(stream_config);
 

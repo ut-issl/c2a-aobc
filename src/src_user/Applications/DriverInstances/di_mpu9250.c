@@ -30,8 +30,8 @@ const  DiMpu9250* const di_mpu9250[MPU9250_IDX_MAX] = {&di_mpu9250_[MPU9250_IDX_
 // バッファ
 static DS_StreamRecBuffer DI_MPU9250_rx_buffer_;
 static DS_StreamRecBuffer DI_AK8963_rx_buffer_;
-static uint8_t DI_MPU9250_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_I2C];
-static uint8_t DI_AK8963_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_I2C];
+static uint8_t DI_MPU9250_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
+static uint8_t DI_AK8963_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
 
 static uint8_t DI_MPU9250_is_initialized_[MPU9250_IDX_MAX] = { 0 };  //!< 0 = not initialized, 1 = initialized
 

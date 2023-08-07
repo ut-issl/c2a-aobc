@@ -36,7 +36,7 @@ const  NANOSSOC_D60_Driver* const nanossoc_d60_driver[NANOSSOC_D60_IDX_MAX]
                                                         &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ]};
 // バッファ
 static DS_StreamRecBuffer DI_NANOSSOC_D60_rx_buffer_[NANOSSOC_D60_IDX_MAX];
-static uint8_t DI_NANOSSOC_D60_rx_buffer_allocation_[NANOSSOC_D60_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_I2C];
+static uint8_t DI_NANOSSOC_D60_rx_buffer_allocation_[NANOSSOC_D60_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
 
 static NANOSSOC_D60_IDX NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY; // DI_NANOSSOC_D60_update_が呼ばれたときにアップデートするサンセンサを指定するカウンタ．
 

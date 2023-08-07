@@ -199,7 +199,7 @@ static DS_ERR_CODE INA260_load_driver_super_init_settings_(DriverSuper* super)
 
   stream_config = &(super->stream_config[INA260_STREAM_TLM_CMD]);
 
-  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_I2C);
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL);
 
   DSSC_enable(stream_config);
   DSSC_set_rx_frame_size(stream_config, INA260_RX_FRAME_SIZE);
