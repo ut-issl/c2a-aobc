@@ -15,7 +15,7 @@ void AR_load_initial_settings(void)
   // add_application_(AR_DI_UART_EXAMPLE, DI_uart_example);
   // add_application_(AR_DI_I2C_EXAMPLE,  I2C_EXAMPLE_update);
   add_application_(AR_DI_MOBC,         DI_MOBC_update);
-  add_application_(AR_DI_MOBC_MST_PH,  DI_MOBC_ms_tlm_packet_handler);
+  add_application_(AR_DI_MOBC_RT_TLM_PH,  DI_MOBC_rt_tlm_packet_handler);
   // AOCS
   add_application_(AR_DI_MPU9250,      DI_MPU9250_update);
   add_application_(AR_DI_RM3100,       DI_RM3100_update);

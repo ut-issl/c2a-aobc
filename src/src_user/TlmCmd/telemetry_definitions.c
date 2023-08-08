@@ -126,12 +126,12 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_OBC_(uint8_t* packet, uint16_t* len, uint16_t ma
   TF_copy_u8(&packet[30], (uint8_t)(mode_manager->stat));
   TF_copy_u8(&packet[31], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[32], (uint8_t)(mode_manager->previous_id));
-  TF_copy_u8(&packet[33], (uint8_t)(task_dispathcer->task_list_id));
-  TF_copy_u32(&packet[34], (uint32_t)(task_dispathcer->tskd.prev_err.time.total_cycle));
-  TF_copy_u8(&packet[38], (uint8_t)(task_dispathcer->tskd.prev_err.time.step));
-  TF_copy_u16(&packet[39], (uint16_t)(task_dispathcer->tskd.prev_err.code));
-  TF_copy_u8(&packet[41], (uint8_t)(task_dispathcer->tskd.prev_err.cmd_ret.exec_sts));
-  TF_copy_u32(&packet[42], (uint32_t)(task_dispathcer->tskd.prev_err.cmd_ret.err_code));
+  TF_copy_u8(&packet[33], (uint8_t)(task_dispatcher->task_list_id));
+  TF_copy_u32(&packet[34], (uint32_t)(task_dispatcher->tskd.prev_err.time.total_cycle));
+  TF_copy_u8(&packet[38], (uint8_t)(task_dispatcher->tskd.prev_err.time.step));
+  TF_copy_u16(&packet[39], (uint16_t)(task_dispatcher->tskd.prev_err.code));
+  TF_copy_u8(&packet[41], (uint8_t)(task_dispatcher->tskd.prev_err.cmd_ret.exec_sts));
+  TF_copy_u32(&packet[42], (uint32_t)(task_dispatcher->tskd.prev_err.cmd_ret.err_code));
   TF_copy_u32(&packet[46], PH_gs_cmd_list.executed_nodes_);
   TF_copy_u32(&packet[50], (uint32_t)(gs_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[54], (uint16_t)(gs_command_dispatcher->prev.code));
@@ -197,8 +197,8 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_OBC_(uint8_t* packet, uint16_t* len, uint16_t ma
   TF_copy_u8(&packet[208], (uint8_t)(block_command_table->pos.cmd));
   TF_copy_u32(&packet[209], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u16(&packet[213], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
-  TF_copy_u32(&packet[215], PH_ms_tlm_list.executed_nodes_);
-  TF_copy_u8(&packet[219], (uint8_t)(PH_ms_tlm_list.active_nodes_));
+  TF_copy_u32(&packet[215], PH_rt_tlm_list.executed_nodes_);
+  TF_copy_u8(&packet[219], (uint8_t)(PH_rt_tlm_list.active_nodes_));
 #endif
 
   *len = 220;
@@ -1720,7 +1720,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t
   TF_copy_u32(&packet[26], (uint32_t)(TMGR_get_master_clock().mode_cycle));
   TF_copy_u8(&packet[30], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[31], (uint8_t)( ((uint8_t)(mode_manager->stat) << 7 & 0x80) | ((uint8_t)(mode_manager->previous_id) & 0x7F) ));
-  TF_copy_u16(&packet[32], task_dispathcer->task_list_id);
+  TF_copy_u16(&packet[32], task_dispatcher->task_list_id);
   TF_copy_u8(&packet[34], (uint8_t)(PH_gs_cmd_list.executed_nodes_));
   TF_copy_u32(&packet[35], (uint32_t)gs_command_dispatcher->prev.time.total_cycle);
   TF_copy_u16(&packet[39], (uint16_t)(gs_command_dispatcher->prev.code));
