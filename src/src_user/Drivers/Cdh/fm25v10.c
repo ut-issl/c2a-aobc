@@ -206,8 +206,10 @@ static DS_ERR_CODE FM25V10_load_driver_super_init_settings_(DriverSuper* super)
   super->interface = SPI;
 
   stream_config = &(super->stream_config[FM25V10_STREAM_TLM_CMD]);
-  DSSC_enable(stream_config);
 
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_IF_RX_BUFFER_SIZE_FM25V10);
+
+  DSSC_enable(stream_config);
   DSSC_set_rx_frame_size(stream_config, FM25V10_MAX_LENGTH);  // 可変だがサイズ情報なし, 都度設定する
   DSSC_set_data_analyzer(stream_config, FM25V10_analyze_rec_data_);
 
