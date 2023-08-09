@@ -2129,7 +2129,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_FRAME_TRANSFORMATION_(uint8_t* packet, uint16_t*
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (217 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (218 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(bdot->control_gain[0]));
@@ -2187,13 +2187,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_CONTROL_(uint8_t* packet, uint16_t* len, uint16_
   TF_copy_float(&packet[195], (float)(aocs_mode_manager->stt_invisible_time_limit_s));
   TF_copy_float(&packet[199], (float)(time_space_calculator->offset_sec));
   TF_copy_u8(&packet[203], (uint8_t)(rough_three_axis_determination->method));
-  TF_copy_float(&packet[204], (float)(rough_three_axis_determination->q_method_info.sun_vec_weight));
-  TF_copy_float(&packet[208], (float)(rough_three_axis_determination->q_method_info.mag_vec_weight));
-  TF_copy_float(&packet[212], (float)(unloading->control_gain));
-  TF_copy_u8(&packet[216], (uint8_t)(unloading->exec_is_enable));
+  TF_copy_u8(&packet[204], (uint8_t)(rough_three_axis_determination->sun_invisible_propagation));
+  TF_copy_float(&packet[205], (float)(rough_three_axis_determination->q_method_info.sun_vec_weight));
+  TF_copy_float(&packet[209], (float)(rough_three_axis_determination->q_method_info.mag_vec_weight));
+  TF_copy_float(&packet[213], (float)(unloading->control_gain));
+  TF_copy_u8(&packet[217], (uint8_t)(unloading->exec_is_enable));
 #endif
 
-  *len = 217;
+  *len = 218;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
