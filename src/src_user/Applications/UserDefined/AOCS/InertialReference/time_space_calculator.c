@@ -26,6 +26,8 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void);
 static double APP_TIME_SPACE_CALC_propagate_current_jday_ref_(void);
 static void   APP_TIME_SPACE_CALC_update_eci_ecef_trans_(const double j_day_ref);
 
+//!< 最後にJday更新に用いたGPSテレメの取得時刻
+static ObcTime obct_tag_for_last_gps_tlm;
 
 AppInfo APP_TIME_SPACE_CALC_create_app(void)
 {
@@ -36,6 +38,7 @@ AppInfo APP_TIME_SPACE_CALC_create_app(void)
 static void APP_TIME_SPACE_CALC_init_(void)
 {
   time_space_calculator_.offset_sec = 0.0f;
+  obct_tag_for_last_gps_tlm = OBCT_create(0, 0, 0);
 
   return;
 }
@@ -43,7 +46,6 @@ static void APP_TIME_SPACE_CALC_init_(void)
 
 static void APP_TIME_SPACE_CALC_exec_(void)
 {
-  static ObcTime obct_tag_for_last_gps_tlm = OBCT_create(0, 0, 0); //!< 最後にJday更新に用いたGPSテレメの取得時刻
   ObcTime obct_tag_for_current_gps_tlm     = aocs_manager->obct_gps_time_obs;
   uint32_t time_from_last_gps_tlm_update   = OBCT_diff_in_msec(&obct_tag_for_last_gps_tlm, &obct_tag_for_current_gps_tlm);
 
