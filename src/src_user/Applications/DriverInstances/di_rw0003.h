@@ -5,8 +5,8 @@
 #ifndef DI_RW0003_H_
 #define DI_RW0003_H_
 
-#include "../../Drivers/Aocs/rw0003.h"
-#include "../UserDefined/AOCS/aocs_error.h"
+#include <src_user/Drivers/Aocs/rw0003.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**
@@ -55,5 +55,9 @@ CCP_CmdRet Cmd_DI_RW0003_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* pa
 CCP_CmdRet Cmd_DI_RW0003_SET_IDLE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_RW0003_DRIVE_TORQUE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_RW0003_DRIVE_SPEED(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_READ_VDD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_READ_SEU_COUNT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_READ_FAULT_STATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_RW0003_DIAGNOSTIC(const CommonCmdPacket* packet);
 
 #endif

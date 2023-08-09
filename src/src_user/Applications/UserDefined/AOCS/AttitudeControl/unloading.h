@@ -5,12 +5,12 @@
 #ifndef UNLOADING_H_
 #define UNLOADING_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/physical_constants.h"
-#include "../../../../Library/ControlUtility/cross_product_control.h"
-#include "../../../../Library/stdint.h"
-#include "../aocs_manager.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/ControlUtility/cross_product_control.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 /**
  * @enum   APP_UNLOADING_STATE
@@ -65,7 +65,7 @@ extern const Unloading* const unloading;
 AppInfo APP_UNLOADING_create_app(void);
 
 CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet); // TODO_L: Fix typo VEROCITY -> VELOCITY. Cmd DBも変わるので注意
 CCP_CmdRet Cmd_APP_UNLOADING_SET_CONTROL_GAIN(const CommonCmdPacket* packet);
 
 

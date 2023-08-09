@@ -11,9 +11,9 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
 
 static void DI_SAGITTA_init_(void);
 static void DI_SAGITTA_update_(void);
@@ -84,7 +84,7 @@ static void DI_SAGITTA_update_(void)
     // 電源OFF直前の可視状態で残りつづけ，他所で参照されることを避ける
     for (uint8_t stt_id = 0; stt_id < SAGITTA_IDX_MAX; stt_id++)
     {
-      sagitta_driver_[stt_id].info.is_valid_quaternion = 0;
+      sagitta_driver_[stt_id].info.telemetry.solution.is_valid_quaternion = 0;
     }
   }
   else
@@ -111,7 +111,7 @@ static void DI_SAGITTA_update_(void)
 CCP_CmdRet Cmd_DI_SAGITTA_BOOT(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
-  const uint8_t* param = CCP_get_param_head(packet);
+  (void)packet;
 
   if (DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
@@ -140,8 +140,6 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_UNIX_TIME_US(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
 {
-  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   DS_CMD_ERR_CODE ret;
@@ -244,8 +242,6 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet)
 {
-  if (!DI_SAGITTA_is_booted_[SAGITTA_IDX_IN_UNIT])  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-
   DS_CMD_ERR_CODE ret;
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 

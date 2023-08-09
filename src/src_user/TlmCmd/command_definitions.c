@@ -4,7 +4,7 @@
  * @brief  コマンド定義
  * @note   このコードは自動生成されています！
  */
-#include "../../src_core/TlmCmd/command_analyze.h"
+#include <src_core/TlmCmd/command_analyze.h>
 #include "command_definitions.h"
 #include "command_source.h"
 
@@ -31,6 +31,10 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TLCD_SET_ID_FOR_TLM].cmd_func = Cmd_TLCD_SET_ID_FOR_TLM;
   cmd_table[Cmd_CODE_TLCD_SET_PAGE_FOR_TLM].cmd_func = Cmd_TLCD_SET_PAGE_FOR_TLM;
   cmd_table[Cmd_CODE_GENERATE_TLM].cmd_func = Cmd_GENERATE_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].cmd_func = Cmd_TG_GENERATE_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_HP_TLM].cmd_func = Cmd_TG_GENERATE_HP_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_RT_TLM].cmd_func = Cmd_TG_GENERATE_RT_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].cmd_func = Cmd_TG_GENERATE_ST_TLM;
   cmd_table[Cmd_CODE_BCT_CLEAR_BLOCK].cmd_func = Cmd_BCT_CLEAR_BLOCK;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].cmd_func = Cmd_BCT_SET_BLOCK_POSITION;
   cmd_table[Cmd_CODE_BCT_COPY_BCT].cmd_func = Cmd_BCT_COPY_BCT;
@@ -57,12 +61,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EL_INIT_LOGGING_SETTINGS].cmd_func = Cmd_EL_INIT_LOGGING_SETTINGS;
   cmd_table[Cmd_CODE_EL_ENABLE_LOGGING].cmd_func = Cmd_EL_ENABLE_LOGGING;
   cmd_table[Cmd_CODE_EL_DISABLE_LOGGING].cmd_func = Cmd_EL_DISABLE_LOGGING;
-  cmd_table[Cmd_CODE_EL_ENABLE_LOGGING_ALL].cmd_func = Cmd_EL_ENABLE_LOGGING_ALL;
-  cmd_table[Cmd_CODE_EL_DISABLE_LOGGING_ALL].cmd_func = Cmd_EL_DISABLE_LOGGING_ALL;
   cmd_table[Cmd_CODE_EL_ENABLE_TLOG_OVERWRITE].cmd_func = Cmd_EL_ENABLE_TLOG_OVERWRITE;
   cmd_table[Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE].cmd_func = Cmd_EL_DISABLE_TLOG_OVERWRITE;
-  cmd_table[Cmd_CODE_EL_ENABLE_TLOG_OVERWRITE_ALL].cmd_func = Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL;
-  cmd_table[Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE_ALL].cmd_func = Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL;
   cmd_table[Cmd_CODE_EH_INIT].cmd_func = Cmd_EH_INIT;
   cmd_table[Cmd_CODE_EH_CLEAR_ALL_RULE].cmd_func = Cmd_EH_CLEAR_ALL_RULE;
   cmd_table[Cmd_CODE_EH_LOAD_DEFAULT_RULE].cmd_func = Cmd_EH_LOAD_DEFAULT_RULE;
@@ -274,6 +274,14 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_GENERATE_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_GENERATE_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_GENERATE_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_HP_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_RT_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_BCT_CLEAR_BLOCK].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;

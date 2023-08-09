@@ -5,13 +5,13 @@
 */
 
 #include "inertial_geomag_calculator.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/time_space.h"
-#include "../../../../Library/geomagnetism.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/time_space.h>
+#include <src_user/Library/geomagnetism.h>
 
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../../app_registry.h"
+#include <src_user/Applications/app_registry.h>
 
 
 static InertialGeomagCalculator        inertial_geomag_calulator_;

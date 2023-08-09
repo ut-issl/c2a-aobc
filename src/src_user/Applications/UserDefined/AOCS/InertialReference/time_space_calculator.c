@@ -4,14 +4,14 @@
 * @brief  各種慣性系リファレンス計算のうち，時刻と座標の変換を行う
 */
 
+#include <stdint.h>
 #include "time_space_calculator.h"
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/TimeManager/obc_time.h>
-#include "../aocs_manager.h"
-#include "../../../../Library/time_space.h"
-#include "../../../../Library/stdint.h"
-#include "../../../../Library/c2a_math.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/time_space.h>
+#include <src_user/Library/c2a_math.h>
 
 
 static TimeSpaceCalculator        time_space_calculator_;
@@ -86,6 +86,7 @@ static double APP_TIME_SPACE_CALC_propagate_current_jday_ref_(void)
 {
   ObcTime obct_now     = TMGR_get_master_clock();
   float elapsed_ti_sec = (float)OBCT_diff_in_sec(&aocs_manager->obct_reference, &obct_now);
+  // TODO: 時間アサーションを入れるかどうか検討する
 
   double reference_jday = (double)(elapsed_ti_sec) / (PHYSICAL_CONST_EARTH_SOLAR_DAY_s) + aocs_manager->reference_jday;
 

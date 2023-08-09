@@ -8,11 +8,14 @@
 
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../DriverInstances/di_mpu9250.h"
-#include "../../../../DriverInstances/di_rm3100.h"
-#include "../SensorFilters/mpu9250_filter.h"
-#include "../SensorFilters/rm3100_filter.h"
-#include "../../aocs_manager.h"
+#include <src_user/Applications/DriverInstances/di_mpu9250.h>
+#include <src_user/Applications/DriverInstances/di_rm3100.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorFilters/mpu9250_filter.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorFilters/rm3100_filter.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/component_selector_parameters.h>
 
 static MagnetometerSelector        magnetometer_selector_;
 const  MagnetometerSelector* const magnetometer_selector = &magnetometer_selector_;
@@ -30,7 +33,7 @@ AppInfo APP_MAG_SELECTOR_create_app(void)
 
 static void APP_MAG_SELECTOR_init_(void)
 {
-  magnetometer_selector_.state = APP_MAG_SELECTOR_STATE_RM_EXT;
+  magnetometer_selector_.state = COMPONENT_SELECTOR_PARAMETERS_initial_selected_magnetometer;
   magnetometer_selector_.auto_flag = 0;
   return;
 }

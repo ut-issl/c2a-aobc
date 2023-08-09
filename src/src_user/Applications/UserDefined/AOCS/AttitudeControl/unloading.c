@@ -10,8 +10,11 @@
 
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../Library/vector3.h"
-#include "../HardwareDependent/ActuatorControllers/mtq_seiren_controller.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Applications/UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static Unloading        unloading_;
 const  Unloading* const unloading = &unloading_;
@@ -43,13 +46,13 @@ AppInfo APP_UNLOADING_create_app(void)
 
 static void APP_UNLOADING_init_(void)
 {
-  unloading_.angular_velocity_upper_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(7000.0f);
-  unloading_.angular_velocity_lower_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(-7000.0f);
-  unloading_.angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec(0.0f);
+  unloading_.angular_velocity_upper_threshold_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;
+  unloading_.angular_velocity_lower_threshold_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;
+  unloading_.angular_velocity_target_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;
 
-  unloading_.control_gain = -1.0e-7f;
+  unloading_.control_gain = ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;
 
-  unloading_.exec_is_enable = APP_UNLOADING_EXEC_DISABLE;
+  unloading_.exec_is_enable = ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable;
 
   for (int idx = 0; idx < AOCS_MANAGER_NUM_OF_RW; idx++)
   {
@@ -71,7 +74,7 @@ void APP_UNLOADING_exec_(void)
   APP_UNLOADING_update_unloading_state_();
   APP_UNLOADING_calc_output_torque();
 
-  // アンローディング処理がenableになっているときのみ，出力目標トルクをAOCS Manegerにセットする
+  // アンローディング処理がenableになっているときのみ，出力目標トルクをAOCS Managerにセットする
   // disableのときは，出力目標トルクのセットはしないが，トルク計算自体はcalc_torque_outputで行われている．
   if (unloading_.exec_is_enable == APP_UNLOADING_EXEC_ENABLE)
   {
@@ -149,10 +152,22 @@ void APP_UNLOADING_calc_output_torque(void)
     if (unloading_.unloading_state[idx] != APP_UNLOADING_STATE_OFF)
     {
       float exceed_angular_velocity_rad_s = aocs_manager->rw_angular_velocity_rad_s[idx] - unloading_.angular_velocity_target_rad_s;
-      float exceed_angular_velocity_vec_rad_s[PHYSICAL_CONST_THREE_DIM]; //!< 目標回転角速度に対して、余分に持っている回転角速度ベクトル
-      VECTOR3_scalar_product(exceed_angular_velocity_vec_rad_s, exceed_angular_velocity_rad_s, aocs_manager->rw_rotation_direction_matrix[idx]);
+      float scalar_output_torque_Nm = exceed_angular_velocity_rad_s * unloading_.control_gain;
+      // Check sign
+      float sign = 1.0f;
+      if (scalar_output_torque_Nm < 0.0f)
+      {
+        sign = -1.0f;
+      }
+      // Check minimum value
+      float abs_output_torque_Nm = fabsf(scalar_output_torque_Nm);
+      if (abs_output_torque_Nm < ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm)
+      {
+        scalar_output_torque_Nm = sign * ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm;
+      }
+
       float output_torque_tmp_Nm[PHYSICAL_CONST_THREE_DIM]; //!< その軸のRWをアンローディングするのに必要な出力トルク
-      VECTOR3_scalar_product(output_torque_tmp_Nm, unloading_.control_gain, exceed_angular_velocity_vec_rad_s);
+      VECTOR3_scalar_product(output_torque_tmp_Nm, scalar_output_torque_Nm, aocs_manager->rw_rotation_direction_matrix[idx]);
       VECTOR3_add(unloading_.output_torque_body_Nm, unloading_.output_torque_body_Nm, output_torque_tmp_Nm);
     }
   }

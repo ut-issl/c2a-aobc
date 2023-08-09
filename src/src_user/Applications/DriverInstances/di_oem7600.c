@@ -8,10 +8,12 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
-#include "../UserDefined/AOCS/aocs_manager.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+
+#define DS_STREAM_REC_BUFFER_SIZE_OEM7600 (DS_IF_RX_BUFFER_SIZE_OEM7600 * 2)  //!< DS_StreamRecBuffer のバッファサイズ（非同期通信なので2倍している）
 
 static void DI_OEM7600_init_(void);
 static void DI_OEM7600_update_(void);
@@ -22,7 +24,7 @@ const  OEM7600_Driver* const oem7600_driver[OEM7600_IDX_MAX] = { &oem7600_driver
 // バッファ
 // 面倒くさいので要素数一つと仮定してバッファを確保する
 static DS_StreamRecBuffer DI_OEM7600_rx_buffer_;
-static uint8_t DI_OEM7600_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_OEM7600_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_OEM7600];
 
 
 AppInfo DI_OEM7600_update(void)

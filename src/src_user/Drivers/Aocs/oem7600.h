@@ -7,11 +7,13 @@
 #define OEM7600_H_
 
 #include <src_core/IfWrapper/uart.h>
-#include "../../IfWrapper/GPIO.h"
+#include <src_user/IfWrapper/GPIO.h>
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/System/TimeManager/obc_time.h>
 
 #define OEM7600_MAX_SAT_NUM_RANGE_STORE (12) //!< rangeテレメの格納対象とする同時可視最大衛星数
+
+#define DS_IF_RX_BUFFER_SIZE_OEM7600 (144)  //!< IF_RXのバッファサイズ
 
 /**
 * @enum  OEM7600_DATA_UPDATE_STATUS
@@ -42,9 +44,9 @@ typedef enum
   OEM7600_TLM_ID_BEST_XYZ         = 0x000000F1, // cmd/log manual 3.21項
   OEM7600_TLM_ID_HARDWARE_MONITOR = 0x000003C3, // cmd/log manual 3.76項
   // 仕様書上はbinary/asciiで同一IDだが、CMD引数にIDを使うために、binary系列ID + 0x1000をascii系列として定義する
-  OEM7600_TLM_ID_RANGE_ASCII            = OEM7600_TLM_ID_RANGE + 0x1000,
-  OEM7600_TLM_ID_BEST_XYZ_ASCII         = OEM7600_TLM_ID_BEST_XYZ + 0x1000,
-  OEM7600_TLM_ID_HARDWARE_MONITOR_ASCII = OEM7600_TLM_ID_HARDWARE_MONITOR + 0x1000
+  OEM7600_TLM_ID_RANGE_ASCII            = 0x0000102B,
+  OEM7600_TLM_ID_BEST_XYZ_ASCII         = 0x000010F1,
+  OEM7600_TLM_ID_HARDWARE_MONITOR_ASCII = 0x000013C3
 
 } OEM7600_TLM_ID;
 

@@ -11,7 +11,7 @@
 
 #include <src_core/System/TimeManager/obc_time.h>
 
-#include "../AOCS/aocs_manager.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 #include "non_volatile_memory_partition.h"
 
 

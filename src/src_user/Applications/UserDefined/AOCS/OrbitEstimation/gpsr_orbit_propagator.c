@@ -9,11 +9,14 @@
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "kepler_orbit_propagator.h"
-#include "../aocs_manager.h"
-#include "../../../../Library/math_constants.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/time_space.h"
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/time_space.h>
 #include <string.h>
+
+// SatelliteParameters
+#include <src_user/Settings/SatelliteParameters/orbit_parameters.h>
 
 static GpsrOrbitPropagator        gpsr_orbit_propagator_;
 const  GpsrOrbitPropagator* const gpsr_orbit_propagator = &gpsr_orbit_propagator_;
@@ -39,19 +42,19 @@ static void APP_GPSROP_init_(void)
   memset(&gpsr_orbit_propagator_, 0x00, sizeof(GpsrOrbitPropagator));
 
   // ひとまず初期値はS2E_ISSL6U_AOCSの軌道設定に合わせる
-  gpsr_orbit_propagator_.orbital_elements.semi_major_axis_km = 6794.5f;
-  gpsr_orbit_propagator_.orbital_elements.eccentricity = 0.0015f;
-  gpsr_orbit_propagator_.orbital_elements.inclination_rad = 0.9012f;
-  gpsr_orbit_propagator_.orbital_elements.raan_rad = 0.1411f;
-  gpsr_orbit_propagator_.orbital_elements.arg_perigee_rad = 0.0f; // 最終書き込み確認用に1.7952fから変更
-  gpsr_orbit_propagator_.orbital_elements.epoch_jday = 2.458940966402607e6;
+  gpsr_orbit_propagator_.orbital_elements.semi_major_axis_km = ORBIT_PARAMETERS_gpsr_semi_major_axis_km;
+  gpsr_orbit_propagator_.orbital_elements.eccentricity = ORBIT_PARAMETERS_gpsr_eccentricity;
+  gpsr_orbit_propagator_.orbital_elements.inclination_rad = ORBIT_PARAMETERS_gpsr_inclination_rad;
+  gpsr_orbit_propagator_.orbital_elements.raan_rad = ORBIT_PARAMETERS_gpsr_raan_rad;
+  gpsr_orbit_propagator_.orbital_elements.arg_perigee_rad = ORBIT_PARAMETERS_gpsr_arg_perigee_rad;
+  gpsr_orbit_propagator_.orbital_elements.epoch_jday = ORBIT_PARAMETERS_gpsr_epoch_jday;
 
-  gpsr_orbit_propagator_.orbital_elements_threshold.semi_major_axis_km = 50.0f;
-  gpsr_orbit_propagator_.orbital_elements_threshold.eccentricity = 0.1f;
-  gpsr_orbit_propagator_.orbital_elements_threshold.inclination_rad = PHYSICAL_CONST_degree_to_radian(20.0f);
-  gpsr_orbit_propagator_.orbital_elements_threshold.raan_rad = PHYSICAL_CONST_degree_to_radian(20.0f);
-  gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad = PHYSICAL_CONST_degree_to_radian(50.0f);
-  gpsr_orbit_propagator_.orbital_elements_threshold.epoch_jday = 0.1;
+  gpsr_orbit_propagator_.orbital_elements_threshold.semi_major_axis_km = ORBIT_PARAMETERS_gpsr_threshold_semi_major_axis_km;
+  gpsr_orbit_propagator_.orbital_elements_threshold.eccentricity = ORBIT_PARAMETERS_gpsr_threshold_eccentricity;
+  gpsr_orbit_propagator_.orbital_elements_threshold.inclination_rad = ORBIT_PARAMETERS_gpsr_threshold_inclination_rad;
+  gpsr_orbit_propagator_.orbital_elements_threshold.raan_rad = ORBIT_PARAMETERS_gpsr_threshold_raan_rad;
+  gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad =ORBIT_PARAMETERS_gpsr_threshold_arg_perigee_rad;
+  gpsr_orbit_propagator_.orbital_elements_threshold.epoch_jday = ORBIT_PARAMETERS_gpsr_threshold_epoch_jday;
 
   KEPLER_ORBIT_init_constants(&gpsr_orbit_propagator_.orbit_constants,
                                gpsr_orbit_propagator_.orbital_elements);

@@ -5,6 +5,7 @@
 #ifndef TELEMETRY_SOURCE_H_
 #define TELEMETRY_SOURCE_H_
 
+#include <src_core/Library/git_revision.h>
 #include <src_core/System/ApplicationManager/app_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/ModeManager/mode_manager.h>
@@ -16,6 +17,5 @@
 #include <src_core/TlmCmd/block_command_executor.h>
 
 #include "../Applications/app_headers.h"
-#include "../Library/git_revision.h"
 
 #endif // TELEMETRY_SOURCE_H_

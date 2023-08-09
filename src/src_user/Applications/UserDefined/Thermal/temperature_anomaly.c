@@ -7,13 +7,13 @@
 
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../Library/c2a_math.h"
+#include <src_user/Library/c2a_math.h>
 #include "thermo_sensor.h"
-#include "../../DriverInstances/di_mpu9250.h"
-#include "../../DriverInstances/di_stim210.h"
-#include "../../DriverInstances/di_sagitta.h"
-#include "../../DriverInstances/di_rw0003.h"
-#include "../../DriverInstances/di_oem7600.h"
+#include <src_user/Applications/DriverInstances/di_mpu9250.h>
+#include <src_user/Applications/DriverInstances/di_stim210.h>
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/DriverInstances/di_rw0003.h>
+#include <src_user/Applications/DriverInstances/di_oem7600.h>
 
 
 static TemperatureAnomaly        temperature_anomaly_;
@@ -91,9 +91,9 @@ static void APP_TEMPERATURE_ANOMALY_update_temperature_(void)
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_FINE_GYRO_Z] =
     stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[2];
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_STT_MCU] =
-    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.temperature_mcu_degC;
+    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC;
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_STT_FPGA] =
-    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.temperature_fpga_degC;
+    sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC;
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_RW_X] =
     rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC;
   APP_TEMPERATURE_ANOMALY_temperature_degC_[APP_TEMPERATURE_ANOMALY_IDX_RW_Y] =

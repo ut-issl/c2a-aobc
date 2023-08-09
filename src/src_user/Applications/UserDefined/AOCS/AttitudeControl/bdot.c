@@ -7,11 +7,14 @@
 #include "bdot.h"
 
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../Library/vector3.h"
-#include "../../../../Library/matrix33.h"
-#include "../../../../Library/math_constants.h"
-#include "../aocs_manager.h"
-#include "../../../DriverInstances/di_mtq_seiren.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/math_constants.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
+
+// Satellite parameters
+#include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
 
 static Bdot        bdot_;
 const  Bdot* const bdot = &bdot_;
@@ -71,9 +74,9 @@ AppInfo APP_BDOT_create_app(void)
 
 static void APP_BDOT_init_(void)
 {
-  VECTOR3_initialize(bdot_.control_gain, -0.1f);
-  bdot_.minimum_time_derivative_step_ms = 100; // SILS試験で正しくレートダンプに成功したときの値を設定している
-  bdot_.mtq_output_time_length_ms = 1000;      // SILS試験で正しくレートダンプに成功したときの値を設定している
+  VECTOR3_copy(bdot_.control_gain, ATTITUDE_CONTROL_PARAMETERS_bdot_control_gain);
+  bdot_.minimum_time_derivative_step_ms = ATTITUDE_CONTROL_PARAMETERS_bdot_minimum_time_derivative_step_ms;
+  bdot_.mtq_output_time_length_ms = ATTITUDE_CONTROL_PARAMETERS_bdot_mtq_output_time_length_ms;
   bdot_.mtq_output_turned_on_obc_time = TMGR_get_master_clock();
 
   bdot_.time_derivative_variables.previous_obc_time = TMGR_get_master_clock();
@@ -143,10 +146,10 @@ AOCS_ERROR APP_BDOT_calculate_mag_vec_time_derivative_(void)
   if (bdot->time_derivative_variables.num_of_mag_observation == 0)
   {
     // 磁気センサの観測が開始していない場合，磁場ベクトルが0となっているので，その場合はすぐにリターンする
-    if (VECTOR3_norm(aocs_manager->mag_vec_obs_body_nT) < MATH_CONST_NORMAL_CHECK_THRESHOLD) return AOCS_ERROR_OTHERS;
+    if (VECTOR3_norm(aocs_manager->mag_vec_est_body_nT) < MATH_CONST_NORMAL_CHECK_THRESHOLD) return AOCS_ERROR_OTHERS;
 
     bdot_.time_derivative_variables.previous_obc_time = TMGR_get_master_clock();
-    VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_before_nT, aocs_manager->mag_vec_obs_body_nT);
+    VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_before_nT, aocs_manager->mag_vec_est_body_nT);
 
     // 1回目の観測が終了した段階では，磁場ベクトルの微分はまだ計算できないので，エラーを出してリターンする．
     bdot_.time_derivative_variables.num_of_mag_observation = 1;
@@ -155,7 +158,7 @@ AOCS_ERROR APP_BDOT_calculate_mag_vec_time_derivative_(void)
   else // bdot->time_derivative_variables.num_of_mag_observation == 1
   {
     bdot_.time_derivative_variables.current_obc_time = TMGR_get_master_clock();
-    VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_after_nT, aocs_manager->mag_vec_obs_body_nT);
+    VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_after_nT, aocs_manager->mag_vec_est_body_nT);
 
     // 時間微分のインターバルが一定以下の場合は，姿勢レートの変化が不十分とみなし，磁場の時間微分を計算しない
     if (OBCT_diff_in_msec(&(bdot->time_derivative_variables.previous_obc_time), &(bdot->time_derivative_variables.current_obc_time))

@@ -15,8 +15,8 @@ C2A_MATH_ERROR SPIKE_FILTER_init(SpikeFilter* filter, const SpikeFilter_Config f
   double amplitude_limit_to_accept_as_step_set = filter_setting.amplitude_limit_to_accept_as_step;
   if ((reject_threshold_set < 0.0) || (amplitude_limit_to_accept_as_step_set < 0.0))
   {
-    double reject_threshold_set = 0.0;
-    double amplitude_limit_to_accept_as_step_set = 0.0;
+    reject_threshold_set = 0.0;
+    amplitude_limit_to_accept_as_step_set = 0.0;
     param_error = C2A_MATH_ERROR_RANGE_OVER;
   }
 

@@ -7,9 +7,9 @@
 #ifndef FINE_THREE_AXIS_DETERMINATION_H_
 #define FINE_THREE_AXIS_DETERMINATION_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/System/TimeManager/time_manager.h>
-#include "../../../../Library/stdint.h"
 
 /**
 * @enum  FINE_THREE_AXIS_DETERMINATION_METHOD

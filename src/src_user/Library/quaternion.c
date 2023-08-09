@@ -101,7 +101,7 @@ C2A_MATH_ERROR QUATERNION_make_from_matrix(Quaternion* q_out,
   float trace = MATRIX33_trace(matrix_n);
   if (trace > 0.0f)
   {
-    float q_scalar_seed = sqrtf(trace + 1.0f);
+    float q_scalar_seed = C2A_MATH_sqrtf(trace + 1.0f);
     q_before_check.scalar_part    = 0.5f * q_scalar_seed;
     q_before_check.vector_part[0] = (matrix_n[1][2] - matrix_n[2][1]) / (2.0f * q_scalar_seed);
     q_before_check.vector_part[1] = (matrix_n[2][0] - matrix_n[0][2]) / (2.0f * q_scalar_seed);
@@ -110,10 +110,10 @@ C2A_MATH_ERROR QUATERNION_make_from_matrix(Quaternion* q_out,
   else
   {
     float q_candidate[PHYSICAL_CONST_QUATERNION_DIM];
-    q_candidate[0] = 0.5f * sqrtf(1.0f + matrix_n[0][0] - matrix_n[1][1] - matrix_n[2][2]);
-    q_candidate[1] = 0.5f * sqrtf(1.0f - matrix_n[0][0] + matrix_n[1][1] - matrix_n[2][2]);
-    q_candidate[2] = 0.5f * sqrtf(1.0f - matrix_n[0][0] - matrix_n[1][1] + matrix_n[2][2]);
-    q_candidate[3] = 0.5f * sqrtf(1.0f + matrix_n[0][0] + matrix_n[1][1] + matrix_n[2][2]);
+    q_candidate[0] = 0.5f * C2A_MATH_sqrtf(1.0f + matrix_n[0][0] - matrix_n[1][1] - matrix_n[2][2]);
+    q_candidate[1] = 0.5f * C2A_MATH_sqrtf(1.0f - matrix_n[0][0] + matrix_n[1][1] - matrix_n[2][2]);
+    q_candidate[2] = 0.5f * C2A_MATH_sqrtf(1.0f - matrix_n[0][0] - matrix_n[1][1] + matrix_n[2][2]);
+    q_candidate[3] = 0.5f * C2A_MATH_sqrtf(1.0f + matrix_n[0][0] + matrix_n[1][1] + matrix_n[2][2]);
 
     uint8_t max_value_index = 0;
     float max_value_in_candidate = fabsf(q_candidate[0]);
@@ -427,7 +427,7 @@ float QUATERNION_calc_norm(const Quaternion q_in)
 {
   float pow2_norm = q_in.scalar_part * q_in.scalar_part +
                     VECTOR3_inner_product(q_in.vector_part, q_in.vector_part);
-  return (sqrtf(pow2_norm));
+  return (C2A_MATH_sqrtf(pow2_norm));
 }
 
 

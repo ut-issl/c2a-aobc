@@ -9,9 +9,11 @@
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/Drivers/Super/driver_super.h>
 
-#include "../../IfWrapper/GPIO.h"
-#include "../../Library/physical_constants.h"
-#include "../../Library/quaternion.h"
+#include <src_user/IfWrapper/GPIO.h>
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/quaternion.h>
+
+#define DS_IF_RX_BUFFER_SIZE_STIM210 (32)  //!< IF_RXのバッファサイズ
 
 /**
  * @enum   STIM210_OPERATION_MODE

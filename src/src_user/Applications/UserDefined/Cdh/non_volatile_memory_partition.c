@@ -3,10 +3,11 @@
 * @file   non_volatile_memory_partition.c
 * @brief  不揮発メモリアクセス用のパーティションを定義する
 */
+
+#include <stdint.h>
 #include "non_volatile_memory_partition.h"
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
-#include "../../../Library/stdint.h"
 #include <string.h>
 
 static NonVolatileMemoryPartition        non_volatile_memory_partition_;

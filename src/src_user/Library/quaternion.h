@@ -8,7 +8,7 @@
 #ifndef QUATERNION_H_
 #define QUATERNION_H_
 
-#include "stdint.h"
+#include <stdint.h>
 #include "physical_constants.h"
 #include "c2a_math.h"
 #include "euler_angle.h"

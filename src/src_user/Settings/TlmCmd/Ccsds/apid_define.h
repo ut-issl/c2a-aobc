@@ -6,7 +6,7 @@
 #ifndef APID_DEFINE_H_
 #define APID_DEFINE_H_
 
-#include "../../../Library/stdint.h"
+#include <stdint.h>
 
 /**
  * @enum   APID
@@ -35,14 +35,5 @@ typedef enum
  * @return APID
  */
 APID APID_get_apid_from_uint16(uint16_t apid);
-
-/**
- * @brief  入力した APID が他の OBC で生成された TLM の APID かどうか
- * @param  apid: APID
- * @note   不正な APID は 0 を返す
- * @retval 1: 他 OBC で生成された TLM の APID
- * @retval 0: それ以外の APID
- */
-int APID_is_other_obc_tlm_apid(APID apid);
 
 #endif

@@ -6,7 +6,7 @@
 
 // TODO_L: DS側のTCPが整理されたら，TCP関連を撲滅し，CTCPに統一する
 
-#include "./mobc.h"
+#include "mobc.h"
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/Library/endian.h>
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
@@ -54,6 +54,8 @@ static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super)
 
   CTCP_init_dssc(p_stream_config, MOBC_tx_frame_, sizeof(MOBC_tx_frame_), MOBC_analyze_rec_data_);
   // 定期TLMの監視機能の有効化しない → ので設定上書きなし
+
+  DSC_set_rx_buffer_size_in_if_rx(p_super, DS_IF_RX_BUFFER_SIZE_MOBC);
 
   DSSC_enable(p_stream_config);
 
@@ -114,8 +116,8 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void
   //      CCP_EXEC_TYPE_TL_FROM_GS   <- GSからMOBCのキューに入らず直接転送されたもの
   //      CCP_EXEC_TYPE_BC    <- GSからMOBCのキューに入らず直接転送されたもの
   //      CCP_EXEC_TYPE_RT    <- これがGS→MOBCとの違いで，MOBCのTLC/BCキューに溜まって実行されたもの
-  // TCP_CMD_DEST_TYPE:
-  //      TCP_CMD_DEST_TYPE_TO_ME (TCP_CMD_DEST_TYPE_TO_AOBC の可能性はなくはないが，MEに上書きされているはず)
+  //  CCP_DEST_TYPE:
+  //      CCP_DEST_TYPE_TO_ME (CCP_DEST_TYPE_TO_APID, CCP_DEST_TYPE_TO_AOBC の可能性はなくはないが， ME に上書きされているはず)
 
   // 通信的にはOKなので， OK を返すのでいいという認識
   mobc_driver->info.c2a.ph_ack = PH_analyze_cmd_packet(&packet);

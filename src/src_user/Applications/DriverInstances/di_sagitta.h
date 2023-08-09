@@ -5,7 +5,7 @@
 #ifndef DI_SAGITTA_H_
 #define DI_SAGITTA_H_
 
-#include "../../Drivers/Aocs/sagitta.h"
+#include <src_user/Drivers/Aocs/sagitta.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**

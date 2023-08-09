@@ -7,25 +7,19 @@ option(BUILD_C2A_AS_CXX "Build C2A as C++" ON)
 
 option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
 
-# SCI COM for connection to WINGS TMTC IF
-option(USE_SCI_COM "Use SCI_COM" OFF)
-
-# SCI COM for connection to PC UART
-# ！！！注意！！！
-# これをONにした状態で，SCIの受け口がない場合（TMTC_IFが動いていない状態）
-# そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
-
-option(USE_SCI_COM_UART "Use SCI_COM_UART" OFF)
+# UART COM for connection to PC UART
+# これをONにした状態でTMTC_IFが動いていない場合，そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
+option(USE_UART_COM "Use UART COM" OFF)
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_core)
 set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user)
+set(C2A_SATELLITE_PARAMETERS_DIR SatelliteParameters/Sample) # relative path from Settings
 
 set(USE_ALL_C2A_CORE_APPS OFF)
 set(USE_ALL_C2A_CORE_TEST_APPS OFF)
 set(USE_ALL_C2A_CORE_LIB ON)
 
 set(C2A_SRCS
-  # ${C2A_CORE_DIR}/Applications/anomaly_handler.c
   ${C2A_CORE_DIR}/Applications/divided_cmd_utility.c
   ${C2A_CORE_DIR}/Applications/event_utility.c
   ${C2A_CORE_DIR}/Applications/gs_command_dispatcher.c
@@ -35,7 +29,6 @@ set(C2A_SRCS
   ${C2A_CORE_DIR}/Applications/timeline_command_dispatcher.c
   # ${C2A_CORE_DIR}/Applications/utility_command.c
   # ${C2A_CORE_DIR}/Applications/utility_counter.c
-  ${C2A_CORE_DIR}/System/AnomalyLogger/anomaly_logger.c
 
   # SRC_USER codes
   # ${C2A_USER_DIR}/C2A_main.c

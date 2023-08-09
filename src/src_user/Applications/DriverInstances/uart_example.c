@@ -2,7 +2,7 @@
 
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/Library/print.h>
-#include "../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 
 static UART_Config uart_debug_;
 
@@ -16,7 +16,6 @@ AppInfo DI_uart_example(void)
 
 static void DI_uart_example_init_(void)
 {
-  int i_ret = 0;
   uart_debug_.ch = PORT_CH_UART_DEBUG;
   uart_debug_.baudrate = 115200;
 

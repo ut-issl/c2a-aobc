@@ -8,7 +8,7 @@
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/System/TimeManager/obc_time.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/quaternion.h"
+#include <src_user/Library/quaternion.h>
 
 #define APP_QI_TARGET_MAX (20) // 衛星が確保可能な目標Quaternionの数
 

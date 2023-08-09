@@ -4,7 +4,7 @@
  */
 
 #include "./I2C_CHIPKIT.h"
-#include "../../../Settings/port_config.h"
+#include <src_user/Settings/port_config.h>
 extern "C"
 {
 #include <src_core/Library/print.h>

@@ -10,9 +10,9 @@
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
-#include "../UserDefined/Power/power_switch_control.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
 
 
 static void DI_INA260_init_(void);
@@ -33,7 +33,7 @@ const  INA260_Driver* const ina260_driver[INA260_IDX_MAX] = {&ina260_driver_[INA
                                                              &ina260_driver_[INA260_IDX_RW0003_Z]};
 // バッファ
 static DS_StreamRecBuffer DI_INA260_rx_buffer_[INA260_IDX_MAX];
-static uint8_t DI_INA260_rx_buffer_allocation_[INA260_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_INA260_rx_buffer_allocation_[INA260_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
 
 static uint8_t    DI_INA260_is_initialized_[INA260_IDX_MAX]; //!< 0 = not initialized, 1 = initialized
 static INA260_IDX DI_INA260_idx_counter_ = (INA260_IDX)(0);  //!< DI_INA260_update_が呼ばれたときに観測する電流センサを指定するカウンタ．

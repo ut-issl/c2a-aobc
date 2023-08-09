@@ -9,9 +9,11 @@
 #include <src_core/Library/print.h>
 #include <src_core/Library/endian.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../Settings/port_config.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
+#include <src_user/Settings/port_config.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
 #include <math.h>
+
+#define DS_STREAM_REC_BUFFER_SIZE_FM25V10 (DS_IF_RX_BUFFER_SIZE_FM25V10)  //!< DS_StreamRecBuffer のバッファサイズ
 
 static void DI_FM25V10_init_(void);
 static void DI_FM25V10_update_(void);
@@ -23,7 +25,7 @@ const  FM25V10_Driver* const fm25v10_driver[FM25V10_IDX_MAX] = {&fm25v10_driver_
                                                                 &fm25v10_driver_[FM25V10_IDX_4]};
 // バッファ
 static DS_StreamRecBuffer DI_FM25V10_rx_buffer_[FM25V10_IDX_MAX];
-static uint8_t DI_FM25V10_rx_buffer_allocation_[FM25V10_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_FM25V10_rx_buffer_allocation_[FM25V10_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_FM25V10];
 
 
 /**

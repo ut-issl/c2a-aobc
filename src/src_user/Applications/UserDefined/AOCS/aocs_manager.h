@@ -5,14 +5,13 @@
 #ifndef AOCS_MANAGER_H_
 #define AOCS_MANAGER_H_
 
+#include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/System/TimeManager/obc_time.h>
-#include "../../../Library/physical_constants.h"
-#include "../../../Library/quaternion.h"
-#include "../../../Library/stdint.h"
-#include "../../../Library/time_system/gps_time.h"
-#include "../../DriverInstances/di_rw0003.h"
-#include "../../DriverInstances/di_mtq_seiren.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/quaternion.h>
+#include <src_user/Applications/DriverInstances/di_rw0003.h>
+#include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 
 /**
  * @enum   AOCS_MANAGER_ERROR
@@ -164,9 +163,10 @@ typedef struct
   ObcTime  obct_gps_time_obs;             //!< 上記をセンサで観測したタイミングのC2Aマスタークロック [-]
   // uint32_t current_gps_time_est_msec;  //!< 推定系で推定されたGPS時刻の秒成分 [msec] : 22_08_24時点で使用箇所がないため，一旦コメントアウト
   // uint16_t current_gps_time_est_week;  //!< 推定系で推定されたGPS時刻の週成分 [week] : 22_08_24時点で使用箇所がないため，一旦コメントアウト
-  ObcTime  obct_gps_time_est;             //!< 上記を推定したタイミングのC2Aマスタークロック [-]
-  double   reference_jday;                //!< 慣性系計算の基準時刻として用いるユリウス日 [ユリウス日]
-  ObcTime  obct_reference;                //!< 慣性系計算の基準時刻として用いるユリウス日を更新した時のOBC時刻 [-]
+  ObcTime  obct_gps_time_est;          //!< 上記を推定したタイミングのC2Aマスタークロック [-]
+  double   reference_jday;             //!< 慣性系計算の基準時刻として用いるユリウス日 [ユリウス日]
+  ObcTime  obct_reference;             //!< 慣性系計算の基準時刻として用いるユリウス日を更新した時のOBC時刻 [-]
+  float obct_diff_max_limit_s;         //!< OBC時刻差計算時のアサーションに使う上限 [s]
   // センサ状態
   AOCS_MANAGER_GPS_VISIBILITY gps_visibility;     //!< GPS情報の利用可否
   AOCS_MANAGER_SUN_VISIBILITY sun_visibility;     //!< 太陽がサンセンサから見えているかどうか

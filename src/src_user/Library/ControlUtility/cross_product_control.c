@@ -8,8 +8,8 @@
 
 #include <math.h>
 
-#include "../vector3.h"
-#include "../math_constants.h"
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/math_constants.h>
 
 
 void CROSS_PRODUCT_CONTROL_init(CrossProductControl* cross_product_control)

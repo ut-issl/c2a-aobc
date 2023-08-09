@@ -8,7 +8,10 @@
 
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../Power/power_switch_control.h"
+#include <src_user/Applications/UserDefined/Power/power_switch_control.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/fdir_parameters.h>
 
 static CurrentAnomaly        current_anomaly_;
 const  CurrentAnomaly* const current_anomaly = &current_anomaly_;
@@ -30,27 +33,27 @@ AppInfo APP_CURRENT_ANOMALY_create_app(void)
 
 static void APP_CURRENT_ANOMALY_init_(void)
 {
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_PIC]          = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_STIM210]      = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_SAGITTA]      = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_OEM7600]      = 1.0;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RM3100]       = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_NANOSSOC_D60] = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_MTQ]          = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RW0003_X]     = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RW0003_Y]     = 0.5;
-  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RW0003_Z]     = 0.5;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_PIC]          = FDIR_PARAMETERS_hw_oc_detection_threshold_pic_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_STIM210]      = FDIR_PARAMETERS_hw_oc_detection_threshold_stim210_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_SAGITTA]      = FDIR_PARAMETERS_hw_oc_detection_threshold_sagitta_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_OEM7600]      = FDIR_PARAMETERS_hw_oc_detection_threshold_oem7600_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RM3100]       = FDIR_PARAMETERS_hw_oc_detection_threshold_rm3100_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_NANOSSOC_D60] = FDIR_PARAMETERS_hw_oc_detection_threshold_nanossoc_d60_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_MTQ]          = FDIR_PARAMETERS_hw_oc_detection_threshold_mtq_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RW0003_X]     = FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_x_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RW0003_Y]     = FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_y_V;
+  current_anomaly_.hw_oc_event_logger_threshold_V[INA260_IDX_RW0003_Z]     = FDIR_PARAMETERS_hw_oc_detection_threshold_rw0003_z_V;
 
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_PIC]          = 200;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_STIM210]      = 1000;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_SAGITTA]      = 500;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_OEM7600]      = 1000;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RM3100]       = 200;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_NANOSSOC_D60] = 150;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_MTQ]          = 2000;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RW0003_X]     = 2000;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RW0003_Y]     = 2000;
-  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RW0003_Z]     = 2000;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_PIC]          = FDIR_PARAMETERS_sw_oc_threshold_pic_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_STIM210]      = FDIR_PARAMETERS_sw_oc_threshold_stim210_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_SAGITTA]      = FDIR_PARAMETERS_sw_oc_threshold_sagitta_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_OEM7600]      = FDIR_PARAMETERS_sw_oc_threshold_oem7600_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RM3100]       = FDIR_PARAMETERS_sw_oc_threshold_rm3100_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_NANOSSOC_D60] = FDIR_PARAMETERS_sw_oc_threshold_nanossoc_d60_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_MTQ]          = FDIR_PARAMETERS_sw_oc_threshold_mtq_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RW0003_X]     = FDIR_PARAMETERS_sw_oc_threshold_rw0003_x_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RW0003_Y]     = FDIR_PARAMETERS_sw_oc_threshold_rw0003_y_mA;
+  current_anomaly_.sw_oc_threshold_mA[INA260_IDX_RW0003_Z]     = FDIR_PARAMETERS_sw_oc_threshold_rw0003_z_mA;
 
   return;
 }

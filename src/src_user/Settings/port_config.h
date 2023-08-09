@@ -109,8 +109,8 @@
 
 // PORT_CH_I2C_RWS
 #define I2C_DEVICE_ADDR_RW_X         (0x11)  //!< X軸RW-FM
-#define I2C_DEVICE_ADDR_RW_Y         (0x37)  //!< Y軸RW-FM
-#define I2C_DEVICE_ADDR_RW_Z         (0x39)  //!< Z軸RW-FM
+#define I2C_DEVICE_ADDR_RW_Y         (0x12)  //!< Y軸RW-FM
+#define I2C_DEVICE_ADDR_RW_Z         (0x13)  //!< Z軸RW-FM
 #define I2C_DEVICE_ADDR_RW_EM        (0x35)  //!< RW-EM 試験時にのみ使う
 
 // PORT_CH_I2C_INAS
@@ -124,5 +124,10 @@
 #define I2C_DEVICE_ADDR_INA_RWX      (0x47)  //!< RW_X軸用のINA260電流センサ
 #define I2C_DEVICE_ADDR_INA_RWY      (0x48)  //!< RW_Y軸用のINA260電流センサ
 #define I2C_DEVICE_ADDR_INA_RWZ      (0x49)  //!< RW_Z軸用のINA260電流センサ
+
+// Use user defined I2C address
+#ifdef USER_DEFINED_I2C_ADDRESS
+#include <Settings/user_defined_i2c_address.h>
+#endif
 
 #endif

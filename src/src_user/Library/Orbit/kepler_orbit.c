@@ -7,9 +7,9 @@
 #include "kepler_orbit.h"
 
 #include <math.h>
-#include "../matrix33.h"
-#include "../vector3.h"
-#include "../math_constants.h"
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/math_constants.h>
 #include <src_core/Library/print.h>
 
 #define KEPLER_ORBIT_ECCENTRICITY_THRESHOLD (1.0e-5f) //!< 円軌道とみなす離心率閾値
@@ -24,7 +24,7 @@ void KEPLER_ORBIT_init_constants(KeplerOrbitConstants* kepler_orbit_constants,
   // 平均運動を求める TODO_L:計算精度を考えると平均運動をアップリンクするほうが良いかも
   float earth_gravity_const_km3_s2 = PHYSICAL_CONST_EARTH_GRAVITY_CONST_m3_s2 / 1.0e9f;
   float semi_major_axis_km3 = powf(orbital_elements.semi_major_axis_km, 3.0f);
-  kepler_orbit_constants->mean_motion_rad_s = sqrtf(earth_gravity_const_km3_s2 / semi_major_axis_km3);
+  kepler_orbit_constants->mean_motion_rad_s = C2A_MATH_sqrtf(earth_gravity_const_km3_s2 / semi_major_axis_km3);
 
   // 座標変換を求める
   float dcm_arg_perigee[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM];
@@ -69,7 +69,7 @@ C2A_MATH_ERROR KEPLER_ORBIT_calc_position(float position_eci_km[PHYSICAL_CONST_T
   // 軌道面内の位置速度を求める
   float cos_u = cosf(u_rad);
   float sin_u = sinf(u_rad);
-  float a_sqrt_e_km = a_km * sqrtf(1.0f - e * e);
+  float a_sqrt_e_km = a_km * C2A_MATH_sqrtf(1.0f - e * e);
   float e_cos_u = 1.0f - e * cos_u;
 
   float pos_inplane_km[PHYSICAL_CONST_THREE_DIM];
@@ -136,7 +136,6 @@ C2A_MATH_ERROR KEPLER_ORBIT_calc_oe_from_pos_vel(KeplerOrbitalElements* orbital_
 
   // eccentricity
   float h[PHYSICAL_CONST_THREE_DIM];
-  float h_norm;
   VECTOR3_outer_product(h, position_eci_km, velocity_eci_km_s);
   float v_temp1[PHYSICAL_CONST_THREE_DIM];
   float v_temp2[PHYSICAL_CONST_THREE_DIM];
@@ -182,9 +181,9 @@ C2A_MATH_ERROR KEPLER_ORBIT_calc_oe_from_pos_vel(KeplerOrbitalElements* orbital_
   if (eccentricity > KEPLER_ORBIT_ECCENTRICITY_THRESHOLD)
   {
     float e_cosE = 1.0f - r_km / semi_major_axis_km;
-    float e_sinE = VECTOR3_inner_product(position_eci_km, velocity_eci_km_s) / sqrtf(mu_km3_s2 * semi_major_axis_km);
+    float e_sinE = VECTOR3_inner_product(position_eci_km, velocity_eci_km_s) / C2A_MATH_sqrtf(mu_km3_s2 * semi_major_axis_km);
     float E_rad = atan2f(e_sinE, e_cosE);
-    float n = sqrtf(mu_km3_s2 / semi_major_axis_km / semi_major_axis_km / semi_major_axis_km);
+    float n = C2A_MATH_sqrtf(mu_km3_s2 / semi_major_axis_km / semi_major_axis_km / semi_major_axis_km);
     epoch_jday = current_time_jday - (double)((E_rad - e_sinE) / n / PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
   }
   else // e->0のとき近点引数の代わりに緯度引数を用いるため、現在時刻がそのまま近心点通過時刻となる

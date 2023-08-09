@@ -5,8 +5,8 @@
 #ifndef DI_MTQ_SEIREN_H_
 #define DI_MTQ_SEIREN_H_
 
-#include "../../Drivers/Aocs/mtq_seiren.h"
-#include "../UserDefined/AOCS/aocs_error.h"
+#include <src_user/Drivers/Aocs/mtq_seiren.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**

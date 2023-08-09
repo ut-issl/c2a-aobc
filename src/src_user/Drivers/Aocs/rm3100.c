@@ -4,10 +4,11 @@
 * @brief  RM3100のDriver
 */
 
-#include "./rm3100.h"
-#include "../../Library/matrix33.h"
-#include "../../Library/vector3.h"
-#include "../../Library/c2a_math.h"
+#include "rm3100.h"
+#include <src_user/Library/matrix33.h>
+#include <src_user/Library/vector3.h>
+#include <src_user/Library/c2a_math.h>
+#include <src_user/Settings/DriverSuper/driver_buffer_define.h>
 
 #define RM3100_STREAM_TLM_CMD  (0)
 #define RM3100_RX_FRAME_SIZE   (9)  //!< RM3100の場合この値で固定
@@ -159,8 +160,10 @@ static DS_ERR_CODE RM3100_load_driver_super_init_settings_(DriverSuper* super)
   super->interface = I2C;
 
   stream_config = &(super->stream_config[RM3100_STREAM_TLM_CMD]);
-  DSSC_enable(stream_config);
 
+  DSC_set_rx_buffer_size_in_if_rx(super, DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL);
+
+  DSSC_enable(stream_config);
   DSSC_set_rx_frame_size(stream_config, RM3100_RX_FRAME_SIZE);
   DSSC_set_data_analyzer(stream_config, RM3100_analyze_rec_data_);
 

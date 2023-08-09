@@ -14,7 +14,7 @@
 #undef PH_TLC_BC_LIST_MAX
 #undef PH_TLC_TLM_LIST_MAX
 #undef PH_TLC_MIS_LIST_MAX
-#undef PH_MS_TLM_LIST_MAX
+#undef PH_RT_TLM_LIST_MAX
 
 #define TL_TLM_PAGE_SIZE (16)
 #define TL_TLM_PAGE_MAX  (1)
@@ -26,6 +26,6 @@
                                                                  // timeline_command_dispatcher.tlm_info_.tl_list の長さがこれなので
 #define PH_TLC_BC_LIST_MAX  (TL_TLM_PAGE_SIZE * 2)
 #define PH_TLC_TLM_LIST_MAX (TL_TLM_PAGE_SIZE * 1)
-#define PH_MS_TLM_LIST_MAX  (4)
+#define PH_RT_TLM_LIST_MAX  (4)
 
 #endif

@@ -7,7 +7,7 @@
 
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include "../../../../Library/quaternion.h"
+#include <src_user/Library/quaternion.h>
 
 /**
  * @enum   APP_TARGET_ATT_CALC_MODE

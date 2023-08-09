@@ -9,9 +9,12 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../../DriverInstances/di_sagitta.h"
-#include "../../aocs_manager.h"
-#include "../../../../../Library/physical_constants.h"
+#include <src_user/Applications/DriverInstances/di_sagitta.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Library/physical_constants.h>
+
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/sagitta_parameters.h>
 
 static SagittaFilter        sagitta_filter_;
 const  SagittaFilter* const sagitta_filter = &sagitta_filter_;
@@ -78,13 +81,10 @@ static void APP_SAGITTA_FILTER_exec_(void)
 
 static int APP_SAGITTA_FILTER_init_spike_filter_(void)
 {
-  // 値は調整してよいが一旦これで進める
-  sagitta_filter_.q_i2b_spike_filter_config.count_limit_to_accept = 20;
-  sagitta_filter_.q_i2b_spike_filter_config.count_limit_to_reject_continued_warning = 200;
-  sagitta_filter_.q_i2b_spike_filter_config.reject_threshold =
-    PHYSICAL_CONST_degree_to_radian(1.0f);
-  sagitta_filter_.q_i2b_spike_filter_config.amplitude_limit_to_accept_as_step =
-    PHYSICAL_CONST_degree_to_radian(0.6f);     // STT精度は8.7 [秒角(1σ)]
+  sagitta_filter_.q_i2b_spike_filter_config.count_limit_to_accept = SAGITTA_PARAMETERS_q_i2b_spike_filter_config_count_limit_to_accept;
+  sagitta_filter_.q_i2b_spike_filter_config.count_limit_to_reject_continued_warning = SAGITTA_PARAMETERS_q_i2b_spike_filter_config_count_limit_to_reject_continued_warning;
+  sagitta_filter_.q_i2b_spike_filter_config.reject_threshold = SAGITTA_PARAMETERS_q_i2b_spike_filter_config_reject_threshold_rad;
+  sagitta_filter_.q_i2b_spike_filter_config.amplitude_limit_to_accept_as_step = SAGITTA_PARAMETERS_q_i2b_spike_filter_config_amplitude_limit_to_accept_as_step_rad;
 
   C2A_MATH_ERROR q_i2b_spike_filter_setting_result = C2A_MATH_ERROR_OK;
   C2A_MATH_ERROR filter_setting_result =

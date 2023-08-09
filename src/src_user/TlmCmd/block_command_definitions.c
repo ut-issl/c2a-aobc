@@ -5,33 +5,33 @@
 #include <string.h> // for memcpy
 #include "command_definitions.h"
 
-#include "../Settings/Modes/Transitions/sl_nop.h"
-#include "../Settings/Modes/Transitions/sl_initial.h"
-#include "../Settings/Modes/Transitions/sl_bdot.h"
-#include "../Settings/Modes/Transitions/sl_rough_sun_pointing.h"
-#include "../Settings/Modes/Transitions/sl_rough_three_axis.h"
-#include "../Settings/Modes/Transitions/sl_rough_three_axis_rw.h"
-#include "../Settings/Modes/Transitions/sl_fine_three_axis.h"
+#include <src_user/Settings/Modes/Transitions/sl_nop.h>
+#include <src_user/Settings/Modes/Transitions/sl_initial.h>
+#include <src_user/Settings/Modes/Transitions/sl_bdot.h>
+#include <src_user/Settings/Modes/Transitions/sl_rough_sun_pointing.h>
+#include <src_user/Settings/Modes/Transitions/sl_rough_three_axis.h>
+#include <src_user/Settings/Modes/Transitions/sl_rough_three_axis_rw.h>
+#include <src_user/Settings/Modes/Transitions/sl_fine_three_axis.h>
 
-#include "../Settings/Modes/TaskLists/tl_initial.h"
-#include "../Settings/Modes/TaskLists/tl_bdot.h"
-#include "../Settings/Modes/TaskLists/tl_rough_sun_pointing.h"
-#include "../Settings/Modes/TaskLists/tl_rough_three_axis.h"
-#include "../Settings/Modes/TaskLists/tl_rough_three_axis_rw.h"
-#include "../Settings/Modes/TaskLists/tl_fine_three_axis.h"
-#include "../Settings/Modes/TaskLists/tl_gpsr_range_observe.h"
+#include <src_user/Settings/Modes/TaskLists/tl_initial.h>
+#include <src_user/Settings/Modes/TaskLists/tl_bdot.h>
+#include <src_user/Settings/Modes/TaskLists/tl_rough_sun_pointing.h>
+#include <src_user/Settings/Modes/TaskLists/tl_rough_three_axis.h>
+#include <src_user/Settings/Modes/TaskLists/tl_rough_three_axis_rw.h>
+#include <src_user/Settings/Modes/TaskLists/tl_fine_three_axis.h>
+#include <src_user/Settings/Modes/TaskLists/tl_gpsr_range_observe.h>
 
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_cdh_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_drivers_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_inertial_ref_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_sun_vector_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_mtq_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_basic_sensor_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_rw_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_rm3100_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_stim210_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_oem7600_update.h"
-#include "../Settings/Modes/TaskLists/Elements/tl_elem_stt_update.h"
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_cdh_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_drivers_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_inertial_ref_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_sun_vector_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_mtq_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_basic_sensor_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_rw_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_rm3100_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_stim210_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_oem7600_update.h>
+#include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_stt_update.h>
 
 #include "./NormalBlockCommandDefinition/nbc_header.h"
 
@@ -52,6 +52,7 @@ void BC_load_defaults(void)
   BCL_load_bc(BC_SL_ROUGH_THREE_AXIS_TO_ROUGH_THREE_AXIS_RW, BCL_load_rough_three_axis_to_rough_three_axis_rw);
   BCL_load_bc(BC_SL_ROUGH_THREE_AXIS_RW_TO_FINE_THREE_AXIS,  BCL_load_rough_three_axis_rw_to_fine_three_axis);
   BCL_load_bc(BC_SL_ANY_TO_BDOT,                             BCL_load_any_to_bdot);
+  BCL_load_bc(BC_SL_BDOT_TO_INITIAL,                         BCL_load_bdot_to_initial);
 
   // Block Cmds for TaskList
   // こいつは TDSP_initialize() で展開される
@@ -66,8 +67,7 @@ void BC_load_defaults(void)
 
   // Block Cmds for Application Rotation / Combination
   // === CDH ===
-  BCL_load_bc(BC_AR_DRIVERS_UPDATE_INI, BCL_load_drivers_update_initial);
-  BCL_load_bc(BC_AC_CDH_UPDATE,         BCL_load_cdh_update);
+  BCL_load_bc(BC_AC_CDH_UPDATE, BCL_load_cdh_update);
 
   // === AOCS ===
   BCL_load_bc(BC_AC_INERTIAL_REF_UPDATE, BCL_load_inertial_ref_update);

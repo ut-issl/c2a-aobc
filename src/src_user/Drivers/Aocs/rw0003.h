@@ -8,8 +8,8 @@
 
 #include <src_core/IfWrapper/i2c.h>
 #include <src_core/Drivers/Super/driver_super.h>
-#include "../../Library/physical_constants.h"
-#include "../../Library/c2a_math.h"
+#include <src_user/Library/physical_constants.h>
+#include <src_user/Library/c2a_math.h>
 
 extern const float RW0003_kMaxTorqueNm;         //!< 出力可能最大トルク [Nm]
 extern const float RW0003_kMomentOfInertiaKgm2; //!< ホイール慣性モーメント [kgm2]
@@ -34,6 +34,10 @@ typedef struct
   float speed_rad_s;        //!< rotation speed [rad/s]
   float torque_Nm;          //!< ordered torque [Nm]
   float temperature_degC;   //!< temperature [degC]
+  float vdd_V;              //!< output of +3.3 V DC/DC converter [V]
+  float seu_count;          //!< number of errors
+  float fault_state;        //!< 1: wheel is in an fault, 0: otherwise
+  int32_t diagnostic_reset_reason;      //!< reset reason
   float speed_limit1_rad_s; //!< clipされる回転数  [rad/s] (limit1 < limit2)
   float speed_limit2_rad_s; //!< 異常停止する回転数 [rad/s] (limit1 < limit2)
   float rotation_direction_b[PHYSICAL_CONST_THREE_DIM]; //!< 機体座標系での回転方向単位ベクトル(右手系)
@@ -120,5 +124,33 @@ DS_CMD_ERR_CODE RW0003_drive_speed(RW0003_Driver* rw0003_driver, const float spe
  */
 C2A_MATH_ERROR RW0003_set_rotation_direction_b(RW0003_Driver* rm3100_driver,
                                                const float rotation_direction_b[PHYSICAL_CONST_THREE_DIM]);
+
+/**
+ * @brief  RW0003 VDD読み取りコマンド
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEに準じる
+ */
+DS_CMD_ERR_CODE RW0003_read_vdd(RW0003_Driver* rw0003_driver);
+
+/**
+ * @brief  RW0003 SEU Count読み取りコマンド
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEに準じる
+ */
+DS_CMD_ERR_CODE RW0003_read_seu_count(RW0003_Driver* rw0003_driver);
+
+/**
+ * @brief  RW0003 Fault State読み取りコマンド
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEに準じる
+ */
+DS_CMD_ERR_CODE RW0003_read_fault_state(RW0003_Driver* rw0003_driver);
+
+/**
+ * @brief  RW0003 Diagnosticコマンド
+ * @param  rw0003_driver : RW0003_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEに準じる
+ */
+DS_CMD_ERR_CODE RW0003_diagnostic(RW0003_Driver* rw0003_driver);
 
 #endif
