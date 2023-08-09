@@ -126,6 +126,9 @@ static DS_ERR_CODE OEM7600_load_driver_super_init_settings_(DriverSuper* p_super
 
   // streamは0のみ
   p_stream_config = &(p_super->stream_config[OEM7600_STREAM_TLM_CMD]);
+
+  DSC_set_rx_buffer_size_in_if_rx(p_super, DS_IF_RX_BUFFER_SIZE_OEM7600);
+
   DSSC_enable(p_stream_config);
 
   // 送信はする

@@ -19,11 +19,10 @@ extern const MOBC_Driver* const mobc_driver;           //!< MOBC driver
 AppInfo DI_MOBC_update(void);
 
 /**
- * @brief  MOBC MS TLM (mission telemetry) PH (packet handler) アプリ生成関数
+ * @brief  MOBC RT TLM (Realtime telemetry) PH (packet handler) アプリ生成関数
  * @param  void
  * @return AppInfo
- * @note   ひとまずテレメはMSTのみ実装する
  */
-AppInfo DI_MOBC_ms_tlm_packet_handler(void);
+AppInfo DI_MOBC_rt_tlm_packet_handler(void);
 
 #endif

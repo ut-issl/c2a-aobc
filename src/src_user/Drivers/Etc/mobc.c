@@ -55,6 +55,8 @@ static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   CTCP_init_dssc(p_stream_config, MOBC_tx_frame_, sizeof(MOBC_tx_frame_), MOBC_analyze_rec_data_);
   // 定期TLMの監視機能の有効化しない → ので設定上書きなし
 
+  DSC_set_rx_buffer_size_in_if_rx(p_super, DS_IF_RX_BUFFER_SIZE_MOBC);
+
   DSSC_enable(p_stream_config);
 
   return DS_ERR_CODE_OK;

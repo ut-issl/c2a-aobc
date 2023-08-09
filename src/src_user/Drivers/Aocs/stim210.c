@@ -469,6 +469,9 @@ static DS_ERR_CODE STIM210_load_driver_super_init_settings_(DriverSuper* p_super
 
   // streamは0のみ
   stream_config = &(p_super->stream_config[STIM210_STREAM_TLM_CMD]);
+
+  DSC_set_rx_buffer_size_in_if_rx(p_super, DS_IF_RX_BUFFER_SIZE_STIM210);
+
   DSSC_enable(stream_config);
 
   // 定期的な受信はするがフォーマットによって異なるので、STIM210_set_rec_frame_size_で設定する

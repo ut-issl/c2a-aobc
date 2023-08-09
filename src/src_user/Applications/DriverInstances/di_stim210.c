@@ -17,6 +17,8 @@
 // Satellite Parameters
 #include <src_user/Settings/SatelliteParameters/stim210_parameters.h>
 
+#define DS_STREAM_REC_BUFFER_SIZE_STIM210 (DS_IF_RX_BUFFER_SIZE_STIM210 * 2)  //!< DS_StreamRecBuffer のバッファサイズ（非同期通信なので2倍している）
+
 static void DI_STIM210_init_(void);
 static void DI_STIM210_update_(void);
 static void DI_STIM210_temperature_caliblation_(void);
@@ -30,7 +32,7 @@ const  DiStim210* const di_stim210 [STIM210_IDX_MAX] = {&di_stim210_[STIM210_IDX
 // バッファ
 // 面倒くさいので要素数一つと仮定してバッファを確保する
 static DS_StreamRecBuffer DI_STIM210_rx_buffer_;
-static uint8_t DI_STIM210_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_STIM210_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_STIM210];
 
 AppInfo DI_STIM210_update(void)
 {
