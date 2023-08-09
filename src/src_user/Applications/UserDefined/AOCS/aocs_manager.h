@@ -160,7 +160,7 @@ typedef struct
   float rw_rotation_direction_matrix[AOCS_MANAGER_NUM_OF_RW][PHYSICAL_CONST_THREE_DIM]; //!< RWの回転向きをRWの個数分まとめたもの
   float rw_distribution_matrix[PHYSICAL_CONST_THREE_DIM][AOCS_MANAGER_NUM_OF_RW];       //!< RW分配行列
   // 時刻
-  GPS_TIME current_gps_time_obs;          //!< センサで観測されたGPS時刻
+  GPSTIME current_gps_time_obs;          //!< センサで観測されたGPS時刻
   ObcTime  obct_gps_time_obs;             //!< 上記をセンサで観測したタイミングのC2Aマスタークロック [-]
   // uint32_t current_gps_time_est_msec;  //!< 推定系で推定されたGPS時刻の秒成分 [msec] : 22_08_24時点で使用箇所がないため，一旦コメントアウト
   // uint16_t current_gps_time_est_week;  //!< 推定系で推定されたGPS時刻の週成分 [week] : 22_08_24時点で使用箇所がないため，一旦コメントアウト
@@ -239,7 +239,7 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_angular_velocity_rad_s(const float rw_ang
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_rotation_direction_matrix(
   const float rw_rotation_direction_body[AOCS_MANAGER_NUM_OF_RW][PHYSICAL_CONST_THREE_DIM]);
 // 時刻
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_obs(const GPS_TIME current_gps_time,
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_obs(const GPSTIME current_gps_time,
                                                          const ObcTime  obct_gps_time_obs);
 // 22_08_24時点で使用箇所がないため，一旦コメントアウト
 // AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_est(const uint32_t current_gps_time_est_msec,
