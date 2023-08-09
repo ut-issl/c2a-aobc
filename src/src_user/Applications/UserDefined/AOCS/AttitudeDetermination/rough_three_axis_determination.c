@@ -472,10 +472,13 @@ CCP_CmdRet Cmd_APP_RTAD_SET_METHOD(const CommonCmdPacket* packet)
   const uint8_t* param = CCP_get_param_head(packet);
 
   APP_RTAD_METHOD method = (APP_RTAD_METHOD)param[0];
+  APP_RTAD_SUN_INVISIBLE_PROPAGATION sun_invisible_propagation = (APP_RTAD_SUN_INVISIBLE_PROPAGATION)param[1];
 
   if (method >= APP_RTAD_METHOD_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (sun_invisible_propagation >= APP_RTAD_SUN_INVISIBLE_PROPAGATION_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   rough_three_axis_determination_.method = method;
+  rough_three_axis_determination_.sun_invisible_propagation = sun_invisible_propagation;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
