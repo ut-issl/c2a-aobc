@@ -70,7 +70,7 @@ double TIME_SPACE_convert_gpstime_to_julian_day(const GPSTIME gps_time)
   if (gps_time_sec > kSecOfWeek_sec) return (kGPSTimeJDayOrigin_day_);
 
   // leap_secondsの分だけgps時刻の方が進んでいるため，leap_seconds分を差し引く．負値になり得るが，doubleにしているので許容可
-  double elapsed_julian_day_sec_part = gps_time_sec - gps_utc_leap_seconds_;
+  double elapsed_julian_day_sec_part = gps_time_sec - (double)(gps_utc_leap_seconds_);
   double elapsed_julian_day = (double)(gps_time.week_number)*kDayOfWeek_day +
                                elapsed_julian_day_sec_part / (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
