@@ -6,9 +6,6 @@
 #include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
 #include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
-// Number of Sun sensor
-const uint8_t NANOSSOC_D60_PARAMETERS_number_of_mounted_sensor = 4;
-
 // Frame conversion
 const Quaternion NANOSSOC_D60_PARAMETERS_py_quaternion_c2b = { 0.70710665f, 0.0f, 0.0f, 0.70710665f };
 const Quaternion NANOSSOC_D60_PARAMETERS_my_quaternion_c2b = { 0.0f, -0.70710665f, 0.70710665f, 0.0f };
