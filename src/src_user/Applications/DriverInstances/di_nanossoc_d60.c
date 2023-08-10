@@ -112,17 +112,17 @@ static uint8_t DI_NANOSSOC_D60_conv_idx_to_i2c_address_(uint8_t idx)
   switch (idx)
   {
   case NANOSSOC_D60_IDX_0:
-    return I2C_DEVICE_ADDR_SS_PY;
+    return I2C_DEVICE_ADDR_SS_IDX_0;
   case NANOSSOC_D60_IDX_1:
-    return I2C_DEVICE_ADDR_SS_MY;
+    return I2C_DEVICE_ADDR_SS_IDX_1;
   case NANOSSOC_D60_IDX_2:
-    return I2C_DEVICE_ADDR_SS_PZ;
+    return I2C_DEVICE_ADDR_SS_IDX_2;
   case NANOSSOC_D60_IDX_3:
-    return I2C_DEVICE_ADDR_SS_MZ;
+    return I2C_DEVICE_ADDR_SS_IDX_3;
   case NANOSSOC_D60_IDX_4:
-    return I2C_DEVICE_ADDR_SS_PX;
+    return I2C_DEVICE_ADDR_SS_IDX_4;
   case NANOSSOC_D60_IDX_5:
-    return I2C_DEVICE_ADDR_SS_MX;
+    return I2C_DEVICE_ADDR_SS_IDX_5;
   default:
     // ここには来ないはず
     return 0;
