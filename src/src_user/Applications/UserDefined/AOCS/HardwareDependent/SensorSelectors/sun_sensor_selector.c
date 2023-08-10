@@ -23,13 +23,13 @@ const  SunSensorSelector* const sun_sensor_selector = &sun_sensor_selector_;
  * @note  固定長配列なので，余った部分にはMAXを入れておく
  * @note  この配列内では，サンセンサの受光強度の順番に並べられているわけではない
  */
-static NANOSSOC_D60_IDX APP_SS_SELECTOR_available_sun_sensor_list_[NANOSSOC_D60_IDX_MAX];
+static NANOSSOC_D60_IDX APP_SS_SELECTOR_available_sun_sensor_list_[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR];
 
 /*
  * @brief 利用可能なサンセンサのインデックスが受光強度順に並べられた配列
  * @note  固定長配列なので，余った部分にはMAXを入れておく
  */
-static NANOSSOC_D60_IDX APP_SS_SELECTOR_sun_sensor_intensity_ranking_[NANOSSOC_D60_IDX_MAX];
+static NANOSSOC_D60_IDX APP_SS_SELECTOR_sun_sensor_intensity_ranking_[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR];
 static int APP_SS_SELECTOR_num_of_available_sun_sensor_;
 
 static void APP_SS_SELECTOR_init_(void);
@@ -48,10 +48,10 @@ static void APP_SS_SELECTOR_init_(void)
 {
   sun_sensor_selector_.sun_intensity_lower_threshold_percent = NANOSSOC_D60_PARAMETERS_sun_intensity_lower_threshold_percent;
   sun_sensor_selector_.sun_intensity_upper_threshold_percent = NANOSSOC_D60_PARAMETERS_sun_intensity_upper_threshold_percent;
-  for (int idx = 0; idx < NANOSSOC_D60_IDX_MAX; idx++)
+  for (int idx = 0; idx < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; idx++)
   {
-    APP_SS_SELECTOR_available_sun_sensor_list_[idx] = NANOSSOC_D60_IDX_MAX;
-    APP_SS_SELECTOR_sun_sensor_intensity_ranking_[idx] = NANOSSOC_D60_IDX_MAX;
+    APP_SS_SELECTOR_available_sun_sensor_list_[idx] = (NANOSSOC_D60_IDX)NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR;
+    APP_SS_SELECTOR_sun_sensor_intensity_ranking_[idx] = (NANOSSOC_D60_IDX)NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR;
   }
   APP_SS_SELECTOR_num_of_available_sun_sensor_ = 0;
   return;
@@ -69,7 +69,7 @@ static void APP_SS_SELECTOR_exec_(void)
   }
 
   // 太陽が見えているサンセンサが存在するときは，最も受光強度が高いサンセンサの太陽方向ベクトルを採用する
-  NANOSSOC_D60_IDX max_intensity_idx = NANOSSOC_D60_IDX_MAX;
+  NANOSSOC_D60_IDX max_intensity_idx = (NANOSSOC_D60_IDX)NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR;
   float max_intensity = 0.0;
 
   for (int idx = 0; idx < APP_SS_SELECTOR_num_of_available_sun_sensor_; idx++)
@@ -90,13 +90,13 @@ static void APP_SS_SELECTOR_exec_(void)
 
 static void APP_SS_SELECTOR_generate_available_list_(void)
 {
-  for (int idx = 0; idx < NANOSSOC_D60_IDX_MAX; idx++)
+  for (int idx = 0; idx < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; idx++)
   {
-    APP_SS_SELECTOR_available_sun_sensor_list_[idx] = NANOSSOC_D60_IDX_MAX;
+    APP_SS_SELECTOR_available_sun_sensor_list_[idx] = (NANOSSOC_D60_IDX)NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR;
   }
   APP_SS_SELECTOR_num_of_available_sun_sensor_ = 0;
 
-  for (int idx = 0; idx < NANOSSOC_D60_IDX_MAX; idx++)
+  for (int idx = 0; idx < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; idx++)
   {
     if (APP_SS_SELECTOR_check_avarlability_((NANOSSOC_D60_IDX)idx) == APP_SS_SELECTOR_AVAILABLE_OK)
     {

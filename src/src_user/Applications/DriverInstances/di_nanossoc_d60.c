@@ -55,7 +55,7 @@ static void DI_NANOSSOC_D60_init_(void)
   DS_INIT_ERR_CODE ret2;
   uint8_t addr;
 
-  for (i = 0; i < NANOSSOC_D60_IDX_MAX; ++i)
+  for (i = 0; i < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; ++i)
   {
     ret1 = DS_init_stream_rec_buffer(&DI_NANOSSOC_D60_rx_buffer_[i],
                                      DI_NANOSSOC_D60_rx_buffer_allocation_[i],
@@ -97,6 +97,18 @@ static void DI_NANOSSOC_D60_init_(void)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
+
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PX], NANOSSOC_D60_PARAMETERS_px_quaternion_c2b);
+  if (ret_math != C2A_MATH_ERROR_OK)
+  {
+    Printf("NanoSSOC-D60: q_px_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
+  }
+
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MX], NANOSSOC_D60_PARAMETERS_mx_quaternion_c2b);
+  if (ret_math != C2A_MATH_ERROR_OK)
+  {
+    Printf("NanoSSOC-D60: q_zx_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
+  }
 }
 
 static void DI_NANOSSOC_D60_update_(void)
@@ -104,7 +116,7 @@ static void DI_NANOSSOC_D60_update_(void)
   if (power_switch_control->switch_state_5v[APP_PSC_5V_IDX_NANOSSOC_D60] == APP_PSC_STATE_OFF)
   {
     // 電源OFF直前の可視状態で残りつづけ，他所で参照されることを避ける
-    for (uint8_t sensor_id = 0; sensor_id < NANOSSOC_D60_IDX_MAX; sensor_id++)
+    for (uint8_t sensor_id = 0; sensor_id < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; sensor_id++)
     {
       nanossoc_d60_driver_[sensor_id].info.sun_intensity_percent = 0.0f;
     }
@@ -152,7 +164,7 @@ static void DI_NANOSSOC_D60_update_idx_counter_(void)
 {
   NANOSSOC_D60_idx_counter_ = (NANOSSOC_D60_IDX)(NANOSSOC_D60_idx_counter_ + 1);
 
-  if (NANOSSOC_D60_idx_counter_ >= NANOSSOC_D60_IDX_MAX)
+  if (NANOSSOC_D60_idx_counter_ >= NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR)
   {
     NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY;
   }
@@ -164,7 +176,7 @@ CCP_CmdRet Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const Com
 
   NANOSSOC_D60_IDX idx;
   idx = (NANOSSOC_D60_IDX)param[0];
-  if (idx >= NANOSSOC_D60_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (idx >= NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   float q_array_c2b[PHYSICAL_CONST_QUATERNION_DIM];
   for (int axis = 0; axis < PHYSICAL_CONST_QUATERNION_DIM; axis++)
