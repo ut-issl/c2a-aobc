@@ -30,17 +30,17 @@ static void DI_NANOSSOC_D60_update_idx_counter_(void);
 
 static NANOSSOC_D60_Driver nanossoc_d60_driver_[NANOSSOC_D60_IDX_MAX];
 const  NANOSSOC_D60_Driver* const nanossoc_d60_driver[NANOSSOC_D60_IDX_MAX]
-                                                     = {&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PX],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MX]};
+                                                     = {&nanossoc_d60_driver_[NANOSSOC_D60_IDX_0],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_1],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_2],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_3],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_4],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_5]};
 // バッファ
 static DS_StreamRecBuffer DI_NANOSSOC_D60_rx_buffer_[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR];
 static uint8_t DI_NANOSSOC_D60_rx_buffer_allocation_[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR][DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
 
-static NANOSSOC_D60_IDX NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY; // DI_NANOSSOC_D60_update_が呼ばれたときにアップデートするサンセンサを指定するカウンタ．
+static NANOSSOC_D60_IDX NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_0; // DI_NANOSSOC_D60_update_が呼ばれたときにアップデートするサンセンサを指定するカウンタ．
 
 
 AppInfo DI_NANOSSOC_D60_update(void)
@@ -74,37 +74,37 @@ static void DI_NANOSSOC_D60_init_(void)
   }
 
   C2A_MATH_ERROR ret_math;
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY], NANOSSOC_D60_PARAMETERS_py_quaternion_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_0], NANOSSOC_D60_PARAMETERS_py_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY], NANOSSOC_D60_PARAMETERS_my_quaternion_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_1], NANOSSOC_D60_PARAMETERS_my_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ], NANOSSOC_D60_PARAMETERS_pz_quaternion_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_2], NANOSSOC_D60_PARAMETERS_pz_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ], NANOSSOC_D60_PARAMETERS_mz_quaternion_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_3], NANOSSOC_D60_PARAMETERS_mz_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PX], NANOSSOC_D60_PARAMETERS_px_quaternion_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_4], NANOSSOC_D60_PARAMETERS_px_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_px_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
   }
 
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MX], NANOSSOC_D60_PARAMETERS_mx_quaternion_c2b);
+  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_5], NANOSSOC_D60_PARAMETERS_mx_quaternion_c2b);
   if (ret_math != C2A_MATH_ERROR_OK)
   {
     Printf("NanoSSOC-D60: q_zx_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
@@ -142,17 +142,17 @@ static uint8_t DI_NANOSSOC_D60_conv_idx_to_i2c_address_(uint8_t idx)
 {
   switch (idx)
   {
-  case NANOSSOC_D60_IDX_ON_PY:
+  case NANOSSOC_D60_IDX_0:
     return I2C_DEVICE_ADDR_SS_PY;
-  case NANOSSOC_D60_IDX_ON_MY:
+  case NANOSSOC_D60_IDX_1:
     return I2C_DEVICE_ADDR_SS_MY;
-  case NANOSSOC_D60_IDX_ON_PZ:
+  case NANOSSOC_D60_IDX_2:
     return I2C_DEVICE_ADDR_SS_PZ;
-  case NANOSSOC_D60_IDX_ON_MZ:
+  case NANOSSOC_D60_IDX_3:
     return I2C_DEVICE_ADDR_SS_MZ;
-  case NANOSSOC_D60_IDX_ON_PX:
+  case NANOSSOC_D60_IDX_4:
     return I2C_DEVICE_ADDR_SS_PX;
-  case NANOSSOC_D60_IDX_ON_MX:
+  case NANOSSOC_D60_IDX_5:
     return I2C_DEVICE_ADDR_SS_MX;
   default:
     // ここには来ないはず
@@ -166,7 +166,7 @@ static void DI_NANOSSOC_D60_update_idx_counter_(void)
 
   if (NANOSSOC_D60_idx_counter_ >= NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR)
   {
-    NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_ON_PY;
+    NANOSSOC_D60_idx_counter_ = NANOSSOC_D60_IDX_0;
   }
 }
 
