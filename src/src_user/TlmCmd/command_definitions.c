@@ -136,7 +136,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_STIM210_SET_LOW_PASS_FILTER].cmd_func = Cmd_DI_STIM210_SET_LOW_PASS_FILTER;
   cmd_table[Cmd_CODE_DI_OEM7600_ONOFF_ANTENNA_POWER].cmd_func = Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER;
   cmd_table[Cmd_CODE_DI_OEM7600_SOFTWARE_RESET].cmd_func = Cmd_DI_OEM7600_SOFTWARE_RESET;
-  cmd_table[Cmd_CODE_DI_OEM7600_SAVE_TLM_SETTING].cmd_func = Cmd_DI_OEM7600_SAVE_TLM_SETTING;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].cmd_func = Cmd_DI_OEM7600_SET_TLM_CONTENTS;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_RESET_GPIO_HIGHLOW].cmd_func = Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW;
   cmd_table[Cmd_CODE_DI_RW0003_INIT].cmd_func = Cmd_DI_RW0003_INIT;
@@ -416,7 +415,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_OEM7600_ONOFF_ANTENNA_POWER].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SOFTWARE_RESET].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SOFTWARE_RESET].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_DI_OEM7600_SAVE_TLM_SETTING].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
