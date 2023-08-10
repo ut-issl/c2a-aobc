@@ -35,7 +35,7 @@ static int APP_SS_SELECTOR_num_of_available_sun_sensor_;
 static void APP_SS_SELECTOR_init_(void);
 static void APP_SS_SELECTOR_exec_(void);
 
-static APP_SS_SELECTOR_AVAILABLE APP_SS_SELECTOR_check_avarlability_(NANOSSOC_D60_IDX idx);
+static APP_SS_SELECTOR_AVAILABLE APP_SS_SELECTOR_check_availability_(NANOSSOC_D60_IDX idx);
 static void APP_SS_SELECTOR_generate_available_list_(void);
 static void APP_SS_SELECTOR_fusion_(void);
 
@@ -98,7 +98,7 @@ static void APP_SS_SELECTOR_generate_available_list_(void)
 
   for (int idx = 0; idx < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; idx++)
   {
-    if (APP_SS_SELECTOR_check_avarlability_((NANOSSOC_D60_IDX)idx) == APP_SS_SELECTOR_AVAILABLE_OK)
+    if (APP_SS_SELECTOR_check_availability_((NANOSSOC_D60_IDX)idx) == APP_SS_SELECTOR_AVAILABLE_OK)
     {
       APP_SS_SELECTOR_available_sun_sensor_list_[APP_SS_SELECTOR_num_of_available_sun_sensor_] = (NANOSSOC_D60_IDX)idx;
       APP_SS_SELECTOR_num_of_available_sun_sensor_++;
@@ -106,7 +106,7 @@ static void APP_SS_SELECTOR_generate_available_list_(void)
   }
 }
 
-static APP_SS_SELECTOR_AVAILABLE APP_SS_SELECTOR_check_avarlability_(NANOSSOC_D60_IDX idx)
+static APP_SS_SELECTOR_AVAILABLE APP_SS_SELECTOR_check_availability_(NANOSSOC_D60_IDX idx)
 {
   float sun_intensity_percent = nanossoc_d60_driver[idx]->info.sun_intensity_percent;
 
