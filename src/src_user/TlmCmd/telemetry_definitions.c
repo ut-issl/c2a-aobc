@@ -2082,7 +2082,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_POWER_(uint8_t* packet, uint16_t* len, uint16_t 
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_FRAME_TRANSFORMATION_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (170 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (202 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(rm3100_driver[RM3100_IDX_ON_AOBC]->info.frame_transform_c2b.vector_part[0]));
@@ -2121,9 +2121,17 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_FRAME_TRANSFORMATION_(uint8_t* packet, uint16_t*
   TF_copy_float(&packet[158], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.frame_transform_c2b.vector_part[1]));
   TF_copy_float(&packet[162], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.frame_transform_c2b.vector_part[2]));
   TF_copy_float(&packet[166], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.frame_transform_c2b.scalar_part));
+  TF_copy_float(&packet[170], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_4]->info.frame_transform_c2b.vector_part[0]));
+  TF_copy_float(&packet[174], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_4]->info.frame_transform_c2b.vector_part[1]));
+  TF_copy_float(&packet[178], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_4]->info.frame_transform_c2b.vector_part[2]));
+  TF_copy_float(&packet[182], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_4]->info.frame_transform_c2b.scalar_part));
+  TF_copy_float(&packet[186], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_5]->info.frame_transform_c2b.vector_part[0]));
+  TF_copy_float(&packet[190], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_5]->info.frame_transform_c2b.vector_part[1]));
+  TF_copy_float(&packet[194], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_5]->info.frame_transform_c2b.vector_part[2]));
+  TF_copy_float(&packet[198], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_5]->info.frame_transform_c2b.scalar_part));
 #endif
 
-  *len = 170;
+  *len = 202;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
