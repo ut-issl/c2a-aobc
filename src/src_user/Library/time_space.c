@@ -14,6 +14,13 @@
 #include "matrix33.h"
 #include "vector3.h"
 
+
+//!< JulainDay at Origin of GPS Time of Week (1980/1/6 00:00)
+static const double kGPSTimeJDayOrigin_day_ = 2444244.5;
+
+//!< leap seconds (GPSTime - UTC)
+static float gps_utc_leap_seconds_ = 18.0;
+
 /**
  * @brief      日周運動を表すR行列の計算
  * @param[in]  gast_rad       : Greenwitch Apparent Sidereal Time [rad]
@@ -51,22 +58,23 @@ static C2A_MATH_ERROR TIME_SPACE_nutation_(const double julian_century_terrestri
                                                  double nutation[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
                                                  double* epsilon_rad, double* delta_epsilon_rad, double* delta_psi_rad);
 
-double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, const uint32_t gps_time_msec)
+
+double TIME_SPACE_convert_gpstime_to_julian_day(const GpsTime gps_time)
 {
-  const double kJulianDayAtGpsTimeEpoch_day = 2444244.5;  //!< JulainDay at Origin of GPSTime (1980/1/6 00:00)
-  const double kMsecToSec     = 1.0e-3;                   //!< conversion from msec to sec
+  const double kMsecToSec = 1.0e-3;                       //!< conversion from msec to sec
   const double kDayOfWeek_day = 7.0;                      //!< days of a week
   const double kSecOfWeek_sec = kDayOfWeek_day * (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
-  double gps_time_sec = (double)(gps_time_msec) * kMsecToSec;
+  double gps_time_sec = (double)(gps_time.msec_of_week)*kMsecToSec;
 
-  if (gps_time_sec > kSecOfWeek_sec) return kJulianDayAtGpsTimeEpoch_day;
+  if (gps_time_sec > kSecOfWeek_sec) return (kGPSTimeJDayOrigin_day_);
 
-  // Since both GPSTime and JulianDay have no leap seconds, they are directly converted to each other.
-  double elapsed_julian_day = (double)(gps_time_week) * kDayOfWeek_day +
-                               gps_time_sec / PHYSICAL_CONST_EARTH_SOLAR_DAY_s;
+  // leap_secondsの分だけgps時刻の方が進んでいるため，leap_seconds分を差し引く．負値になり得るが，doubleにしているので許容可
+  double elapsed_julian_day_sec_part = gps_time_sec - (double)(gps_utc_leap_seconds_);
+  double elapsed_julian_day = (double)(gps_time.week_number)*kDayOfWeek_day +
+                               elapsed_julian_day_sec_part / (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
-  return (kJulianDayAtGpsTimeEpoch_day + elapsed_julian_day);
+  return (kGPSTimeJDayOrigin_day_ + elapsed_julian_day);
 }
 
 
@@ -163,6 +171,12 @@ void TIME_SPACE_calc_sun_direction_eci(const double julian_century, float sun_di
   VECTOR3_normalize(sun_direction_eci, sun_direction_eci_unnormalize);
 }
 
+// TODO_L: どこかのアプリでこれをCMDとして呼ぶ
+void TIME_SPACE_update_gps_utc_leap_seconds(const float leap_seconds_updated)
+{
+  gps_utc_leap_seconds_ = leap_seconds_updated;
+  return;
+}
 
 C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float* radious_m,
                                                    const double lla_rad_m[PHYSICAL_CONST_THREE_DIM])

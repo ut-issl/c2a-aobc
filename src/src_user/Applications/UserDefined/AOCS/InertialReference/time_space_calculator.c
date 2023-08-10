@@ -26,6 +26,8 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void);
 static double APP_TIME_SPACE_CALC_propagate_current_jday_ref_(void);
 static void   APP_TIME_SPACE_CALC_update_eci_ecef_trans_(const double j_day_ref);
 
+//!< 最後にJday更新に用いたGPSテレメの取得時刻
+static ObcTime obct_tag_for_last_gps_tlm;
 
 AppInfo APP_TIME_SPACE_CALC_create_app(void)
 {
@@ -36,6 +38,7 @@ AppInfo APP_TIME_SPACE_CALC_create_app(void)
 static void APP_TIME_SPACE_CALC_init_(void)
 {
   time_space_calculator_.offset_sec = 0.0f;
+  obct_tag_for_last_gps_tlm = OBCT_create(0, 0, 0);
 
   return;
 }
@@ -43,10 +46,15 @@ static void APP_TIME_SPACE_CALC_init_(void)
 
 static void APP_TIME_SPACE_CALC_exec_(void)
 {
+  ObcTime obct_tag_for_current_gps_tlm     = aocs_manager->obct_gps_time_obs;
+  uint32_t time_from_last_gps_tlm_update   = OBCT_diff_in_msec(&obct_tag_for_last_gps_tlm, &obct_tag_for_current_gps_tlm);
+
   double reference_jday;
-  if (aocs_manager->gps_visibility == AOCS_MANAGER_GPS_VISIBLE)
+  // GPSテレメの更新頻度よりも早いインターバルで更新される場合，AOCS_MANAGER_GPS_VISIBLEとテレメ時刻両方での判定が必要
+  if ((time_from_last_gps_tlm_update > 0) && (aocs_manager->gps_visibility == AOCS_MANAGER_GPS_VISIBLE))
   {
     reference_jday = APP_TIME_SPACE_CALC_update_current_jday_ref_();
+    obct_tag_for_last_gps_tlm = obct_tag_for_current_gps_tlm;
   }
   else
   {
@@ -61,27 +69,16 @@ static void APP_TIME_SPACE_CALC_exec_(void)
 
 static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
 {
-  uint32_t offset_time_msec  = (uint32_t)(time_space_calculator_.offset_sec * 1e3f);
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる方が他との統一性の観点でベターだが，
   // 現状では，GPSR情報は全てobsに入れる流れとなっており，estに値が入らないことから，ここではobsのままにする
-  uint32_t ref_gps_time_msec = aocs_manager->current_gps_time_obs_msec + offset_time_msec;
-  uint16_t ref_gps_time_week = aocs_manager->current_gps_time_obs_week;
+  GpsTime ref_gps_time = aocs_manager->current_gps_time_obs;
 
-  double week_of_msec = PHYSICAL_CONST_EARTH_SOLAR_DAY_s * 7.0 * 1e3;
-
-  // check rollover
-  if ((double)(ref_gps_time_msec) > week_of_msec)
-  {
-    ref_gps_time_msec = 0;
-    ref_gps_time_week += 1;
-  }
-
-  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time_week, ref_gps_time_msec);
+  ObcTime current_obct  = TMGR_get_master_clock();
+  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time);
+  reference_jday += (double)(time_space_calculator_.offset_sec) / (PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
 
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる
-  // 上の話と同様
-  ObcTime obct_now = aocs_manager->obct_gps_time_obs;
-  AOCS_MANAGER_set_reference_jday(reference_jday, obct_now);
+  AOCS_MANAGER_set_reference_jday(reference_jday, current_obct);
 
   return reference_jday;
 }

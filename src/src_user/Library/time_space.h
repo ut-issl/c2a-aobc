@@ -10,15 +10,15 @@
 #include <stdint.h>
 #include "physical_constants.h"
 #include "c2a_math.h"
+#include "time_system/gps_time.h"
 
 // 時刻換算関数
 /**
  * @brief  GPSTimeからJulian Dayへの変換
  * @param  gps_time_week : GPSTime週番号 [week] (should be larger than zero)
- * @param  gps_time_sec  : GPSTime週秒 [msec]   (should be in range of 0 ~ 7*24*60*60)
  * @return Julian Day [day] (returns Julian day at the origin of GPSTime when the input is out-of-range )
  */
-double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, const uint32_t gps_time_msec);
+double TIME_SPACE_convert_gpstime_to_julian_day(const GpsTime gps_time);
 
 /**
  * @brief  Julian DayからJulian Centuryへの変換
@@ -61,6 +61,12 @@ void TIME_SPACE_calc_sun_direction_eci(const double julian_century, float sun_di
  */
 void TIME_SPACE_trans_ned_to_ecef(float dcm_ned_to_ecef[][PHYSICAL_CONST_THREE_DIM],
                             const float lat_rad, const float lon_rad);
+
+/**
+ * @brief      うるう秒 (GPSTime - UTC) の更新
+ * @param[in]  leap_seconds_updated   : 更新後のうるう秒 [s]
+ */
+void TIME_SPACE_update_gps_utc_leap_seconds(const float leap_seconds_updated);
 
 /**
  * @brief      ECIからECEFへの変換 R*N*P
