@@ -9,7 +9,7 @@
 #include <src_user/Library/quaternion.h>
 
 // Number of Sun sensor
-#define NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR (6)  //!< Number of mounted sun sensor ( <= 6)
+#define NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR (4)  //!< Number of mounted sun sensor ( <= 6)
 
 // Use user defined sensor number
 #ifdef USER_DEFINED_SENSOR_NUMBER
