@@ -17,12 +17,7 @@
 #endif
 
 // Frame conversion
-extern const Quaternion NANOSSOC_D60_PARAMETERS_py_quaternion_c2b;  //!< Frame conversion quaternion for PY sun sensor
-extern const Quaternion NANOSSOC_D60_PARAMETERS_my_quaternion_c2b;  //!< Frame conversion quaternion for MY sun sensor
-extern const Quaternion NANOSSOC_D60_PARAMETERS_pz_quaternion_c2b;  //!< Frame conversion quaternion for PZ sun sensor
-extern const Quaternion NANOSSOC_D60_PARAMETERS_mz_quaternion_c2b;  //!< Frame conversion quaternion for MZ sun sensor
-extern const Quaternion NANOSSOC_D60_PARAMETERS_px_quaternion_c2b;  //!< Frame conversion quaternion for PX sun sensor
-extern const Quaternion NANOSSOC_D60_PARAMETERS_mx_quaternion_c2b;  //!< Frame conversion quaternion for MX sun sensor
+extern const Quaternion NANOSSOC_D60_PARAMETERS_quaternion_c2b[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR];  //!< Frame conversion quaternion for sun sensor
 
 // Spike Filter
 extern uint8_t NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_accept;                   //!< Count limit to accept

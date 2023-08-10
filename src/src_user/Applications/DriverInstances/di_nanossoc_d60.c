@@ -71,43 +71,12 @@ static void DI_NANOSSOC_D60_init_(void)
     {
       Printf("NANOSSOC_D60 #%d init Failed ! %d \n", i, ret2);
     }
-  }
-
-  C2A_MATH_ERROR ret_math;
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_0], NANOSSOC_D60_PARAMETERS_py_quaternion_c2b);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
-  }
-
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_1], NANOSSOC_D60_PARAMETERS_my_quaternion_c2b);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
-  }
-
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_2], NANOSSOC_D60_PARAMETERS_pz_quaternion_c2b);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
-  }
-
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_3], NANOSSOC_D60_PARAMETERS_mz_quaternion_c2b);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("NanoSSOC-D60: q_py_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
-  }
-
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_4], NANOSSOC_D60_PARAMETERS_px_quaternion_c2b);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("NanoSSOC-D60: q_px_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
-  }
-
-  ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[NANOSSOC_D60_IDX_5], NANOSSOC_D60_PARAMETERS_mx_quaternion_c2b);
-  if (ret_math != C2A_MATH_ERROR_OK)
-  {
-    Printf("NanoSSOC-D60: q_zx_c2b set error.\n");  // 初期化時のエラーはデバッグ表示して知らせるだけ
+    // Set frame
+    C2A_MATH_ERROR ret_math = NANOSSOC_D60_set_frame_transform_c2b(&nanossoc_d60_driver_[i], NANOSSOC_D60_PARAMETERS_quaternion_c2b[i]);
+    if (ret_math != C2A_MATH_ERROR_OK)
+    {
+      Printf("NanoSSOC-D60 #%d: Quaternion set error.\n", i);  // 初期化時のエラーはデバッグ表示して知らせるだけ
+    }
   }
 }
 
