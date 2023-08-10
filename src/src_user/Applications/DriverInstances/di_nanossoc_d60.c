@@ -33,7 +33,9 @@ const  NANOSSOC_D60_Driver* const nanossoc_d60_driver[NANOSSOC_D60_IDX_MAX]
                                                      = {&nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PY],
                                                         &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MY],
                                                         &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PZ],
-                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ]};
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MZ],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_PX],
+                                                        &nanossoc_d60_driver_[NANOSSOC_D60_IDX_ON_MX]};
 // バッファ
 static DS_StreamRecBuffer DI_NANOSSOC_D60_rx_buffer_[NANOSSOC_D60_IDX_MAX];
 static uint8_t DI_NANOSSOC_D60_rx_buffer_allocation_[NANOSSOC_D60_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
@@ -136,6 +138,10 @@ static uint8_t DI_NANOSSOC_D60_conv_idx_to_i2c_address_(uint8_t idx)
     return I2C_DEVICE_ADDR_SS_PZ;
   case NANOSSOC_D60_IDX_ON_MZ:
     return I2C_DEVICE_ADDR_SS_MZ;
+  case NANOSSOC_D60_IDX_ON_PX:
+    return I2C_DEVICE_ADDR_SS_PX;
+  case NANOSSOC_D60_IDX_ON_MX:
+    return I2C_DEVICE_ADDR_SS_MX;
   default:
     // ここには来ないはず
     return 0;
