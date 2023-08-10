@@ -6,9 +6,9 @@
 #include "gps_time.h"
 
 
-GPSTIME GPS_TIME_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week)
+GpsTime GPS_TIME_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week)
 {
-  GPSTIME gps_time;
+  GpsTime gps_time;
   gps_time.week_number  = week_number;
   gps_time.msec_of_week = msec_of_week;
 

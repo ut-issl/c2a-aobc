@@ -71,7 +71,7 @@ static double APP_TIME_SPACE_CALC_update_current_jday_ref_(void)
 {
   // TODO_L: 位置情報をobsからestに置き換えるタイミングで，時刻もobsからestに置き換えて，ここではestを用いる方が他との統一性の観点でベターだが，
   // 現状では，GPSR情報は全てobsに入れる流れとなっており，estに値が入らないことから，ここではobsのままにする
-  GPSTIME ref_gps_time = aocs_manager->current_gps_time_obs;
+  GpsTime ref_gps_time = aocs_manager->current_gps_time_obs;
 
   ObcTime current_obct  = TMGR_get_master_clock();
   double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(ref_gps_time);
