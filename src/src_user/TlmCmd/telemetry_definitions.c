@@ -1952,9 +1952,9 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint
   TF_copy_float(&packet[62], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_vec_body[0]));
   TF_copy_float(&packet[66], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_vec_body[1]));
   TF_copy_float(&packet[70], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_vec_body[2]));
-  TF_copy_float(&packet[74], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_vec_body[0]));
-  TF_copy_float(&packet[78], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_vec_body[1]));
-  TF_copy_float(&packet[82], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_vec_body[2]));
+  TF_copy_float(&packet[74], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_vec_body[0]));
+  TF_copy_float(&packet[78], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_vec_body[1]));
+  TF_copy_float(&packet[82], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_vec_body[2]));
   TF_copy_u8(&packet[86], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.counter));
   TF_copy_u16(&packet[87], (uint16_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.latency_sec));
   TF_copy_u8(&packet[89], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.normal_mode_format));
