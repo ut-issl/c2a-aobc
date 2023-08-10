@@ -140,19 +140,19 @@ void BCL_load_activate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_PY);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_MY);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_1);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_PZ);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_2);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_MZ);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_3);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
@@ -194,19 +194,19 @@ void BCL_load_inactivate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_PY);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_MY);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_1);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_PZ);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_2);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_MZ);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_3);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
