@@ -19,10 +19,10 @@
 #define I2C_DEVICE_ADDR_AOBC_MPU_AK  (0x0c)  //!< AK8963 magnetometer in MPU9250
 #define I2C_DEVICE_ADDR_AOBC_RM      (0x20)  //!< RM3100 magnetometer on AOBC board
 #define I2C_DEVICE_ADDR_EXT_RM       (0x23)  //!< External RM3100 magnetometer
-#define I2C_DEVICE_ADDR_SS_PY        (0x70)  //!< nanoSSOC-D60 Sun-sensor on PY
-#define I2C_DEVICE_ADDR_SS_MY        (0x71)  //!< nanoSSOC-D60 Sun-sensor on MY
-#define I2C_DEVICE_ADDR_SS_PZ        (0x72)  //!< nanoSSOC-D60 Sun-sensor on PZ
-#define I2C_DEVICE_ADDR_SS_MZ        (0x7C)  //!< nanoSSOC-D60 Sun-sensor on MZ
+#define I2C_DEVICE_ADDR_SS_PY        (0x60)  //!< nanoSSOC-D60 Sun-sensor on PY
+#define I2C_DEVICE_ADDR_SS_MY        (0x61)  //!< nanoSSOC-D60 Sun-sensor on MY
+#define I2C_DEVICE_ADDR_SS_PZ        (0x62)  //!< nanoSSOC-D60 Sun-sensor on PZ
+#define I2C_DEVICE_ADDR_SS_MZ        (0x63)  //!< nanoSSOC-D60 Sun-sensor on MZ
 
 // RWs
 #define I2C_DEVICE_ADDR_RW_X         (0x11)  //!< RW on X-axis
