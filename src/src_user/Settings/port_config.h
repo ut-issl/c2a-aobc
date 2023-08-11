@@ -105,7 +105,7 @@
 #define I2C_DEVICE_ADDR_SS_PY        (0x60)  //!< PY面搭載nanoSSOC-D60サンセンサ
 #define I2C_DEVICE_ADDR_SS_MY        (0x61)  //!< MY面搭載nanoSSOC-D60サンセンサ
 #define I2C_DEVICE_ADDR_SS_PZ        (0x62)  //!< PZ面搭載nanoSSOC-D60サンセンサ
-#define I2C_DEVICE_ADDR_SS_MZ        (0x6C)  //!< MZ面搭載nanoSSOC-D60サンセンサ
+#define I2C_DEVICE_ADDR_SS_MZ        (0x63)  //!< MZ面搭載nanoSSOC-D60サンセンサ
 
 // PORT_CH_I2C_RWS
 #define I2C_DEVICE_ADDR_RW_X         (0x11)  //!< X軸RW-FM
