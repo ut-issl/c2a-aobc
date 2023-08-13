@@ -65,7 +65,7 @@ extern const Unloading* const unloading;
 AppInfo APP_UNLOADING_create_app(void);
 
 CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet); // TODO Fix typo (major update)
 CCP_CmdRet Cmd_APP_UNLOADING_SET_CONTROL_GAIN(const CommonCmdPacket* packet);
 
 

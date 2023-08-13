@@ -103,8 +103,6 @@ static void DI_MPU9250_init_(void)
   // 温度補正
   const float kRangeLow = MPU9250_PARAMETERS_temperature_range_low_degC;
   const float kRangeHigh = MPU9250_PARAMETERS_temperature_range_high_degC;
-  // 切片は実機計測値、切片はOPT-1, RWASATでの測定値を利用
-  // 特にSFは小さいのでなしとする
   // SF,バイアスは y = SF*x - BIASという式を想定
   // X軸
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[0]),
