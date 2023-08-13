@@ -19,7 +19,7 @@
 
 static void DI_MPU9250_init_(void);
 static void DI_MPU9250_update_(void);
-static void DI_MPU9250_temperature_caliblation_(void);
+static void DI_MPU9250_temperature_calibration_(void);
 
 static MPU9250_Driver mpu9250_driver_[MPU9250_IDX_MAX];
 const  MPU9250_Driver* const mpu9250_driver[MPU9250_IDX_MAX] = {&mpu9250_driver_[MPU9250_IDX_ON_AOBC]};
@@ -108,7 +108,7 @@ static void DI_MPU9250_init_(void)
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_bias_compo_rad_s[0]),
                                       MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_bias_coeff_compo_x,
                                       kRangeLow, kRangeHigh);
-  if (ret3 < 0) Printf("MPU9250 Gyro-X Bias Temperature Caliblation init Failed ! \n");
+  if (ret3 < 0) Printf("MPU9250 Gyro-X Bias Temperature Calibration init Failed ! \n");
 
   ret3 = POLYNOMIAL_APPROX_initialize(&(di_mpu9250_[MPU9250_IDX_ON_AOBC].gyro_scale_factor_compo[0]),
                                       MPU9250_PARAMETERS_kNumCoeffTempCalib, MPU9250_PARAMETERS_scale_factor_coeff_compo_x,
@@ -158,12 +158,12 @@ static void DI_MPU9250_update_(void)
       EL_record_event(EL_GROUP_TLM_ERROR_MPU9250, (uint32_t)MPU9250_IDX_ON_AOBC, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
     }
 
-    DI_MPU9250_temperature_caliblation_();
+    DI_MPU9250_temperature_calibration_();
   }
   return;
 }
 
-static void DI_MPU9250_temperature_caliblation_(void)
+static void DI_MPU9250_temperature_calibration_(void)
 {
   for (int mpu_idx = 0; mpu_idx < MPU9250_IDX_MAX; mpu_idx++)
   {
