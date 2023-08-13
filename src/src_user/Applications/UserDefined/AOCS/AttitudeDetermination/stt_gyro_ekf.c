@@ -106,7 +106,7 @@ typedef enum
   APP_STT_GYRO_EKF_STT_STATUS_NG      //!< STTからQuaternionが更新されていない
 } APP_STT_GYRO_EKF_STT_STATUS;
 
-static const float APP_STT_GYRO_EKF_kAccceptableMaxTimeStepSec_ = 1.0f; //!< 時間刻みがこれより大きい場合フィルタ計算をスキップ
+static const float APP_STT_GYRO_EKF_kAcceptableMaxTimeStepSec_ = 1.0f; //!< 時間刻みがこれより大きい場合フィルタ計算をスキップ
 static const float APP_STT_GYRO_EKF_kComputationCycle_ = 0.1f; //!< EKFアプリの計算周期．タスクリストでの実行頻度と合わせること
 static float APP_STT_GYRO_EKF_rate_bias_propagation_coefficient_; //!< レートバイアス伝搬の漸化式の係数．計算速度のために固定値．
 static CalculationTime APP_STT_GYRO_EKF_calculation_time_;
@@ -305,7 +305,7 @@ static void APP_STT_GYRO_EKF_exec_(void)
 
 void APP_STT_GYRO_EKF_execute_estimation(float time_step_s)
 {
-  if (time_step_s > APP_STT_GYRO_EKF_kAccceptableMaxTimeStepSec_)
+  if (time_step_s > APP_STT_GYRO_EKF_kAcceptableMaxTimeStepSec_)
   {
     // フィルタ計算を回し始めた初回や，別のモードに遷移したあと戻ってきた初回などは，time_step_sが大きな値になっている．
     // これらのケースでは，状態変数や推定結果に，ある程度正しい値を入れて初期化しておく．
