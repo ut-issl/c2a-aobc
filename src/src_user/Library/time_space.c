@@ -16,10 +16,10 @@
 
 /**
  * @brief      日周運動を表すR行列の計算
- * @param[in]  gast_rad       : Greenwitch Apparent Sidereal Time [rad]
+ * @param[in]  gast_rad       : Greenwich Apparent Sidereal Time [rad]
  * @param[out] axial_rotation : R
  * @note       歳差・章動を考慮しない場合，gast_radの代わりにgmst_radを用いることで，
-               axial_rotationがECIECEF変換のDCMとなる。
+               axial_rotationがECI/ECEF変換のDCMとなる。
  *             GMSTが0に近いとき，GASTは負の値になりうる。
  */
 static void TIME_SPACE_axial_rotation_(const double gast_rad, double axial_rotation[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM]);
@@ -27,7 +27,7 @@ static void TIME_SPACE_axial_rotation_(const double gast_rad, double axial_rotat
 /**
  * @brief      歳差を表すP行列の計算
  * @param[in]  julian_century_terrestrial_time : Julian Century in Terrestrial Time [century]
-                                                 (sholud be larger than zero)
+                                                 (should be larger than zero)
  * @param[out] precession : P (set unit matrix when the input is out-of-range)
  * @return     C2A_MATH_ERROR_RANGE_OVER : Julian Century in Terrestrial Timeが0以下
  * @return     C2A_MATH_ERROR_OK
@@ -38,7 +38,7 @@ static C2A_MATH_ERROR TIME_SPACE_precession_(const double julian_century_terrest
 /**
  * @brief      章動を表すN行列の計算
  * @param[in]  julian_century_terrestrial_time : Julian Century in Terrestrial Time [century]
-                                                 (sholud be larger than zero)
+                                                 (should be larger than zero)
  * @param[out] nutation : N (set unit matrix when the input is out-of-range)
  * @param[out] epsilon_rad
  * @param[out] depsilon_rad
@@ -53,7 +53,7 @@ static C2A_MATH_ERROR TIME_SPACE_nutation_(const double julian_century_terrestri
 
 double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, const uint32_t gps_time_msec)
 {
-  const double kJulianDayAtGpsTimeEpoch_day = 2444244.5;  //!< JulainDay at Origin of GPSTime (1980/1/6 00:00)
+  const double kJulianDayAtGpsTimeEpoch_day = 2444244.5;  //!< Julian Day at Origin of GPSTime (1980/1/6 00:00)
   const double kMsecToSec     = 1.0e-3;                   //!< conversion from msec to sec
   const double kDayOfWeek_day = 7.0;                      //!< days of a week
   const double kSecOfWeek_sec = kDayOfWeek_day * (double)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s);
@@ -72,7 +72,7 @@ double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, co
 
 double TIME_SPACE_convert_julian_day_to_century(const double julian_day)
 {
-  const double kJulianDayAtJ2000Epoch_day = 2451545.0;  //!< JulainDay at Epoch of J2000 (2000/1/1 12:00)
+  const double kJulianDayAtJ2000Epoch_day = 2451545.0;  //!< Julian Day at Epoch of J2000 (2000/1/1 12:00)
 
   if (julian_day < kJulianDayAtJ2000Epoch_day) return 0.0;
 
@@ -95,16 +95,16 @@ double TIME_SPACE_calc_gmst_rad(const double julian_day)
 
   double julian_century = TIME_SPACE_convert_julian_day_to_century(julian_day);
 
-  const double kOffsetNoonMidhight_day = 0.5; //!< offset day of noon from midnight [day]
+  const double kOffsetNoonMidnight_day = 0.5; //!< offset day of noon from midnight [day]
   uint32_t jday_integer = (uint32_t)(julian_day);
-  double elapsed_day = (julian_day - (double)(jday_integer)) + kOffsetNoonMidhight_day;
+  double elapsed_day = (julian_day - (double)(jday_integer)) + kOffsetNoonMidnight_day;
   if (elapsed_day >= 1.0)
   {
     elapsed_day = elapsed_day - 1.0;
   }
   double elapsed_time_of_day_sec = elapsed_day * PHYSICAL_CONST_EARTH_SOLAR_DAY_s;
 
-  //!< Coefficients to compute Greenwitch Mean Side Real Time (GMST)[hour angle/century]
+  //!< Coefficients to compute Greenwich Mean Side Real Time (GMST)[hour angle/century]
   const double kCoeffTimeToGmst_hour_angle_century[] = { 24110.54841, 8640184.812866, 0.093104, -6.2e-6 };
   //!< ratio of the length of 1 seconds in Sidereal compare to Universal Time [-]
   const double kCoeffSecOfDayToGmst_hour_angle_sec = 1.002737909350975;
@@ -140,7 +140,7 @@ void TIME_SPACE_calc_sun_direction_eci(const double julian_century, float sun_di
 
   //!< Mean obliquity of ecliptic [rad]
   const double kEclipticEpsilon_rad = 4.0909280E-01;
-  //!< Coefficients to compute Mean Anomarly of Sun [rad/century]
+  //!< Coefficients to compute Mean Anomaly of Sun [rad/century]
   const double kCoeffsMeanAnomalySun_rad_century[] = { 6.2399989E+00, 6.2830186E+02 };
   //!< Coefficients to compute Ecliptic Longitude [rad/century]
   const double kCoeffsEclipticLongitude_rad_century[]
@@ -164,7 +164,7 @@ void TIME_SPACE_calc_sun_direction_eci(const double julian_century, float sun_di
 }
 
 
-C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float* radious_m,
+C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float* radius_m,
                                                    const double lla_rad_m[PHYSICAL_CONST_THREE_DIM])
 {
   float lat_rad   = (float)(lla_rad_m[0]);
@@ -189,14 +189,14 @@ C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float
   float pow2_rp2_sin  = pow2_earth_rp * rp_earth_sin_lat * rp_earth_sin_lat;
 
   //!< 1st_term of r^2 = [(Re^2*cos_lat)^2 + (Rp^2*sin_lat)^2]/(Rm^2)
-  float pow2_radious_m_1st_term = (pow2_re2_cos + pow2_rp2_sin) / pow2_radius_mean;
+  float pow2_radius_m_1st_term = (pow2_re2_cos + pow2_rp2_sin) / pow2_radius_mean;
 
   //!< r^2 = 1st_term of r^2 + 2h*Rm + h^2
-  float pow2_radius_m = pow2_radious_m_1st_term + 2.0f * height_m * radius_mean + height_m * height_m;
-  *radious_m = C2A_MATH_sqrtf(pow2_radius_m);
+  float pow2_radius_m = pow2_radius_m_1st_term + 2.0f * height_m * radius_mean + height_m * height_m;
+  *radius_m = C2A_MATH_sqrtf(pow2_radius_m);
 
   //!< cos(colat) = (sin_lat/r)*(h + (Rp^2)/Rm)
-  float cos_colat = (sinf(lat_rad) / *radious_m) * (height_m + pow2_earth_rp / radius_mean);
+  float cos_colat = (sinf(lat_rad) / *radius_m) * (height_m + pow2_earth_rp / radius_mean);
 
   *colat_rad = C2A_MATH_acos_rad(cos_colat);
 
@@ -215,10 +215,10 @@ C2A_MATH_ERROR TIME_SPACE_convert_ecef_to_lla(double lla_rad_m[PHYSICAL_CONST_TH
 
   double distance_p_m = sqrt(pos_ecef_m[0] * pos_ecef_m[0] + pos_ecef_m[1] * pos_ecef_m[1]);
 
-  double dot_z_earth_radious_a  = pos_ecef_m[2] * Re;
-  double dot_xy_earth_radious_b = distance_p_m * Re_p;
+  double dot_z_earth_radius_a  = pos_ecef_m[2] * Re;
+  double dot_xy_earth_radius_b = distance_p_m * Re_p;
 
-  double theta_rad = atan(dot_z_earth_radious_a / dot_xy_earth_radious_b);
+  double theta_rad = atan(dot_z_earth_radius_a / dot_xy_earth_radius_b);
 
   double sin_theta = sin(theta_rad);
   double cos_theta = cos(theta_rad);
