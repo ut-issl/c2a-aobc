@@ -22,7 +22,7 @@ static void Z_FILTER_zero_clear_coeff_(double numerator_coeff[Z_FILTER_ORDER_MAX
 
 C2A_MATH_ERROR Z_FILTER_init_as_lpf_1st(ZFilter* filter, const float f_sample_Hz, const float f_cut_Hz)
 {
-  // in these case, the filter maight not work
+  // in these case, the filter might not work
   if (f_cut_Hz <= 0)
   {
     filter->order = 0; // set the filter as feed-through
@@ -49,8 +49,8 @@ C2A_MATH_ERROR Z_FILTER_init_as_lpf_1st(ZFilter* filter, const float f_sample_Hz
 
   filter->order = 1;
   double ts_sec = 1.0 / (double)(f_sample_Hz);
-  C2A_MATH_ERROR transration_error = Z_FILTER_bilinear_trans_(filter, ts_sec, numerator_continuous_coeff, denominator_continuous_coeff);
-  if (transration_error != C2A_MATH_ERROR_OK) return transration_error;
+  C2A_MATH_ERROR translation_error = Z_FILTER_bilinear_trans_(filter, ts_sec, numerator_continuous_coeff, denominator_continuous_coeff);
+  if (translation_error != C2A_MATH_ERROR_OK) return translation_error;
 
   Z_FILTER_reset(filter);
 
@@ -60,7 +60,7 @@ C2A_MATH_ERROR Z_FILTER_init_as_lpf_1st(ZFilter* filter, const float f_sample_Hz
 
 C2A_MATH_ERROR Z_FILTER_init_as_lpf_2nd(ZFilter* filter, const float f_sample_Hz, const float f_cut_Hz, const float xi)
 {
-  // in these case, the filter maight not work
+  // in these case, the filter might not work
   if (f_cut_Hz <= 0)
   {
     filter->order = 0; // set the filter as feed-through
@@ -88,8 +88,8 @@ C2A_MATH_ERROR Z_FILTER_init_as_lpf_2nd(ZFilter* filter, const float f_sample_Hz
 
   filter->order = 2;
   double ts_sec = 1.0 / (double)(f_sample_Hz);
-  C2A_MATH_ERROR transration_error = Z_FILTER_bilinear_trans_(filter, ts_sec, numerator_continuous_coeff, denominator_continuous_coeff);
-  if (transration_error != C2A_MATH_ERROR_OK) return transration_error;
+  C2A_MATH_ERROR translation_error = Z_FILTER_bilinear_trans_(filter, ts_sec, numerator_continuous_coeff, denominator_continuous_coeff);
+  if (translation_error != C2A_MATH_ERROR_OK) return translation_error;
 
   Z_FILTER_reset(filter);
 
@@ -100,7 +100,7 @@ C2A_MATH_ERROR Z_FILTER_init_as_lpf_2nd(ZFilter* filter, const float f_sample_Hz
 C2A_MATH_ERROR Z_FILTER_init_as_notch(ZFilter* filter, const float f_sample_Hz, const float f_cut_Hz,
                                       const float xi, const float depth)
 {
-  // in these case, the filter maight not work
+  // in these case, the filter might not work
   if (f_cut_Hz <= 0)
   {
     filter->order = 0; // set the filter as feed-through
@@ -129,8 +129,8 @@ C2A_MATH_ERROR Z_FILTER_init_as_notch(ZFilter* filter, const float f_sample_Hz, 
 
   filter->order = 2;
   double ts_sec = 1.0 / (double)(f_sample_Hz);
-  C2A_MATH_ERROR transration_error = Z_FILTER_bilinear_trans_(filter, ts_sec, numerator_continuous_coeff, denominator_continuous_coeff);
-  if (transration_error != C2A_MATH_ERROR_OK) return transration_error;
+  C2A_MATH_ERROR translation_error = Z_FILTER_bilinear_trans_(filter, ts_sec, numerator_continuous_coeff, denominator_continuous_coeff);
+  if (translation_error != C2A_MATH_ERROR_OK) return translation_error;
 
   Z_FILTER_reset(filter);
 
@@ -197,7 +197,7 @@ static C2A_MATH_ERROR Z_FILTER_bilinear_trans_(ZFilter* filter,
 {
   double pow2_ts = ts_sec * ts_sec;
   double inverse_trans_coeff = 1.0;         //!< inverse of coeffs for bilinear trans
-  C2A_MATH_ERROR transration_success = C2A_MATH_ERROR_OK;
+  C2A_MATH_ERROR translation_success = C2A_MATH_ERROR_OK;
 
   switch (filter->order)
   {
@@ -208,7 +208,7 @@ static C2A_MATH_ERROR Z_FILTER_bilinear_trans_(ZFilter* filter,
 
     if (fabs(inverse_trans_coeff) < MATH_CONST_PROHIBIT_DIVISION_VALUE)
     {
-      transration_success = C2A_MATH_ERROR_SINGULAR;
+      translation_success = C2A_MATH_ERROR_SINGULAR;
       break;
     }
 
@@ -240,7 +240,7 @@ static C2A_MATH_ERROR Z_FILTER_bilinear_trans_(ZFilter* filter,
 
     if (fabs(inverse_trans_coeff) < MATH_CONST_PROHIBIT_DIVISION_VALUE)
     {
-      transration_success = C2A_MATH_ERROR_SINGULAR;
+      translation_success = C2A_MATH_ERROR_SINGULAR;
       break;
     }
 
@@ -253,11 +253,11 @@ static C2A_MATH_ERROR Z_FILTER_bilinear_trans_(ZFilter* filter,
     filter->denominator_discrete_coeff[1] = 0.0;
     break;
   default:
-    transration_success = C2A_MATH_ERROR_SINGULAR;
+    translation_success = C2A_MATH_ERROR_SINGULAR;
     break;
   }
 
-  if (transration_success == C2A_MATH_ERROR_SINGULAR)
+  if (translation_success == C2A_MATH_ERROR_SINGULAR)
   {
     // set the filter order as feed-through
     filter->order = 0;
@@ -267,7 +267,7 @@ static C2A_MATH_ERROR Z_FILTER_bilinear_trans_(ZFilter* filter,
     filter->numerator_discrete_coeff[0] = 1.0;
   }
 
-  return transration_success;
+  return translation_success;
 }
 
 
