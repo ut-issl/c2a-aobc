@@ -245,7 +245,7 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
       float float_sat_pos_est_eci_m[PHYSICAL_CONST_THREE_DIM];
       float float_sat_vel_est_eci_m_s[PHYSICAL_CONST_THREE_DIM];
       float orbit_normal_vec[PHYSICAL_CONST_THREE_DIM];
-      float orbit_noraml_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
+      float orbit_normal_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
 
       for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
       {
@@ -253,8 +253,8 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
         float_sat_vel_est_eci_m_s[idx] = (float)aocs_manager->sat_vel_est_eci_m_s[idx];
       }
       VECTOR3_outer_product(orbit_normal_vec, float_sat_pos_est_eci_m, float_sat_vel_est_eci_m_s);
-      VECTOR3_normalize(orbit_noraml_vec_est_eci_normalized, orbit_normal_vec);
-      VECTOR3_copy(target_direction_vec_eci_normalized, orbit_noraml_vec_est_eci_normalized);
+      VECTOR3_normalize(orbit_normal_vec_est_eci_normalized, orbit_normal_vec);
+      VECTOR3_copy(target_direction_vec_eci_normalized, orbit_normal_vec_est_eci_normalized);
       break;
     }
   default:
