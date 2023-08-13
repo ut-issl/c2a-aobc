@@ -21,6 +21,7 @@ set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src_aobc/src/src_core)
 set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src_aobc/src/src_user)
 set(C2A_SATELLITE_PARAMETERS_DIR ../../../../src_aobc_example/Settings/SatelliteParameters/) # relative path from Settings
 add_definitions(-DUSER_DEFINED_I2C_ADDRESS)
+add_definitions(-DUSER_DEFINED_SENSOR_NUMBER)
 
 set(USE_ALL_C2A_CORE_APPS OFF)
 set(USE_ALL_C2A_CORE_TEST_APPS OFF)
