@@ -503,9 +503,9 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_sun_visibility(const AOCS_MANAGER_SUN_VISIBI
   return AOCS_MANAGER_ERROR_OK;
 }
 
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_stt_availability(const AOCS_MANAGER_STT_AVAILABILITY stt_availibility)
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_stt_availability(const AOCS_MANAGER_STT_AVAILABILITY stt_availability)
 {
-  aocs_manager_.stt_availability = stt_availibility;
+  aocs_manager_.stt_availability = stt_availability;
   return AOCS_MANAGER_ERROR_OK;
 }
 
