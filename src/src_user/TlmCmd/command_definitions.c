@@ -574,6 +574,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_FTAD_SET_METHOD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
