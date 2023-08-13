@@ -41,7 +41,6 @@ static void APP_GPSROP_init_(void)
 {
   memset(&gpsr_orbit_propagator_, 0x00, sizeof(GpsrOrbitPropagator));
 
-  // ひとまず初期値はS2E_ISSL6U_AOCSの軌道設定に合わせる
   gpsr_orbit_propagator_.orbital_elements.semi_major_axis_km = ORBIT_PARAMETERS_gpsr_semi_major_axis_km;
   gpsr_orbit_propagator_.orbital_elements.eccentricity = ORBIT_PARAMETERS_gpsr_eccentricity;
   gpsr_orbit_propagator_.orbital_elements.inclination_rad = ORBIT_PARAMETERS_gpsr_inclination_rad;
