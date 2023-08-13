@@ -39,7 +39,7 @@ typedef enum
 } AOCS_MANAGER_MTQ_OUTPUT_STATE;
 
 /**
- * @enum   AOCS_MANAGER_SUN_VISIVILITY
+ * @enum   AOCS_MANAGER_SUN_VISIBILITY
  * @brief  太陽がサンセンサから見えているかどうか
  * @note   複数あるサンセンサの中で，どれか一つでも太陽方向ベクトルが取れていればVISIBLEとなる
  * @note   サンセンサ選択アプリから，太陽方向ベクトルが取れていないことを太陽方向伝播アプリに伝えるために使う
