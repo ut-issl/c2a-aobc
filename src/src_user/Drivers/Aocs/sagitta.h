@@ -279,7 +279,7 @@ typedef struct
   float track_confidence;         //!< Tracker Confidence Value. The lower this value is, the more confidence we can have in the solution.
   uint8_t num_stars_removed;      //!< The number of stars that were removed by the tracking algorithms that can remove outlier stars
   uint8_t num_stars_centroided;   //!< The number of stars for which a valid centroid was found
-  uint8_t num_stars_matched;      //!< The numver of stars that was matched to a database star
+  uint8_t num_stars_matched;      //!< The number of stars that was matched to a database star
   float lisa_percentage_close;    //!< The percentage of identified stars in the image
   uint8_t num_stars_lisa_close;   //!< The number of identified stars in the image
   uint8_t star_tracker_mode;      //!< LISA = 1, Tracking = 0
