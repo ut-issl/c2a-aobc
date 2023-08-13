@@ -729,14 +729,14 @@ CCP_CmdRet Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacket*
   size_t arg_num;
   for (arg_num = 0; arg_num < PHYSICAL_CONST_THREE_DIM; arg_num++)
   {
-    float initial_covarinace_upper_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
-    if (initial_covarinace_upper_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-    stt_gyro_ekf_.initial_covariance.diagonal_component_stt[arg_num] = initial_covarinace_upper_diagonal_component;
+    float initial_covariance_upper_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
+    if (initial_covariance_upper_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    stt_gyro_ekf_.initial_covariance.diagonal_component_stt[arg_num] = initial_covariance_upper_diagonal_component;
   }
 
-  float initial_covarinace_lower_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
-  if (initial_covarinace_lower_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  stt_gyro_ekf_.initial_covariance.diagonal_component_gyro = initial_covarinace_lower_diagonal_component;
+  float initial_covariance_lower_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
+  if (initial_covariance_lower_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  stt_gyro_ekf_.initial_covariance.diagonal_component_gyro = initial_covariance_lower_diagonal_component;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
