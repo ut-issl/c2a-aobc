@@ -48,7 +48,7 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
 /**
  * @brief  目標方向チェック関数
  *         main，subの2目標方向が一致しているかどうか判定する
- * @param[in]  main_taregt : main目標
+ * @param[in]  main_target : main目標
  * @param[in]  sub_target  : sub目標
  * @return 0:不一致，1:一致
  */
