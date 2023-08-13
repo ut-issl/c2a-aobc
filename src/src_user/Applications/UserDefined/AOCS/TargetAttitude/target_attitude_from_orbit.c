@@ -301,9 +301,9 @@ CCP_CmdRet Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packet)
   }
 
   // main_target_directionとsub_target_directionが一致するのを禁止
-  uint8_t is_target_direcition_same = APP_TAFO_check_is_target_direction_same_((APP_TAFO_TARGET_DIRECITON)main_target_direction,
+  uint8_t is_target_direction_same = APP_TAFO_check_is_target_direction_same_((APP_TAFO_TARGET_DIRECITON)main_target_direction,
                                                                                target_attitude_from_orbit_.sub_target_direction);
-  if (is_target_direcition_same)
+  if (is_target_direction_same)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -347,9 +347,9 @@ CCP_CmdRet Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet)
   }
 
   // main_target_directionとsub_target_directionが一致するのを禁止
-  uint8_t is_target_direcition_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
+  uint8_t is_target_direction_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
                                                                                (APP_TAFO_TARGET_DIRECITON)sub_target_direction);
-  if (is_target_direcition_same)
+  if (is_target_direction_same)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -430,9 +430,9 @@ CCP_CmdRet Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet)
 
   // main_target_directionとsub_target_directionが一致しているとき，
   // is_enabledの有効化を禁止
-  uint8_t is_target_direcition_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
+  uint8_t is_target_direction_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
                                                                                target_attitude_from_orbit_.sub_target_direction);
-  if (is_target_direcition_same)
+  if (is_target_direction_same)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
