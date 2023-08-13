@@ -33,7 +33,7 @@ typedef enum
 } APP_NVM_MANAGER_ERROR;
 
 /**
- * @struct APP_NVM_M<ANAGER_InfoForTlm
+ * @struct APP_NVM_MANAGER_InfoForTlm
  * @brief  不揮発メモリ全体管理のテレメ表示用の基礎構造体
  */
 typedef struct
