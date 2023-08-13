@@ -199,30 +199,30 @@ CCP_CmdRet Cmd_APP_STIM210_FILTER_SET_SPIKE_FILTER_PARAM(const CommonCmdPacket* 
   if (axis_id >= PHYSICAL_CONST_THREE_DIM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   read_out_offset++;
 
-  SpikeFilter_Config config_recieved;
-  config_recieved.count_limit_to_accept = param[read_out_offset];
+  SpikeFilter_Config config_received;
+  config_received.count_limit_to_accept = param[read_out_offset];
   read_out_offset++;
 
-  config_recieved.count_limit_to_reject_continued_warning = param[read_out_offset];
+  config_received.count_limit_to_reject_continued_warning = param[read_out_offset];
   read_out_offset++;
 
   float reject_threshold_float;
   ENDIAN_memcpy(&reject_threshold_float, param + read_out_offset, sizeof(float));
   if (reject_threshold_float < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  config_recieved.reject_threshold = (double)(reject_threshold_float);
+  config_received.reject_threshold = (double)(reject_threshold_float);
   read_out_offset += sizeof(float);
 
   float amplitude_limit_to_accept_as_step_float;
   ENDIAN_memcpy(&amplitude_limit_to_accept_as_step_float, param + read_out_offset, sizeof(float));
   if (amplitude_limit_to_accept_as_step_float < 0.0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  config_recieved.amplitude_limit_to_accept_as_step = (double)(amplitude_limit_to_accept_as_step_float);
+  config_received.amplitude_limit_to_accept_as_step = (double)(amplitude_limit_to_accept_as_step_float);
 
   C2A_MATH_ERROR init_error;
-  init_error = SPIKE_FILTER_init(&APP_STIM210_FILTER_spike_[axis_id], config_recieved);
+  init_error = SPIKE_FILTER_init(&APP_STIM210_FILTER_spike_[axis_id], config_received);
 
   if (init_error == C2A_MATH_ERROR_OK)
   {
-    stim210_filter_.spike_filter_config[axis_id] = config_recieved;
+    stim210_filter_.spike_filter_config[axis_id] = config_received;
     CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
