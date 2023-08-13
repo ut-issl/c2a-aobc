@@ -35,7 +35,7 @@ AppInfo APP_STIM210_FILTER_create_app(void)
 static void APP_STIM210_FILTER_init_(void)
 {
   // same sampling frequency is applied to all filters
-  // (since the frequency must be coincide with the call interval of this apllication)
+  // (since the frequency must be coincide with the call interval of this application)
   stim210_filter_.sampling_freq_Hz = 10.0f;
 
   int z_filter_init_result = APP_STIM210_FILTER_init_z_filter_();
