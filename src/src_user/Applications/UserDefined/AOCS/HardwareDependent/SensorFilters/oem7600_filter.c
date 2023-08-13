@@ -61,7 +61,7 @@ static void APP_OEM7600_FILTER_init_(void)
 
 static void APP_OEM7600_FILTER_exec_(void)
 {
-  if (aocs_manager->gps_visibility == AOCS_MANAGER_GPS_INVISIBILE) return;
+  if (aocs_manager->gps_visibility == AOCS_MANAGER_GPS_INVISIBLE) return;
 
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {

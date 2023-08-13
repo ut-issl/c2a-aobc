@@ -119,8 +119,8 @@ static void APP_AOCS_MANAGER_init_(void)
   aocs_manager_.reference_jday = ORBIT_PARAMETERS_reference_jday;
   aocs_manager_.obct_diff_max_limit_s = 10.0f; // TODO_L : 可変にする？あまり必要なさそう。
   // センサ状態
-  aocs_manager_.sun_visibility = AOCS_MANAGER_SUN_INVISIBILE;
-  aocs_manager_.gps_visibility = AOCS_MANAGER_GPS_INVISIBILE;
+  aocs_manager_.sun_visibility = AOCS_MANAGER_SUN_INVISIBLE;
+  aocs_manager_.gps_visibility = AOCS_MANAGER_GPS_INVISIBLE;
   aocs_manager_.stt_availability = AOCS_MANAGER_STT_UNAVAILABLE;
 
   // 軌道

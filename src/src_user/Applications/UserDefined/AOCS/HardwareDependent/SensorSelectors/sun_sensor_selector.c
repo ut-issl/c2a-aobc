@@ -64,7 +64,7 @@ static void APP_SS_SELECTOR_exec_(void)
   if (APP_SS_SELECTOR_num_of_available_sun_sensor_ == 0)
   {
     // どのサンセンサからも太陽が見えていないときは，ひとまず最後の太陽方向ベクトルを保持するために，サンセンサセレクタからは太陽方向ベクトルの更新をしない
-    AOCS_MANAGER_set_sun_visibility(AOCS_MANAGER_SUN_INVISIBILE);
+    AOCS_MANAGER_set_sun_visibility(AOCS_MANAGER_SUN_INVISIBLE);
     return;
   }
 

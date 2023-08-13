@@ -48,7 +48,7 @@ typedef enum
 typedef enum
 {
   AOCS_MANAGER_SUN_VISIBLE = 0,     //!< 少なくとも一つのサンセンサ情報から，太陽方向ベクトルが取れている状態
-  AOCS_MANAGER_SUN_INVISIBILE       //!< サンセンサから太陽方向ベクトルが取れないので，太陽方向ベクトルをダイナミクスによって伝搬する必要がある状態
+  AOCS_MANAGER_SUN_INVISIBLE       //!< サンセンサから太陽方向ベクトルが取れないので，太陽方向ベクトルをダイナミクスによって伝搬する必要がある状態
 } AOCS_MANAGER_SUN_VISIBILITY;
 
 /**
@@ -60,7 +60,7 @@ typedef enum
 typedef enum
 {
   AOCS_MANAGER_GPS_VISIBLE = 0,     //!< 可視衛星数が十分な状態
-  AOCS_MANAGER_GPS_INVISIBILE       //!< 可視衛星数が不十分な状態
+  AOCS_MANAGER_GPS_INVISIBLE       //!< 可視衛星数が不十分な状態
 } AOCS_MANAGER_GPS_VISIBILITY;
 
 /**
