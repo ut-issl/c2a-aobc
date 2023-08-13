@@ -12,7 +12,7 @@
 #include <src_user/Library/matrix.h>
 #include <src_user/Library/vector3.h>
 
-MATRIX_DEFINE_MATRIX_SRTUCT(6, 6, float);
+MATRIX_DEFINE_MATRIX_STRUCT(6, 6, float);
 
 /**
  * @struct EstimatedResult

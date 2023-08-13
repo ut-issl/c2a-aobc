@@ -23,11 +23,11 @@
 // Satellite parameters
 #include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
-MATRIX_DEFINE_MATRIX_SRTUCT(6, 3, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(6, 1, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(3, 6, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(3, 3, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(3, 1, float);
+MATRIX_DEFINE_MATRIX_STRUCT(6, 3, float);
+MATRIX_DEFINE_MATRIX_STRUCT(6, 1, float);
+MATRIX_DEFINE_MATRIX_STRUCT(3, 6, float);
+MATRIX_DEFINE_MATRIX_STRUCT(3, 3, float);
+MATRIX_DEFINE_MATRIX_STRUCT(3, 1, float);
 
 static SttGyroEkf        stt_gyro_ekf_;
 const  SttGyroEkf* const stt_gyro_ekf = &stt_gyro_ekf_;
