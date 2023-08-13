@@ -52,7 +52,7 @@ typedef enum
 } AOCS_MANAGER_SUN_VISIBILITY;
 
 /**
- * @enum   AOCS_MANAGER_GPS_VISIVILITY
+ * @enum   AOCS_MANAGER_GPS_VISIBILITY
  * @brief  GPSRの可視衛星数が十分 (=>4) 採れているか否か
  * @note   時刻決定やクロックドリフト推定の際にGPSR情報を用いるか否かの判定に利用
  * @note   uint8_tを想定
