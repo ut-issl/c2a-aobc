@@ -1,6 +1,6 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
 ,PacketID,0xd1,,,,,,,,,,,,,,,
-,Enable/Disable,DISABLE,,,,,,,,,,,,,,,
+,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,,,,,,,Description,Note

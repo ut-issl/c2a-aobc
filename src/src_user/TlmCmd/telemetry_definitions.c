@@ -58,6 +58,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_FILTERS_2_(uint8_t* packet, uint16_t* len, uint1
 static TF_TLM_FUNC_ACK Tlm_AOBC_DR_ALGORITHM_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_DEBUG_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA3_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 
@@ -113,6 +114,7 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_AOBC_DR_ALGORITHM].tlm_func = Tlm_AOBC_DR_ALGORITHM_;
   tlm_table[Tlm_CODE_AOBC_DEBUG].tlm_func = Tlm_AOBC_DEBUG_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA1].tlm_func = Tlm_AOBC_SAGITTA1_;
+  tlm_table[Tlm_CODE_AOBC_SAGITTA2].tlm_func = Tlm_AOBC_SAGITTA2_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA3].tlm_func = Tlm_AOBC_SAGITTA3_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA4].tlm_func = Tlm_AOBC_SAGITTA4_;
 }
@@ -3679,7 +3681,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_DEBUG_(uint8_t* packet, uint16_t* len, uint16_t 
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (93 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (214 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[0]));
@@ -3704,9 +3706,101 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA1_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_u8(&packet[87], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.is_valid_quaternion));
   TF_copy_u32(&packet[88], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.stable_count));
   TF_copy_u8(&packet[92], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.solution_strategy));
+  TF_copy_u8(&packet[93], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.count));
+  TF_copy_u32(&packet[94], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[0]));
+  TF_copy_float(&packet[98], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[0]));
+  TF_copy_float(&packet[102], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[0]));
+  TF_copy_float(&packet[106], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[0]));
+  TF_copy_float(&packet[110], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[0]));
+  TF_copy_u32(&packet[114], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[1]));
+  TF_copy_float(&packet[118], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[1]));
+  TF_copy_float(&packet[122], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[1]));
+  TF_copy_float(&packet[126], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[1]));
+  TF_copy_float(&packet[130], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[1]));
+  TF_copy_u32(&packet[134], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[2]));
+  TF_copy_float(&packet[138], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[2]));
+  TF_copy_float(&packet[142], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[2]));
+  TF_copy_float(&packet[146], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[2]));
+  TF_copy_float(&packet[150], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[2]));
+  TF_copy_u32(&packet[154], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[3]));
+  TF_copy_float(&packet[158], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[3]));
+  TF_copy_float(&packet[162], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[3]));
+  TF_copy_float(&packet[166], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[3]));
+  TF_copy_float(&packet[170], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[3]));
+  TF_copy_u32(&packet[174], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[4]));
+  TF_copy_float(&packet[178], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[4]));
+  TF_copy_float(&packet[182], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[4]));
+  TF_copy_float(&packet[186], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[4]));
+  TF_copy_float(&packet[190], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[4]));
+  TF_copy_u32(&packet[194], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[5]));
+  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[5]));
+  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[5]));
+  TF_copy_float(&packet[206], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[5]));
+  TF_copy_float(&packet[210], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[5]));
 #endif
 
-  *len = 93;
+  *len = 214;
+  return TF_TLM_FUNC_ACK_SUCCESS;
+}
+
+static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+{
+  if (226 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+
+#ifndef BUILD_SETTINGS_FAST_BUILD
+  TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[6]));
+  TF_copy_float(&packet[30], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[6]));
+  TF_copy_float(&packet[34], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[6]));
+  TF_copy_float(&packet[38], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[6]));
+  TF_copy_float(&packet[42], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[6]));
+  TF_copy_u32(&packet[46], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[7]));
+  TF_copy_float(&packet[50], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[7]));
+  TF_copy_float(&packet[54], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[7]));
+  TF_copy_float(&packet[58], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[7]));
+  TF_copy_float(&packet[62], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[7]));
+  TF_copy_u32(&packet[66], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[8]));
+  TF_copy_float(&packet[70], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[8]));
+  TF_copy_float(&packet[74], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[8]));
+  TF_copy_float(&packet[78], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[8]));
+  TF_copy_float(&packet[82], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[8]));
+  TF_copy_u32(&packet[86], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[9]));
+  TF_copy_float(&packet[90], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[9]));
+  TF_copy_float(&packet[94], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[9]));
+  TF_copy_float(&packet[98], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[9]));
+  TF_copy_float(&packet[102], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[9]));
+  TF_copy_u32(&packet[106], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[10]));
+  TF_copy_float(&packet[110], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[10]));
+  TF_copy_float(&packet[114], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[10]));
+  TF_copy_float(&packet[118], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[10]));
+  TF_copy_float(&packet[122], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[10]));
+  TF_copy_u32(&packet[126], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[11]));
+  TF_copy_float(&packet[130], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[11]));
+  TF_copy_float(&packet[134], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[11]));
+  TF_copy_float(&packet[138], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[11]));
+  TF_copy_float(&packet[142], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[11]));
+  TF_copy_u32(&packet[146], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[12]));
+  TF_copy_float(&packet[150], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[12]));
+  TF_copy_float(&packet[154], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[12]));
+  TF_copy_float(&packet[158], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[12]));
+  TF_copy_float(&packet[162], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[12]));
+  TF_copy_u32(&packet[166], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[13]));
+  TF_copy_float(&packet[170], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[13]));
+  TF_copy_float(&packet[174], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[13]));
+  TF_copy_float(&packet[178], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[13]));
+  TF_copy_float(&packet[182], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[13]));
+  TF_copy_u32(&packet[186], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[14]));
+  TF_copy_float(&packet[190], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[14]));
+  TF_copy_float(&packet[194], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[14]));
+  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[14]));
+  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[14]));
+  TF_copy_u32(&packet[206], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.id[15]));
+  TF_copy_float(&packet[210], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.x_coordinate[15]));
+  TF_copy_float(&packet[214], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.y_coordinate[15]));
+  TF_copy_float(&packet[218], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_x_coordinate[15]));
+  TF_copy_float(&packet[222], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.matched_centroids.error_y_coordinate[15]));
+#endif
+
+  *len = 226;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -3734,6 +3828,55 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA3_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_u16(&packet[58], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.blobs.y_coordinate[6]));
   TF_copy_u16(&packet[60], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.blobs.x_coordinate[7]));
   TF_copy_u16(&packet[62], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.blobs.y_coordinate[7]));
+  TF_copy_u16(&packet[64], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.count));
+  TF_copy_float(&packet[66], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[0]));
+  TF_copy_float(&packet[70], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[0]));
+  TF_copy_u8(&packet[74], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[0]));
+  TF_copy_float(&packet[75], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[1]));
+  TF_copy_float(&packet[79], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[1]));
+  TF_copy_u8(&packet[83], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[1]));
+  TF_copy_float(&packet[84], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[2]));
+  TF_copy_float(&packet[88], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[2]));
+  TF_copy_u8(&packet[92], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[2]));
+  TF_copy_float(&packet[93], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[3]));
+  TF_copy_float(&packet[97], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[3]));
+  TF_copy_u8(&packet[101], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[3]));
+  TF_copy_float(&packet[102], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[4]));
+  TF_copy_float(&packet[106], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[4]));
+  TF_copy_u8(&packet[110], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[4]));
+  TF_copy_float(&packet[111], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[5]));
+  TF_copy_float(&packet[115], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[5]));
+  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[5]));
+  TF_copy_float(&packet[120], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[6]));
+  TF_copy_float(&packet[124], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[6]));
+  TF_copy_u8(&packet[128], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[6]));
+  TF_copy_float(&packet[129], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[7]));
+  TF_copy_float(&packet[133], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[7]));
+  TF_copy_u8(&packet[137], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[7]));
+  TF_copy_float(&packet[138], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[8]));
+  TF_copy_float(&packet[142], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[8]));
+  TF_copy_u8(&packet[146], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[8]));
+  TF_copy_float(&packet[147], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[9]));
+  TF_copy_float(&packet[151], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[9]));
+  TF_copy_u8(&packet[155], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[9]));
+  TF_copy_float(&packet[156], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[10]));
+  TF_copy_float(&packet[160], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[10]));
+  TF_copy_u8(&packet[164], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[10]));
+  TF_copy_float(&packet[165], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[11]));
+  TF_copy_float(&packet[169], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[11]));
+  TF_copy_u8(&packet[173], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[11]));
+  TF_copy_float(&packet[174], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[12]));
+  TF_copy_float(&packet[178], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[12]));
+  TF_copy_u8(&packet[182], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[12]));
+  TF_copy_float(&packet[183], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[13]));
+  TF_copy_float(&packet[187], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[13]));
+  TF_copy_u8(&packet[191], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[13]));
+  TF_copy_float(&packet[192], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[14]));
+  TF_copy_float(&packet[196], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[14]));
+  TF_copy_u8(&packet[200], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[14]));
+  TF_copy_float(&packet[201], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.x_coordinate[15]));
+  TF_copy_float(&packet[205], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.y_coordinate[15]));
+  TF_copy_u8(&packet[209], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.centroids.magnitude[15]));
   TF_copy_float(&packet[210], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.auto_blob_threshold));
   TF_copy_float(&packet[214], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
   TF_copy_float(&packet[222], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
@@ -3748,6 +3891,42 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16
   if (234 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
+  TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[0]));
+  TF_copy_u32(&packet[30], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[1]));
+  TF_copy_u32(&packet[34], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[2]));
+  TF_copy_u32(&packet[38], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[3]));
+  TF_copy_u32(&packet[42], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[4]));
+  TF_copy_u32(&packet[46], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[5]));
+  TF_copy_u32(&packet[50], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[6]));
+  TF_copy_u32(&packet[54], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[7]));
+  TF_copy_u32(&packet[58], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_a_pix[8]));
+  TF_copy_u32(&packet[62], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[0]));
+  TF_copy_u32(&packet[66], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[1]));
+  TF_copy_u32(&packet[70], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[2]));
+  TF_copy_u32(&packet[74], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[3]));
+  TF_copy_u32(&packet[78], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[4]));
+  TF_copy_u32(&packet[82], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[5]));
+  TF_copy_u32(&packet[86], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[6]));
+  TF_copy_u32(&packet[90], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[7]));
+  TF_copy_u32(&packet[94], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_b_pix[8]));
+  TF_copy_u32(&packet[98], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[0]));
+  TF_copy_u32(&packet[102], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[1]));
+  TF_copy_u32(&packet[106], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[2]));
+  TF_copy_u32(&packet[110], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[3]));
+  TF_copy_u32(&packet[114], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[4]));
+  TF_copy_u32(&packet[118], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[5]));
+  TF_copy_u32(&packet[122], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[6]));
+  TF_copy_u32(&packet[126], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[7]));
+  TF_copy_u32(&packet[130], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_c_pix[8]));
+  TF_copy_u32(&packet[134], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[0]));
+  TF_copy_u32(&packet[138], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[1]));
+  TF_copy_u32(&packet[142], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[2]));
+  TF_copy_u32(&packet[146], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[3]));
+  TF_copy_u32(&packet[150], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[4]));
+  TF_copy_u32(&packet[154], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[5]));
+  TF_copy_u32(&packet[158], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[6]));
+  TF_copy_u32(&packet[162], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[7]));
+  TF_copy_u32(&packet[166], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.histogram_d_pix[8]));
   TF_copy_float(&packet[170], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.mcu_current_A));
   TF_copy_float(&packet[174], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.mcu_voltage_V));
   TF_copy_float(&packet[178], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.power.fpga_core_current_A));
