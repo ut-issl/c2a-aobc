@@ -88,6 +88,7 @@ extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;           //!< Unloading target [rad/s]
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;                            //!< Unloading gain
 extern const APP_UNLOADING_EXEC ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable;             //!< Unloading execution enable flag
+extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm;                       //!< Unloading minimum torque [Nm]
 
 // Control Torques
 extern const AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION ATTITUDE_CONTROL_PARAMETERS_constant_torque_permission;  //!< Constant torque correction permission

@@ -26,7 +26,7 @@ const  RW0003_Driver* const rw0003_driver[RW0003_IDX_MAX] = {&rw0003_driver_[RW0
                                                              &rw0003_driver_[RW0003_IDX_ON_Z]};
 // バッファ
 static DS_StreamRecBuffer DI_RW0003_rx_buffer_[RW0003_IDX_MAX];
-static uint8_t DI_RW0003_rx_buffer_allocation_[RW0003_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_RW0003_rx_buffer_allocation_[RW0003_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
 
 static float DI_RW0003_rw_speed_rad_s_[RW0003_IDX_MAX] = {0.0f, 0.0f, 0.0f};
 static uint8_t DI_RW0003_is_initialized_[RW0003_IDX_MAX];  //!< 0 = not initialized, 1 = initialized

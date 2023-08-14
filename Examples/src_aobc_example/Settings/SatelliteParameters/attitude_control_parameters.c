@@ -81,6 +81,7 @@ const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_thresho
 const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s = PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(0.0f);
 const float ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain = -1.0e-7f;
 const APP_UNLOADING_EXEC ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable = APP_UNLOADING_EXEC_DISABLE;
+const float ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm = 1.0e-7f;
 
 // Control Torques
 const AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION ATTITUDE_CONTROL_PARAMETERS_constant_torque_permission = AOCS_MANAGER_CONSTANT_TORQUE_DISABLE;

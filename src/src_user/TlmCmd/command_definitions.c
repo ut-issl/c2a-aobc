@@ -4,7 +4,7 @@
  * @brief  コマンド定義
  * @note   このコードは自動生成されています！
  */
-#include "../../src_core/TlmCmd/command_analyze.h"
+#include <src_core/TlmCmd/command_analyze.h>
 #include "command_definitions.h"
 #include "command_source.h"
 
@@ -32,8 +32,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TLCD_SET_PAGE_FOR_TLM].cmd_func = Cmd_TLCD_SET_PAGE_FOR_TLM;
   cmd_table[Cmd_CODE_GENERATE_TLM].cmd_func = Cmd_GENERATE_TLM;
   cmd_table[Cmd_CODE_TG_GENERATE_TLM].cmd_func = Cmd_TG_GENERATE_TLM;
-  cmd_table[Cmd_CODE_TG_GENERATE_HK_TLM].cmd_func = Cmd_TG_GENERATE_HK_TLM;
-  cmd_table[Cmd_CODE_TG_GENERATE_MS_TLM].cmd_func = Cmd_TG_GENERATE_MS_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_HP_TLM].cmd_func = Cmd_TG_GENERATE_HP_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_RT_TLM].cmd_func = Cmd_TG_GENERATE_RT_TLM;
   cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].cmd_func = Cmd_TG_GENERATE_ST_TLM;
   cmd_table[Cmd_CODE_BCT_CLEAR_BLOCK].cmd_func = Cmd_BCT_CLEAR_BLOCK;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].cmd_func = Cmd_BCT_SET_BLOCK_POSITION;
@@ -136,7 +136,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_STIM210_SET_LOW_PASS_FILTER].cmd_func = Cmd_DI_STIM210_SET_LOW_PASS_FILTER;
   cmd_table[Cmd_CODE_DI_OEM7600_ONOFF_ANTENNA_POWER].cmd_func = Cmd_DI_OEM7600_ONOFF_ANTENNA_POWER;
   cmd_table[Cmd_CODE_DI_OEM7600_SOFTWARE_RESET].cmd_func = Cmd_DI_OEM7600_SOFTWARE_RESET;
-  cmd_table[Cmd_CODE_DI_OEM7600_SAVE_TLM_SETTING].cmd_func = Cmd_DI_OEM7600_SAVE_TLM_SETTING;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].cmd_func = Cmd_DI_OEM7600_SET_TLM_CONTENTS;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_RESET_GPIO_HIGHLOW].cmd_func = Cmd_DI_OEM7600_SET_RESET_GPIO_HIGHLOW;
   cmd_table[Cmd_CODE_DI_RW0003_INIT].cmd_func = Cmd_DI_RW0003_INIT;
@@ -278,8 +277,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_TG_GENERATE_HK_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_TG_GENERATE_MS_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_HP_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_RT_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_BCT_CLEAR_BLOCK].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
@@ -416,7 +415,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_OEM7600_ONOFF_ANTENNA_POWER].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SOFTWARE_RESET].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SOFTWARE_RESET].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_DI_OEM7600_SAVE_TLM_SETTING].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_OEM7600_SET_TLM_CONTENTS].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
@@ -576,6 +574,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_FTAD_SET_METHOD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;

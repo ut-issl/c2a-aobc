@@ -11,8 +11,6 @@
   - For SILS test
     - [S2E-AOBC](https://github.com/ut-issl/s2e-aobc) v3.0.0
   - Telemetry/Command interface
-    - [tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
-      - Version: [ISSL Branch](https://github.com/ut-issl/c2a-tlm-cmd-code-generator/tree/feature/issl)
     - [WINGS](https://gitlab.com/ut_issl/wings/wings)
 - How to use
   - `The main developers` of the AOCS module directly use this repository to add new features and improve the module.
@@ -57,8 +55,8 @@
 - The term `body-fixed frame` in the codes and tlm/cmd database means `the body-fixed frame of the AOCS module`. It does not necessarily coincide with the body-fixed frame of your satellite.
 
 ## For main developers
-## How to clone the repository
-  - This repository includes [c2a-core](https://github.com/ut-issl/c2a-core) with the `git submodule`. Please use the following commands to construct the directory.
+### How to clone the repository
+  - This repository includes [c2a-core](https://github.com/ut-issl/c2a-core) and [tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator) as the `git submodule`. Please use the following commands to construct the directory.
     ```
     $ git clone git@github.com:ut-issl/c2a-aobc.git
     $ cd c2a-aobc/
@@ -106,23 +104,12 @@
 
 
 ### How to edit TLM/CMD (Telemetry/Command)
-1. Open TLM/CMD DB
+1. Edit TLM/CMD DB in `c2a-aobc/database/`
    - Please find detailed information on [How to use TLM/CMD DB](https://github.com/ut-issl/tlm-cmd-db).
-2. Execute `tlm-cmd-generator` and generate source codes.
+2. Execute `tools/tlm_cmd_generator` and generate source codes.
    - [How to use tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
-   - Edit the `settings.json` as follows.
-     ```
-     {
-       "c2a_root_dir" : "Relative path to c2a-aobc/src/",
-       "db_path" : "Relative path to c2a-aobc/src/src_user/Settings/TlmCmd/DataBase/",
-       "db_prefix" : "ISSL6U_AOBC",
-       "tlm_id_range" : ["0x00", "0x100"],
-       "is_cmd_prefixed_in_db" : 1,
-       "input_file_encoding" : "utf-8",
-       "output_file_encoding" : "utf-8",
-       "is_main_obc" : 0
-     }
-     ```
+   - Just use the version specified in the submodule.
+   - It is set to read `tools/tlm_cmd_gen_config.json` as the config file.
 
 
 ### Development style

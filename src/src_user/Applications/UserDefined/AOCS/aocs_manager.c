@@ -109,8 +109,8 @@ static void APP_AOCS_MANAGER_init_(void)
   VECTOR3_initialize(rw_angular_velocity_rad_s, 0.0f);
   AOCS_MANAGER_set_rw_angular_velocity_rad_s(rw_angular_velocity_rad_s);
   // 時刻
-  aocs_manager_.current_gps_time_obs_msec = 0;
-  aocs_manager_.current_gps_time_obs_week = 0;
+  aocs_manager_.current_gps_time_obs.week_number  = 0;
+  aocs_manager_.current_gps_time_obs.msec_of_week = 0;
   aocs_manager_.obct_gps_time_obs = OBCT_create(0, 0, 0);
   // aocs_manager_.current_gps_time_est_msec = 0;
   // aocs_manager_.current_gps_time_est_week = 0;
@@ -466,13 +466,11 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_rotation_direction_matrix(
 }
 
 // 時刻
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_obs(const uint32_t current_gps_time_obs_msec,
-                                                         const uint16_t current_gps_time_obs_week,
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_current_gps_time_obs(const GpsTime current_gps_time,
                                                          const ObcTime  obct_gps_time_obs)
 {
-  aocs_manager_.current_gps_time_obs_msec = current_gps_time_obs_msec;
-  aocs_manager_.current_gps_time_obs_week = current_gps_time_obs_week;
-  aocs_manager_.obct_gps_time_obs = obct_gps_time_obs;
+  aocs_manager_.current_gps_time_obs = current_gps_time;
+  aocs_manager_.obct_gps_time_obs    = obct_gps_time_obs;
   return AOCS_MANAGER_ERROR_OK;
 }
 

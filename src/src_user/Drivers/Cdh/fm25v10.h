@@ -11,6 +11,9 @@
 
 #define FM25V10_STOP_ADDRESS (0x20000) //!< FM25V10のSTOPアドレス(排他範囲)
 #define FM25V10_MAX_LENGTH  (128)      //!< 読み書きする最大データ数（実行速度などで決める）
+
+#define DS_IF_RX_BUFFER_SIZE_FM25V10 (128)  //!< IF_RXのバッファサイズ
+
 /**
  * @struct FM25V10_Info
  * @brief  FM25V10のテレメトリ情報

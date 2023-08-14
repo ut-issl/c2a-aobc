@@ -26,7 +26,7 @@ const  RM3100_Driver* const rm3100_driver[RM3100_IDX_MAX] = {&rm3100_driver_[RM3
                                                              &rm3100_driver_[RM3100_IDX_EXTERNAL]};
 // バッファ
 static DS_StreamRecBuffer DI_RM3100_rx_buffer_[RM3100_IDX_MAX];
-static uint8_t DI_RM3100_rx_buffer_allocation_[RM3100_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t DI_RM3100_rx_buffer_allocation_[RM3100_IDX_MAX][DS_STREAM_REC_BUFFER_SIZE_SYNCHRONOUS_SMALL];
 
 static uint8_t DI_RM3100_is_initialized_[RM3100_IDX_MAX] = { 0, 0 };  //!< 0 = not initialized, 1 = initialized
 

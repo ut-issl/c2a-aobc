@@ -13,6 +13,8 @@
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/quaternion.h>
 
+#define DS_IF_RX_BUFFER_SIZE_STIM210 (32)  //!< IF_RXのバッファサイズ
+
 /**
  * @enum   STIM210_OPERATION_MODE
  * @brief  STIM210の運用モード
