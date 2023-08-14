@@ -49,7 +49,7 @@ static void APP_GPSR_SELECTOR_exec_(void)
     }
     else
     {
-      AOCS_MANAGER_set_gps_visibility(AOCS_MANAGER_GPS_INVISIBILE);
+      AOCS_MANAGER_set_gps_visibility(AOCS_MANAGER_GPS_INVISIBLE);
     }
     break;
   default:

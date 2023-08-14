@@ -39,7 +39,7 @@ typedef enum
 } AOCS_MANAGER_MTQ_OUTPUT_STATE;
 
 /**
- * @enum   AOCS_MANAGER_SUN_VISIVILITY
+ * @enum   AOCS_MANAGER_SUN_VISIBILITY
  * @brief  太陽がサンセンサから見えているかどうか
  * @note   複数あるサンセンサの中で，どれか一つでも太陽方向ベクトルが取れていればVISIBLEとなる
  * @note   サンセンサ選択アプリから，太陽方向ベクトルが取れていないことを太陽方向伝播アプリに伝えるために使う
@@ -48,11 +48,11 @@ typedef enum
 typedef enum
 {
   AOCS_MANAGER_SUN_VISIBLE = 0,     //!< 少なくとも一つのサンセンサ情報から，太陽方向ベクトルが取れている状態
-  AOCS_MANAGER_SUN_INVISIBILE       //!< サンセンサから太陽方向ベクトルが取れないので，太陽方向ベクトルをダイナミクスによって伝搬する必要がある状態
+  AOCS_MANAGER_SUN_INVISIBLE       //!< サンセンサから太陽方向ベクトルが取れないので，太陽方向ベクトルをダイナミクスによって伝搬する必要がある状態
 } AOCS_MANAGER_SUN_VISIBILITY;
 
 /**
- * @enum   AOCS_MANAGER_GPS_VISIVILITY
+ * @enum   AOCS_MANAGER_GPS_VISIBILITY
  * @brief  GPSRの可視衛星数が十分 (=>4) 採れているか否か
  * @note   時刻決定やクロックドリフト推定の際にGPSR情報を用いるか否かの判定に利用
  * @note   uint8_tを想定
@@ -60,7 +60,7 @@ typedef enum
 typedef enum
 {
   AOCS_MANAGER_GPS_VISIBLE = 0,     //!< 可視衛星数が十分な状態
-  AOCS_MANAGER_GPS_INVISIBILE       //!< 可視衛星数が不十分な状態
+  AOCS_MANAGER_GPS_INVISIBLE       //!< 可視衛星数が不十分な状態
 } AOCS_MANAGER_GPS_VISIBILITY;
 
 /**

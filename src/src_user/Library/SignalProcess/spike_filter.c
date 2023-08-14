@@ -66,7 +66,7 @@ C2A_MATH_ERROR SPIKE_FILTER_calc_output_double(SpikeFilter* filter, double* outp
     filter->count_to_reject_continued_warning_++;
 
     // reset counter if the differential amplitude of successive spikes is too large
-    // so as not to misrecognize oscillating signal as step signal
+    // so as not to mis-recognize oscillating signal as step signal
     double diff_of_successive_spikes = input - filter->last_reject_val_;
     if (fabs(diff_of_successive_spikes) > filter->config.amplitude_limit_to_accept_as_step)
     {

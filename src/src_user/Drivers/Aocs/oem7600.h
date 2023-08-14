@@ -31,7 +31,7 @@ typedef enum
  */
 typedef enum
 {
-  // hwmonitor tlm内部の識別ID
+  // hw monitor tlm内部の識別ID
   OEM7600_TLM_ID_TEMPERATURE     = 0x00000001,
   OEM7600_TLM_ID_ANTENNA_CURRENT = 0x00000002,
   OEM7600_TLM_ID_3V3_VOLTAGE     = 0x00000006,
@@ -69,7 +69,7 @@ typedef struct
  */
 typedef struct
 {
-  float temperature_degC;  //!< reciever temperature [degC]
+  float temperature_degC;  //!< receiver temperature [degC]
   float antenna_current_A; //!< antenna current [A]
   float voltage_3v3_V;     //!< 3V3 voltage regulated in the receiver and delivered mainly to the receiver's processor [V]
   float antenna_voltage_V; //!< antenna voltage [V]
@@ -126,7 +126,7 @@ typedef struct
   struct oem7600
   {
     uint8_t is_receiving;             //!< flag to check whether the driver is under range tlm receiving or not
-    uint16_t recieved_tlm_len;        //!< length of the range data stored to the range tlm buffer
+    uint16_t received_tlm_len;        //!< length of the range data stored to the range tlm buffer
     uint16_t expected_data_length;    //!< expected data length of range tlm sentence under receiving
     uint16_t range_tlm_wait_counter;  //!< range tlmの受信処理call回数（閾値以上になった場合、range tlmの受信処理をリセット）
   } range_tlm_status;

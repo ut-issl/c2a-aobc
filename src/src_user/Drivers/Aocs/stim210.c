@@ -457,7 +457,7 @@ C2A_MATH_ERROR STIM210_set_ang_vel_scale_factor_compo(STIM210_Driver* stim210_dr
 
 /*
  * @private
- * @breif ドライバ初期化設定
+ * @brief ドライバ初期化設定
  * @param p_super: ドライバーへのポインタ
  * @return DS_ERR_CODEを参照
  */
@@ -481,7 +481,7 @@ static DS_ERR_CODE STIM210_load_driver_super_init_settings_(DriverSuper* p_super
 
 /*
  * @private
- * @breif テレメトリのフレームサイズとヘッダー・フッターを指定する関数。
+ * @brief テレメトリのフレームサイズとヘッダー・フッターを指定する関数。
  * @param stim210: ドライバーへのポインタ
  * @return DS_CMD_ERR_CODEを参照
  */
@@ -508,7 +508,7 @@ static DS_CMD_ERR_CODE STIM210_set_rec_frame_size_(STIM210_Driver* stim210_drive
 
 /*
  * @private
- * @breif 汎用コマンド作成関数
+ * @brief 汎用コマンド作成関数
  * @param stim210: ドライバーへのポインタ
  * @param param_size: cmd paramで使われているバイト長 (フッターを含まない)
  * @param cmd_param: 送信するコマンドパラメータ
@@ -541,7 +541,7 @@ static DS_CMD_ERR_CODE STIM210_send_cmd_(STIM210_Driver* stim210_driver, uint8_t
 
 /*
  * @private
- * @breif 受け取ったデータを変数に格納していく
+ * @brief 受け取ったデータを変数に格納していく
  * @param stream_config: ドライバーの設定
  * @param p_driver: ドライバーへのポインタ
  * @return DS_ERR_CODEを参照
@@ -800,7 +800,7 @@ static int STIM210_convert_latency_(STIM210_Driver* stim210_driver, const uint8_
 
 static void STIM210_calc_ang_vel_calibration_(STIM210_Info* info)
 {
-  // Scale Factor and Bias caliblation: y = SF*x - BIAS
+  // Scale Factor and Bias calibration: y = SF*x - BIAS
   MATRIX33_multiply_matrix_vector(info->ang_vel_compo_rad_sec,
                                   info->ang_vel_scale_factor_compo,
                                   info->ang_vel_raw_compo_rad_sec);

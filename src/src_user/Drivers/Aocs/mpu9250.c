@@ -440,7 +440,7 @@ static DS_ERR_CODE MPU9250_gyro_analyze_rec_data_(DS_StreamConfig* stream_config
   MPU9250_convert_bytes_to_info_accel_(mpu9250_rx_data, &(mpu9250_driver->info));
   MPU9250_convert_bytes_to_info_temperature_(mpu9250_rx_data, &(mpu9250_driver->info));
 
-  // Scale Factor and Bias caliblation: y = SF*x - BIAS
+  // Scale Factor and Bias calibration: y = SF*x - BIAS
   MATRIX33_multiply_matrix_vector(mpu9250_driver->info.ang_vel_compo_rad_s,
                                 mpu9250_driver->info.ang_vel_scale_factor_compo,
                                 mpu9250_driver->info.ang_vel_raw_compo_rad_s);
@@ -466,12 +466,12 @@ static DS_ERR_CODE MPU9250_mag_analyze_rec_data_(DS_StreamConfig* stream_config,
 
   MPU9250_convert_bytes_to_info_mag_(mpu9250_rx_data, &(mpu9250_driver->info));
 
-  // Bias caliblation
+  // Bias calibration
   VECTOR3_subtract(mpu9250_driver->info.mag_compo_nT,
                    mpu9250_driver->info.mag_raw_compo_nT,
                    mpu9250_driver->info.mag_bias_compo_nT);
 
-  // Scale Factor caliblation
+  // Scale Factor calibration
   MATRIX33_multiply_matrix_vector(mpu9250_driver->info.mag_compo_nT,
                                   mpu9250_driver->info.mag_scale_factor_compo,
                                   mpu9250_driver->info.mag_compo_nT);

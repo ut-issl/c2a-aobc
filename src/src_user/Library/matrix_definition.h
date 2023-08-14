@@ -38,7 +38,7 @@ typedef struct
 #define MATRIX_T(row, col, type) MATRIX_T_INNER(row, col, type)  //!< 各行列演算関数の返り値型定義マクロ
 #define MATRIX_TYPE_MEMBER(type) MATRIX_TYPE_ ## type //!< 型とMATRIX_TYPE enumの変換マクロ
 
-#define MATRIX_DEFINE_MATRIX_SRTUCT(row, col, type) \
+#define MATRIX_DEFINE_MATRIX_STRUCT(row, col, type) \
 typedef struct \
 { \
   MATRIX_Parameter parameter; \

@@ -12,7 +12,7 @@
 #include <src_user/Library/quaternion.h>
 
 /**
- * @enum   APP_TAFO_TARGET_DIRECITON
+ * @enum   APP_TAFO_TARGET_DIRECITON TODO Fix typo (This will be major update)
  * @brief  機体座標系の特定軸を向ける方向を指定する
  * @note   uint8_tを想定
  */

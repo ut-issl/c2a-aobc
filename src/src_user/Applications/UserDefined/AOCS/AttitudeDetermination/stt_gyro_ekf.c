@@ -23,11 +23,11 @@
 // Satellite parameters
 #include <src_user/Settings/SatelliteParameters/attitude_determination_parameters.h>
 
-MATRIX_DEFINE_MATRIX_SRTUCT(6, 3, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(6, 1, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(3, 6, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(3, 3, float);
-MATRIX_DEFINE_MATRIX_SRTUCT(3, 1, float);
+MATRIX_DEFINE_MATRIX_STRUCT(6, 3, float);
+MATRIX_DEFINE_MATRIX_STRUCT(6, 1, float);
+MATRIX_DEFINE_MATRIX_STRUCT(3, 6, float);
+MATRIX_DEFINE_MATRIX_STRUCT(3, 3, float);
+MATRIX_DEFINE_MATRIX_STRUCT(3, 1, float);
 
 static SttGyroEkf        stt_gyro_ekf_;
 const  SttGyroEkf* const stt_gyro_ekf = &stt_gyro_ekf_;
@@ -106,7 +106,7 @@ typedef enum
   APP_STT_GYRO_EKF_STT_STATUS_NG      //!< STTからQuaternionが更新されていない
 } APP_STT_GYRO_EKF_STT_STATUS;
 
-static const float APP_STT_GYRO_EKF_kAccceptableMaxTimeStepSec_ = 1.0f; //!< 時間刻みがこれより大きい場合フィルタ計算をスキップ
+static const float APP_STT_GYRO_EKF_kAcceptableMaxTimeStepSec_ = 1.0f; //!< 時間刻みがこれより大きい場合フィルタ計算をスキップ
 static const float APP_STT_GYRO_EKF_kComputationCycle_ = 0.1f; //!< EKFアプリの計算周期．タスクリストでの実行頻度と合わせること
 static float APP_STT_GYRO_EKF_rate_bias_propagation_coefficient_; //!< レートバイアス伝搬の漸化式の係数．計算速度のために固定値．
 static CalculationTime APP_STT_GYRO_EKF_calculation_time_;
@@ -305,7 +305,7 @@ static void APP_STT_GYRO_EKF_exec_(void)
 
 void APP_STT_GYRO_EKF_execute_estimation(float time_step_s)
 {
-  if (time_step_s > APP_STT_GYRO_EKF_kAccceptableMaxTimeStepSec_)
+  if (time_step_s > APP_STT_GYRO_EKF_kAcceptableMaxTimeStepSec_)
   {
     // フィルタ計算を回し始めた初回や，別のモードに遷移したあと戻ってきた初回などは，time_step_sが大きな値になっている．
     // これらのケースでは，状態変数や推定結果に，ある程度正しい値を入れて初期化しておく．
@@ -729,14 +729,14 @@ CCP_CmdRet Cmd_STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX(const CommonCmdPacket*
   size_t arg_num;
   for (arg_num = 0; arg_num < PHYSICAL_CONST_THREE_DIM; arg_num++)
   {
-    float initial_covarinace_upper_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
-    if (initial_covarinace_upper_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-    stt_gyro_ekf_.initial_covariance.diagonal_component_stt[arg_num] = initial_covarinace_upper_diagonal_component;
+    float initial_covariance_upper_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
+    if (initial_covariance_upper_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    stt_gyro_ekf_.initial_covariance.diagonal_component_stt[arg_num] = initial_covariance_upper_diagonal_component;
   }
 
-  float initial_covarinace_lower_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
-  if (initial_covarinace_lower_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  stt_gyro_ekf_.initial_covariance.diagonal_component_gyro = initial_covarinace_lower_diagonal_component;
+  float initial_covariance_lower_diagonal_component = CCP_get_param_from_packet(packet, arg_num, float);
+  if (initial_covariance_lower_diagonal_component < 0.0f) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  stt_gyro_ekf_.initial_covariance.diagonal_component_gyro = initial_covariance_lower_diagonal_component;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

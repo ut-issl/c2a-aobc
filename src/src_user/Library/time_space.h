@@ -24,21 +24,21 @@ double TIME_SPACE_convert_gpstime_to_julian_day(const uint16_t gps_time_week, co
  * @brief  Julian DayからJulian Centuryへの変換
  *
  *         色々なところで使いまわす1次項だけ計算
- * @param  julian_day : JulianDay [day] (should be larger than JulainDay at Epoch of J2000)
+ * @param  julian_day : JulianDay [day] (should be larger than Julian Day at Epoch of J2000)
  * @return Julian Century [century] (returns zero when the input is out-of-range )
  */
 double TIME_SPACE_convert_julian_day_to_century(const double julian_day);
 
 /**
- * @brief  Greenwitch Mean Sidereal Time (GMST) [rad]の計算
- * @param  julian_day : JulianDay [day] (should be larger than JulainDay at Epoch of J2000)
+ * @brief  Greenwich Mean Sidereal Time (GMST) [rad]の計算
+ * @param  julian_day : JulianDay [day] (should be larger than Julian Day at Epoch of J2000)
  * @return GMST [rad] (returns zero when the input is out-of-range)
  */
 double TIME_SPACE_calc_gmst_rad(const double julian_day);
 
 /**
  * @brief  Julian Dayからdecimal year(基準日からの10進数表記での経過年数)
- * @param  julian_day      : JulianDay [day] (should be larger than JulainDay at Epoch of J2000)
+ * @param  julian_day      : JulianDay [day] (should be larger than Julian Day at Epoch of J2000)
  * @param  julian_day_base : JulianDayで表した基準日 [day]
  * @return decimal year [year] (returns zero when the input is out-of-range )
  */
@@ -56,7 +56,7 @@ void TIME_SPACE_calc_sun_direction_eci(const double julian_century, float sun_di
 /**
  * @brief      NEDからECEFへの座標変換
  * @param[out] dcm_ned_to_ecef : rotational matrix from ned to ecef
- * @param[in]  lat_rad         : geodetic lattitude [rad]
+ * @param[in]  lat_rad         : geodetic latitude [rad]
  * @param[in]  lon_rad         : geodetic longitude [rad]
  */
 void TIME_SPACE_trans_ned_to_ecef(float dcm_ned_to_ecef[][PHYSICAL_CONST_THREE_DIM],
@@ -67,10 +67,10 @@ void TIME_SPACE_trans_ned_to_ecef(float dcm_ned_to_ecef[][PHYSICAL_CONST_THREE_D
  *
  *             歳差と章動を考慮した変換
  * @param[in]  julian_century  : Julian Century [century] (should be larger than zero)
- * @param[in]  gmst_rad        : Greenwitch Mean Sidereal Time [rad] (should be larger than zero)
+ * @param[in]  gmst_rad        : Greenwich Mean Sidereal Time [rad] (should be larger than zero)
  * @param[out] dcm_eci_to_ecef : coordinate transformation from eci to ecef
                                  (set unit matrix when the input is out-of-range)
- * @return     C2A_MATH_ERROR_RANGE_OVER : Julian CenturyまたはGreenwitch Mean Sidereal Timeが0以下
+ * @return     C2A_MATH_ERROR_RANGE_OVER : Julian CenturyまたはGreenwich Mean Sidereal Timeが0以下
  * @return     C2A_MATH_ERROR_OK
  */
 C2A_MATH_ERROR TIME_SPACE_trans_eci_to_ecef(const double julian_day, const double gmst_rad,
@@ -80,10 +80,10 @@ C2A_MATH_ERROR TIME_SPACE_trans_eci_to_ecef(const double julian_day, const doubl
  * @brief      ECIからECEFへの変換 R
  *
  *             歳差と章動を考慮しない変換
- * @param[in]  gmst_rad        : Greenwitch Mean Sidereal Time [rad] (should be larger than zero)
+ * @param[in]  gmst_rad        : Greenwich Mean Sidereal Time [rad] (should be larger than zero)
  * @param[out] dcm_eci_to_ecef : coordinate transformation from eci to ecef
                                  (set unit matrix when the input is out-of-range)
- * @return     C2A_MATH_ERROR_RANGE_OVER : Greenwitch Mean Sidereal Timeが0以下
+ * @return     C2A_MATH_ERROR_RANGE_OVER : Greenwich Mean Sidereal Timeが0以下
  * @return     C2A_MATH_ERROR_OK
  */
 C2A_MATH_ERROR TIME_SPACE_trans_eci_to_ecef_rotation_only(const double gmst_rad,
@@ -91,12 +91,12 @@ C2A_MATH_ERROR TIME_SPACE_trans_eci_to_ecef_rotation_only(const double gmst_rad,
 
 /**
  * @brief      測地経緯度, 高度を地心余緯度, 地心距離に変換
- * @param[out] colat_rad : co-lattitude in geocentric [rad]
- * @param[out] radious_m : radious distance in geocentric [m]
+ * @param[out] colat_rad : co-latitude in geocentric [rad]
+ * @param[out] radius_m : radius distance in geocentric [m]
  * @param[in]  lla_rad_m : lat, lon, alt in geodetic
  * @return     C2A_MATH_ERROR_OK
  */
-C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float* radious_m,
+C2A_MATH_ERROR TIME_SPACE_convert_geodetic_to_geocentric(float* colat_rad, float* radius_m,
                                                    const double lla_rad_m[PHYSICAL_CONST_THREE_DIM]);
 
 /**
