@@ -1,43 +1,33 @@
 .# ===== SAFITTA FILTER 単体試験 =====
 .#
-.# ===== デバッグ時には0xbfを使った =====
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xbf 1 # AOBC_FILTERをDL
-.# AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc1 1 # AOBC_FILTERをDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x31 1 # AOBC_FILTERをDL
 .# 初期値が設定どおりであることを確認する
 .#
 .# ----- コマンド試験 -----
  Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM 5 6 0.1 0.5
  wait_sec 1
 .#
-.# ===== デバッグ時には0xbfを使った =====
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xbf 1 # AOBC_FILTERをDL
-.# AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc1 1 # AOBC_FILTERをDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x31 1 # AOBC_FILTERをDL
 .# 正しく設定されていることを確認する
 .#
 .#
 .Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM 4 5 1.1 1.5
  wait_sec 1
 .#
-.# ===== デバッグ時には0xbfを使った =====
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xbf 1 # AOBC_FILTERをDL
-.# AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc1 1 # AOBC_FILTERをDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x31 1 # AOBC_FILTERをDL
 .# 値が変わらないことを確認する
 .#
 .#
 .Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM 4 5 1.1 0.9
  wait_sec 1
 .#
-.# ===== デバッグ時には0xbfを使った =====
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xbf 1 # AOBC_FILTERをDL
-.# AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc1 1 # AOBC_FILTERをDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x31 1 # AOBC_FILTERをDL
 .# 値が変わらないことを確認する
 .#
 .#
 .Cmd_APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM 4 5 -0.9 0.8
  wait_sec 1
 .#
-.# ===== デバッグ時には0xbfを使った =====
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0xbf 1 # AOBC_FILTERをDL
-.# AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc1 1 # AOBC_FILTERをDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x31 1 # AOBC_FILTERをDL
 .# 値が変わらないことを確認する
 .#
