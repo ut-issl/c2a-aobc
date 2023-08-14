@@ -10,6 +10,10 @@
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/quaternion.h>
 
+#define SAGITTA_TELEMETRY_HISTOGRAM_LENGTH                (9)
+#define SAGITTA_TELEMETRY_BLOBS_LENGTH                    (8)
+#define SAGITTA_TELEMETRY_CENTROIDS_LENGTH                (16)
+#define SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH        (16)
 #define SAGITTA_PARAMETER_LOG_LEVEL_LENGTH                (16)
 #define SAGITTA_PARAMETER_LIMITS_LENGTH                   (10)
 #define SAGITTA_PARAMETER_CAMERA_OVERRIDE_REGISTER_LENGTH (16)
@@ -57,8 +61,14 @@ typedef enum
  */
 typedef enum
 {
+  SAGITTA_TLM_ID_POWER = 11,
   SAGITTA_TLM_ID_SOLUTION = 24,
-  SAGITTA_TLM_ID_TEMPERATURE = 27
+  SAGITTA_TLM_ID_TEMPERATURE = 27,
+  SAGITTA_TLM_ID_HISTOGRAM = 28,
+  SAGITTA_TLM_ID_BLOBS = 36,
+  SAGITTA_TLM_ID_CENTROIDS = 37,
+  SAGITTA_TLM_ID_AUTO_BLOB = 39,
+  SAGITTA_TLM_ID_MATCHED_CENTROIDS = 40
 } SAGITTA_TLM_ID;
 
 /**
@@ -114,6 +124,121 @@ typedef enum
   SAGITTA_SOLUTION_STRATEGY_AUTONOMOUS_TRACKING_DEMOTO_TO_LISA = 7,
   SAGITTA_SOLUTION_STRATEGY_AUTONOMOUS_LISA_LOW_CONFIDENCE = 8
 } SAGITTA_SOLUTION_STRATEGY;
+
+/**
+ * @struct SAGITTA_TELEMETRY_POWER
+ * @brief  SagittaのPowerテレメトリを格納する
+ */
+typedef struct
+{
+  float mcu_current_A;       //!< Current used by the MCU [A]
+  float mcu_voltage_V;       //!< Voltage over the MCU [V]
+  float fpga_core_current_A; //!< Current used by the FPGA core [A]
+  float fpga_core_voltage_V; //!< Voltage over the FPGA core [V]
+  float fpga_18_current_A;   //!< Current used by the FPGA 1.8 V line [A]
+  float fpga_18_voltage_V;   //!< Voltage over the FPGA 1.8 V line [V]
+  float fpga_25_current_A;   //!< Current used by the FPGA 2.5 V line [A]
+  float fpga_25_voltage_V;   //!< Voltage over the FPGA 2.5 V line [V]
+  float cmv_21_current_A;    //!< Current used by the CMV 2.1 V line [A]
+  float cmv_21_voltage_V;    //!< Voltage over the CMV 2.1 V line [V]
+  float cmv_pix_current_A;   //!< Current used by the CMV VDDPix [A]
+  float cmv_pix_voltage_V;   //!< Voltage over the CMV VDDPix [V]
+  float cmv_33_current_A;    //!< Current used by the CMV VDD 3.3 V line [A]
+  float cmv_33_voltage_V;    //!< Voltage over the CMV VDD 3.3 V line [V]
+  float cmv_res_current_A;   //!< Current used by the CMV VResh [A]
+  float cmv_res_voltage_V;   //!< Voltage over the CMV Resh [V]
+} SAGITTA_TELEMETRY_POWER;
+
+/**
+ * @struct SAGITTA_TELEMETRY_SOLUTION
+ * @brief  SagittaのSolutionテレメトリを格納する
+ */
+typedef struct
+{
+  Quaternion quaternion_i2c;       //!< Quaternion ECI -> Component Frame
+  float track_confidence;          //!< Tracker Confidence Value
+  Quaternion track_quaternion_i2c; //!< Quaternion tracking solution
+  uint8_t num_stars_removed;       //!< Number of stars removed from trackgin solution
+  uint8_t num_stars_centroided;    //!< Number of stars centroided
+  uint8_t num_stars_matched;       //!< Number of stars matched with db image
+  Quaternion lisa_quaternion_i2c;  //!< Quaternion LISA solution
+  float lisa_percentage_close;     //!< Percentage of close stars in LISA solution
+  uint8_t num_stars_lisa_close;    //!< Number of close stars in LISA solution
+  uint8_t star_tracker_mode;       //!< Star tracker state: LISA = 1, Tracking = 0
+  uint8_t is_valid_quaternion;     //!< Status of attitude determination (0: not valid, 1: valid)
+  uint32_t stable_count;           //!< Number of consecutive stable solutions
+  SAGITTA_SOLUTION_STRATEGY solution_strategy; //!< Algorithm path that was followed to determine the attitude
+} SAGITTA_TELEMETRY_SOLUTION;
+
+/**
+ * @struct SAGITTA_TELEMETRY_TEMPERATURE
+ * @brief  SagittaのTemperatureテレメトリを格納する
+ */
+typedef struct
+{
+  float mcu_degC;  //!< Temperature of the MCU
+  float cmos_degC; //!< Temperature of the image sensor
+  float fpga_degC; //!< Temperature of the FPGA
+} SAGITTA_TELEMETRY_TEMPERATURE;
+
+/**
+ * @struct SAGITTA_TELEMETRY_BLOBS
+ * @brief  SagittaのBlobsテレメトリを格納する
+ * @note   blob: a collection of pixels with a value higher than a specified threshold level
+ */
+typedef struct
+{
+  uint16_t count;              //!< Number of detected blobs
+  uint16_t count_used;         //!< Number of detected blobs excluding duplicates
+  uint16_t four_lines_skipped; //!< Number of 4lines that were skipped in the image to speed up the blob algorithm
+  uint16_t x_coordinate[SAGITTA_TELEMETRY_BLOBS_LENGTH]; //!< x coordinate of blob 1-8
+  uint16_t y_coordinate[SAGITTA_TELEMETRY_BLOBS_LENGTH]; //!< y coordinate of blob 1-8
+} SAGITTA_TELEMETRY_BLOBS;
+
+/**
+ * @struct SAGITTA_TELEMETRY_CENTROIDS
+ * @brief  SagittaのCentroidsテレメトリを格納する
+ */
+typedef struct
+{
+  uint16_t count;
+  float x_coordinate[SAGITTA_TELEMETRY_CENTROIDS_LENGTH];
+  float y_coordinate[SAGITTA_TELEMETRY_CENTROIDS_LENGTH];
+  uint8_t magnitude[SAGITTA_TELEMETRY_CENTROIDS_LENGTH];
+} SAGITTA_TELEMETRY_CENTROIDS;
+
+/**
+ * @struct SAGITTA_TELEMETRY_MATCHED_CENTROIDS
+ * @brief  SagittaのMatchedCentroidsテレメトリを格納する
+ */
+typedef struct
+{
+  uint8_t count; //!< Number of matched centroids
+  uint32_t id[SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH];              //!< Star ID number of centroid
+  float x_coordinate[SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH];       //!< x-coordinate of matched centroid
+  float y_coordinate[SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH];       //!< y-coordinate of matched centroid
+  float error_x_coordinate[SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH]; //!< x-coordinate error of matched centroid
+  float error_y_coordinate[SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH]; //!< y-coordinate error of matched centroid
+} SAGITTA_TELEMETRY_MATCHED_CENTROIDS;
+
+/**
+ * @struct SAGITTA_TELEMETRY
+ * @brief  Sagittaのテレメトリを格納する
+ */
+typedef struct
+{
+  SAGITTA_TELEMETRY_POWER power;
+  SAGITTA_TELEMETRY_SOLUTION solution;
+  SAGITTA_TELEMETRY_TEMPERATURE temperature;
+  uint32_t histogram_a_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section A
+  uint32_t histogram_b_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section B
+  uint32_t histogram_c_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section C
+  uint32_t histogram_d_pix[SAGITTA_TELEMETRY_HISTOGRAM_LENGTH]; //!< Number of pixel values in section D
+  SAGITTA_TELEMETRY_BLOBS blobs;
+  SAGITTA_TELEMETRY_CENTROIDS centroids;
+  float auto_blob_threshold; //!< Automatically determined signal threshold value used in the blob algorithm
+  SAGITTA_TELEMETRY_MATCHED_CENTROIDS matched_centroids;
+} SAGITTA_TELEMETRY;
 
 /**
  * @struct SAGITTA_PARAMETER_LIMITS
@@ -272,29 +397,17 @@ typedef struct
  */
 typedef struct
 {
-  uint8_t is_valid_quaternion;    //!< Status of attitude determination (0: not valid, 1: valid)
-  Quaternion quaternion_i2c;      //!< Quaternion ECI -> Component Frame
   Quaternion quaternion_i2b;      //!< Quaternion ECI -> Body
   Quaternion frame_transform_c2b; //!< frame transformation quaternion from component frame to body frame
-  float track_confidence;         //!< Tracker Confidence Value. The lower this value is, the more confidence we can have in the solution.
-  uint8_t num_stars_removed;      //!< The number of stars that were removed by the tracking algorithms that can remove outlier stars
-  uint8_t num_stars_centroided;   //!< The number of stars for which a valid centroid was found
-  uint8_t num_stars_matched;      //!< The number of stars that was matched to a database star
-  float lisa_percentage_close;    //!< The percentage of identified stars in the image
-  uint8_t num_stars_lisa_close;   //!< The number of identified stars in the image
-  uint8_t star_tracker_mode;      //!< LISA = 1, Tracking = 0
-  uint32_t stable_count;          //!< The number of times the validation criteria were met.
-  SAGITTA_SOLUTION_STRATEGY solution_strategy; //!< Solution strategy based on LISA parameters, stars_centroided and stars_matched
 
   SAGITTA_TLM_TYPE tlm_type;         //!< テレメのタイプ
   uint8_t tlm_id;                    //!< テレメに含まれるparameter, action, telemetryのID
   uint8_t tlm_status;                //!< テレメに含まれるset parameter, action, telemetryのstatus
   uint32_t unix_time_ms;             //!< Unix time [ms]
-  float temperature_mcu_degC;        //!< Temperature of micro-computer [0 ~ 100 degC]
-  float temperature_fpga_degC;       //!< Temperature of FPGA [0 ~ 100 degC]
   SAGITTA_REC_ERR_CODE err_status;   //!< Receive error status
   uint32_t xxhash;                   //!< 受信したxxhash
   SAGITTA_XXHASH_STATE xxhash_state; //!< 受信したxxhashが正しいか
+  SAGITTA_TELEMETRY telemetry;       //!< テレメ
   SAGITTA_PARAMETER set_parameter;   //!< Sagittaに設定するパラメータ
   SAGITTA_PARAMETER read_parameter;  //!< Sagittaか読み出したパラメータ
 } SAGITTA_Info;
