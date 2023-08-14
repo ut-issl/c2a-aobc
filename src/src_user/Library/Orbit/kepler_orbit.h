@@ -41,7 +41,7 @@ typedef struct
 /**
  * @brief 軌道要素から軌道計算に使う定数値を求める
  * @param[out] kepler_orbit_constant   : ケプラー運動の定数
- * @param[in]  ortibal_elements        : 軌道要素
+ * @param[in]  orbital_elements        : 軌道要素
  */
 void KEPLER_ORBIT_init_constants(KeplerOrbitConstants* kepler_orbit_constants,
                                  const KeplerOrbitalElements orbital_elements);

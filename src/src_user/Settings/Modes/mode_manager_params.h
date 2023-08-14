@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief ModeMangaer のパラメーターオーバーライト
+ * @brief ModeManager のパラメーターオーバーライト
  */
 #ifndef MODE_MANAGER_PARAMS_H_
 #define MODE_MANAGER_PARAMS_H_

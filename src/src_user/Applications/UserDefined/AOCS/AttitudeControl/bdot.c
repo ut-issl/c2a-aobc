@@ -47,7 +47,7 @@ static AOCS_ERROR APP_BDOT_calculate_mag_vec_time_derivative_(void);
  * @return void
  * @note   MTQの出力がOFFのときに呼び出され，MTQの出力をONにする役割を持つ
  */
-static void APP_BDOT_cauculate_target_mtq_output_(void);
+static void APP_BDOT_calculate_target_mtq_output_(void);
 
 /**
  * @brief  MTQ目標磁気モーメント維持関数
@@ -92,7 +92,7 @@ void APP_BDOT_exec_(void)
   switch (aocs_manager->mtq_output_state)
   {
   case AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF:
-    APP_BDOT_cauculate_target_mtq_output_();
+    APP_BDOT_calculate_target_mtq_output_();
     break;
   case AOCS_MANAGER_MTQ_OUTPUT_STATE_ON:
     APP_BDOT_maintain_mtq_output_();
@@ -106,7 +106,7 @@ void APP_BDOT_exec_(void)
   }
 }
 
-void APP_BDOT_cauculate_target_mtq_output_(void)
+void APP_BDOT_calculate_target_mtq_output_(void)
 {
   AOCS_ERROR ret;
   ret = APP_BDOT_calculate_mag_vec_time_derivative_();

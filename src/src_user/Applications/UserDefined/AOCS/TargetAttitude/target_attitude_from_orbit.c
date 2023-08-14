@@ -48,7 +48,7 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
 /**
  * @brief  目標方向チェック関数
  *         main，subの2目標方向が一致しているかどうか判定する
- * @param[in]  main_taregt : main目標
+ * @param[in]  main_target : main目標
  * @param[in]  sub_target  : sub目標
  * @return 0:不一致，1:一致
  */
@@ -245,7 +245,7 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
       float float_sat_pos_est_eci_m[PHYSICAL_CONST_THREE_DIM];
       float float_sat_vel_est_eci_m_s[PHYSICAL_CONST_THREE_DIM];
       float orbit_normal_vec[PHYSICAL_CONST_THREE_DIM];
-      float orbit_noraml_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
+      float orbit_normal_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
 
       for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
       {
@@ -253,8 +253,8 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
         float_sat_vel_est_eci_m_s[idx] = (float)aocs_manager->sat_vel_est_eci_m_s[idx];
       }
       VECTOR3_outer_product(orbit_normal_vec, float_sat_pos_est_eci_m, float_sat_vel_est_eci_m_s);
-      VECTOR3_normalize(orbit_noraml_vec_est_eci_normalized, orbit_normal_vec);
-      VECTOR3_copy(target_direction_vec_eci_normalized, orbit_noraml_vec_est_eci_normalized);
+      VECTOR3_normalize(orbit_normal_vec_est_eci_normalized, orbit_normal_vec);
+      VECTOR3_copy(target_direction_vec_eci_normalized, orbit_normal_vec_est_eci_normalized);
       break;
     }
   default:
@@ -301,9 +301,9 @@ CCP_CmdRet Cmd_APP_TAFO_SET_MAIN_TARGET_DIRECTION(const CommonCmdPacket* packet)
   }
 
   // main_target_directionとsub_target_directionが一致するのを禁止
-  uint8_t is_target_direcition_same = APP_TAFO_check_is_target_direction_same_((APP_TAFO_TARGET_DIRECITON)main_target_direction,
+  uint8_t is_target_direction_same = APP_TAFO_check_is_target_direction_same_((APP_TAFO_TARGET_DIRECITON)main_target_direction,
                                                                                target_attitude_from_orbit_.sub_target_direction);
-  if (is_target_direcition_same)
+  if (is_target_direction_same)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -347,9 +347,9 @@ CCP_CmdRet Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION(const CommonCmdPacket* packet)
   }
 
   // main_target_directionとsub_target_directionが一致するのを禁止
-  uint8_t is_target_direcition_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
+  uint8_t is_target_direction_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
                                                                                (APP_TAFO_TARGET_DIRECITON)sub_target_direction);
-  if (is_target_direcition_same)
+  if (is_target_direction_same)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -430,9 +430,9 @@ CCP_CmdRet Cmd_APP_TAFO_ENABLE(const CommonCmdPacket* packet)
 
   // main_target_directionとsub_target_directionが一致しているとき，
   // is_enabledの有効化を禁止
-  uint8_t is_target_direcition_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
+  uint8_t is_target_direction_same = APP_TAFO_check_is_target_direction_same_(target_attitude_from_orbit_.main_target_direction,
                                                                                target_attitude_from_orbit_.sub_target_direction);
-  if (is_target_direcition_same)
+  if (is_target_direction_same)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }

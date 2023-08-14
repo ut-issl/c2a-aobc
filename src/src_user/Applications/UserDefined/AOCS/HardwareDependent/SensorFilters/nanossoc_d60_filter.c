@@ -56,7 +56,7 @@ static void APP_NANOSSOC_D60_FILTER_exec_(void)
 {
   // 太陽センサのプレゼンスがない場合には，直近のプレゼンスに備え，伝播値をフィルタ過去値に反映
   // 伝播値そのものに対してはフィルタ処理を実施しない
-  if (aocs_manager->sun_visibility == AOCS_MANAGER_SUN_INVISIBILE)
+  if (aocs_manager->sun_visibility == AOCS_MANAGER_SUN_INVISIBLE)
   {
     VECTOR3_copy(nanossoc_d60_filter_.sun_vec_est_body, aocs_manager->sun_vec_est_body);
     return;

@@ -48,7 +48,7 @@ typedef enum
 typedef struct
 {
   // angular velocity
-  float ang_vel_raw_compo_rad_s[PHYSICAL_CONST_THREE_DIM];   //!< uncalibrated angular velocity uncaliblated value @ gyroscope and accelerometer frame [rad/s]
+  float ang_vel_raw_compo_rad_s[PHYSICAL_CONST_THREE_DIM];   //!< uncalibrated angular velocity uncalibrated value @ gyroscope and accelerometer frame [rad/s]
   float ang_vel_compo_rad_s[PHYSICAL_CONST_THREE_DIM];       //!< calibrated angular velocity @ gyroscope and accelerometer frame [rad/s]
   float ang_vel_body_rad_s [PHYSICAL_CONST_THREE_DIM];       //!< calibrated angular velocity @ body frame [rad/s]
   float ang_vel_bias_compo_rad_s[PHYSICAL_CONST_THREE_DIM];  //!< bias correction value of angular velocity @ gyroscope and accelerometer frame [rad/s]
@@ -60,7 +60,7 @@ typedef struct
   uint8_t mag_status_overrun;                         //!< status of magnetometer (0: ready to read, 1: reading register, 2,3: data overrun)
   uint8_t mag_status_overflow;                        //!< status of magnetometer (0,16: OK, 8,24: data overflow)
   uint8_t is_mag_enabled;                             //!< magnetometer is enabled or not (0: OFF, 1:ON)
-  float mag_raw_compo_nT[PHYSICAL_CONST_THREE_DIM];   //!< uncalibrated magnetic flux density uncaliblated value @ gyroscope and accelerometer frame [nT] (not magnetometer frame)
+  float mag_raw_compo_nT[PHYSICAL_CONST_THREE_DIM];   //!< uncalibrated magnetic flux density uncalibrated value @ gyroscope and accelerometer frame [nT] (not magnetometer frame)
   float mag_compo_nT[PHYSICAL_CONST_THREE_DIM];       //!< calibrated magnetic flux density @ gyroscope and accelerometer frame [nT] (not magnetometer frame)
   float mag_body_nT [PHYSICAL_CONST_THREE_DIM];       //!< calibrated magnetic flux density @ body frame [nT] (not magnetometer frame)
   float mag_bias_compo_nT[PHYSICAL_CONST_THREE_DIM];  //!< bias correction value of magnetic flux density @ gyroscope and accelerometer frame [nT] (not magnetometer frame) (output = observation - this value)

@@ -47,7 +47,7 @@ typedef enum
  * @param[in]   position   : 配列中のスカラー部位置 (0か3のどちらかのみ想定)
  * @return C2A_MATH_ERROR
  * @note   入力が規格化されていないこととゼロ割を生じる値であることを区別してエラー出力
- * @note   入力がゼロ割を生じる場合はunitq uaternionを返し，入力が規格化されていない場合は規格化する
+ * @note   入力がゼロ割を生じる場合はunit quaternionを返し，入力が規格化されていない場合は規格化する
  */
 C2A_MATH_ERROR QUATERNION_make_from_array(Quaternion* q_out,
                                           const float array[PHYSICAL_CONST_QUATERNION_DIM],
@@ -73,7 +73,7 @@ C2A_MATH_ERROR QUATERNION_make_from_array_unnormalizing(Quaternion* q_out,
  * @param[in]   angle_rad  : axis周りの回転角 [rad]
  * @return C2A_MATH_ERROR
  * @note   入力軸が規格化されていないこととゼロ割を生じる値であることを区別してエラー出力
- * @note   入力がゼロ割を生じる場合はunitq uaternionを返し，入力軸が規格化されていない場合は規格化する
+ * @note   入力がゼロ割を生じる場合はunit quaternionを返し，入力軸が規格化されていない場合は規格化する
  */
 C2A_MATH_ERROR QUATERNION_make_from_axis_angle(Quaternion* q_out,
                                                const float axis[PHYSICAL_CONST_THREE_DIM],
@@ -85,7 +85,7 @@ C2A_MATH_ERROR QUATERNION_make_from_axis_angle(Quaternion* q_out,
  * @param[in]   matrix     : 元の行列 (2次元配列)
  * @return C2A_MATH_ERROR
  * @note   元行列が規格化されていないこととゼロ割を生じる値であることを区別してエラー出力
- * @note   入力がゼロ割を生じる場合はunitq uaternionを返し，元行列が規格化されていない場合は規格化する
+ * @note   入力がゼロ割を生じる場合はunit quaternionを返し，元行列が規格化されていない場合は規格化する
  */
 C2A_MATH_ERROR QUATERNION_make_from_matrix(Quaternion* q_out,
                                            const float matrix[][PHYSICAL_CONST_THREE_DIM]);
@@ -245,7 +245,7 @@ Quaternion QUATERNION_calc_time_derivative(const Quaternion q_in, const float om
  * @param[out]  omega_rad_s   : 角速度ベクトル [rad/s]
  * @param[in]   q_previous    : 前ステップのQuaternion
  * @param[in]   q_current     : 現ステップのQuaternion
- * @param[in]   time_diff_sec : Quaterionの時刻差 [sec]
+ * @param[in]   time_diff_sec : Quaternionの時刻差 [sec]
  * @return      C2A_MATH_ERRORに準拠
  */
 C2A_MATH_ERROR QUATERNION_calc_angular_velocity(float omega_rad_s[PHYSICAL_CONST_THREE_DIM],
@@ -300,7 +300,7 @@ Quaternion QUATERNION_divide(const Quaternion q_in1, const Quaternion q_in2);
  * @param   factor : 補間パラメータ [0, 1]で指定する
  * @return  演算結果
  * @note    factorが0に近づくほどq1に近い値となり，1に近づくほどq2に近い値となる．
- * @note    slerpはsphercial linear interpolationの略
+ * @note    slerpはspherical linear interpolationの略
  */
 Quaternion QUATERNION_interpolate_slerp(const Quaternion q_in1, const Quaternion q_in2, const float factor);
 
