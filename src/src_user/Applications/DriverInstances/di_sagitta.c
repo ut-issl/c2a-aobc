@@ -250,6 +250,16 @@ CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet)
   return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
+CCP_CmdRet Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY(const CommonCmdPacket* packet)
+{
+  DS_CMD_ERR_CODE ret;
+  uint8_t tlm_id = CCP_get_param_from_packet(packet, 0, uint8_t);
+
+  ret = SAGITTA_request_tlm(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), tlm_id);
+
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+}
+
 CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);

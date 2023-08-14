@@ -665,6 +665,14 @@ DS_CMD_ERR_CODE SAGITTA_change_subscription(SAGITTA_Driver* sagitta_driver, uint
 DS_CMD_ERR_CODE SAGITTA_read_parameter(SAGITTA_Driver* sagitta_driver, const uint8_t parameter_id);
 
 /**
+ * @brief  同期式でテレメトリを受け取る
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  telemetry_id       : TELEMETRY ID
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_request_tlm_(SAGITTA_Driver* sagitta_driver, uint8_t tlm_id);
+
+/**
  * @brief  座標変換行列設定関数
  * @param  sagitta_driver  : SAGITTA_Driver構造体へのポインタ
  * @param  q_c2b            : コンポ座標からボディ座標への座標変換Quaternion

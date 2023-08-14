@@ -12,7 +12,7 @@
 #include <src_user/Library/xxhash.h>
 #include <src_user/Library/physical_constants.h>
 
-// #define DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
+#define DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
 
 #define SAGITTA_STREAM_TLM_CMD        (0)
 #define SAGITTA_TX_MAX_FRAME_SIZE     (80)  //!< TXフレームの最大バイト数。
@@ -1157,12 +1157,13 @@ static int SAGITTA_encode_tx_frame_(uint8_t cmd_data_len)
   return num_escape;
 }
 
-static DS_CMD_ERR_CODE SAGITTA_request_tlm_(SAGITTA_Driver* sagitta_driver)
+DS_CMD_ERR_CODE SAGITTA_request_tlm(SAGITTA_Driver* sagitta_driver, uint8_t tlm_id)
 {
   const uint8_t kCmdDataLength = 3;
+
   SAGITTA_tx_data_frame_[0] = SAGITTA_kAddress_;
   SAGITTA_tx_data_frame_[1] = SAGITTA_kCmdRequestTelem_;
-  SAGITTA_tx_data_frame_[2] = sagitta_driver->info.tlm_id;
+  SAGITTA_tx_data_frame_[2] = tlm_id;
 
   return (SAGITTA_send_cmd_(sagitta_driver, kCmdDataLength));
 }
@@ -1187,6 +1188,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_(DS_StreamConfig* stream_config, voi
     return SAGITTA_analyze_rec_data_parameter_reply_(sagitta_driver);
   case SAGITTA_TLM_TYPE_ACTION_REPLY:
     return SAGITTA_analyze_rec_data_action_reply_(sagitta_driver);
+  case SAGITTA_TLM_TYPE_TELEMETRY_REPLY:
+    return SAGITTA_analyze_rec_data_telemetry_(sagitta_driver);
   case SAGITTA_TLM_TYPE_ASYNCHRONOUS_TELEMETRY_REPLY:
     return SAGITTA_analyze_rec_data_telemetry_(sagitta_driver);
   default:
