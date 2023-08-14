@@ -670,7 +670,7 @@ DS_CMD_ERR_CODE SAGITTA_read_parameter(SAGITTA_Driver* sagitta_driver, const uin
  * @param  telemetry_id       : TELEMETRY ID
  * @return DS_CMD_ERR_CODEを参照
  */
-DS_CMD_ERR_CODE SAGITTA_request_tlm_(SAGITTA_Driver* sagitta_driver, uint8_t tlm_id);
+DS_CMD_ERR_CODE SAGITTA_request_tlm(SAGITTA_Driver* sagitta_driver, uint8_t tlm_id);
 
 /**
  * @brief  座標変換行列設定関数
