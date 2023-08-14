@@ -267,6 +267,7 @@
     <ClCompile Include="src_aobc\src\src_user\Library\physical_constants.c" />
     <ClCompile Include="src_aobc\src\src_user\Library\c2a_math.c" />
     <ClCompile Include="src_aobc\src\src_user\Library\SignalProcess\polynomial_approximation.c" />
+    <ClCompile Include="src_aobc\src\src_user\Library\TimeSystem\gps_time.c" />
     <ClCompile Include="src_aobc\src\src_user\Library\time_space.c" />
     <ClCompile Include="src_aobc\src\src_user\Library\geomagnetism.c" />
     <ClCompile Include="src_aobc\src\src_user\Library\quaternion.c" />
