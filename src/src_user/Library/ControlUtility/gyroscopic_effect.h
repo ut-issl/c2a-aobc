@@ -10,8 +10,8 @@
 
 
  /**
-  * @brief        ジャイロ効果トルク ωbxhbの計算
-  * @param[out]   gyroscopic_trq_Nm  : ジャイロ効果トルクωbxhb [Nm]
+  * @brief        ジャイロ効果トルク ωb x hbの計算
+  * @param[out]   gyroscopic_trq_Nm  : ジャイロ効果トルクωb x hb [Nm]
   * @param[in]    body_rate_rad_s    : 姿勢レート制御使用値 at 機体座標系 [rad/s]
   * @param[in]    body_momentum_Nms  : 機体系 (RW込み) の角運動量 at 機体座標系 [Nms]
   * @return       void

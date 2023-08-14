@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
-* @file   power_switch_conrtol.c
+* @file   power_switch_control.c
 * @brief  電源操作アプリケーション
 */
 
@@ -86,7 +86,7 @@ static void APP_PSC_init_(void)
   APP_PSC_private_info_5v_[APP_PSC_5V_IDX_NANOSSOC_D60].port_list = PORT_CH_GPIO_OUT_POWER_SS;
   APP_PSC_private_info_5v_[APP_PSC_5V_IDX_MTQ_SEIREN].port_list   = PORT_CH_GPIO_OUT_POWER_MTQ;
 
-  // unregurated power port list
+  // unregulated power port list
   APP_PSC_private_info_unreg_[APP_PSC_UNREG_IDX_STIM210].port_list = PORT_CH_GPIO_OUT_POWER_STIM;
   APP_PSC_private_info_unreg_[APP_PSC_UNREG_IDX_SAGITTA].port_list = PORT_CH_GPIO_OUT_POWER_SAGITTA;
   APP_PSC_private_info_unreg_[APP_PSC_UNREG_IDX_OEM7600].port_list = PORT_CH_GPIO_OUT_POWER_OEM;
@@ -102,7 +102,7 @@ static void APP_PSC_init_(void)
   }
   APP_PSC_private_info_5v_[APP_PSC_5V_IDX_INA260].output_logic = APP_PSC_OUTPUT_LOGIC_NEGATIVE;
 
-  // unregurated output logic
+  // unregulated output logic
   for (uint8_t i = 0; i < APP_PSC_UNREG_IDX_MAX; i++)
   {
     APP_PSC_private_info_unreg_[i].output_logic = APP_PSC_OUTPUT_LOGIC_POSITIVE;

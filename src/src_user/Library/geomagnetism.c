@@ -199,7 +199,7 @@ static GEOMAGNETISM_Coeffs geomag_coeff_ =
 // localの作業用関数の宣言
 
 //!< ルジャンドル陪関数の基底に用いる三角関数のn倍の計算
-static void GEOMAGNETISM_calc_trigonometrics_(float sinn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+static void GEOMAGNETISM_calc_trigonometric_(float sinn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
                                               float cosn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
                                               const float base_angle_rad,
                                               const uint8_t order);
@@ -249,14 +249,14 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
   // cast is necessary since C2A_MATH_clip_value handles only float variables
   uint8_t order = (uint8_t)C2A_MATH_clip_value((float)(clac_order), (float)(GEOMAGNETISM_IGRF_ORDER_MAX), 1.0f);
 
-  //!< geocentric co-lattitude and mean radius at the interest point
+  //!< geocentric co-latitude and mean radius at the interest point
   float colat_rad, radius_m;
   C2A_MATH_ERROR warning = TIME_SPACE_convert_geodetic_to_geocentric(&colat_rad, &radius_m, lla_rad_m);
 
   //!< buffer to avoid repitational computation of cos, sin harmonics
   float sin_m[GEOMAGNETISM_IGRF_ORDER_MAX + 1];
   float cos_m[GEOMAGNETISM_IGRF_ORDER_MAX + 1];
-  GEOMAGNETISM_calc_trigonometrics_(sin_m, cos_m, lon_rad, order);
+  GEOMAGNETISM_calc_trigonometric_(sin_m, cos_m, lon_rad, order);
 
   //!< buffer to solve the recurrence equation
   float legendre_p_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1];    //!< P[n][m]
@@ -267,7 +267,7 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
   float sin_colat = sinf(colat_rad);
   float cos_colat = cosf(colat_rad);
 
-  //!< geomagnetic coeffsitients
+  //!< geomagnetic coefficients
   float gnm[GEOMAGNETISM_IGRF_ORDER_MAX + 1];
   float hnm[GEOMAGNETISM_IGRF_ORDER_MAX + 1];
 
@@ -300,7 +300,7 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
     mag_ned_nT[2] += (float)(n + 1) * pow_k_geo_aspect * mag_ned_temp[2];
   }
 
-  // zero-devide constantly occurs at north/south pole
+  // zero-divide constantly occurs at north/south pole
   // 軌道傾斜角97deg位であれば，sin_colat > 0.1くらいはあるため，ゼロ割には至らない
   if (fabs(sin_colat) > MATH_CONST_PROHIBIT_DIVISION_VALUE)
   {
@@ -328,7 +328,7 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
 
 // localの作業用関数
 
-static void GEOMAGNETISM_calc_trigonometrics_(float sinn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+static void GEOMAGNETISM_calc_trigonometric_(float sinn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
                                               float cosn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
                                               const float base_angle_rad,
                                               const uint8_t order)
@@ -424,20 +424,20 @@ static void GEOMAGNETISM_calc_gauss_coeffs_(float gnm[GEOMAGNETISM_IGRF_ORDER_MA
   hnm[0] = geomag_coeff_.igrf_hnm_nT[n - 1][0] + decimal_year * geomag_coeff_.igrf_htnm_nT[n - 1][0];
 
   float factorial_coeff = C2A_MATH_sqrtf(2.0f); //!< factorial_coeff(n,m) = [2(n-m)!/(n+m)!]^(1/2) (for m >0)
-  float devide_coeff    = 0.0;
+  float divide_coeff    = 0.0;
   for (uint8_t m = 1; m <= n; m++)
   {
     // factorial_coeff(m) = factorial_coeff(m-1)/[(n+m)(n+m-1)]^(1/2) (for m < n)
     // factorial_coeff(m) = factorial_coeff(m-1)/[(n+m)]^(1/2) (for m = n)
     if (m == n)
     {
-      devide_coeff = C2A_MATH_sqrtf((float)((n + m)));
+      divide_coeff = C2A_MATH_sqrtf((float)((n + m)));
     }
     else
     {
-      devide_coeff = C2A_MATH_sqrtf((float)((n + m)*(n - m + 1)));
+      divide_coeff = C2A_MATH_sqrtf((float)((n + m)*(n - m + 1)));
     }
-    factorial_coeff = factorial_coeff / devide_coeff;
+    factorial_coeff = factorial_coeff / divide_coeff;
 
     // g(n,m,t) = [g0(n,m) + dt*gt(n,m)]*factorial_coeff
     gnm[m] = geomag_coeff_.igrf_gnm_nT[n - 1][m] + decimal_year * geomag_coeff_.igrf_gtnm_nT[n - 1][m];

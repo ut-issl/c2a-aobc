@@ -458,7 +458,7 @@ C2A_MATH_ERROR MATRIX33_normalize(float matrix_out[PHYSICAL_CONST_THREE_DIM][PHY
     return C2A_MATH_ERROR_OK;
   }
 
-  // safety of devide operation with matrix_det is already guaranteed
+  // safety of divide operation with matrix_det is already guaranteed
   float matrix_det = fabs(MATRIX33_determinant(matrix_in));
   // since det(k*matrix) = k^n*det(matrix), scale factor should be pow(1/n) of det(matrix)
   float inverse_scale_factor = powf(matrix_det, (1.0f /(float)(PHYSICAL_CONST_THREE_DIM)));

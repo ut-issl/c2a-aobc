@@ -27,7 +27,7 @@ typedef enum
 /**
  * @struct MTQ_SEIREN_OUT_STATUS
  * @brief  MTQ駆動状態
- * @note   PWM周期が遅いISSL6Uプロジェクト専用のMTQ駆動状態モニタ
+ * @note   PWM周期が遅いプロジェクト専用のMTQ駆動状態モニタ
  * @note   int8_tを想定
  */
 typedef enum
@@ -60,7 +60,7 @@ typedef struct
     uint8_t ch_gpio_negative;
     MTQ_SEIREN_POLARITY polarity;         //!< MTQ極性
     float max_mag_moment;                 //!< 出力可能な最大磁気モーメント
-    MTQ_SEIREN_DRIVE_STATUS drive_status; //!< MTQ駆動状態 (PWM周期が遅いISSL6Uプロジェクト専用)
+    MTQ_SEIREN_DRIVE_STATUS drive_status; //!< MTQ駆動状態 (PWM周期が遅いプロジェクト専用)
     uint8_t unsigned_duty_percent_buffer; //!< 上位アプリからCMD指示されたPWMの符号なしduty (PWMタイマがゼロの時にunsigned_duty_percentへ反映)
     MTQ_SEIREN_POLARITY polarity_buffer;  //!< 上位アプリからCMD指示されたMTQ駆動極性
     struct
