@@ -4,17 +4,17 @@
 .# ----- テレメダウンリンク -----
 .#
 .# アプリ実行時間の確認
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x99 1 # APP_TIMEをDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x09 1 # APP_TIMEをDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0xc3 1 # APP_TIME2をDL
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0x33 1 # APP_TIME2をDL
 .#
 .#
 .# アノマリログの確認
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x9b 1 # EL TLog(TimeSeriesLog)をDL
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0b 1 # EL TLog(TimeSeriesLog)をDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x9c 1 # EL CLog(CumulativeLog)をDL
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0c 1 # EL CLog(CumulativeLog)をDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x9f 1 #EH LogをDL
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0f 1 #EH LogをDL
 .#
 .#
 .# ----- モード遷移 -----
@@ -105,7 +105,7 @@
  wait_sec 1
  AOBC_RT.Cmd_APP_TAFO_SET_SUB_TARGET_DIRECTION 4 1 0 0 # PX Orbit Normal
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0xb6 1 # AOBC_CONTROLをDL
+ AOBC_RT.Cmd_GENERATE_TLM 0x40 0x26 1 # AOBC_CONTROLをDL
 .#
 .# 設定を確認する
 .#
