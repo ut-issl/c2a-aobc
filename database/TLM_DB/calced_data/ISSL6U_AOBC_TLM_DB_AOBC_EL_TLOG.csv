@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0x9b,EL_ERROR_LEVEL err_level = event_logger->tlm_info.tlog.err_level;##uint16_t offset = EL_TLOG_TLM_PAGE_SIZE * event_logger->tlm_info.tlog.page_no;##const EL_Event* events = event_logger->tlogs[err_level].events;##,,,,,,,,,,,,,,
+,PacketID,0x0b,EL_ERROR_LEVEL err_level = event_logger->tlm_info.tlog.err_level;##uint16_t offset = EL_TLOG_TLM_PAGE_SIZE * event_logger->tlm_info.tlog.page_no;##const EL_Event* events = event_logger->tlogs[err_level].events;##,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,

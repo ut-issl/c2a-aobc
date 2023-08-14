@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0x94,uint8_t page = telemetry_frame->tlm_page_no;##int offset = TF_TLM_PAGE_SIZE * (telemetry_frame->tlm_page_no);,,,,,,,,,,,,,,
+,PacketID,0x04,uint8_t page = telemetry_frame->tlm_page_no;##int offset = TF_TLM_PAGE_SIZE * (telemetry_frame->tlm_page_no);,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
