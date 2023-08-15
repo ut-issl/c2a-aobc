@@ -51,7 +51,8 @@ typedef enum
   SAGITTA_PARAMETER_ID_TRACKING = 14,
   SAGITTA_PARAMETER_ID_VALIDATION = 15,
   SAGITTA_PARAMETER_ID_ALGO = 16,
-  SAGITTA_PARAMETER_ID_SUBSCRIPTION = 18
+  SAGITTA_PARAMETER_ID_SUBSCRIPTION = 18,
+  SAGITTA_PARAMETER_ID_AUTO_THRESHOLD = 23
 } SAGITTA_PARAMETER_ID;
 
 /**
@@ -372,6 +373,19 @@ typedef struct
 } SAGITTA_PARAMETER_ALGO;
 
 /**
+ * @struct SAGITTA_PARAMETER_AUTO_THRESHOLD
+ * @brief  SagittaのAUTO_THRESHOLDパラメータを格納する
+ */
+typedef struct
+{
+  uint8_t mode;
+  uint8_t desired_blobs_count;
+  uint16_t min_threshold;
+  uint16_t max_threshold;
+  float threshold_kp;
+} SAGITTA_PARAMETER_AUTO_THRESHOLD;
+
+/**
  * @struct SAGITTA_Parameter
  * @brief  Sagittaの内部パラメータを格納する
  */
@@ -389,6 +403,7 @@ typedef struct
   SAGITTA_PARAMETER_VALIDATION validation;
   SAGITTA_PARAMETER_ALGO algo;
   uint8_t subscription[SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH];
+  SAGITTA_PARAMETER_AUTO_THRESHOLD auto_threshold;
 } SAGITTA_PARAMETER;
 
 /**
@@ -548,6 +563,13 @@ DS_CMD_ERR_CODE SAGITTA_set_algo(SAGITTA_Driver* sagitta_driver);
 DS_CMD_ERR_CODE SAGITTA_set_subscription(SAGITTA_Driver* sagitta_driver);
 
 /**
+ * @brief  SAGITTAのAuto Thresholdパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_auto_threshold(SAGITTA_Driver* sagitta_driver);
+
+/**
  * @brief  SAGITTAのLog Levelパラメータを変更する
  * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
@@ -655,6 +677,15 @@ DS_CMD_ERR_CODE SAGITTA_change_algo(SAGITTA_Driver* sagitta_driver, uint8_t para
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_change_subscription(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのAuto Thresholdパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_auto_threshold(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
 
 /**
  * @brief  SAGITTAのパラメータを読み取る

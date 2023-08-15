@@ -181,6 +181,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_SUBSCRIPTION:
     ret = SAGITTA_set_subscription(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
+  case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
+    ret = SAGITTA_set_auto_threshold(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -232,6 +235,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
     break;
   case SAGITTA_PARAMETER_ID_SUBSCRIPTION:
     ret = SAGITTA_change_subscription(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
+  case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
+    ret = SAGITTA_change_auto_threshold(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
