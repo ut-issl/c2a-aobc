@@ -594,8 +594,14 @@ Quaternion QUATERNION_divide(const Quaternion q_in1, const Quaternion q_in2)
 
 Quaternion QUATERNION_interpolate_slerp(const Quaternion q_in1, const Quaternion q_in2, const float factor)
 {
+  Quaternion q_temp = q_in2;
   float clipped_factor = C2A_MATH_clip_value(factor, 1.0f, 0.0f);
-  float inner_product = QUATERNION_inner_product(q_in1, q_in2);
+  float inner_product = QUATERNION_inner_product(q_in1, q_temp);
+  if (inner_product < 0)
+  {
+    q_temp = QUATERNION_scalar_product(-1, q_temp);
+    inner_product = QUATERNION_inner_product(q_in1, q_temp);
+  }
   float angle = C2A_MATH_acos_rad(inner_product);
   float sin_angle = sin(angle);
   C2A_MATH_ERROR equal_zero =
@@ -608,7 +614,7 @@ Quaternion QUATERNION_interpolate_slerp(const Quaternion q_in1, const Quaternion
   float scalar1 = sin((1.0f - clipped_factor) * angle) / sin_angle;
   float scalar2 = sin(clipped_factor * angle) / sin_angle;
   Quaternion q1 = QUATERNION_scalar_product(scalar1, q_in1);
-  Quaternion q2 = QUATERNION_scalar_product(scalar2, q_in2);
+  Quaternion q2 = QUATERNION_scalar_product(scalar2, q_temp);
   return QUATERNION_add(q1, q2);
 }
 
