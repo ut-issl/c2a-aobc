@@ -172,6 +172,10 @@ void BCL_set_sagitta_parameter(void)
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_ALGO);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_AUTO_THRESHOLD);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
 }
 
 void BCL_read_sagitta_parameter(void)
@@ -223,6 +227,10 @@ void BCL_read_sagitta_parameter(void)
   bc_cycle += OBCT_sec2cycle(1);
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_SUBSCRIPTION);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_AUTO_THRESHOLD);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 

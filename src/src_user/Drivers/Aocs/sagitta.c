@@ -1632,13 +1632,13 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_auto_threshold_(SAGITTA_Dr
 
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.mode), offset);
   offset += (uint16_t)sizeof(uint8_t);
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.desired_blobs_count), offset);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.desired_blobs_count), offset);
   offset += (uint16_t)sizeof(uint8_t);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.min_threshold), offset);
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.min_threshold), offset);
   offset += (uint16_t)sizeof(uint16_t);
-  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.max_threshold), offset);
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.max_threshold), offset);
   offset += (uint16_t)sizeof(uint16_t);
-  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.threshold_kp), offset);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.threshold_kp), offset);
   offset += (uint16_t)sizeof(float);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
