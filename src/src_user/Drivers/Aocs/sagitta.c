@@ -202,8 +202,6 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
   uint8_t default_subscription_length = 0;
   sagitta_driver->info.set_parameter.subscription[default_subscription_length] = 24;
   default_subscription_length++;
-  sagitta_driver->info.set_parameter.subscription[default_subscription_length] = 27;
-  default_subscription_length++;
   memset(&(sagitta_driver->info.set_parameter.subscription[default_subscription_length]), 0x00,
          SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH - default_subscription_length);
 
