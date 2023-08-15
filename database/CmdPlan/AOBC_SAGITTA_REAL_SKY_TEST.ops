@@ -58,7 +58,7 @@
  # テレメを止める
  let stt_param_id = 18
  let idx = 0
- stt_tlm_id = 0 # None
+ let stt_tlm_id = 0 # None
  AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {stt_param_id} {idx} {stt_tlm_id}
  wait_sec 1
  AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {stt_param_id}
@@ -88,12 +88,12 @@
  let value = 0
  get value
  #
-.parameter変更
-.AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER 10 0 1
+.# parameter変更
+ AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER 10
+ AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER 10
+ AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
  wait_sec 1
  let tlm_id = 0x36 # AOBC_SAGITTA_READ1
  AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
@@ -215,7 +215,7 @@
  AOBC_RT.Cmd_BCT_CLEAR_BLOCK {target_bc_id}
  #
 .# 定期テレメを追加
- !! ti, add_tlm_idを変えて複数回送信 !!
+ # !! ti, add_tlm_idを変えて複数回送信 !!
  AOBC_BL.Cmd_TG_GENERATE_RT_TLM {ti} {add_tlm_id}
  #
 .# 1Hzで無限ループ
@@ -265,8 +265,8 @@
  AOBC_RT.Cmd_BCT_CLEAR_BLOCK {target_bc_id}
  #
 .# STT -> AOBC定期テレメを追加
- !! ti, stt_tlm_idを変えて複数回送信 !!
- AOBC_BL.Cmd_CODE_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY {ti} {stt_tlm_id}
+ # !! ti, stt_tlm_idを変えて複数回送信 !!
+ AOBC_BL.Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY {ti} {stt_tlm_id}
  #
 .# tiを指定して、無限ループ
  AOBC_BL.Cmd_TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
