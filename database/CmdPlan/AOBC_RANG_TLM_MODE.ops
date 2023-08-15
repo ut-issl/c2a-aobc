@@ -39,7 +39,7 @@
 .#
 .AOBC_RT.Cmd_EL_DISABLE_LOGGING 38 # RWZ Other (Spike Filterなど)
  # 
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x26 1 # AOBC_CONTROLをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x26 # AOBC_CONTROLをDL
 .#
 .# モード遷移
  #
@@ -68,11 +68,11 @@
  #
 .# アノマリログの確認
 .#
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0b 1 # EL TLog(TimeSeriesLog)をDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x0b # EL TLog(TimeSeriesLog)をDL
 .wait_sec 1
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0c 1 # EL CLog(CumulativeLog)をDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x0c # EL CLog(CumulativeLog)をDL
 .wait_sec 1
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0f 1 #EH LogをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x0f #EH LogをDL
 .#
 .# 機器電源OFF
 .#
@@ -133,7 +133,7 @@
 .# ボーレート変更
  Cmd_DI_OEM7600_SET_UART_BAUDRATE 0 9600
  wait_sec 5
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x23 1 # AOBC_COMPONENTSをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x23 # AOBC_COMPONENTSをDL
 .# [Chk] 正しく設定されていることを確認する
  check_value AOBC_COMPONENTS.OEM_BAUDRATE == 9600
 .#
@@ -147,9 +147,9 @@
  #
 .# 取得結果確認
 .#
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3a 1 # RANGE1をDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3a # RANGE1をDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3b 1 # RANGE2をDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3b # RANGE2をDL
 .#
 .# ----- タスク実行時間計測 -----
 .#
@@ -170,16 +170,16 @@
  wait_sec 2
 .#
 .# アプリ実行時間の確認
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x09 1 # APP_TIMEをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x09 # APP_TIMEをDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x33 1 # APP_TIME2をDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x33 # APP_TIME2をDL
 .#
 .# アノマリログの確認
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0b 1 # EL TLog(TimeSeriesLog)をDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x0b # EL TLog(TimeSeriesLog)をDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0c 1 # EL CLog(CumulativeLog)をDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x0c # EL CLog(CumulativeLog)をDL
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x0f 1 #EH LogをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x0f #EH LogをDL
 .#
 .# ----- 終了手順 -----
 .#

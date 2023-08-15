@@ -1,6 +1,6 @@
 .# ===== RW三軸制御コマンド試験 =====
 .#
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x30 1 # THREE_AXIS_RWをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 初期値が設定どおりであることを確認する
 .#
 .# ----- 制御ゲイン設定コマンド -----
@@ -13,7 +13,7 @@
  # omega Z軸
  Cmd_APP_TAC_RW_SET_GAIN 0 2 0.31 0.32 0.33
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x30 1 # THREE_AXIS_RWをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 正しく設定されていることを確認
 .#
  # att X軸
@@ -25,23 +25,23 @@
  # att Z軸
  Cmd_APP_TAC_RW_SET_GAIN 1 2 1.31 1.32 1.33
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x30 1 # THREE_AXIS_RWをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 正しく設定されていることを確認
 .#
 .# 制御ゲインを使い始める
  Cmd_APP_TAC_RW_SAVE_GAIN
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x30 1 # THREE_AXIS_RWをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 正しく設定されていることを確認
 .#
 .# ----- 制御ゲイン設定コマンドエラーチェック -----
 .Cmd_APP_TAC_RW_SET_GAIN 2 0 0.0 0.0 0.0
 .# コマンドエラーではじかれることを確認
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x30 1 # THREE_AXIS_RWをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 値が変わっていないことを確認
 .Cmd_APP_TAC_RW_SET_GAIN 0 4 0.0 0.0 0.0
 .# コマンドエラーではじかれることを確認
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x30 1 # THREE_AXIS_RWをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 値が変わっていないことを確認
 .#
 .#

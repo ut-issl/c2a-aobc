@@ -1,6 +1,6 @@
 .# ===== RW0003 単体試験 =====
 .#
-.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3f 1 # AOBC_DEBUGをDL
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3f # AOBC_DEBUGをDL
 .# 初期値が設定どおりであることを確認する
 .#
 .# ----- テレコマ試験 -----
@@ -10,7 +10,7 @@
  wait_sec 1
  Cmd_DI_RW0003_READ_VDD 2
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3f 1 # AOBC_DEBUGをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3f # AOBC_DEBUGをDL
 .# 正しくテレメが取れていることを確認する
  #
 .Cmd_DI_RW0003_READ_SEU_COUNT 0
@@ -19,7 +19,7 @@
  wait_sec 1
  Cmd_DI_RW0003_READ_SEU_COUNT 2
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3f 1 # AOBC_DEBUGをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3f # AOBC_DEBUGをDL
 .# 正しくテレメが取れていることを確認する
  #
 .Cmd_DI_RW0003_READ_FAULT_STATE 0
@@ -28,7 +28,7 @@
  wait_sec 1
  Cmd_DI_RW0003_READ_FAULT_STATE 2
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3f 1 # AOBC_DEBUGをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3f # AOBC_DEBUGをDL
 .# 正しくテレメが取れていることを確認する
  #
 .Cmd_DI_RW0003_DIAGNOSTIC 0
@@ -37,5 +37,5 @@
  wait_sec 1
  Cmd_DI_RW0003_DIAGNOSTIC 2
  wait_sec 1
- AOBC_RT.Cmd_GENERATE_TLM 0x40 0x3f 1 # AOBC_DEBUGをDL
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x3f # AOBC_DEBUGをDL
 .# 正しくテレメが取れていることを確認する
