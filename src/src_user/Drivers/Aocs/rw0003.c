@@ -32,9 +32,9 @@ typedef enum
 
 
 #define RW0003_WRITE_MODE_FILE_DATA_LENGTH (4)  //!< Mode file データ書き込み長 [byte]
-#define RW0003_READ_OVER_HAED              (4)  //!< TLMに付加される情報のバイト数 [byte]
-#define RW0003_NSP_HEADER_SIZE             (2)  //!< Nano Satellite Protcol header: MCF(Message Control Field) + Source Address = 2 byte
-#define RW0003_NSP_CRC_SIZE                (2)  //!< Nano Satellite Protcol CRC size
+#define RW0003_READ_OVER_HEAD              (4)  //!< TLMに付加される情報のバイト数 [byte]
+#define RW0003_NSP_HEADER_SIZE             (2)  //!< Nano Satellite Protocol header: MCF(Message Control Field) + Source Address = 2 byte
+#define RW0003_NSP_CRC_SIZE                (2)  //!< Nano Satellite Protocol CRC size
 #define RW0003_FOOTER_SIZE                 (1)  //!< TX/RX共通
 #define RW0003_RX_MAX_FRAME_SIZE           (15) //!< SLIPを考慮した(現時点での)最大テレメフレーム長( 9 + 6 )
 #define RW0003_STREAM_TLM_CMD              (0)

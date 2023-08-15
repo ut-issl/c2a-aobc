@@ -16,7 +16,7 @@ static NonVolatileMemoryParameter        non_volatile_memory_parameter_;
 const  NonVolatileMemoryParameter* const non_volatile_memory_parameter = &non_volatile_memory_parameter_;
 
 static uint8_t APP_NVM_PARAMETER_calc_data_size_(const APP_NVM_PARAM_TYPE data_type);
-static APP_NVM_MANAGER_ERROR APP_NVM_PARAMETER_check_registration_(const APP_NVM_PARTITION_ID partion_id,
+static APP_NVM_MANAGER_ERROR APP_NVM_PARAMETER_check_registration_(const APP_NVM_PARTITION_ID partition_id,
                                                                    const APP_NVM_PARAM_TYPE data_type,
                                                                    const uint32_t start_address,
                                                                    const uint8_t length);
@@ -316,21 +316,21 @@ static uint8_t APP_NVM_PARAMETER_calc_data_size_(const APP_NVM_PARAM_TYPE data_t
   }
 }
 
-static APP_NVM_MANAGER_ERROR APP_NVM_PARAMETER_check_registration_(const APP_NVM_PARTITION_ID partion_id,
+static APP_NVM_MANAGER_ERROR APP_NVM_PARAMETER_check_registration_(const APP_NVM_PARTITION_ID partition_id,
                                                                    const APP_NVM_PARAM_TYPE data_type,
                                                                    const uint32_t start_address,
                                                                    const uint8_t length)
 {
-  if (partion_id >= APP_NVM_PARTITION_ID_MAX) return APP_NVM_MANAGER_ERROR_NG_OTHERS;
+  if (partition_id >= APP_NVM_PARTITION_ID_MAX) return APP_NVM_MANAGER_ERROR_NG_OTHERS;
   if (data_type >= APP_NVM_PARAM_TYPE_MAX)  return APP_NVM_MANAGER_ERROR_NG_OTHERS;
-  if (start_address > non_volatile_memory_partition->elements[partion_id].size_byte)
+  if (start_address > non_volatile_memory_partition->elements[partition_id].size_byte)
   {
     return APP_NVM_MANAGER_ERROR_NG_ADDRESS;
   }
   uint8_t single_data_size = APP_NVM_PARAMETER_calc_data_size_(data_type);
   if (single_data_size == 0) return APP_NVM_MANAGER_ERROR_NG_LENGTH;
   uint32_t stop_address = start_address + single_data_size * length;
-  if (stop_address > non_volatile_memory_partition->elements[partion_id].size_byte)
+  if (stop_address > non_volatile_memory_partition->elements[partition_id].size_byte)
   {
     return APP_NVM_MANAGER_ERROR_NG_LENGTH;
   }

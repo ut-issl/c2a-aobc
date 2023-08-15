@@ -69,12 +69,12 @@ C2A_MATH_ERROR QUATERNION_make_from_axis_angle(Quaternion* q_out,
     return is_normalized;
   }
 
-  // ignore warning since singular valune is already removed
+  // ignore warning since singular value is already removed
   C2A_MATH_ERROR ignored_warning = VECTOR3_normalize(axis_normalized, axis);
-  float angle_cliped = C2A_MATH_normalize_zero_2pi(angle_rad);
+  float angle_clipped = C2A_MATH_normalize_zero_2pi(angle_rad);
 
-  VECTOR3_scalar_product(q_out->vector_part, sinf(0.5f * angle_cliped), axis_normalized);
-  q_out->scalar_part = cosf(0.5f * angle_cliped);
+  VECTOR3_scalar_product(q_out->vector_part, sinf(0.5f * angle_clipped), axis_normalized);
+  q_out->scalar_part = cosf(0.5f * angle_clipped);
 
   *q_out = QUATERNION_normalize(*q_out); // ignore assertion, since input is safe in this case
 
@@ -94,7 +94,7 @@ C2A_MATH_ERROR QUATERNION_make_from_matrix(Quaternion* q_out,
     return normalize_check;
   }
 
-  // ignore warning since singular valune is already removed
+  // ignore warning since singular value is already removed
   C2A_MATH_ERROR ignored_warning = MATRIX33_normalize(matrix_n, matrix);
   Quaternion q_before_check;
 
@@ -133,7 +133,7 @@ C2A_MATH_ERROR QUATERNION_make_from_matrix(Quaternion* q_out,
       return C2A_MATH_ERROR_SINGULAR;
     }
 
-    // zero devide is already removed
+    // zero divide is already removed
     float denominator = 4.0f * q_candidate[max_value_index];
 
     switch (max_value_index)
@@ -197,7 +197,7 @@ C2A_MATH_ERROR QUATERNION_make_from_euler_angles(Quaternion* q_out,
     q_rot_3 = QUATERNION_make_x_rot(angle_3_rad);
     break;
   default:
-    // otherwise, replace the order with 1-2-3, which would be the most freqently used order
+    // otherwise, replace the order with 1-2-3, which would be the most frequently used order
     q_rot_1 = QUATERNION_make_x_rot(angle_1_rad);
     q_rot_2 = QUATERNION_make_y_rot(angle_2_rad);
     q_rot_3 = QUATERNION_make_z_rot(angle_3_rad);
@@ -306,7 +306,7 @@ void QUATERNION_to_euler_axis_angle(float axis[PHYSICAL_CONST_THREE_DIM], float*
 
   float axis_unnormalized[PHYSICAL_CONST_THREE_DIM];
   VECTOR3_scalar_product(axis_unnormalized, (1.0f / sin_half_angle), q_in.vector_part);
-  // ignore error code since zero-devide is already handled
+  // ignore error code since zero-divide is already handled
   C2A_MATH_ERROR err_check = VECTOR3_normalize(axis, axis_unnormalized);
 }
 
@@ -594,8 +594,14 @@ Quaternion QUATERNION_divide(const Quaternion q_in1, const Quaternion q_in2)
 
 Quaternion QUATERNION_interpolate_slerp(const Quaternion q_in1, const Quaternion q_in2, const float factor)
 {
+  Quaternion q_temp = q_in2;
   float clipped_factor = C2A_MATH_clip_value(factor, 1.0f, 0.0f);
-  float inner_product = QUATERNION_inner_product(q_in1, q_in2);
+  float inner_product = QUATERNION_inner_product(q_in1, q_temp);
+  if (inner_product < 0)
+  {
+    q_temp = QUATERNION_scalar_product(-1, q_temp);
+    inner_product = QUATERNION_inner_product(q_in1, q_temp);
+  }
   float angle = C2A_MATH_acos_rad(inner_product);
   float sin_angle = sin(angle);
   C2A_MATH_ERROR equal_zero =
@@ -608,7 +614,7 @@ Quaternion QUATERNION_interpolate_slerp(const Quaternion q_in1, const Quaternion
   float scalar1 = sin((1.0f - clipped_factor) * angle) / sin_angle;
   float scalar2 = sin(clipped_factor * angle) / sin_angle;
   Quaternion q1 = QUATERNION_scalar_product(scalar1, q_in1);
-  Quaternion q2 = QUATERNION_scalar_product(scalar2, q_in2);
+  Quaternion q2 = QUATERNION_scalar_product(scalar2, q_temp);
   return QUATERNION_add(q1, q2);
 }
 

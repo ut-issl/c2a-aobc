@@ -12,16 +12,12 @@
 void BCL_load_start_hk_tlm()
 {
   // HK General
-  BCL_tool_prepare_param_uint8(0x40);
   BCL_tool_prepare_param_uint8(Tlm_CODE_AOBC_HK_GEN);
-  BCL_tool_prepare_param_uint8(1);
-  BCL_tool_register_cmd       (1, Cmd_CODE_GENERATE_TLM);
+  BCL_tool_register_cmd       (1, Cmd_CODE_TG_GENERATE_RT_TLM);
 
   // HK Components
-  BCL_tool_prepare_param_uint8(0x40);
   BCL_tool_prepare_param_uint8(Tlm_CODE_AOBC_HK_COMPO);
-  BCL_tool_prepare_param_uint8(1);
-  BCL_tool_register_cmd       (2, Cmd_CODE_GENERATE_TLM);
+  BCL_tool_register_cmd       (2, Cmd_CODE_TG_GENERATE_RT_TLM);
 
   // SAGITTA1
   BCL_tool_prepare_param_uint8(0x40);

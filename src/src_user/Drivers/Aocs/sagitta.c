@@ -1118,9 +1118,9 @@ static int SAGITTA_set_tx_frame_xxhash_(uint8_t cmd_data_len)
 
 static int SAGITTA_set_tx_frame_footer_(uint8_t cmd_offset_len)
 {
-  for (uint8_t i = cmd_offset_len; i < cmd_offset_len + SAGITTA_FOOTER_SIZE; i++)
+  for (uint8_t i = 0; i < SAGITTA_FOOTER_SIZE; i++)
   {
-    SAGITTA_tx_frame_[i] = SAGITTA_kFooter_[i];
+    SAGITTA_tx_frame_[cmd_offset_len + i] = SAGITTA_kFooter_[i];
   }
   return SAGITTA_FOOTER_SIZE;
 }

@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0x9f,uint16_t offset = event_handler->tlm_info.log.page_no * EH_LOG_TLM_PAGE_SIZE;##,,,,,,,,,,,,,,
+,PacketID,0x0f,uint16_t offset = event_handler->tlm_info.log.page_no * EH_LOG_TLM_PAGE_SIZE;##,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,

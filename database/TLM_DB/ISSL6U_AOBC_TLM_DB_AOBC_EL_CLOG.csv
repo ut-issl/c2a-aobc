@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0x9c,EL_ERROR_LEVEL err_level = event_logger->tlm_info.clog.err_level;##uint16_t offset = EL_CLOG_TLM_PAGE_SIZE * event_logger->tlm_info.clog.page_no;##const uint16_t* log_orders = event_logger->clogs[err_level].log_orders;##const EL_CLogElement* logs = event_logger->clogs[err_level].logs;##,,,,,,,,,,,,,,
+,PacketID,0x0c,EL_ERROR_LEVEL err_level = event_logger->tlm_info.clog.err_level;##uint16_t offset = EL_CLOG_TLM_PAGE_SIZE * event_logger->tlm_info.clog.page_no;##const uint16_t* log_orders = event_logger->clogs[err_level].log_orders;##const EL_CLogElement* logs = event_logger->clogs[err_level].logs;##,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,

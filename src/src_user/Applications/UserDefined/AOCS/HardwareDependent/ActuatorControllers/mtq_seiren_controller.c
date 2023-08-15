@@ -24,7 +24,7 @@
 static MtqSeirenController        mtq_seiren_controller_;
 const  MtqSeirenController* const mtq_seiren_controller = &mtq_seiren_controller_;
 
-//!< 元のcase文仕様に伴って生じる，MTQoff期間の余分な長さ [msec]
+//!< 元のcase文仕様に伴って生じる，MTQ off期間の余分な長さ [msec]
 static const uint32_t APP_MTQ_SEIREN_CONTROLLER_kDelayForMTQStopExec_ms_ = 100;
 
 static void APP_MTQ_SEIREN_CONTROLLER_init_(void);
@@ -76,7 +76,7 @@ static void APP_MTQ_SEIREN_CONTROLLER_wait_for_demagnitization_(void);
  * @brief  MTQ出力磁気モーメント実効値clip関数
  * @param[out]  clipped_mag_moment_cmd_Am2s    : clip後のMTQ駆動/消磁の合計インターバルの間に出力できる磁気モーメント積算値 [Am^2sec]
  * @param[in]   mag_moment_cmd_Am2             : clip前の磁気モーメント出力指令値 [Am^2]
- * @note   MTQ_SEIREN_CONTROLLERアプリ内でMTQ駆動/消磁の比率とPWMduty比の計算が混ざって同じものとして計算されてしまっている
+ * @note   MTQ_SEIREN_CONTROLLERアプリ内でMTQ駆動/消磁の比率とPWM duty比の計算が混ざって同じものとして計算されてしまっている
  * @note   このことへの対処として，MTQ駆動/消磁の合計インターバルに対する駆動時間の比率を使って最大MTQ駆動可能量を補正した上でclipする
  */
 static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],

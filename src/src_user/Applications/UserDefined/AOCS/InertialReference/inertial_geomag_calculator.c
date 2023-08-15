@@ -14,8 +14,8 @@
 #include <src_user/Applications/app_registry.h>
 
 
-static InertialGeomagCalculator        inertial_geomag_calulator_;
-const  InertialGeomagCalculator* const inertial_geomag_calulator = &inertial_geomag_calulator_;
+static InertialGeomagCalculator        inertial_geomag_calculator_;
+const  InertialGeomagCalculator* const inertial_geomag_calculator = &inertial_geomag_calculator_;
 
 static void APP_GEOMAG_ECI_CALC_init_(void);
 static void APP_GEOMAG_ECI_CALC_exec_(void);
@@ -29,7 +29,7 @@ AppInfo APP_GEOMAG_ECI_CALC_create_app(void)
 
 static void APP_GEOMAG_ECI_CALC_init_(void)
 {
-  inertial_geomag_calulator_.calc_order = 13;
+  inertial_geomag_calculator_.calc_order = 13;
   return;
 }
 
@@ -41,7 +41,7 @@ static void APP_GEOMAG_ECI_CALC_exec_(void)
 
   float mag_i_nT_temp[PHYSICAL_CONST_THREE_DIM];
   C2A_MATH_ERROR error = GEOMAGNETISM_calc_igrf(mag_i_nT_temp,
-                                                inertial_geomag_calulator_.calc_order,
+                                                inertial_geomag_calculator_.calc_order,
                                                 aocs_manager->reference_jday,
                                                 dcm_ecef2eci,
                                                 aocs_manager->sat_pos_est_lla_rad_m);

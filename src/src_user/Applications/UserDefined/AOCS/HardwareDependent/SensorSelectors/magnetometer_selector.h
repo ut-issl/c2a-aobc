@@ -24,7 +24,7 @@ typedef enum
 } APP_MAG_SELECTOR_STATE;
 
 /**
- * @struct MagnetmeterSelector
+ * @struct MagnetometerSelector
  * @brief 磁気センサ統合に関する外部公開情報用構造体
  */
 typedef struct

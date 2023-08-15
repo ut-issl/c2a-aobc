@@ -21,7 +21,7 @@
 
 static void DI_STIM210_init_(void);
 static void DI_STIM210_update_(void);
-static void DI_STIM210_temperature_caliblation_(void);
+static void DI_STIM210_temperature_calibration_(void);
 
 static STIM210_Driver stim210_driver_[STIM210_IDX_MAX];
 const  STIM210_Driver* const stim210_driver[STIM210_IDX_MAX] = {&stim210_driver_[STIM210_IDX_IN_UNIT]};
@@ -85,26 +85,26 @@ static void DI_STIM210_init_(void)
   // X軸
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[0]),
                                      STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_bias_coeff_compo_x, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("STIM210 Gyro-X Bias Temperature Caliblation init Failed ! \n");
+  if (ret < 0) Printf("STIM210 Gyro-X Bias Temperature Calibration init Failed ! \n");
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[0]),
                                      STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_scale_factor_coeff_compo_x, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("STIM210 Gyro-X SF Temperature Caliblation init Failed ! \n");
+  if (ret < 0) Printf("STIM210 Gyro-X SF Temperature Calibration init Failed ! \n");
 
   // Y軸
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[1]),
                                      STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_bias_coeff_compo_y, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("STIM210 Gyro-Y Bias Temperature Caliblation init Failed ! \n");
+  if (ret < 0) Printf("STIM210 Gyro-Y Bias Temperature Calibration init Failed ! \n");
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[1]),
                                      STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_scale_factor_coeff_compo_y, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("STIM210 Gyro-Y SF Temperature Caliblation init Failed ! \n");
+  if (ret < 0) Printf("STIM210 Gyro-Y SF Temperature Calibration init Failed ! \n");
 
   // Z軸
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].bias_compo_rad_s[2]),
                                      STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_bias_coeff_compo_z, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("STIM210 Gyro-Z Bias Temperature Caliblation init Failed ! \n");
+  if (ret < 0) Printf("STIM210 Gyro-Z Bias Temperature Calibration init Failed ! \n");
   ret = POLYNOMIAL_APPROX_initialize(&(di_stim210_[STIM210_IDX_IN_UNIT].scale_factor_compo[2]),
                                      STIM210_PARAMETERS_kNumCoeffTempCalib, STIM210_PARAMETERS_scale_factor_coeff_compo_z, kRangeLow, kRangeHigh);
-  if (ret < 0) Printf("STIM210 Gyro-Z SF Temperature Caliblation init Failed ! \n");
+  if (ret < 0) Printf("STIM210 Gyro-Z SF Temperature Calibration init Failed ! \n");
 
   return;
 }
@@ -148,7 +148,7 @@ static void DI_STIM210_update_(void)
       // NOT REACHED
     }
 
-    DI_STIM210_temperature_caliblation_();
+    DI_STIM210_temperature_calibration_();
   }
   else if (power_switch_control->switch_state_unreg[APP_PSC_UNREG_IDX_STIM210] == APP_PSC_STATE_OFF)
   {
@@ -157,7 +157,7 @@ static void DI_STIM210_update_(void)
   }
 }
 
-static void DI_STIM210_temperature_caliblation_(void)
+static void DI_STIM210_temperature_calibration_(void)
 {
   for (int stim_idx = 0; stim_idx < STIM210_IDX_MAX; stim_idx++)
   {
