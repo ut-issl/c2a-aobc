@@ -76,6 +76,7 @@
 .let param_id = 15 # SAGITTA_PARAMETER_ID_VALIDATION
 .let param_id = 16 # SAGITTA_PARAMETER_ID_ALGO
 .let param_id = 18 # SAGITTA_PARAMETER_ID_SUBSCRIPTION
+.let param_id = 23 # SAGITTA_PARAMETER_ID_AUTO_THRESHOLD
  #
 .get param_id
  #
@@ -149,6 +150,22 @@
  let param_id = 9 # SAGITTA_PARAMETER_ID_CAMERA
  let idx = 3
  let value = 1.0
+ AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
+ wait_sec 1
+ AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
+ wait_sec 1
+ AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
+ wait_sec 1
+ let tlm_id = 0x36 # AOBC_SAGITTA_READ1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ wait_sec 1
+ let tlm_id = 0x37 # AOBC_SAGITTA_READ2
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ #
+.# Case 4: auto thresholdをoff
+ let param_id = 23 # SAGITTA_PARAMETER_ID_AUTO_THRESHOLD
+ let idx = 0
+ let value = 0
  AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
  wait_sec 1
  AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
