@@ -99,14 +99,11 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void
 
   mobc_driver->info.comm.rx_err_code = MOBC_RX_ERR_CODE_OK;
 
-  // TODO: CRC チェックを入れる
-#if 0
   if (!EB90_FRAME_is_valid_crc_of_dssc(p_stream_config))
   {
     mobc_driver->info.comm.rx_err_code = MOBC_RX_ERR_CODE_CRC_ERR;
     return DS_ERR_CODE_ERR;
   }
-#endif
 
   // MOBCからのコマンドは以下のパターン
   //  APID:
@@ -130,37 +127,11 @@ DS_CMD_ERR_CODE MOBC_send(MOBC_Driver* mobc_driver, const CommonTlmPacket* packe
 {
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
-  uint16_t    ctp_len;
-  uint16_t    crc;
-  size_t      pos;
-  size_t      size;
 
   p_stream_config = &(mobc_driver->driver.super.stream_config[MOBC_STREAM_TLM_CMD]);
 
   // tx_frameの設定
-  ctp_len = CTP_get_packet_len(packet);
-  DSSC_set_tx_frame_size(p_stream_config,
-                         (uint16_t)(ctp_len + EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE));
-
-  pos  = 0;
-  size = EB90_FRAME_STX_SIZE;
-  memcpy(&(MOBC_tx_frame_[pos]), EB90_FRAME_kStx, size);
-  pos += size;
-  size = EB90_FRAME_LEN_SIZE;
-  ENDIAN_memcpy(&(MOBC_tx_frame_[pos]), &ctp_len, size);       // ここはエンディアンを気にする！
-  pos += size;
-  size = (size_t)ctp_len;
-  memcpy(&(MOBC_tx_frame_[pos]), packet->packet, size);
-  pos += size;
-
-  crc = EB90_FRAME_calc_crc(MOBC_tx_frame_ + EB90_FRAME_HEADER_SIZE, pos - EB90_FRAME_HEADER_SIZE);
-
-  size = EB90_FRAME_CRC_SIZE;
-  // TODO_L: 本当は rev_endian_memcpy (Big の時に反転する) が欲しいが, SILS も AOBC も Little endian なためこれで良い
-  memcpy(&(MOBC_tx_frame_[pos]), &crc, size);
-  pos += size;
-  size = EB90_FRAME_ETX_SIZE;
-  memcpy(&(MOBC_tx_frame_[pos]), EB90_FRAME_kEtx, size);
+  CTP_set_tx_frame_to_dssc(p_stream_config, packet);
 
   ret = DS_send_general_cmd(&(mobc_driver->driver.super), MOBC_STREAM_TLM_CMD);
 
@@ -170,6 +141,7 @@ DS_CMD_ERR_CODE MOBC_send(MOBC_Driver* mobc_driver, const CommonTlmPacket* packe
   }
   else
   {
+    // TODO: エラー処理？
     return DS_CMD_DRIVER_SUPER_ERR;
   }
 }
