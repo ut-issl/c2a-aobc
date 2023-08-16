@@ -44,15 +44,15 @@ typedef enum
  */
 typedef struct
 {
-  float angular_velocity_upper_threshold_rad_s;           //!< アンローディングを始める上側RW回転角速度．これを上回ったらRW回転数を減らす
-  float angular_velocity_lower_threshold_rad_s;           //!< アンローディングを終わるRW回転角速度．これを下回ったらRW回転数を増やす
-  float angular_velocity_target_rad_s;                    //!< アンローディング目標角速度
-  float control_gain;                                     //!< RWの余剰回転数に対するMTQ出力トルクのゲイン．負の値を想定
-  APP_UNLOADING_EXEC exec_is_enable;                      //!< アンローディング処理が有効であるかどうか
-  APP_UNLOADING_STATE unloading_state[RW0003_IDX_MAX];    //!< 各ホイールがアンローディング中であるかどうか
-  float output_torque_body_Nm[PHYSICAL_CONST_THREE_DIM];  //!< アンローディングによる出力目標トルク
-  uint8_t number_of_unloading_wheels;                     //!< アンローディング中のホイールの個数
-  CrossProductControl cross_product_cntrl;                //!< CrossProduct制御インスタンス
+  float angular_velocity_upper_threshold_rad_s[PHYSICAL_CONST_THREE_DIM]; //!< アンローディングを始める上側RW回転角速度．これを上回ったらRW回転数を減らす
+  float angular_velocity_lower_threshold_rad_s[PHYSICAL_CONST_THREE_DIM]; //!< アンローディングを終わるRW回転角速度．これを下回ったらRW回転数を増やす
+  float angular_velocity_target_rad_s[PHYSICAL_CONST_THREE_DIM];          //!< アンローディング目標角速度
+  float control_gain;                                                     //!< RWの余剰回転数に対するMTQ出力トルクのゲイン．負の値を想定
+  APP_UNLOADING_EXEC exec_is_enable;                                      //!< アンローディング処理が有効であるかどうか
+  APP_UNLOADING_STATE unloading_state[RW0003_IDX_MAX];                    //!< 各ホイールがアンローディング中であるかどうか
+  float output_torque_body_Nm[PHYSICAL_CONST_THREE_DIM];                  //!< アンローディングによる出力目標トルク
+  uint8_t number_of_unloading_wheels;                                     //!< アンローディング中のホイールの個数
+  CrossProductControl cross_product_cntrl;                                //!< CrossProduct制御インスタンス
 } Unloading;
 
 extern const Unloading* const unloading;

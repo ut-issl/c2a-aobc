@@ -46,9 +46,12 @@ AppInfo APP_UNLOADING_create_app(void)
 
 static void APP_UNLOADING_init_(void)
 {
-  unloading_.angular_velocity_upper_threshold_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;
-  unloading_.angular_velocity_lower_threshold_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;
-  unloading_.angular_velocity_target_rad_s = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;
+  for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
+  {
+    unloading_.angular_velocity_upper_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;
+    unloading_.angular_velocity_lower_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;
+    unloading_.angular_velocity_target_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;
+  }
 
   unloading_.control_gain = ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;
 
@@ -100,11 +103,11 @@ static void APP_UNLOADING_update_unloading_state_(void)
   {
     if (unloading_.unloading_state[idx] == APP_UNLOADING_STATE_OFF)
     {
-      if (aocs_manager->rw_angular_velocity_rad_s[idx] > unloading_.angular_velocity_upper_threshold_rad_s)
+      if (aocs_manager->rw_angular_velocity_rad_s[idx] > unloading_.angular_velocity_upper_threshold_rad_s[idx])
       { // 回転数が上側閾値を超えたら，回転数を下げるためのアンローディングを開始する．
         unloading_.unloading_state[idx] = APP_UNLOADING_STATE_ON_DECREASE;
       }
-      else if (aocs_manager->rw_angular_velocity_rad_s[idx] < unloading_.angular_velocity_lower_threshold_rad_s)
+      else if (aocs_manager->rw_angular_velocity_rad_s[idx] < unloading_.angular_velocity_lower_threshold_rad_s[idx])
       { // 回転数が下側閾値を超えたら，回転数を上げるためのアンローディングを開始する．
         unloading_.unloading_state[idx] = APP_UNLOADING_STATE_ON_INCREASE;
       }
@@ -116,7 +119,7 @@ static void APP_UNLOADING_update_unloading_state_(void)
     else if (unloading_.unloading_state[idx] == APP_UNLOADING_STATE_ON_INCREASE)
     {
       // アンローディングによって回転数が目標値を上回ったら，アンローディングを終了する．
-      if (aocs_manager->rw_angular_velocity_rad_s[idx] >= unloading_.angular_velocity_target_rad_s)
+      if (aocs_manager->rw_angular_velocity_rad_s[idx] >= unloading_.angular_velocity_target_rad_s[idx])
       {
         unloading_.unloading_state[idx] = APP_UNLOADING_STATE_OFF;
       }
@@ -124,7 +127,7 @@ static void APP_UNLOADING_update_unloading_state_(void)
     else if (unloading_.unloading_state[idx] == APP_UNLOADING_STATE_ON_DECREASE)
     {
       // アンローディングによって回転数が目標値を下回ったら，アンローディングを終了する．
-      if (aocs_manager->rw_angular_velocity_rad_s[idx] < unloading_.angular_velocity_target_rad_s)
+      if (aocs_manager->rw_angular_velocity_rad_s[idx] < unloading_.angular_velocity_target_rad_s[idx])
       {
         unloading_.unloading_state[idx] = APP_UNLOADING_STATE_OFF;
       }
@@ -151,7 +154,7 @@ void APP_UNLOADING_calc_output_torque(void)
     // アンローディングが必要なRWについては，必要トルクを計算し，出力トルクに入れる
     if (unloading_.unloading_state[idx] != APP_UNLOADING_STATE_OFF)
     {
-      float exceed_angular_velocity_rad_s = aocs_manager->rw_angular_velocity_rad_s[idx] - unloading_.angular_velocity_target_rad_s;
+      float exceed_angular_velocity_rad_s = aocs_manager->rw_angular_velocity_rad_s[idx] - unloading_.angular_velocity_target_rad_s[idx];
       float scalar_output_torque_Nm = exceed_angular_velocity_rad_s * unloading_.control_gain;
       // Check sign
       float sign = 1.0f;
@@ -192,17 +195,24 @@ CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
+  uint8_t axis;
   int16_t angular_velocity_upper_threshold_rpm;
   int16_t angular_velocity_target_rpm;
   int16_t angular_velocity_lower_threshold_rpm;
 
-  ENDIAN_memcpy(&angular_velocity_upper_threshold_rpm, param, sizeof(int16_t));
-  ENDIAN_memcpy(&angular_velocity_target_rpm, param + sizeof(int16_t),  sizeof(int16_t));
-  ENDIAN_memcpy(&angular_velocity_lower_threshold_rpm, param + sizeof(int16_t) + sizeof(int16_t), sizeof(int16_t));
+  ENDIAN_memcpy(&axis, param, sizeof(uint8_t));
+  ENDIAN_memcpy(&angular_velocity_upper_threshold_rpm, param + (1 * sizeof(int16_t)), sizeof(int16_t));
+  ENDIAN_memcpy(&angular_velocity_target_rpm,          param + (2 * sizeof(int16_t)), sizeof(int16_t));
+  ENDIAN_memcpy(&angular_velocity_lower_threshold_rpm, param + (3 * sizeof(int16_t)), sizeof(int16_t));
 
   float angular_velocity_upper_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_upper_threshold_rpm);
   float angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_target_rpm);
   float angular_velocity_lower_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_lower_threshold_rpm);
+
+  if(axis >= PHYSICAL_CONST_THREE_DIM)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
 
   // RW回転数の閾値について，下限値 < 目標値 < 上限値 が満たされていないとアンローディング動作がおかしくなるので，満たしていないときはセットせずにリターン
   if ((angular_velocity_upper_threshold_rad_s < angular_velocity_target_rad_s) &&
@@ -211,9 +221,9 @@ CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacke
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  unloading_.angular_velocity_upper_threshold_rad_s = angular_velocity_upper_threshold_rad_s;
-  unloading_.angular_velocity_target_rad_s = angular_velocity_target_rad_s;
-  unloading_.angular_velocity_lower_threshold_rad_s = angular_velocity_lower_threshold_rad_s;
+  unloading_.angular_velocity_upper_threshold_rad_s[axis] = angular_velocity_upper_threshold_rad_s;
+  unloading_.angular_velocity_target_rad_s[axis]          = angular_velocity_target_rad_s;
+  unloading_.angular_velocity_lower_threshold_rad_s[axis] = angular_velocity_lower_threshold_rad_s;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
