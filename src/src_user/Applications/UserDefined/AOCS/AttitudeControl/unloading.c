@@ -192,7 +192,7 @@ CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t axis;
