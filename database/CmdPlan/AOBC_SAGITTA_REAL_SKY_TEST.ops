@@ -228,8 +228,10 @@
  wait_sec 1
  let tlm_id = 0x02 # AOBC_BL
  AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
- wait_until AOBC_BL.BLOCK_NO == {target_bc_id}
- check_value AOBC_BL.IS_ACTIVE == ACTIVE
+ #
+.# 無限ループ開始
+ let target_bc_id = 30 # BC_HK_CYCLIC_TLM
+ AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 {target_bc_id}
  #
 .# 無限ループ停止
  let target_bc_id = 30 # BC_HK_CYCLIC_TLM
@@ -277,8 +279,10 @@
  wait_sec 1
  let tlm_id = 0x02 # AOBC_BL
  AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
- wait_until AOBC_BL.BLOCK_NO == {target_bc_id}
- check_value AOBC_BL.IS_ACTIVE == ACTIVE
+ #
+.# 無限ループ開始
+ let target_bc_id = 9 # BLANK
+ AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 {target_bc_id}
  #
 .# 無限ループ停止
  let target_bc_id = 9 # BLANK
