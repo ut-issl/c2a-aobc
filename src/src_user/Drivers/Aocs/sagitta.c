@@ -1773,7 +1773,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
   SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.stable_count), offset);
   offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.stable_count);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_((uint8_t*)(&(sagitta_driver->info.telemetry.solution.solution_strategy)), offset);
-  offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.solution_strategy);
+  offset += (uint16_t)sizeof(uint8_t);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
