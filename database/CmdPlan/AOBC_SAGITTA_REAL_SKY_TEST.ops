@@ -218,8 +218,8 @@
  # !! ti, add_tlm_idを変えて複数回送信 !!
  AOBC_BL.Cmd_TG_GENERATE_RT_TLM {ti} {add_tlm_id}
  #
-.# 1Hzで無限ループ
- let ti = 10
+.# 無限ループ
+ !!ループの周期でti設定!!
  AOBC_BL.Cmd_TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
  wait_sec 1
  #
@@ -296,3 +296,14 @@
  AOBC_RT.Cmd_AM_INITIALIZE_APP {app_id}
  #
  # STTにも反映する場合、STTの電源リセット
+ #
+.# =========================================
+ #  8. EL無効化
+ # =========================================
+ # 3-3, 5-1アノマリを止めたい
+.let el_id = 3
+ AOBC_RT.Cmd_EL_DISABLE_LOGGING {el_id}
+ #
+.let el_id = 5
+ AOBC_RT.Cmd_EL_DISABLE_LOGGING {el_id}
+ #

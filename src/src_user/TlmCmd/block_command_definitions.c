@@ -82,6 +82,7 @@ void BC_load_defaults(void)
 
   // Normal Block Cmds
   // === AOCS ===
+  BCL_load_bc(BC_STT_SYNCHRONOUS_TLM,    BCL_load_stt_synchronous);
   BCL_load_bc(BC_HK_CYCLIC_TLM,          BCL_load_start_hk_tlm);
   BCL_load_bc(BC_SELECT_RM3100_ON_AOBC,  BCL_load_select_rm3100_on_aobc);
   BCL_load_bc(BC_SELECT_RM3100_EXTERNAL, BCL_load_select_rm3100_external);

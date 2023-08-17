@@ -5,6 +5,7 @@
 
 // AOCS
 void BCL_load_start_hk_tlm(void);
+void BCL_load_stt_synchronous(void);
 void BCL_load_select_rm3100_on_aobc(void);
 void BCL_load_select_rm3100_external(void);
 void BCL_set_sagitta_parameter(void);
