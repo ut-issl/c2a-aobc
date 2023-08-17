@@ -84,7 +84,7 @@ void BCL_load_stt_synchronous()
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY);
   bc_cycle += OBCT_sec2cycle(1);
 
-  BCL_tool_register_deploy(bc_cycle, BC_HK_CYCLIC_TLM, TLCD_ID_DEPLOY_TLM);
+  BCL_tool_register_deploy(bc_cycle, BC_STT_SYNCHRONOUS_TLM, TLCD_ID_DEPLOY_TLM);
 }
 
 #pragma section

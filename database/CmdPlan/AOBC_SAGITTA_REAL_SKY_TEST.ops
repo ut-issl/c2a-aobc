@@ -219,7 +219,7 @@
  AOBC_BL.Cmd_TG_GENERATE_RT_TLM {ti} {add_tlm_id}
  #
 .# 無限ループ
- !!ループの周期でti設定!!
+ # !!ループの周期でti設定!!
  AOBC_BL.Cmd_TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
  wait_sec 1
  #
@@ -240,6 +240,15 @@
 .# =========================================
  #  6. 同期式テレメ取得（STT -> AOBC）
  # =========================================
+ # 事前に準備したBC
+.# 無限ループ開始
+ let target_bc_id = 29 # BC_STT_SYNCHRONOUS_TLM
+ AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 {target_bc_id}
+ #
+.# 無限ループ停止
+ let target_bc_id = 29 # BC_STT_SYNCHRONOUS_TLM
+ AOBC_RT.Cmd_BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
+ #
  # 非同期テレメだとテレメエラーが起きる場合に、同期式でテレメ要求を行う。
  # ti候補
 .let ti = 1
