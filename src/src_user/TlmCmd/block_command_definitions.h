@@ -54,7 +54,6 @@ typedef enum
   // イベントハンドラはBC_EH_など，接頭辞を適切につけること！
 
   // AOCS
-  BC_STT_SYNCHRONOUS_TLM = 29,
   BC_HK_CYCLIC_TLM = 30,
   BC_SELECT_RM3100_ON_AOBC = 31,
   BC_SELECT_RM3100_EXTERNAL = 32,

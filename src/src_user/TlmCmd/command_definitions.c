@@ -143,7 +143,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_TORQUE].cmd_func = Cmd_DI_RW0003_DRIVE_TORQUE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_SPEED].cmd_func = Cmd_DI_RW0003_DRIVE_SPEED;
   cmd_table[Cmd_CODE_DI_SAGITTA_BOOT].cmd_func = Cmd_DI_SAGITTA_BOOT;
-  cmd_table[Cmd_CODE_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY].cmd_func = Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY;
+  cmd_table[Cmd_CODE_DI_SAGITTA_SET_UNIX_TIME_US].cmd_func = Cmd_DI_SAGITTA_SET_UNIX_TIME_US;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_PARAMETER].cmd_func = Cmd_DI_SAGITTA_SET_PARAMETER;
   cmd_table[Cmd_CODE_DI_SAGITTA_CHANGE_PARAMETER].cmd_func = Cmd_DI_SAGITTA_CHANGE_PARAMETER;
   cmd_table[Cmd_CODE_DI_SAGITTA_READ_PARAMETER].cmd_func = Cmd_DI_SAGITTA_READ_PARAMETER;
@@ -426,7 +426,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_TORQUE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_SPEED].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_SPEED].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_DI_SAGITTA_SET_UNIX_TIME_US].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_DI_SAGITTA_SET_UNIX_TIME_US].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_PARAMETER].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_SAGITTA_CHANGE_PARAMETER].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_SAGITTA_CHANGE_PARAMETER].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;

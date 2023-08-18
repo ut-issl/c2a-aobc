@@ -12,7 +12,7 @@
 #include <src_user/Library/xxhash.h>
 #include <src_user/Library/physical_constants.h>
 
-#define DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
+// #define DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
 
 #define SAGITTA_STREAM_TLM_CMD        (0)
 #define SAGITTA_TX_MAX_FRAME_SIZE     (80)  //!< TXフレームの最大バイト数。
@@ -202,6 +202,8 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
   sagitta_driver->info.set_parameter.algo.t2l_min_matched = 6;
   uint8_t default_subscription_length = 0;
   sagitta_driver->info.set_parameter.subscription[default_subscription_length] = 24;
+  default_subscription_length++;
+  sagitta_driver->info.set_parameter.subscription[default_subscription_length] = 27;
   default_subscription_length++;
   memset(&(sagitta_driver->info.set_parameter.subscription[default_subscription_length]), 0x00,
          SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH - default_subscription_length);
