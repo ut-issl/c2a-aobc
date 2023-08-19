@@ -68,6 +68,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_tracking_(SAGITTA_Driver* 
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_validation_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_algo_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_subscription_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_auto_threshold_(SAGITTA_Driver* sagitta_driver);
 // action
 static DS_ERR_CODE SAGITTA_analyze_rec_data_action_reply_(SAGITTA_Driver* sagitta_driver);
 // telemetry
@@ -206,6 +207,11 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
   default_subscription_length++;
   memset(&(sagitta_driver->info.set_parameter.subscription[default_subscription_length]), 0x00,
          SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH - default_subscription_length);
+  sagitta_driver->info.set_parameter.auto_threshold.mode = 1;
+  sagitta_driver->info.set_parameter.auto_threshold.desired_blobs_count = 30;
+  sagitta_driver->info.set_parameter.auto_threshold.min_threshold = 1;
+  sagitta_driver->info.set_parameter.auto_threshold.max_threshold = 255;
+  sagitta_driver->info.set_parameter.auto_threshold.threshold_kp = 0.10;
 
   return DS_INIT_OK;
 }
@@ -667,6 +673,36 @@ DS_CMD_ERR_CODE SAGITTA_set_subscription(SAGITTA_Driver* sagitta_driver)
   return SAGITTA_send_cmd_(sagitta_driver, offset);
 }
 
+DS_CMD_ERR_CODE SAGITTA_set_auto_threshold(SAGITTA_Driver* sagitta_driver)
+{
+  const uint8_t mode = sagitta_driver->info.set_parameter.auto_threshold.mode;
+  const uint8_t desired_blobs_count = sagitta_driver->info.set_parameter.auto_threshold.desired_blobs_count;
+  const uint16_t min_threshold = sagitta_driver->info.set_parameter.auto_threshold.min_threshold;
+  const uint16_t max_threshold = sagitta_driver->info.set_parameter.auto_threshold.max_threshold;
+  const float threshold_kp = sagitta_driver->info.set_parameter.auto_threshold.threshold_kp;
+
+  uint8_t offset = 0;
+
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kAddress_;
+  offset += (uint8_t)sizeof(SAGITTA_kAddress_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kCmdSetParameter_;
+  offset += (uint8_t)sizeof(SAGITTA_kCmdSetParameter_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_PARAMETER_ID_AUTO_THRESHOLD;
+  offset += (uint8_t)sizeof(uint8_t);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(mode), sizeof(mode));
+  offset += (uint8_t)sizeof(mode);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(desired_blobs_count), sizeof(desired_blobs_count));
+  offset += (uint8_t)sizeof(desired_blobs_count);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(min_threshold), sizeof(min_threshold));
+  offset += (uint8_t)sizeof(min_threshold);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_threshold), sizeof(max_threshold));
+  offset += (uint8_t)sizeof(max_threshold);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(threshold_kp), sizeof(threshold_kp));
+  offset += (uint8_t)sizeof(threshold_kp);
+
+  return SAGITTA_send_cmd_(sagitta_driver, offset);
+}
+
 DS_CMD_ERR_CODE SAGITTA_change_log_level(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
 {
   if (param_idx >= SAGITTA_PARAMETER_LOG_LEVEL_LENGTH) return DS_CMD_ILLEGAL_PARAMETER;
@@ -1004,6 +1040,35 @@ DS_CMD_ERR_CODE SAGITTA_change_subscription(SAGITTA_Driver* sagitta_driver, uint
   return DS_CMD_OK;
 }
 
+DS_CMD_ERR_CODE SAGITTA_change_auto_threshold(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
+{
+  if (param_idx >= 5) return DS_CMD_ILLEGAL_PARAMETER;
+
+  switch (param_idx)
+  {
+  case 0:
+    sagitta_driver->info.set_parameter.auto_threshold.mode = (uint8_t)value;
+    break;
+  case 1:
+    sagitta_driver->info.set_parameter.auto_threshold.desired_blobs_count = (uint8_t)value;
+    break;
+  case 2:
+    sagitta_driver->info.set_parameter.auto_threshold.min_threshold = (uint16_t)value;
+    break;
+  case 3:
+    sagitta_driver->info.set_parameter.auto_threshold.max_threshold = (uint16_t)value;
+    break;
+  case 4:
+    sagitta_driver->info.set_parameter.auto_threshold.threshold_kp = value;
+    break;
+  default:
+    // NOT REACHED
+    break;
+  }
+
+  return DS_CMD_OK;
+}
+
 C2A_MATH_ERROR SAGITTA_set_frame_transform_c2b(SAGITTA_Driver* sagitta_driver, const Quaternion q_c2b)
 {
   C2A_MATH_ERROR ret;
@@ -1157,12 +1222,13 @@ static int SAGITTA_encode_tx_frame_(uint8_t cmd_data_len)
   return num_escape;
 }
 
-static DS_CMD_ERR_CODE SAGITTA_request_tlm_(SAGITTA_Driver* sagitta_driver)
+DS_CMD_ERR_CODE SAGITTA_request_tlm(SAGITTA_Driver* sagitta_driver, uint8_t tlm_id)
 {
   const uint8_t kCmdDataLength = 3;
+
   SAGITTA_tx_data_frame_[0] = SAGITTA_kAddress_;
   SAGITTA_tx_data_frame_[1] = SAGITTA_kCmdRequestTelem_;
-  SAGITTA_tx_data_frame_[2] = sagitta_driver->info.tlm_id;
+  SAGITTA_tx_data_frame_[2] = tlm_id;
 
   return (SAGITTA_send_cmd_(sagitta_driver, kCmdDataLength));
 }
@@ -1187,6 +1253,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_(DS_StreamConfig* stream_config, voi
     return SAGITTA_analyze_rec_data_parameter_reply_(sagitta_driver);
   case SAGITTA_TLM_TYPE_ACTION_REPLY:
     return SAGITTA_analyze_rec_data_action_reply_(sagitta_driver);
+  case SAGITTA_TLM_TYPE_TELEMETRY_REPLY:
+    return SAGITTA_analyze_rec_data_telemetry_(sagitta_driver);
   case SAGITTA_TLM_TYPE_ASYNCHRONOUS_TELEMETRY_REPLY:
     return SAGITTA_analyze_rec_data_telemetry_(sagitta_driver);
   default:
@@ -1291,6 +1359,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_reply_(SAGITTA_Driver* sag
     return SAGITTA_analyze_rec_data_parameter_algo_(sagitta_driver);
   case SAGITTA_PARAMETER_ID_SUBSCRIPTION:
     return SAGITTA_analyze_rec_data_parameter_subscription_(sagitta_driver);
+  case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
+    return SAGITTA_analyze_rec_data_parameter_auto_threshold_(sagitta_driver);
   default:
     return DS_ERR_CODE_ERR;
   }
@@ -1558,6 +1628,26 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_subscription_(SAGITTA_Driv
   return DS_ERR_CODE_OK;
 }
 
+static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_auto_threshold_(SAGITTA_Driver* sagitta_driver)
+{
+  uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetTlmID_ + (uint16_t)(sizeof(sagitta_driver->info.tlm_id));
+
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.mode), offset);
+  offset += (uint16_t)sizeof(uint8_t);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.desired_blobs_count), offset);
+  offset += (uint16_t)sizeof(uint8_t);
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.min_threshold), offset);
+  offset += (uint16_t)sizeof(uint16_t);
+  SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.max_threshold), offset);
+  offset += (uint16_t)sizeof(uint16_t);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.threshold_kp), offset);
+  offset += (uint16_t)sizeof(float);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
 static DS_ERR_CODE SAGITTA_analyze_rec_data_action_reply_(SAGITTA_Driver* sagitta_driver)
 {
   uint8_t status;
@@ -1685,7 +1775,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
   SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.stable_count), offset);
   offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.stable_count);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_((uint8_t*)(&(sagitta_driver->info.telemetry.solution.solution_strategy)), offset);
-  offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.solution_strategy);
+  offset += (uint16_t)sizeof(uint8_t);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 

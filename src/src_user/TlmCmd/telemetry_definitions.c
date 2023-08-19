@@ -3129,7 +3129,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET1_(uint8_t* packet, uint16_t* len, ui
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (134 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (144 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.mode));
@@ -3177,9 +3177,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET2_(uint8_t* packet, uint16_t* len, ui
   TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[13]));
   TF_copy_u8(&packet[132], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[14]));
   TF_copy_u8(&packet[133], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[15]));
+  TF_copy_u8(&packet[134], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.mode));
+  TF_copy_u8(&packet[135], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.desired_blobs_count));
+  TF_copy_u16(&packet[136], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.min_threshold));
+  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.max_threshold));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.threshold_kp));
 #endif
 
-  *len = 134;
+  *len = 144;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -3269,7 +3274,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ1_(uint8_t* packet, uint16_t* len, u
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (134 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (144 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.mode));
@@ -3317,9 +3322,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, u
   TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[13]));
   TF_copy_u8(&packet[132], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[14]));
   TF_copy_u8(&packet[133], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[15]));
+  TF_copy_u8(&packet[134], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.mode));
+  TF_copy_u8(&packet[135], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.desired_blobs_count));
+  TF_copy_u16(&packet[136], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.min_threshold));
+  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.max_threshold));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.threshold_kp));
 #endif
 
-  *len = 134;
+  *len = 144;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
