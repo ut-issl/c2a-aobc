@@ -15,7 +15,7 @@ on:
       - 'src/**'
 
 env:
-  S2E_AOBC_VERSION: v3.0.1
+  S2E_AOBC_VERSION: v4.0.0
 
 jobs:
   build_c2a_with_s2e_win:
