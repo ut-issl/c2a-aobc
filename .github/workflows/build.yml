@@ -15,6 +15,7 @@ on:
       - 'src/**'
 
 env:
+  # renovate: datasource=github-releases depName=ut-issl/s2e-aobc
   S2E_AOBC_VERSION: v4.0.0
 
 jobs:
