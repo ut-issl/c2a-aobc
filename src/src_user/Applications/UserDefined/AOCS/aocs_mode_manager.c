@@ -32,12 +32,13 @@ static uint8_t APP_AOCS_MM_initial_mode_transition_flag_ = 0;  //!< S2E使用時
 static AocsModeManager        aocs_mode_manager_;
 const  AocsModeManager* const aocs_mode_manager = &aocs_mode_manager_;
 
-static float APP_AOCS_MM_kLimitDiffTime_s_ = 1.0f;               //!< 時間差分の最大リミット値 [s]
-static float APP_AOCS_MM_ang_vel_conv_judge_counter_s_  = 0.0f;  //!< 角速度収束判定カウンタ [s]
-static float APP_AOCS_MM_ang_div_judge_counter_s_       = 0.0f;  //!< 角度発散判定カウンタ [s]
-static float APP_AOCS_MM_sensor_error_judge_counter_s_  = 0.0f;  //!< センサエラー判定カウンタ [s]
-static float APP_AOCS_MM_ang_vel_prev_norm_rad_s_       = 0.0f;  //!< 前回の角速度ノルム [rad/s]
-static float APP_AOCS_MM_ang_vel_update_timing_s_       = 0.0f;  //!< 角速度ノルム更新タイミングカウンタ
+static float APP_AOCS_MM_kLimitDiffTime_s_ = 1.0f;                 //!< 時間差分の最大リミット値 [s]
+static float APP_AOCS_MM_kBdotAnomalyLimitDiffTime_s_   = 300.0f;  //!< Bdot異常判定のための時間差分の最大リミット値 [s]
+static float APP_AOCS_MM_ang_vel_conv_judge_counter_s_  = 0.0f;    //!< 角速度収束判定カウンタ [s]
+static float APP_AOCS_MM_ang_div_judge_counter_s_       = 0.0f;    //!< 角度発散判定カウンタ [s]
+static float APP_AOCS_MM_sensor_error_judge_counter_s_  = 0.0f;    //!< センサエラー判定カウンタ [s]
+static float APP_AOCS_MM_ang_vel_prev_norm_rad_s_       = 0.0f;    //!< 前回の角速度ノルム [rad/s]
+static ObcTime APP_AOCS_MM_ang_vel_update_previous_obc_time_ = OBCT_create(0, 0, 0);  //!< 前回角速度ノルムを更新した時のOBC時刻
 
 static void APP_AOCS_MM_init_(void);
 static void APP_AOCS_MM_initial_exec_(void);
@@ -159,9 +160,10 @@ static void APP_AOCS_MM_bdot_exec_(void)
 
   // Bdot 異常検知 (センサ、MTQ符号ミス)
   // エラー増えていることを検知してInitialに戻る
-  if (APP_AOCS_MM_ang_vel_update_timing_s_ >= aocs_mode_manager_.ang_vel_anomaly_detection_period_s)
+  ObcTime current_obc_time = TMGR_get_master_clock();
+  float diff_time_s = (float)OBCT_diff_in_sec(&APP_AOCS_MM_ang_vel_update_previous_obc_time_, &current_obc_time);
+  if (diff_time_s >= aocs_mode_manager_.ang_vel_anomaly_detection_period_s)
   {
-    APP_AOCS_MM_ang_vel_update_timing_s_ = 0.0f;
     float ang_vel_norm_diff_rad_s = ang_vel_norm_rad_s - APP_AOCS_MM_ang_vel_prev_norm_rad_s_;
     if (APP_AOCS_MM_ang_vel_prev_norm_rad_s_ < 1e-4f)
     {
@@ -169,25 +171,18 @@ static void APP_AOCS_MM_bdot_exec_(void)
     }
     else if (ang_vel_norm_diff_rad_s > aocs_mode_manager_.ang_vel_norm_increase_limit_rad_s)
     {
-      // Initialに戻って制御をやめる
-      APP_AOCS_MM_change_mode_(MD_MODEID_INITIAL);
+      if (diff_time_s < APP_AOCS_MM_kBdotAnomalyLimitDiffTime_s_)
+      {
+        // Initialに戻って制御をやめる
+        APP_AOCS_MM_change_mode_(MD_MODEID_INITIAL);
+      }
     }
     else
     {
       // 特に何もしない
     }
+    APP_AOCS_MM_ang_vel_update_previous_obc_time_ = current_obc_time;
     APP_AOCS_MM_ang_vel_prev_norm_rad_s_ = ang_vel_norm_rad_s;
-  }
-  else
-  {
-    ObcTime current_obc_time = TMGR_get_master_clock();
-    float diff_time_s = (float)OBCT_diff_in_sec(&aocs_mode_manager_.previous_obc_time, &current_obc_time);
-    // (初回など)時間差が大きすぎたら異常なので足さない
-    // TODO: 時間アサーションが正しいかどうか検討する
-    if (diff_time_s < APP_AOCS_MM_kLimitDiffTime_s_)
-    {
-      APP_AOCS_MM_ang_vel_update_timing_s_ += diff_time_s;
-    }
   }
 
   aocs_mode_manager_.previous_obc_time = TMGR_get_master_clock();
@@ -224,7 +219,6 @@ static void APP_AOCS_MM_sun_pointing_exec_(void)
   // モード遷移するかの判定
   if (is_div == 1 || is_sensor_error == 1)
   {
-    APP_AOCS_MM_ang_vel_prev_norm_rad_s_ = VECTOR3_norm(aocs_manager->ang_vel_est_body_rad_s);
     APP_AOCS_MM_change_mode_(MD_MODEID_BDOT);
   }
   // エラーが小さいかの判定、ただしセンサが見えていないときは適合しない TODO_L: 本来はもう少し丁寧に判定すべき
