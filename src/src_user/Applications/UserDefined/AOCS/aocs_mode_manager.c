@@ -38,7 +38,7 @@ static float APP_AOCS_MM_ang_vel_conv_judge_counter_s_  = 0.0f;    //!< 角速�
 static float APP_AOCS_MM_ang_div_judge_counter_s_       = 0.0f;    //!< 角度発散判定カウンタ [s]
 static float APP_AOCS_MM_sensor_error_judge_counter_s_  = 0.0f;    //!< センサエラー判定カウンタ [s]
 static float APP_AOCS_MM_ang_vel_prev_norm_rad_s_       = 0.0f;    //!< 前回の角速度ノルム [rad/s]
-static ObcTime APP_AOCS_MM_ang_vel_update_previous_obc_time_ = OBCT_create(0, 0, 0);  //!< 前回角速度ノルムを更新した時のOBC時刻
+static ObcTime APP_AOCS_MM_ang_vel_update_previous_obc_time_;      //!< 前回角速度ノルムを更新した時のOBC時刻
 
 static void APP_AOCS_MM_init_(void);
 static void APP_AOCS_MM_initial_exec_(void);
@@ -102,6 +102,7 @@ static void APP_AOCS_MM_init_(void)
 
   aocs_mode_manager_.ang_vel_norm_increase_limit_rad_s = FDIR_PARAMETERS_ang_vel_norm_increase_limit_rad_s;
   aocs_mode_manager_.ang_vel_anomaly_detection_period_s = FDIR_PARAMETERS_ang_vel_anomaly_detection_period_s;
+  APP_AOCS_MM_ang_vel_update_previous_obc_time_ = TMGR_get_master_clock();
 
   aocs_mode_manager_.sun_angle_div_limit_rad     = FDIR_PARAMETERS_sun_angle_div_limit_rad;
   aocs_mode_manager_.sun_angle_div_time_limit_s  = FDIR_PARAMETERS_sun_angle_div_time_limit_s;
