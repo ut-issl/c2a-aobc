@@ -76,9 +76,18 @@ const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_y = {
 const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z = { 2.0f * 7.0e-2f, 0.0f, 2.0f * 2.0e-3f };
 
 // Unloading
-const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s = PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f);
-const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s = PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(-7000.0f);
-const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s = PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(0.0f);
+const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s[AOCS_MANAGER_NUM_OF_RW] =
+    {PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f),
+     PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f),
+     PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f)};
+const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s[AOCS_MANAGER_NUM_OF_RW] =
+    {PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f),
+     PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f),
+     PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(7000.0f)};
+const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s[AOCS_MANAGER_NUM_OF_RW] =
+    {PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(0.0f),
+     PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(0.0f),
+     PARAMETER_SETTING_MACRO_RPM_TO_RADIAN_SEC(0.0f)};
 const float ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain = -1.0e-7f;
 const APP_UNLOADING_EXEC ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable = APP_UNLOADING_EXEC_DISABLE;
 const float ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm = 1.0e-7f;
