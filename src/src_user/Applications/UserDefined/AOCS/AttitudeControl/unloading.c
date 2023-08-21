@@ -48,9 +48,9 @@ static void APP_UNLOADING_init_(void)
 {
   for (size_t i = 0; i < AOCS_MANAGER_NUM_OF_RW; i++)
   {
-    unloading_.angular_velocity_upper_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;
-    unloading_.angular_velocity_lower_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;
-    unloading_.angular_velocity_target_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;
+    unloading_.angular_velocity_upper_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s[i];
+    unloading_.angular_velocity_lower_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s[i];
+    unloading_.angular_velocity_target_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s[i];
   }
 
   unloading_.control_gain = ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;
