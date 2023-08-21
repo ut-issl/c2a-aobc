@@ -46,7 +46,7 @@ AppInfo APP_UNLOADING_create_app(void)
 
 static void APP_UNLOADING_init_(void)
 {
-  for (size_t i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
+  for (size_t i = 0; i < AOCS_MANAGER_NUM_OF_RW; i++)
   {
     unloading_.angular_velocity_upper_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;
     unloading_.angular_velocity_lower_threshold_rad_s[i] = ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;
@@ -209,7 +209,7 @@ CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD(const CommonCmdPacke
   float angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_target_rpm);
   float angular_velocity_lower_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_lower_threshold_rpm);
 
-  if(axis >= PHYSICAL_CONST_THREE_DIM)
+  if(axis >= AOCS_MANAGER_NUM_OF_RW)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
