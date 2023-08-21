@@ -188,6 +188,10 @@ static void APP_AOCS_MM_bdot_exec_(void)
     {
       APP_AOCS_MM_ang_vel_update_timing_s_ += diff_time_s;
     }
+    else
+    {
+      APP_AOCS_MM_ang_vel_prev_norm_rad_s_ = ang_vel_norm_rad_s;
+    }
   }
 
   aocs_mode_manager_.previous_obc_time = TMGR_get_master_clock();

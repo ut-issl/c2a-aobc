@@ -13,6 +13,8 @@
 
 #define OEM7600_MAX_SAT_NUM_RANGE_STORE (12) //!< rangeテレメの格納対象とする同時可視最大衛星数
 
+#define DS_IF_RX_BUFFER_SIZE_OEM7600 (144)  //!< IF_RXのバッファサイズ
+
 /**
 * @enum  OEM7600_DATA_UPDATE_STATUS
 * @brief レンジデータが最新値か（可視衛星不足により）過去値が残ったままか．

@@ -1,3 +1,6 @@
 [submodule "src/src_core"]
 	path = src/src_core
 	url = https://github.com/ut-issl/c2a-core
+[submodule "tools/tlm_cmd_generator"]
+	path = tools/tlm_cmd_generator
+	url = https://github.com/ut-issl/c2a-tlm-cmd-code-generator.git

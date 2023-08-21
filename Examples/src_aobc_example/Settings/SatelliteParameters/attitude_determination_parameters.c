@@ -9,6 +9,7 @@
 
 // Rough Three Axis Determination
 const APP_RTAD_METHOD ATTITUDE_DETERMINATION_PARAMETERS_rtad_method = APP_RTAD_METHOD_TRIAD;
+const APP_RTAD_SUN_INVISIBLE_PROPAGATION ATTITUDE_DETERMINATION_PARAMETERS_rtad_sun_invisible_propagation = APP_RTAD_SUN_INVISIBLE_PROPAGATION_QUATERNION;
 const float ATTITUDE_DETERMINATION_PARAMETERS_q_method_sun_vec_weight = 0.5f;
 
 // Fine Three Axis Determination

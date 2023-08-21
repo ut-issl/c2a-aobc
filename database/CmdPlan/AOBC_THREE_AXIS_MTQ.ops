@@ -1,0 +1,82 @@
+.# ===== MTQ三軸制御コマンド試験 =====
+.#
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 初期値が設定どおりであることを確認する
+.#
+.# ----- 制御ゲイン設定コマンド -----
+ # omega X軸
+ Cmd_APP_TAC_MTQ_SET_GAIN 0 0 0.11 0.12 0.13
+ wait_sec 1
+ # omega Y軸
+ Cmd_APP_TAC_MTQ_SET_GAIN 0 1 0.21 0.22 0.23
+ wait_sec 1
+ # omega Z軸
+ Cmd_APP_TAC_MTQ_SET_GAIN 0 2 0.31 0.32 0.33
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 正しく設定されていることを確認
+.#
+ # att X軸
+ Cmd_APP_TAC_MTQ_SET_GAIN 1 0 1.11 1.12 1.13
+ wait_sec 1
+ # att Y軸
+ Cmd_APP_TAC_MTQ_SET_GAIN 1 1 1.21 1.22 1.23
+ wait_sec 1
+ # att Z軸
+ Cmd_APP_TAC_MTQ_SET_GAIN 1 2 1.31 1.32 1.33
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 正しく設定されていることを確認
+.#
+.# 制御ゲインを使い始める
+ Cmd_APP_TAC_MTQ_SAVE_GAIN
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 正しく設定されていることを確認
+.#
+.# ----- 制御ゲイン設定コマンドエラーチェック -----
+.Cmd_APP_TAC_MTQ_SET_GAIN 2 0 0.0 0.0 0.0
+.# コマンドエラーではじかれることを確認
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 値が変わっていないことを確認
+.Cmd_APP_TAC_MTQ_SET_GAIN 0 4 0.0 0.0 0.0
+.# コマンドエラーではじかれることを確認
+.AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 値が変わっていないことを確認
+.#
+.# ----- 状態FBリミッタ設定コマンド -----
+ Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS 0.10 0.11 0.12 0.13
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 正しく設定されていることを確認
+.#
+.# ----- 状態FBリミッタ設定コマンドエラーチェック -----
+ Cmd_APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS 6.10 6.11 6.12 6.13
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 値が変わっていないことを確認
+.#
+.# ----- LPF設定コマンド -----
+ Cmd_APP_TAC_MTQ_SET_LPF_PARAMS 5 1 0.1
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 正しく設定されていることを確認
+.#
+.# ----- LPF設定コマンドエラーチェック -----
+ Cmd_APP_TAC_MTQ_SET_LPF_PARAMS 20 10 0.1
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 値が変わっていないことを確認
+.#
+.# ----- CrossProduct Error設定コマンド -----
+ Cmd_APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS 0.2 0.5 0.1 0.1 1e-3
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 正しく設定されていることを確認
+.#
+.# ----- CrossProduct Error設定コマンドエラーチェック -----
+ Cmd_APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS 1.2 1.5 1.1 1.1 1e-3
+ wait_sec 1
+ AOBC_RT.Cmd_TG_GENERATE_RT_TLM 0x2f # THREE_AXIS_MTQをDL
+.# 値が変わっていないことを確認
+.#

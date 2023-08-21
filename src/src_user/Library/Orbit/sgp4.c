@@ -16,7 +16,7 @@
 #include <src_core/Library/print.h>
 
 // SGP4内での使う定数
-static const float SGP4_kKe_s = sqrtf(PHYSICAL_CONST_EARTH_GRAVITY_CONST_km3_s2 / powf(PHYSICAL_CONST_EARTH_RADIUS_km, 3.0f));
+static const float SGP4_kKe_s = 0.00123945f;       //!< sqrtf(PHYSICAL_CONST_EARTH_GRAVITY_CONST_km3_s2 / powf(PHYSICAL_CONST_EARTH_RADIUS_km, 3.0f));
 static const float SGP4_kDensityFunc = 1.012229f;  //!< 密度関数パラメータ s
 static const float SGP4_kQMS4 = 1.880279e-9f;      //!< (q - s)^4
 
