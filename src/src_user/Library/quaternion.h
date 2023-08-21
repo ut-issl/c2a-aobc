@@ -301,6 +301,7 @@ Quaternion QUATERNION_divide(const Quaternion q_in1, const Quaternion q_in2);
  * @return  演算結果
  * @note    factorが0に近づくほどq1に近い値となり，1に近づくほどq2に近い値となる．
  * @note    slerpはspherical linear interpolationの略
+ * @note    回転角度が180degを超える場合，q2を-q2に変えて角度が小さい回転を選ぶ．
  */
 Quaternion QUATERNION_interpolate_slerp(const Quaternion q_in1, const Quaternion q_in2, const float factor);
 

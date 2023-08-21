@@ -83,9 +83,9 @@ extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_bod
 extern const PidGains ATTITUDE_CONTROL_PARAMETERS_tac_rw_attitude_rate_gains_body_z;  //!< Three Axis Control RW attitude rate gain body Z axis
 
 // Unloading
-extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s;  //!< Unloading upper threshold [rad/s]
-extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s;  //!< Unloading lower threshold [rad/s]
-extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s;           //!< Unloading target [rad/s]
+extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_upper_threshold_rad_s[AOCS_MANAGER_NUM_OF_RW];  //!< Unloading upper threshold [rad/s]
+extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_lower_threshold_rad_s[AOCS_MANAGER_NUM_OF_RW];  //!< Unloading lower threshold [rad/s]
+extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_angular_velocity_target_rad_s[AOCS_MANAGER_NUM_OF_RW];           //!< Unloading target [rad/s]
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_control_gain;                            //!< Unloading gain
 extern const APP_UNLOADING_EXEC ATTITUDE_CONTROL_PARAMETERS_unloading_exec_is_enable;             //!< Unloading execution enable flag
 extern const float ATTITUDE_CONTROL_PARAMETERS_unloading_minimum_torque_Nm;                       //!< Unloading minimum torque [Nm]

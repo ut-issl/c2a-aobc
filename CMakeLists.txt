@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(C2A)
 
-option(BUILD_C2A_AS_CXX "Build C2A as C++" ON)
+option(BUILD_C2A_AS_CXX "Build C2A as C++" OFF)
 
 option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
 

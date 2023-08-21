@@ -181,6 +181,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_SUBSCRIPTION:
     ret = SAGITTA_set_subscription(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
+  case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
+    ret = SAGITTA_set_auto_threshold(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -233,6 +236,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_SUBSCRIPTION:
     ret = SAGITTA_change_subscription(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
+  case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
+    ret = SAGITTA_change_auto_threshold(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -246,6 +252,16 @@ CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet)
   uint8_t param_id = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   ret = SAGITTA_read_parameter(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_id);
+
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+}
+
+CCP_CmdRet Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY(const CommonCmdPacket* packet)
+{
+  DS_CMD_ERR_CODE ret;
+  uint8_t tlm_id = CCP_get_param_from_packet(packet, 0, uint8_t);
+
+  ret = SAGITTA_request_tlm(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), tlm_id);
 
   return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }

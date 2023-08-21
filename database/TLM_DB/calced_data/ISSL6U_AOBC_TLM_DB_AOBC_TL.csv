@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0x91,int offset = TL_TLM_PAGE_SIZE*(timeline_command_dispatcher->tlm_info_.page_no);,,,,,,,,,,,,,,
+,PacketID,0x01,int offset = TL_TLM_PAGE_SIZE*(timeline_command_dispatcher->tlm_info_.page_no);,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,

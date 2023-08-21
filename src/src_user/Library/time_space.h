@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include "physical_constants.h"
 #include "c2a_math.h"
-#include "time_system/gps_time.h"
+#include "TimeSystem/gps_time.h"
 
 // 時刻換算関数
 /**

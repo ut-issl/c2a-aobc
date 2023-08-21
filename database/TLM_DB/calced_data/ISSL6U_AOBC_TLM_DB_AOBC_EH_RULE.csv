@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0x9e,uint16_t offset = event_handler->tlm_info.rule.page_no * EH_RULE_TLM_PAGE_SIZE;##const EH_Rule* rules = event_handler->rule_table.rules;##,,,,,,,,,,,,,,
+,PacketID,0x0e,uint16_t offset = event_handler->tlm_info.rule.page_no * EH_RULE_TLM_PAGE_SIZE;##const EH_Rule* rules = event_handler->rule_table.rules;##,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,

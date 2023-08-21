@@ -1,5 +1,5 @@
 ,Target,OBC,Local Var,,,,,,,,,,,,,,
-,PacketID,0xcd,,,,,,,,,,,,,,,
+,PacketID,0x3d,,,,,,,,,,,,,,,
 ,Enable/Disable,ENABLE,,,,,,,,,,,,,,,
 ,IsRestricted,TRUE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,

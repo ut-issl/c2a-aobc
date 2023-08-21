@@ -52,6 +52,8 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet);
 // Read parameter
 CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet);
+// 同期式でテレメトリを要求
+CCP_CmdRet Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY(const CommonCmdPacket* packet);
 
 CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
 

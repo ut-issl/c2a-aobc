@@ -19,7 +19,7 @@ set(C2A_SRCS
   c2a_math.c
   quaternion.c
   crc8.c
-  time_system/gps_time.c
+  TimeSystem/gps_time.c
   Orbit/kepler_orbit.c
   Orbit/sgp4.c
   SignalProcess/z_filter.c

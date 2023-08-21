@@ -10,7 +10,7 @@
 #include <src_core/System/TimeManager/obc_time.h>
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/quaternion.h>
-#include <src_user/Library/time_system/gps_time.h>
+#include <src_user/Library/TimeSystem/gps_time.h>
 #include <src_user/Applications/DriverInstances/di_rw0003.h>
 #include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 

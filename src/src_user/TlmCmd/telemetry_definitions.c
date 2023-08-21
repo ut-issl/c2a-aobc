@@ -1926,9 +1926,9 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
   TF_copy_double(&packet[194], (double)(aocs_manager->sat_vel_est_ecef_m_s[0]));
   TF_copy_double(&packet[202], (double)(aocs_manager->sat_vel_est_ecef_m_s[1]));
   TF_copy_double(&packet[210], (double)(aocs_manager->sat_vel_est_ecef_m_s[2]));
-  TF_copy_float(&packet[218], (float)(unloading->angular_velocity_upper_threshold_rad_s));
-  TF_copy_float(&packet[222], (float)(unloading->angular_velocity_lower_threshold_rad_s));
-  TF_copy_float(&packet[226], (float)(unloading->angular_velocity_target_rad_s));
+  TF_copy_float(&packet[218], (float)(unloading->angular_velocity_upper_threshold_rad_s[0]));
+  TF_copy_float(&packet[222], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
+  TF_copy_float(&packet[226], (float)(unloading->angular_velocity_target_rad_s[0]));
   TF_copy_u8(&packet[230], (uint8_t)(aocs_mode_manager->bdot_retry_count));
   TF_copy_u8(&packet[231], (uint8_t)(aocs_manager->flags_for_tlm));
 #endif
@@ -2736,7 +2736,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_THREE_AXIS_MTQ_(uint8_t* packet, uint16_t* len, 
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_THREE_AXIS_RW_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (170 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (206 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(three_axis_control_rw->pid_omega[0].gains.p_gain));
@@ -2775,9 +2775,18 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_THREE_AXIS_RW_(uint8_t* packet, uint16_t* len, u
   TF_copy_float(&packet[158], (float)(three_axis_control_rw->gains_att_cmd_tmp[0].d_gain));
   TF_copy_float(&packet[162], (float)(three_axis_control_rw->gains_att_cmd_tmp[1].d_gain));
   TF_copy_float(&packet[166], (float)(three_axis_control_rw->gains_att_cmd_tmp[2].d_gain));
+  TF_copy_float(&packet[170], (float)(unloading->angular_velocity_upper_threshold_rad_s[0]));
+  TF_copy_float(&packet[174], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
+  TF_copy_float(&packet[178], (float)(unloading->angular_velocity_target_rad_s[0]));
+  TF_copy_float(&packet[182], (float)(unloading->angular_velocity_upper_threshold_rad_s[1]));
+  TF_copy_float(&packet[186], (float)(unloading->angular_velocity_lower_threshold_rad_s[1]));
+  TF_copy_float(&packet[190], (float)(unloading->angular_velocity_target_rad_s[1]));
+  TF_copy_float(&packet[194], (float)(unloading->angular_velocity_upper_threshold_rad_s[2]));
+  TF_copy_float(&packet[198], (float)(unloading->angular_velocity_lower_threshold_rad_s[2]));
+  TF_copy_float(&packet[202], (float)(unloading->angular_velocity_target_rad_s[2]));
 #endif
 
-  *len = 170;
+  *len = 206;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -3129,7 +3138,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET1_(uint8_t* packet, uint16_t* len, ui
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (134 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (144 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.mode));
@@ -3177,9 +3186,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET2_(uint8_t* packet, uint16_t* len, ui
   TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[13]));
   TF_copy_u8(&packet[132], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[14]));
   TF_copy_u8(&packet[133], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[15]));
+  TF_copy_u8(&packet[134], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.mode));
+  TF_copy_u8(&packet[135], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.desired_blobs_count));
+  TF_copy_u16(&packet[136], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.min_threshold));
+  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.max_threshold));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.threshold_kp));
 #endif
 
-  *len = 134;
+  *len = 144;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -3269,7 +3283,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ1_(uint8_t* packet, uint16_t* len, u
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (134 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (144 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.mode));
@@ -3317,9 +3331,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, u
   TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[13]));
   TF_copy_u8(&packet[132], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[14]));
   TF_copy_u8(&packet[133], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[15]));
+  TF_copy_u8(&packet[134], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.mode));
+  TF_copy_u8(&packet[135], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.desired_blobs_count));
+  TF_copy_u16(&packet[136], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.min_threshold));
+  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.max_threshold));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.threshold_kp));
 #endif
 
-  *len = 134;
+  *len = 144;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
