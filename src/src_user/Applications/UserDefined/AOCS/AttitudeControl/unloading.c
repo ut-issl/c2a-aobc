@@ -194,16 +194,14 @@ CCP_CmdRet Cmd_APP_UNLOADING_SET_ENABLE(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD(const CommonCmdPacket* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t axis;
-  int16_t angular_velocity_upper_threshold_rpm;
-  int16_t angular_velocity_target_rpm;
-  int16_t angular_velocity_lower_threshold_rpm;
-
-  ENDIAN_memcpy(&axis, param, sizeof(uint8_t));
-  ENDIAN_memcpy(&angular_velocity_upper_threshold_rpm, param + (1 * sizeof(int16_t)), sizeof(int16_t));
-  ENDIAN_memcpy(&angular_velocity_target_rpm,          param + (2 * sizeof(int16_t)), sizeof(int16_t));
-  ENDIAN_memcpy(&angular_velocity_lower_threshold_rpm, param + (3 * sizeof(int16_t)), sizeof(int16_t));
+  uint8_t arg_num = 0;
+  uint8_t axis = CCP_get_param_from_packet(packet, arg_num, uint8_t);
+  arg_num++;
+  int16_t angular_velocity_upper_threshold_rpm = CCP_get_param_from_packet(packet, arg_num, int16_t);
+  arg_num++;
+  int16_t angular_velocity_target_rpm = CCP_get_param_from_packet(packet, arg_num, int16_t);
+  arg_num++;
+  int16_t angular_velocity_lower_threshold_rpm = CCP_get_param_from_packet(packet, arg_num, int16_t);
 
   float angular_velocity_upper_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_upper_threshold_rpm);
   float angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_target_rpm);
