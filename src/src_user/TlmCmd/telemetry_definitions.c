@@ -1882,7 +1882,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (220 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (232 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(aocs_manager->ang_vel_est_body_rad_s[0]));
@@ -1926,11 +1926,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
   TF_copy_double(&packet[194], (double)(aocs_manager->sat_vel_est_ecef_m_s[0]));
   TF_copy_double(&packet[202], (double)(aocs_manager->sat_vel_est_ecef_m_s[1]));
   TF_copy_double(&packet[210], (double)(aocs_manager->sat_vel_est_ecef_m_s[2]));
-  TF_copy_u8(&packet[218], (uint8_t)(aocs_mode_manager->bdot_retry_count));
-  TF_copy_u8(&packet[219], (uint8_t)(aocs_manager->flags_for_tlm));
+  TF_copy_float(&packet[218], (float)(unloading->angular_velocity_upper_threshold_rad_s[0]));
+  TF_copy_float(&packet[222], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
+  TF_copy_float(&packet[226], (float)(unloading->angular_velocity_target_rad_s[0]));
+  TF_copy_u8(&packet[230], (uint8_t)(aocs_mode_manager->bdot_retry_count));
+  TF_copy_u8(&packet[231], (uint8_t)(aocs_manager->flags_for_tlm));
 #endif
 
-  *len = 220;
+  *len = 232;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
