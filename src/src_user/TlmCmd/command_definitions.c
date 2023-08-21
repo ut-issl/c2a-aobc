@@ -207,7 +207,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_TAC_RW_SET_GAIN].cmd_func = Cmd_APP_TAC_RW_SET_GAIN;
   cmd_table[Cmd_CODE_APP_TAC_RW_SAVE_GAIN].cmd_func = Cmd_APP_TAC_RW_SAVE_GAIN;
   cmd_table[Cmd_CODE_APP_UNLOADING_SET_ENABLE].cmd_func = Cmd_APP_UNLOADING_SET_ENABLE;
-  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD].cmd_func = Cmd_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD;
+  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD].cmd_func = Cmd_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD;
   cmd_table[Cmd_CODE_APP_UNLOADING_SET_CONTROL_GAIN].cmd_func = Cmd_APP_UNLOADING_SET_CONTROL_GAIN;
   cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_MODE].cmd_func = Cmd_APP_TARGET_ATT_CALC_SET_MODE;
   cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_ENABLE].cmd_func = Cmd_APP_TARGET_ATT_CALC_ENABLE;
@@ -647,9 +647,10 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_TAC_RW_SET_GAIN].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_TAC_RW_SET_GAIN].param_size_infos[2].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_UNLOADING_SET_ENABLE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
-  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
-  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VEROCITY_THRESHOLD].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_APP_UNLOADING_SET_CONTROL_GAIN].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_MODE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_ENABLE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
