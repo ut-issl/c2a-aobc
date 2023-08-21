@@ -188,6 +188,10 @@ static void APP_AOCS_MM_bdot_exec_(void)
     {
       APP_AOCS_MM_ang_vel_update_timing_s_ += diff_time_s;
     }
+    else
+    {
+      APP_AOCS_MM_ang_vel_prev_norm_rad_s_ = ang_vel_norm_rad_s;
+    }
   }
 
   aocs_mode_manager_.previous_obc_time = TMGR_get_master_clock();
@@ -224,7 +228,6 @@ static void APP_AOCS_MM_sun_pointing_exec_(void)
   // モード遷移するかの判定
   if (is_div == 1 || is_sensor_error == 1)
   {
-    APP_AOCS_MM_ang_vel_prev_norm_rad_s_ = VECTOR3_norm(aocs_manager->ang_vel_est_body_rad_s);
     APP_AOCS_MM_change_mode_(MD_MODEID_BDOT);
   }
   // エラーが小さいかの判定、ただしセンサが見えていないときは適合しない TODO_L: 本来はもう少し丁寧に判定すべき
