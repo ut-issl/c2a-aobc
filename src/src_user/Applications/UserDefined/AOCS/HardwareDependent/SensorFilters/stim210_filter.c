@@ -12,7 +12,7 @@
 #include <src_user/Applications/DriverInstances/di_stim210.h>
 #include <src_user/Library/vector3.h>
 
-//Satellite Parameters
+// Satellite Parameters
 #include <src_user/Settings/SatelliteParameters/stim210_parameters.h>
 
 static Stim210Filter        stim210_filter_;

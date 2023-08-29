@@ -52,7 +52,7 @@ static void APP_GPSROP_init_(void)
   gpsr_orbit_propagator_.orbital_elements_threshold.eccentricity = ORBIT_PARAMETERS_gpsr_threshold_eccentricity;
   gpsr_orbit_propagator_.orbital_elements_threshold.inclination_rad = ORBIT_PARAMETERS_gpsr_threshold_inclination_rad;
   gpsr_orbit_propagator_.orbital_elements_threshold.raan_rad = ORBIT_PARAMETERS_gpsr_threshold_raan_rad;
-  gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad =ORBIT_PARAMETERS_gpsr_threshold_arg_perigee_rad;
+  gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad = ORBIT_PARAMETERS_gpsr_threshold_arg_perigee_rad;
   gpsr_orbit_propagator_.orbital_elements_threshold.epoch_jday = ORBIT_PARAMETERS_gpsr_threshold_epoch_jday;
 
   KEPLER_ORBIT_init_constants(&gpsr_orbit_propagator_.orbit_constants,

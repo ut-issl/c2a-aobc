@@ -207,7 +207,7 @@ CCP_CmdRet Cmd_APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD(const CommonCmdPacke
   float angular_velocity_target_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_target_rpm);
   float angular_velocity_lower_threshold_rad_s = PHYSICAL_CONST_rpm_to_rad_sec((float)angular_velocity_lower_threshold_rpm);
 
-  if(axis >= AOCS_MANAGER_NUM_OF_RW)
+  if (axis >= AOCS_MANAGER_NUM_OF_RW)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
