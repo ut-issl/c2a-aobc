@@ -3,7 +3,7 @@
 #include "com_port.h"
 
 #ifdef WIN32
-ComPort::ComPort(int port) : init_success_{true}
+ComPort::ComPort(int port) : init_success_(true)
 {
   char port_settings[15];
   snprintf(port_settings, 15, "%s%d", "\\\\.\\COM", port);
@@ -88,7 +88,7 @@ int ComPort::receive(unsigned char* buffer, size_t offset, size_t count)
 
 #else
 
-ComPort::ComPort(int port) : init_success_{true}
+ComPort::ComPort(int port) : init_success_(true)
 {
   char port_settings[13];
   snprintf(port_settings, 13, "%s%d", "/dev/tnt", port);
