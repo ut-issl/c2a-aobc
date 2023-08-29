@@ -5,4 +5,3 @@
 #define C2A_GIT_REVISION_IGNORE
 
 #endif // GIT_REVISION_CONFIG_H_
-
