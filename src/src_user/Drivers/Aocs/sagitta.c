@@ -1098,9 +1098,11 @@ static DS_ERR_CODE SAGITTA_load_driver_super_init_settings_(DriverSuper* p_super
 
   stream_config = &(p_super->stream_config[SAGITTA_STREAM_TLM_CMD]);
   DSSC_enable(stream_config);
+  DSSC_enable_strict_frame_search(stream_config); // ヘッダとフッタの文字列が共通しており，テレメ長ものっていないので，フレーム確定に失敗しやすいため
 
+  // 送信側
   DSSC_set_tx_frame(stream_config, SAGITTA_tx_frame_);
-  DSSC_set_tx_frame_size(stream_config, SAGITTA_tx_frame_length_);
+  DSSC_set_tx_frame_size(stream_config, 0); // 送る直前に値をセットする
 
   // 定期的な受信はする
   DSSC_set_rx_header(stream_config, SAGITTA_kRxHeader_, SAGITTA_RX_HEADER_SIZE);
