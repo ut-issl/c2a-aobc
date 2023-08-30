@@ -222,8 +222,6 @@ DS_REC_ERR_CODE SAGITTA_rec(SAGITTA_Driver* sagitta_driver)
   DS_ERR_CODE ret;
   DS_StreamConfig* stream_config;
 
-  DS_clear_rx_buffer(&(sagitta_driver->driver.super)); // ここでクリアしないとずれる
-
   ret = DS_receive(&(sagitta_driver->driver.super));
 
 #ifdef DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
