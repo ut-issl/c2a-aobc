@@ -7,10 +7,11 @@
 #include <src_user/Settings/SatelliteParameters/parameter_setting_macro.h>
 
 // Frame conversion
-const Quaternion NANOSSOC_D60_PARAMETERS_quaternion_c2b[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR] = { 0.70710665f, 0.0f, 0.0f, 0.70710665f,     // IDX 0
-                                                                                                              0.0f, -0.70710665f, 0.70710665f, 0.0f,    // IDX 1
-                                                                                                              0.0f, 0.0f, 0.70710665f, 0.70710665f,     // IDX 2
-                                                                                                              0.707106471f, -0.707106471f, 0.0f, 0.0f}; // IDX 3
+const Quaternion NANOSSOC_D60_PARAMETERS_quaternion_c2b[NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR] =
+  { 0.70710665f, 0.0f, 0.0f, 0.70710665f,      // IDX 0
+    0.0f, -0.70710665f, 0.70710665f, 0.0f,     // IDX 1
+    0.0f, 0.0f, 0.70710665f, 0.70710665f,      // IDX 2
+    0.707106471f, -0.707106471f, 0.0f, 0.0f }; // IDX 3
 
 // Spike Filter
 uint8_t NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_accept = 10;
