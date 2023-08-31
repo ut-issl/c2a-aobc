@@ -183,10 +183,14 @@ static int APP_MPU9250_FILTER_init_spike_filter_mag_(void)
 
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_accept = MPU9250_PARAMETERS_mag_spike_count_limit_to_accept[axis_id];
-    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_reject_continued_warning = MPU9250_PARAMETERS_mag_spike_count_limit_to_reject_continued_warning[axis_id];
-    mpu9250_filter_.spike_filter_config_mag[axis_id].reject_threshold = MPU9250_PARAMETERS_mag_spike_reject_threshold_nT[axis_id];
-    mpu9250_filter_.spike_filter_config_mag[axis_id].amplitude_limit_to_accept_as_step = MPU9250_PARAMETERS_mag_spike_amplitude_limit_to_accept_as_step_nT[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_accept =
+      MPU9250_PARAMETERS_mag_spike_count_limit_to_accept[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].count_limit_to_reject_continued_warning =
+      MPU9250_PARAMETERS_mag_spike_count_limit_to_reject_continued_warning[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].reject_threshold =
+      MPU9250_PARAMETERS_mag_spike_reject_threshold_nT[axis_id];
+    mpu9250_filter_.spike_filter_config_mag[axis_id].amplitude_limit_to_accept_as_step =
+      MPU9250_PARAMETERS_mag_spike_amplitude_limit_to_accept_as_step_nT[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
