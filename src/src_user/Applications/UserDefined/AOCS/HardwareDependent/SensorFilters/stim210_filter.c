@@ -117,10 +117,14 @@ static int APP_STIM210_FILTER_init_spike_filter_(void)
 {
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
-    stim210_filter_.spike_filter_config[axis_id].count_limit_to_accept = STIM210_PARAMETERS_gyro_spike_count_limit_to_accept[axis_id];
-    stim210_filter_.spike_filter_config[axis_id].count_limit_to_reject_continued_warning = STIM210_PARAMETERS_gyro_spike_count_limit_to_reject_continued_warning[axis_id];
-    stim210_filter_.spike_filter_config[axis_id].reject_threshold = STIM210_PARAMETERS_gyro_spike_reject_threshold_rad_s[axis_id];
-    stim210_filter_.spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = STIM210_PARAMETERS_gyro_spike_amplitude_limit_to_accept_as_step_rad_s[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].count_limit_to_accept =
+      STIM210_PARAMETERS_gyro_spike_count_limit_to_accept[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].count_limit_to_reject_continued_warning =
+      STIM210_PARAMETERS_gyro_spike_count_limit_to_reject_continued_warning[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].reject_threshold =
+      STIM210_PARAMETERS_gyro_spike_reject_threshold_rad_s[axis_id];
+    stim210_filter_.spike_filter_config[axis_id].amplitude_limit_to_accept_as_step =
+      STIM210_PARAMETERS_gyro_spike_amplitude_limit_to_accept_as_step_rad_s[axis_id];
   }
 
   C2A_MATH_ERROR filter_setting_result_three_axis = C2A_MATH_ERROR_OK;
