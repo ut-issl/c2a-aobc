@@ -1751,7 +1751,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
     SAGITTA_memcpy_float_from_rx_frame_decoded_(&(track_quaternion_array_i2c[i]), offset);
     offset += (uint16_t)sizeof(track_quaternion_array_i2c[i]);
   }
-  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.track_quaternion_i2c, track_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.track_quaternion_i2c,
+                             track_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_removed), offset);
   offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_removed);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_centroided), offset);
@@ -1763,7 +1764,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
     SAGITTA_memcpy_float_from_rx_frame_decoded_(&(lisa_quaternion_array_i2c[i]), offset);
     offset += (uint16_t)sizeof(lisa_quaternion_array_i2c[i]);
   }
-  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.lisa_quaternion_i2c, lisa_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.lisa_quaternion_i2c,
+                             lisa_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
   SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.lisa_percentage_close), offset);
   offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.lisa_percentage_close);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_lisa_close), offset);
