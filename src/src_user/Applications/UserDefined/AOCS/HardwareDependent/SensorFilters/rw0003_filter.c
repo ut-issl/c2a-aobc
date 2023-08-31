@@ -32,10 +32,14 @@ static void APP_RW0003_FILTER_init_(void)
   for (uint8_t axis_id = 0; axis_id < RW0003_IDX_MAX; axis_id++)
   {
     rw0003_filter_.filter_error[axis_id] = C2A_MATH_ERROR_OK;
-    rw0003_filter_.spike_filter_config[axis_id].count_limit_to_accept = RW0003_PARAMETERS_spike_filter_config_count_limit_to_accept[axis_id];
-    rw0003_filter_.spike_filter_config[axis_id].count_limit_to_reject_continued_warning = RW0003_PARAMETERS_spike_filter_config_count_limit_to_reject_continued_warning[axis_id];
-    rw0003_filter_.spike_filter_config[axis_id].reject_threshold = RW0003_PARAMETERS_spike_filter_config_reject_threshold_rad_s[axis_id];
-    rw0003_filter_.spike_filter_config[axis_id].amplitude_limit_to_accept_as_step = RW0003_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_step_rad_s[axis_id];
+    rw0003_filter_.spike_filter_config[axis_id].count_limit_to_accept =
+      RW0003_PARAMETERS_spike_filter_config_count_limit_to_accept[axis_id];
+    rw0003_filter_.spike_filter_config[axis_id].count_limit_to_reject_continued_warning =
+      RW0003_PARAMETERS_spike_filter_config_count_limit_to_reject_continued_warning[axis_id];
+    rw0003_filter_.spike_filter_config[axis_id].reject_threshold =
+      RW0003_PARAMETERS_spike_filter_config_reject_threshold_rad_s[axis_id];
+    rw0003_filter_.spike_filter_config[axis_id].amplitude_limit_to_accept_as_step =
+      RW0003_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_step_rad_s[axis_id];
     C2A_MATH_ERROR ret = SPIKE_FILTER_init(&APP_RW0003_FILTER_spike_[axis_id],
                                            rw0003_filter_.spike_filter_config[axis_id]);
     if (ret != C2A_MATH_ERROR_OK)
