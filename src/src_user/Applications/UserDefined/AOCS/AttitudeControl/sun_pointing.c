@@ -105,7 +105,7 @@ static void APP_SUN_POINTING_init_(void)
   gains_omega[0] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_x;
   gains_omega[1] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_y;
   gains_omega[2] = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_attitude_rate_gains_body_z;
-  
+
   sun_pointing_.max_direct_feedback_angle_rad         = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_direct_feedback_angle_rad;
   sun_pointing_.max_direct_feedback_rate_rad_s        = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_direct_feedback_rate_rad_s;
   sun_pointing_.max_integral_angle_rad                = ATTITUDE_CONTROL_PARAMETERS_sun_pointing_max_integral_angle_rad;

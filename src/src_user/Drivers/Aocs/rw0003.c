@@ -47,11 +47,11 @@ static const uint8_t RW0003_kSlipTfesc_ = 0xdd;  //!< SLIP TFESC
 
 static const uint8_t RW0003_kSrcAddress_ = 0x11;  //!< I2C source address. 実際は0xc0以外の適当な値でよくこの値は仕様書で例として与えられているもの
 
-static const uint8_t RW0003_kCmdIdInit_      = 0x01;
-static const uint8_t RW0003_kCmdIdDiagnostic_= 0x04;
-static const uint8_t RW0003_kCmdIdReadFile_  = 0x07;
-static const uint8_t RW0003_kCmdIdWriteFile_ = 0x08;
-static const uint8_t RW0003_kCmdIdMax_       = 0x1f;
+static const uint8_t RW0003_kCmdIdInit_       = 0x01;
+static const uint8_t RW0003_kCmdIdDiagnostic_ = 0x04;
+static const uint8_t RW0003_kCmdIdReadFile_   = 0x07;
+static const uint8_t RW0003_kCmdIdWriteFile_  = 0x08;
+static const uint8_t RW0003_kCmdIdMax_        = 0x1f;
 
 static const uint8_t RW0003_kWriteAddressIdle_   = 0x00;
 static const uint8_t RW0003_kWriteAddressSpeed_  = 0x03;
@@ -67,8 +67,8 @@ static const uint8_t RW0003_kReadAddressFaultState_  = 0x19;
 static const uint8_t RW0003_kReadAddressLimitSpeed1_ = 0x33;
 static const uint8_t RW0003_kReadAddressLimitSpeed2_ = 0x34;
 
-static const uint8_t RW0003_kMcfReadEdac_ = 0xa7;   //!< EDAC memory読み出し返答テレメのMessage Control Field
-static const uint8_t RW0003_kMcfDiagnostics_ = 0xa4;//!< Diagnostics返答テレメのMessage Control Field
+static const uint8_t RW0003_kMcfReadEdac_ = 0xa7;    //!< EDAC memory読み出し返答テレメのMessage Control Field
+static const uint8_t RW0003_kMcfDiagnostics_ = 0xa4; //!< Diagnostics返答テレメのMessage Control Field
 
 static const int      RW0003_kCrcRevFlag_ = 0;      //!< CRC関数の反転フラグ
 static const uint16_t RW0003_kCrcInitial_ = 0xffff; //!< CRC計算初期値

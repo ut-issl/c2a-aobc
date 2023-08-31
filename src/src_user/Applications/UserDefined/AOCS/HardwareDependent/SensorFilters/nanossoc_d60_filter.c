@@ -36,10 +36,14 @@ static void APP_NANOSSOC_D60_FILTER_init_(void)
   VECTOR3_initialize(nanossoc_d60_filter_.sun_vec_est_body, 0.0f);
   nanossoc_d60_filter_.sun_vec_est_body[2] = 1.0f; // 規格時等にエラーにならない様に，Z軸に1.0fを代入
 
-  nanossoc_d60_filter_.spike_filter_config.count_limit_to_accept = NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_accept;
-  nanossoc_d60_filter_.spike_filter_config.count_limit_to_reject_continued_warning = NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_reject_continued_warning;
-  nanossoc_d60_filter_.spike_filter_config.reject_threshold = NANOSSOC_D60_PARAMETERS_spike_filter_config_reject_threshold_rad;
-  nanossoc_d60_filter_.spike_filter_config.amplitude_limit_to_accept_as_step =NANOSSOC_D60_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_step_rad;
+  nanossoc_d60_filter_.spike_filter_config.count_limit_to_accept =
+    NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_accept;
+  nanossoc_d60_filter_.spike_filter_config.count_limit_to_reject_continued_warning =
+    NANOSSOC_D60_PARAMETERS_spike_filter_config_count_limit_to_reject_continued_warning;
+  nanossoc_d60_filter_.spike_filter_config.reject_threshold =
+    NANOSSOC_D60_PARAMETERS_spike_filter_config_reject_threshold_rad;
+  nanossoc_d60_filter_.spike_filter_config.amplitude_limit_to_accept_as_step =
+    NANOSSOC_D60_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_step_rad;
 
   C2A_MATH_ERROR filter_setting_result = SPIKE_FILTER_init(&APP_NANOSSOC_D60_FILTER_spike_,
                                                             nanossoc_d60_filter_.spike_filter_config);

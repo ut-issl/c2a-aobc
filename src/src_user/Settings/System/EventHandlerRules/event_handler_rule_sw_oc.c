@@ -114,7 +114,7 @@ void EH_load_rule_sw_oc(void)
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
   settings.condition.count_threshold = FDIR_PARAMETERS_sw_oc_eh_reset_count_threshold_nanossoc_d60;
-  settings.condition.time_threshold_ms =FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_nanossoc_d60_ms;
+  settings.condition.time_threshold_ms = FDIR_PARAMETERS_sw_oc_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_SW_OC_NANOSSOC_D60, &settings);
