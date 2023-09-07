@@ -29,6 +29,7 @@
 - We recommend making a project-specific repository named `c2a-aobc-project-name`.
 - Users can refer to the `c2a-aobc/Examples` directory to make a directory construction of `c2a-aobc-project-name`.
   - **NOTE** Please change all words `example, EXAMPLE, or Example` in the files in this directory to suit your project name.
+    - The root directory name `Examples` needs to be renamed as `c2a-aobc-project-name`.
   ```
   - src_aobc (git submodule of c2a-aobc with rename)
     - We recommend to use a released version of c2a-aobc.
