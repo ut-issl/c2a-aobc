@@ -30,7 +30,7 @@
 - Users can refer to the `c2a-aobc/Examples` directory to make a directory construction of `c2a-aobc-project-name`.
   - **NOTE** Please change all words `example, EXAMPLE, or Example` in the files in this directory to suit your project name.
   ```
-  - src-aobc (git submodule of c2a-aobc with rename)
+  - src_aobc (git submodule of c2a-aobc with rename)
     - We recommend to use a released version of c2a-aobc.
   - Build setting files
     - CMake files, Visual Studio files, and others
@@ -38,7 +38,7 @@
     - git related files
   - README.md
   ```
-- To construct the `src-aobc` directory, we recommend to use `git submodule` to take in the `c2a-aobc` repository with renaming to `src-aobc`.
+- To construct the `src_aobc` directory, we recommend to use `git submodule` to take in the `c2a-aobc` repository with renaming to `src_aobc`.
   - Reference: [Git Tools Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ### How to build and execute the project-specific repository
