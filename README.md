@@ -11,7 +11,7 @@
   - For SILS test
     - [S2E-AOBC v4.0.0](https://github.com/ut-issl/s2e-aobc/releases/tag/v4.0.0)
   - Telemetry/Command interface
-    - [WINGS v2.0.0](https://gitlab.com/ut_issl/wings/wings/releases/tag/v2.0.0)
+    - [WINGS v2.1.0](https://github.com/ut-issl/wings/releases/tag/v2.1.0)
 - How to use
   - `The main developers` of the AOCS module directly use this repository to add new features and improve the module.
   - `General users` of the AOCS module do not need to use and edit this repository directly. They need to create a project-specific repository and define spacecraft-specific parameters within the repository.
