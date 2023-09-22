@@ -5,10 +5,10 @@
  #  1. 電源ON/OFF
  # =========================================
 .# 電源ON
- AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 39
+ AOBC_RT.TLCD_DEPLOY_BLOCK 1 39
  #
 .# 電源OFF
- AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 51
+ AOBC_RT.TLCD_DEPLOY_BLOCK 1 51
  #
 .# =========================================
  #  2. 1shot TLM 取得（AOBC -> WINGS）
@@ -28,7 +28,7 @@
  #
 .get tlm_id
  #
-.AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+.AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# =========================================
  #  3. subscription parameter書き換え（STT -> AOBC）
@@ -48,9 +48,9 @@
 .# 非同期で下ろすテレメを変更する
  let stt_param_id = 18
  let idx = 0
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {stt_param_id} {idx} {stt_tlm_id}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {stt_param_id} {idx} {stt_tlm_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {stt_param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {stt_param_id}
  #
 .# =========================================
  #  4. STT parameter書き換え
@@ -59,9 +59,9 @@
  let stt_param_id = 18
  let idx = 0
  let stt_tlm_id = 0 # None
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {stt_param_id} {idx} {stt_tlm_id}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {stt_param_id} {idx} {stt_tlm_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {stt_param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {stt_param_id}
  #
  # 変更するparam_idの候補
 .let param_id = 3 # SAGITTA_PARAMETER_ID_LOG_LEVEL
@@ -89,17 +89,17 @@
  get value
  #
 .# parameter変更
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {param_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_READ_PARAMETER {param_id}
  wait_sec 1
  let tlm_id = 0x36 # AOBC_SAGITTA_READ1
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  wait_sec 1
  let tlm_id = 0x37 # AOBC_SAGITTA_READ2
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# Case 1: IMAGE_PROCESSORのmodeを変更する
  # The star tracker algorithms (centroiding, LISA, matching and tracking) can only return a solution
@@ -118,65 +118,65 @@
  #
 .let param_id = 10 # SAGITTA_PARAMETER_ID_IMAGE_PROCESSOR
  let idx = 0
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {ip_mode_id}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {ip_mode_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {param_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_READ_PARAMETER {param_id}
  wait_sec 1
  let tlm_id = 0x36 # AOBC_SAGITTA_READ1
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  wait_sec 1
  let tlm_id = 0x37 # AOBC_SAGITTA_READ2
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# Case 2: 露光時間を default = 0.2 [sec] から変更
  let param_id = 9 # SAGITTA_PARAMETER_ID_CAMERA
  let idx = 2
  let value = 0.10
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {param_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_READ_PARAMETER {param_id}
  wait_sec 1
  let tlm_id = 0x36 # AOBC_SAGITTA_READ1
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  wait_sec 1
  let tlm_id = 0x37 # AOBC_SAGITTA_READ2
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# Case 3: intervalを default = 0.2 [sec] から変更
  let param_id = 9 # SAGITTA_PARAMETER_ID_CAMERA
  let idx = 3
  let value = 1.0
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {param_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_READ_PARAMETER {param_id}
  wait_sec 1
  let tlm_id = 0x36 # AOBC_SAGITTA_READ1
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  wait_sec 1
  let tlm_id = 0x37 # AOBC_SAGITTA_READ2
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# Case 4: auto thresholdをoff
  let param_id = 23 # SAGITTA_PARAMETER_ID_AUTO_THRESHOLD
  let idx = 0
  let value = 0
- AOBC_RT.Cmd_DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
+ AOBC_RT.DI_SAGITTA_CHANGE_PARAMETER {param_id} {idx} {value}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_SET_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_SET_PARAMETER {param_id}
  wait_sec 1
- AOBC_RT.Cmd_DI_SAGITTA_READ_PARAMETER {param_id}
+ AOBC_RT.DI_SAGITTA_READ_PARAMETER {param_id}
  wait_sec 1
  let tlm_id = 0x36 # AOBC_SAGITTA_READ1
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  wait_sec 1
  let tlm_id = 0x37 # AOBC_SAGITTA_READ2
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# =========================================
  #  5. 定期テレメ組み替え（AOBC -> WINGS）
@@ -212,30 +212,30 @@
  # defaultでHK3種類が降りてくる
 .# 定期テレメ登録BCを初期化
  let target_bc_id = 30 # BC_HK_CYCLIC_TLM
- AOBC_RT.Cmd_BCT_CLEAR_BLOCK {target_bc_id}
+ AOBC_RT.BCT_CLEAR_BLOCK {target_bc_id}
  #
 .# 定期テレメを追加
  # !! ti, add_tlm_idを変えて複数回送信 !!
- AOBC_BL.Cmd_TG_GENERATE_RT_TLM {ti} {add_tlm_id}
+ AOBC_BL.TG_GENERATE_RT_TLM {ti} {add_tlm_id}
  #
 .# 無限ループ
  # !!ループの周期でti設定!!
- AOBC_BL.Cmd_TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
+ AOBC_BL.TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
  wait_sec 1
  #
  # 有効化と設定の確認
- AOBC_RT.Cmd_BCE_ACTIVATE_BLOCK
+ AOBC_RT.BCE_ACTIVATE_BLOCK
  wait_sec 1
  let tlm_id = 0x02 # AOBC_BL
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# 無限ループ開始
  let target_bc_id = 30 # BC_HK_CYCLIC_TLM
- AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 {target_bc_id}
+ AOBC_RT.TLCD_DEPLOY_BLOCK 1 {target_bc_id}
  #
 .# 無限ループ停止
  let target_bc_id = 30 # BC_HK_CYCLIC_TLM
- AOBC_RT.Cmd_BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
+ AOBC_RT.BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
  #
 .# =========================================
  #  6. 同期式テレメ取得（STT -> AOBC）
@@ -243,11 +243,11 @@
  # 事前に準備したBC
 .# 無限ループ開始
  let target_bc_id = 29 # BC_STT_SYNCHRONOUS_TLM
- AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 {target_bc_id}
+ AOBC_RT.TLCD_DEPLOY_BLOCK 1 {target_bc_id}
  #
 .# 無限ループ停止
  let target_bc_id = 29 # BC_STT_SYNCHRONOUS_TLM
- AOBC_RT.Cmd_BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
+ AOBC_RT.BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
  #
  # 非同期テレメだとテレメエラーが起きる場合に、同期式でテレメ要求を行う。
  # ti候補
@@ -273,36 +273,36 @@
  #
 .# 空いている BC = 9 を使う
  let target_bc_id = 9 # BLANK
- AOBC_RT.Cmd_BCT_CLEAR_BLOCK {target_bc_id}
+ AOBC_RT.BCT_CLEAR_BLOCK {target_bc_id}
  #
 .# STT -> AOBC定期テレメを追加
  # !! ti, stt_tlm_idを変えて複数回送信 !!
- AOBC_BL.Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY {ti} {stt_tlm_id}
+ AOBC_BL.DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY {ti} {stt_tlm_id}
  #
 .# tiを指定して、無限ループ
- AOBC_BL.Cmd_TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
+ AOBC_BL.TLCD_DEPLOY_BLOCK {ti} 1 {target_bc_id}
  wait_sec 1
  #
  # 有効化と設定の確認
- AOBC_RT.Cmd_BCE_ACTIVATE_BLOCK
+ AOBC_RT.BCE_ACTIVATE_BLOCK
  wait_sec 1
  let tlm_id = 0x02 # AOBC_BL
- AOBC_RT.Cmd_TG_GENERATE_RT_TLM {tlm_id}
+ AOBC_RT.TG_GENERATE_RT_TLM {tlm_id}
  #
 .# 無限ループ開始
  let target_bc_id = 9 # BLANK
- AOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 1 {target_bc_id}
+ AOBC_RT.TLCD_DEPLOY_BLOCK 1 {target_bc_id}
  #
 .# 無限ループ停止
  let target_bc_id = 9 # BLANK
- AOBC_RT.Cmd_BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
+ AOBC_RT.BCE_INACTIVATE_BLOCK_BY_ID {target_bc_id}
  #
 .# =========================================
  #  7. STT DI初期化
  # =========================================
  # バッファを初期化したい or AOBCが保持するSTTパラメータを初期化したい
 .let app_id = 7 # AR_DI_SAGITTA
- AOBC_RT.Cmd_AM_INITIALIZE_APP {app_id}
+ AOBC_RT.AM_INITIALIZE_APP {app_id}
  #
  # STTにも反映する場合、STTの電源リセット
  #
@@ -311,8 +311,8 @@
  # =========================================
  # 3-3, 5-1アノマリを止めたい
 .let el_id = 3
- AOBC_RT.Cmd_EL_DISABLE_LOGGING {el_id}
+ AOBC_RT.EL_DISABLE_LOGGING {el_id}
  #
 .let el_id = 5
- AOBC_RT.Cmd_EL_DISABLE_LOGGING {el_id}
+ AOBC_RT.EL_DISABLE_LOGGING {el_id}
  #
