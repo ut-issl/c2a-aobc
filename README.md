@@ -26,25 +26,8 @@
 ## For general users
 ### How to make a project-specific repository
 
-- We recommend making a project-specific repository named `c2a-aobc-project-name`.
-- Users can refer to the `c2a-aobc/Examples` directory to make a directory construction of `c2a-aobc-project-name`.
-  - **NOTE** Please change all words `example, EXAMPLE, or Example` in the files in this directory to suit your project name.
-    - The root directory name `Examples` needs to be renamed as `c2a-aobc-project-name`.
-  ```
-  - src_aobc (git submodule of c2a-aobc with rename)
-    - We recommend to use a released version of c2a-aobc.
-  - Build setting files
-    - CMake files, Visual Studio files, and others
-  - others
-    - git related files
-  - README.md
-  ```
-- To construct the `src_aobc` directory, we recommend to use `git submodule` to take in the `c2a-aobc` repository with renaming to `src_aobc`.
-  - Reference: [Git Tools Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
-
-### How to build and execute the project-specific repository
-
-- Please see the [README.md](./Examples/README.md) in the `Examples` directly.
+- Please refer [c2a-aobc-example](https://github.com/ut-issl/c2a-aobc-example) repository.
+- Users can fork or copy of this example repository.
 
 ### How to join the development of this repository
 
