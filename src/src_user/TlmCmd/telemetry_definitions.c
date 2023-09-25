@@ -1873,7 +1873,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (232 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (225 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(aocs_manager->ang_vel_est_body_rad_s[0]));
@@ -1886,45 +1886,44 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
   TF_copy_float(&packet[54], (float)(aocs_manager->quaternion_est_i2b.vector_part[1]));
   TF_copy_float(&packet[58], (float)(aocs_manager->quaternion_est_i2b.vector_part[2]));
   TF_copy_float(&packet[62], (float)(aocs_manager->quaternion_est_i2b.scalar_part));
-  TF_copy_float(&packet[66], (float)(aocs_manager->quaternion_target_i2t.vector_part[0]));
-  TF_copy_float(&packet[70], (float)(aocs_manager->quaternion_target_i2t.vector_part[1]));
-  TF_copy_float(&packet[74], (float)(aocs_manager->quaternion_target_i2t.vector_part[2]));
-  TF_copy_float(&packet[78], (float)(aocs_manager->quaternion_target_i2t.scalar_part));
-  TF_copy_float(&packet[82], (float)(aocs_manager->quaternion_error_b2t.vector_part[0]));
-  TF_copy_float(&packet[86], (float)(aocs_manager->quaternion_error_b2t.vector_part[1]));
-  TF_copy_float(&packet[90], (float)(aocs_manager->quaternion_error_b2t.vector_part[2]));
-  TF_copy_float(&packet[94], (float)(aocs_manager->quaternion_error_b2t.scalar_part));
-  TF_copy_float(&packet[98], (float)(aocs_manager->sun_vec_est_body[0]));
-  TF_copy_float(&packet[102], (float)(aocs_manager->sun_vec_est_body[1]));
-  TF_copy_float(&packet[106], (float)(aocs_manager->sun_vec_est_body[2]));
-  TF_copy_float(&packet[110], (float)(aocs_manager->sun_vec_target_body[0]));
-  TF_copy_float(&packet[114], (float)(aocs_manager->sun_vec_target_body[1]));
-  TF_copy_float(&packet[118], (float)(aocs_manager->sun_vec_target_body[2]));
-  TF_copy_float(&packet[122], (float)(aocs_manager->sun_vec_error_rad));
-  TF_copy_float(&packet[126], (float)(aocs_manager->mag_vec_est_body_nT[0]));
-  TF_copy_float(&packet[130], (float)(aocs_manager->mag_vec_est_body_nT[1]));
-  TF_copy_float(&packet[134], (float)(aocs_manager->mag_vec_est_body_nT[2]));
-  TF_copy_float(&packet[138], (float)(aocs_manager->internal_torque_target_body_Nm[0]));
-  TF_copy_float(&packet[142], (float)(aocs_manager->internal_torque_target_body_Nm[1]));
-  TF_copy_float(&packet[146], (float)(aocs_manager->internal_torque_target_body_Nm[2]));
-  TF_copy_float(&packet[150], (float)(aocs_manager->external_torque_target_body_Nm[0]));
-  TF_copy_float(&packet[154], (float)(aocs_manager->external_torque_target_body_Nm[1]));
-  TF_copy_float(&packet[158], (float)(aocs_manager->external_torque_target_body_Nm[2]));
-  TF_copy_double(&packet[162], (double)(aocs_manager->reference_jday));
-  TF_copy_double(&packet[170], (double)(aocs_manager->sat_pos_est_ecef_m[0]));
-  TF_copy_double(&packet[178], (double)(aocs_manager->sat_pos_est_ecef_m[1]));
-  TF_copy_double(&packet[186], (double)(aocs_manager->sat_pos_est_ecef_m[2]));
-  TF_copy_double(&packet[194], (double)(aocs_manager->sat_vel_est_ecef_m_s[0]));
-  TF_copy_double(&packet[202], (double)(aocs_manager->sat_vel_est_ecef_m_s[1]));
-  TF_copy_double(&packet[210], (double)(aocs_manager->sat_vel_est_ecef_m_s[2]));
-  TF_copy_float(&packet[218], (float)(unloading->angular_velocity_upper_threshold_rad_s[0]));
-  TF_copy_float(&packet[222], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
-  TF_copy_float(&packet[226], (float)(unloading->angular_velocity_target_rad_s[0]));
-  TF_copy_u8(&packet[230], (uint8_t)(aocs_mode_manager->bdot_retry_count));
-  TF_copy_u8(&packet[231], (uint8_t)(aocs_manager->flags_for_tlm));
+  TF_copy_u8(&packet[66], (uint8_t)(quaternion_interpolator->index));
+  TF_copy_float(&packet[67], (float)(aocs_manager->quaternion_target_i2t.vector_part[0]));
+  TF_copy_float(&packet[71], (float)(aocs_manager->quaternion_target_i2t.vector_part[1]));
+  TF_copy_float(&packet[75], (float)(aocs_manager->quaternion_target_i2t.vector_part[2]));
+  TF_copy_float(&packet[79], (float)(aocs_manager->quaternion_target_i2t.scalar_part));
+  TF_copy_float(&packet[83], (float)(aocs_manager->sun_vec_est_eci[0]));
+  TF_copy_float(&packet[87], (float)(aocs_manager->sun_vec_est_eci[1]));
+  TF_copy_float(&packet[91], (float)(aocs_manager->sun_vec_est_eci[2]));
+  TF_copy_float(&packet[95], (float)(aocs_manager->sun_vec_est_body[0]));
+  TF_copy_float(&packet[99], (float)(aocs_manager->sun_vec_est_body[1]));
+  TF_copy_float(&packet[103], (float)(aocs_manager->sun_vec_est_body[2]));
+  TF_copy_float(&packet[107], (float)(aocs_manager->sun_vec_target_body[0]));
+  TF_copy_float(&packet[111], (float)(aocs_manager->sun_vec_target_body[1]));
+  TF_copy_float(&packet[115], (float)(aocs_manager->sun_vec_target_body[2]));
+  TF_copy_float(&packet[119], (float)(aocs_manager->mag_vec_est_eci_nT[0]));
+  TF_copy_float(&packet[123], (float)(aocs_manager->mag_vec_est_eci_nT[1]));
+  TF_copy_float(&packet[127], (float)(aocs_manager->mag_vec_est_eci_nT[2]));
+  TF_copy_float(&packet[131], (float)(aocs_manager->mag_vec_est_body_nT[0]));
+  TF_copy_float(&packet[135], (float)(aocs_manager->mag_vec_est_body_nT[1]));
+  TF_copy_float(&packet[139], (float)(aocs_manager->mag_vec_est_body_nT[2]));
+  TF_copy_float(&packet[143], (float)(aocs_manager->internal_torque_target_body_Nm[0]));
+  TF_copy_float(&packet[147], (float)(aocs_manager->internal_torque_target_body_Nm[1]));
+  TF_copy_float(&packet[151], (float)(aocs_manager->internal_torque_target_body_Nm[2]));
+  TF_copy_float(&packet[155], (float)(aocs_manager->external_torque_target_body_Nm[0]));
+  TF_copy_float(&packet[159], (float)(aocs_manager->external_torque_target_body_Nm[1]));
+  TF_copy_float(&packet[163], (float)(aocs_manager->external_torque_target_body_Nm[2]));
+  TF_copy_double(&packet[167], (double)(aocs_manager->reference_jday));
+  TF_copy_double(&packet[175], (double)(aocs_manager->sat_pos_est_ecef_m[0]));
+  TF_copy_double(&packet[183], (double)(aocs_manager->sat_pos_est_ecef_m[1]));
+  TF_copy_double(&packet[191], (double)(aocs_manager->sat_pos_est_ecef_m[2]));
+  TF_copy_double(&packet[199], (double)(aocs_manager->sat_vel_est_ecef_m_s[0]));
+  TF_copy_double(&packet[207], (double)(aocs_manager->sat_vel_est_ecef_m_s[1]));
+  TF_copy_double(&packet[215], (double)(aocs_manager->sat_vel_est_ecef_m_s[2]));
+  TF_copy_u8(&packet[223], (uint8_t)(aocs_mode_manager->bdot_retry_count));
+  TF_copy_u8(&packet[224], (uint8_t)(aocs_manager->flags_for_tlm));
 #endif
 
-  *len = 232;
+  *len = 225;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
