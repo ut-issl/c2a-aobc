@@ -34,8 +34,8 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_FRAME_TRANSFORMATION_(uint8_t* packet, uint16_t*
 static TF_TLM_FUNC_ACK Tlm_AOBC_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_BIAS_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_TEMP_CALIB_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_TARGET_QUATERNION1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_TARGET_QUATERNION2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_INTERPOLATION_TARGET1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_INTERPOLATION_TARGET2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_NON_VOLATILE_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_ORBIT_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_AOCS_MANAGER_(uint8_t* packet, uint16_t* len, uint16_t max_len);
@@ -49,14 +49,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET1_(uint8_t* packet, uint16_t* len, ui
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_ATTITUDE_DETERMINATION1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_ATTITUDE_DETERMINATION2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_STT_GYRO_EKF1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_STT_GYRO_EKF2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_GPSR_RANGE_P1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_GPSR_RANGE_P2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_ORBIT2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_FILTERS_2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_DR_ALGORITHM_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_DEBUG_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_RW_DETAILED_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA1_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA3_(uint8_t* packet, uint16_t* len, uint16_t max_len);
@@ -90,8 +90,8 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_AOBC_CONTROL].tlm_func = Tlm_AOBC_CONTROL_;
   tlm_table[Tlm_CODE_AOBC_BIAS].tlm_func = Tlm_AOBC_BIAS_;
   tlm_table[Tlm_CODE_AOBC_TEMP_CALIB].tlm_func = Tlm_AOBC_TEMP_CALIB_;
-  tlm_table[Tlm_CODE_AOBC_TARGET_QUATERNION1].tlm_func = Tlm_AOBC_TARGET_QUATERNION1_;
-  tlm_table[Tlm_CODE_AOBC_TARGET_QUATERNION2].tlm_func = Tlm_AOBC_TARGET_QUATERNION2_;
+  tlm_table[Tlm_CODE_AOBC_INTERPOLATION_TARGET1].tlm_func = Tlm_AOBC_INTERPOLATION_TARGET1_;
+  tlm_table[Tlm_CODE_AOBC_INTERPOLATION_TARGET2].tlm_func = Tlm_AOBC_INTERPOLATION_TARGET2_;
   tlm_table[Tlm_CODE_AOBC_NON_VOLATILE].tlm_func = Tlm_AOBC_NON_VOLATILE_;
   tlm_table[Tlm_CODE_AOBC_ORBIT].tlm_func = Tlm_AOBC_ORBIT_;
   tlm_table[Tlm_CODE_AOBC_AOCS_MANAGER].tlm_func = Tlm_AOBC_AOCS_MANAGER_;
@@ -105,14 +105,14 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_AOBC_SAGITTA_SET2].tlm_func = Tlm_AOBC_SAGITTA_SET2_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA_READ1].tlm_func = Tlm_AOBC_SAGITTA_READ1_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA_READ2].tlm_func = Tlm_AOBC_SAGITTA_READ2_;
-  tlm_table[Tlm_CODE_AOBC_ATTITUDE_DETERMINATION1].tlm_func = Tlm_AOBC_ATTITUDE_DETERMINATION1_;
-  tlm_table[Tlm_CODE_AOBC_ATTITUDE_DETERMINATION2].tlm_func = Tlm_AOBC_ATTITUDE_DETERMINATION2_;
+  tlm_table[Tlm_CODE_AOBC_STT_GYRO_EKF1].tlm_func = Tlm_AOBC_STT_GYRO_EKF1_;
+  tlm_table[Tlm_CODE_AOBC_STT_GYRO_EKF2].tlm_func = Tlm_AOBC_STT_GYRO_EKF2_;
   tlm_table[Tlm_CODE_AOBC_GPSR_RANGE_P1].tlm_func = Tlm_AOBC_GPSR_RANGE_P1_;
   tlm_table[Tlm_CODE_AOBC_GPSR_RANGE_P2].tlm_func = Tlm_AOBC_GPSR_RANGE_P2_;
   tlm_table[Tlm_CODE_AOBC_ORBIT2].tlm_func = Tlm_AOBC_ORBIT2_;
   tlm_table[Tlm_CODE_AOBC_FILTERS_2].tlm_func = Tlm_AOBC_FILTERS_2_;
   tlm_table[Tlm_CODE_AOBC_DR_ALGORITHM].tlm_func = Tlm_AOBC_DR_ALGORITHM_;
-  tlm_table[Tlm_CODE_AOBC_DEBUG].tlm_func = Tlm_AOBC_DEBUG_;
+  tlm_table[Tlm_CODE_AOBC_RW_DETAILED].tlm_func = Tlm_AOBC_RW_DETAILED_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA1].tlm_func = Tlm_AOBC_SAGITTA1_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA2].tlm_func = Tlm_AOBC_SAGITTA2_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA3].tlm_func = Tlm_AOBC_SAGITTA3_;
@@ -2304,7 +2304,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_TEMP_CALIB_(uint8_t* packet, uint16_t* len, uint
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
-static TF_TLM_FUNC_ACK Tlm_AOBC_TARGET_QUATERNION1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_INTERPOLATION_TARGET1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (226 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
@@ -2365,7 +2365,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_TARGET_QUATERNION1_(uint8_t* packet, uint16_t* l
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
-static TF_TLM_FUNC_ACK Tlm_AOBC_TARGET_QUATERNION2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_INTERPOLATION_TARGET2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (226 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
@@ -3333,7 +3333,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, u
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
-static TF_TLM_FUNC_ACK Tlm_AOBC_ATTITUDE_DETERMINATION1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_STT_GYRO_EKF1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (132 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
@@ -3372,7 +3372,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_ATTITUDE_DETERMINATION1_(uint8_t* packet, uint16
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
-static TF_TLM_FUNC_ACK Tlm_AOBC_ATTITUDE_DETERMINATION2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_STT_GYRO_EKF2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (170 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
@@ -3660,7 +3660,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_DR_ALGORITHM_(uint8_t* packet, uint16_t* len, ui
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
-static TF_TLM_FUNC_ACK Tlm_AOBC_DEBUG_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_RW_DETAILED_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (98 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
