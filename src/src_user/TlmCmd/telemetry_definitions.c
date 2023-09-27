@@ -1716,7 +1716,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_GIT_REV_(uint8_t* packet, uint16_t* len, uint16_
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (232 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (222 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(TMGR_get_master_clock().mode_cycle));
@@ -1753,70 +1753,63 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t
   TF_copy_u16(&packet[87], (uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW]);
   TF_copy_u16(&packet[89], (uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL]);
   TF_copy_u16(&packet[91], (uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH]);
-  TF_copy_u8(&packet[93], (uint8_t)event_logger->latest_event.group);
-  TF_copy_u32(&packet[94], event_logger->latest_event.local);
-  TF_copy_u8(&packet[98], (uint8_t)event_logger->latest_event.err_level);
-  TF_copy_u32(&packet[99], event_logger->latest_event.time.total_cycle);
-  TF_copy_u8(&packet[103], (uint8_t)event_logger->latest_event.time.step);
+  TF_copy_u8(&packet[93], (uint8_t)event_logger->latest_event.err_level);
+  TF_copy_u8(&packet[94], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->group);
+  TF_copy_u32(&packet[95], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->local);
+  TF_copy_u32(&packet[99], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->time.total_cycle);
+  TF_copy_u8(&packet[103], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->time.step);
   TF_copy_u8(&packet[104], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->group);
   TF_copy_u32(&packet[105], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->local);
   TF_copy_u32(&packet[109], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.total_cycle);
   TF_copy_u8(&packet[113], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.step);
   TF_copy_u32(&packet[114], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->note);
   TF_copy_u32(&packet[118], event_handler->log_table.respond_counter);
-  TF_copy_u8(&packet[122], (uint8_t)(power_switch_control->switch_state_5v_tlm.byte));
-  TF_copy_u8(&packet[123], (uint8_t)(power_switch_control->switch_state_unreg_tlm.byte));
-  TF_copy_i16(&packet[124], (int16_t)(ina260_driver[INA260_IDX_PIC]->info.current_raw));
-  TF_copy_u16(&packet[126], (uint16_t)(ina260_driver[INA260_IDX_PIC]->info.voltage_raw));
-  TF_copy_u16(&packet[128], (uint16_t)(ina260_driver[INA260_IDX_PIC]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[130], (int16_t)(ina260_driver[INA260_IDX_STIM210]->info.current_raw));
-  TF_copy_u16(&packet[132], (uint16_t)(ina260_driver[INA260_IDX_STIM210]->info.voltage_raw));
-  TF_copy_u16(&packet[134], (uint16_t)(ina260_driver[INA260_IDX_STIM210]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[136], (int16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.current_raw));
-  TF_copy_u16(&packet[138], (uint16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.voltage_raw));
-  TF_copy_u16(&packet[140], (uint16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.oc_threshold_raw));
+  TF_copy_u16(&packet[122], (uint16_t)EH_get_the_nth_log_from_the_latest(0)->rule_id);
+  TF_copy_u32(&packet[124], (uint32_t)EH_get_the_nth_log_from_the_latest(0)->respond_time_in_master_cycle);
+  TF_copy_u8(&packet[128], (uint8_t)(power_switch_control->switch_state_5v_tlm.byte));
+  TF_copy_u8(&packet[129], (uint8_t)(power_switch_control->switch_state_unreg_tlm.byte));
+  TF_copy_i16(&packet[130], (int16_t)(ina260_driver[INA260_IDX_PIC]->info.current_raw));
+  TF_copy_u16(&packet[132], (uint16_t)(ina260_driver[INA260_IDX_PIC]->info.voltage_raw));
+  TF_copy_i16(&packet[134], (int16_t)(ina260_driver[INA260_IDX_STIM210]->info.current_raw));
+  TF_copy_u16(&packet[136], (uint16_t)(ina260_driver[INA260_IDX_STIM210]->info.voltage_raw));
+  TF_copy_i16(&packet[138], (int16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.current_raw));
+  TF_copy_u16(&packet[140], (uint16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.voltage_raw));
   TF_copy_i16(&packet[142], (int16_t)(ina260_driver[INA260_IDX_OEM7600]->info.current_raw));
   TF_copy_u16(&packet[144], (uint16_t)(ina260_driver[INA260_IDX_OEM7600]->info.voltage_raw));
-  TF_copy_u16(&packet[146], (uint16_t)(ina260_driver[INA260_IDX_OEM7600]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[148], (int16_t)(ina260_driver[INA260_IDX_RM3100]->info.current_raw));
-  TF_copy_u16(&packet[150], (uint16_t)(ina260_driver[INA260_IDX_RM3100]->info.voltage_raw));
-  TF_copy_u16(&packet[152], (uint16_t)(ina260_driver[INA260_IDX_RM3100]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[154], (int16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.current_raw));
-  TF_copy_u16(&packet[156], (uint16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.voltage_raw));
-  TF_copy_u16(&packet[158], (uint16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[160], (int16_t)(ina260_driver[INA260_IDX_MTQ]->info.current_raw));
-  TF_copy_u16(&packet[162], (uint16_t)(ina260_driver[INA260_IDX_MTQ]->info.voltage_raw));
-  TF_copy_u16(&packet[164], (uint16_t)(ina260_driver[INA260_IDX_MTQ]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[166], (int16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.current_raw));
-  TF_copy_u16(&packet[168], (uint16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.voltage_raw));
-  TF_copy_u16(&packet[170], (uint16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[172], (int16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.current_raw));
-  TF_copy_u16(&packet[174], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.voltage_raw));
-  TF_copy_u16(&packet[176], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.oc_threshold_raw));
-  TF_copy_i16(&packet[178], (int16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.current_raw));
-  TF_copy_u16(&packet[180], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.voltage_raw));
-  TF_copy_u16(&packet[182], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.oc_threshold_raw));
-  TF_copy_float(&packet[184], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_PIC]));
-  TF_copy_float(&packet[188], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_RW_DCDC]));
-  TF_copy_float(&packet[192], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.temperature_degC));
-  TF_copy_float(&packet[196], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[0]));
-  TF_copy_float(&packet[200], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[1]));
-  TF_copy_float(&packet[204], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[2]));
-  TF_copy_float(&packet[208], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
-  TF_copy_float(&packet[212], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
-  TF_copy_float(&packet[216], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
-  TF_copy_float(&packet[220], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
-  TF_copy_float(&packet[224], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
-  TF_copy_float(&packet[228], (float)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.hardware_status.temperature_degC));
+  TF_copy_i16(&packet[146], (int16_t)(ina260_driver[INA260_IDX_RM3100]->info.current_raw));
+  TF_copy_u16(&packet[148], (uint16_t)(ina260_driver[INA260_IDX_RM3100]->info.voltage_raw));
+  TF_copy_i16(&packet[150], (int16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.current_raw));
+  TF_copy_u16(&packet[152], (uint16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.voltage_raw));
+  TF_copy_i16(&packet[154], (int16_t)(ina260_driver[INA260_IDX_MTQ]->info.current_raw));
+  TF_copy_u16(&packet[156], (uint16_t)(ina260_driver[INA260_IDX_MTQ]->info.voltage_raw));
+  TF_copy_i16(&packet[158], (int16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.current_raw));
+  TF_copy_u16(&packet[160], (uint16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.voltage_raw));
+  TF_copy_i16(&packet[162], (int16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.current_raw));
+  TF_copy_u16(&packet[164], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.voltage_raw));
+  TF_copy_i16(&packet[166], (int16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.current_raw));
+  TF_copy_u16(&packet[168], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.voltage_raw));
+  TF_copy_float(&packet[170], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_PIC]));
+  TF_copy_float(&packet[174], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_RW_DCDC]));
+  TF_copy_float(&packet[178], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.temperature_degC));
+  TF_copy_float(&packet[182], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[0]));
+  TF_copy_float(&packet[186], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[1]));
+  TF_copy_float(&packet[190], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[2]));
+  TF_copy_float(&packet[194], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
+  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
+  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.cmos_degC));
+  TF_copy_float(&packet[206], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
+  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
+  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
+  TF_copy_float(&packet[218], (float)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.hardware_status.temperature_degC));
 #endif
 
-  *len = 232;
+  *len = 222;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (235 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (218 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.ang_vel_body_rad_s[0]));
@@ -1832,57 +1825,55 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_float(&packet[66], (float)(rm3100_driver[RM3100_IDX_EXTERNAL]->info.mag_body_nT[1]));
   TF_copy_float(&packet[70], (float)(rm3100_driver[RM3100_IDX_EXTERNAL]->info.mag_body_nT[2]));
   TF_copy_u8(&packet[74], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.operation_mode));
-  TF_copy_u8(&packet[75], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.status));
-  TF_copy_float(&packet[76], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.ang_vel_body_rad_sec[0]));
-  TF_copy_float(&packet[80], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.ang_vel_body_rad_sec[1]));
-  TF_copy_float(&packet[84], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.ang_vel_body_rad_sec[2]));
-  TF_copy_float(&packet[88], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_0]->info.sun_angle_compo_deg[0]));
-  TF_copy_float(&packet[92], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_0]->info.sun_angle_compo_deg[1]));
-  TF_copy_float(&packet[96], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_0]->info.sun_intensity_percent));
-  TF_copy_u8(&packet[100], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_0]->info.err_code));
-  TF_copy_float(&packet[101], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_1]->info.sun_angle_compo_deg[0]));
-  TF_copy_float(&packet[105], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_1]->info.sun_angle_compo_deg[1]));
-  TF_copy_float(&packet[109], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_1]->info.sun_intensity_percent));
-  TF_copy_u8(&packet[113], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_1]->info.err_code));
-  TF_copy_float(&packet[114], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_angle_compo_deg[0]));
-  TF_copy_float(&packet[118], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_angle_compo_deg[1]));
-  TF_copy_float(&packet[122], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_intensity_percent));
-  TF_copy_u8(&packet[126], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.err_code));
-  TF_copy_float(&packet[127], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_angle_compo_deg[0]));
-  TF_copy_float(&packet[131], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_angle_compo_deg[1]));
-  TF_copy_float(&packet[135], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_intensity_percent));
-  TF_copy_u8(&packet[139], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.err_code));
-  TF_copy_u32(&packet[140], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.unix_time_ms));
-  TF_copy_u8(&packet[144], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.is_valid_quaternion));
-  TF_copy_float(&packet[145], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.vector_part[0]));
-  TF_copy_float(&packet[149], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.vector_part[1]));
-  TF_copy_float(&packet[153], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.vector_part[2]));
-  TF_copy_float(&packet[157], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.scalar_part));
-  TF_copy_u16(&packet[161], (uint16_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week));
-  TF_copy_u32(&packet[163], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms));
-  TF_copy_u32(&packet[167], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.tlm_received_aobc_time));
-  TF_copy_u8(&packet[171], (uint8_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.num_of_visible_sats));
-  TF_copy_double(&packet[172], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[0]));
-  TF_copy_double(&packet[180], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[1]));
-  TF_copy_double(&packet[188], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[2]));
-  TF_copy_double(&packet[196], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[0]));
-  TF_copy_double(&packet[204], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[1]));
-  TF_copy_double(&packet[212], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[2]));
-  TF_copy_i8(&packet[220], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_X]->info.pwm_signed_duty_percent);
-  TF_copy_i8(&packet[221], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Y]->info.pwm_signed_duty_percent);
-  TF_copy_i8(&packet[222], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Z]->info.pwm_signed_duty_percent);
-  TF_copy_float(&packet[223], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
-  TF_copy_float(&packet[227], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
-  TF_copy_float(&packet[231], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_float(&packet[75], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.ang_vel_body_rad_sec[0]));
+  TF_copy_float(&packet[79], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.ang_vel_body_rad_sec[1]));
+  TF_copy_float(&packet[83], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.ang_vel_body_rad_sec[2]));
+  TF_copy_float(&packet[87], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_0]->info.sun_intensity_percent));
+  TF_copy_u8(&packet[91], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_0]->info.err_code));
+  TF_copy_float(&packet[92], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_1]->info.sun_intensity_percent));
+  TF_copy_u8(&packet[96], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_1]->info.err_code));
+  TF_copy_float(&packet[97], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.sun_intensity_percent));
+  TF_copy_u8(&packet[101], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_2]->info.err_code));
+  TF_copy_float(&packet[102], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.sun_intensity_percent));
+  TF_copy_u8(&packet[106], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_3]->info.err_code));
+  TF_copy_float(&packet[107], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_4]->info.sun_intensity_percent));
+  TF_copy_u8(&packet[111], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_4]->info.err_code));
+  TF_copy_float(&packet[112], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_5]->info.sun_intensity_percent));
+  TF_copy_u8(&packet[116], (float)(nanossoc_d60_driver[NANOSSOC_D60_IDX_5]->info.err_code));
+  TF_copy_u32(&packet[117], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.unix_time_ms));
+  TF_copy_u8(&packet[121], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.is_valid_quaternion));
+  TF_copy_u8(&packet[122], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.num_stars_centroided));
+  TF_copy_u8(&packet[123], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.num_stars_matched));
+  TF_copy_u32(&packet[124], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.stable_count));
+  TF_copy_float(&packet[128], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.vector_part[0]));
+  TF_copy_float(&packet[132], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.vector_part[1]));
+  TF_copy_float(&packet[136], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.vector_part[2]));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.quaternion_i2b.scalar_part));
+  TF_copy_u16(&packet[144], (uint16_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week));
+  TF_copy_u32(&packet[146], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms));
+  TF_copy_u32(&packet[150], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.tlm_received_aobc_time));
+  TF_copy_u8(&packet[154], (uint8_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.num_of_visible_sats));
+  TF_copy_double(&packet[155], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[0]));
+  TF_copy_double(&packet[163], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[1]));
+  TF_copy_double(&packet[171], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[2]));
+  TF_copy_double(&packet[179], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[0]));
+  TF_copy_double(&packet[187], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[1]));
+  TF_copy_double(&packet[195], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[2]));
+  TF_copy_i8(&packet[203], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_X]->info.pwm_signed_duty_percent);
+  TF_copy_i8(&packet[204], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Y]->info.pwm_signed_duty_percent);
+  TF_copy_i8(&packet[205], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Z]->info.pwm_signed_duty_percent);
+  TF_copy_float(&packet[206], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
+  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
+  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
 #endif
 
-  *len = 235;
+  *len = 218;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (232 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (225 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(aocs_manager->ang_vel_est_body_rad_s[0]));
@@ -1895,51 +1886,50 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
   TF_copy_float(&packet[54], (float)(aocs_manager->quaternion_est_i2b.vector_part[1]));
   TF_copy_float(&packet[58], (float)(aocs_manager->quaternion_est_i2b.vector_part[2]));
   TF_copy_float(&packet[62], (float)(aocs_manager->quaternion_est_i2b.scalar_part));
-  TF_copy_float(&packet[66], (float)(aocs_manager->quaternion_target_i2t.vector_part[0]));
-  TF_copy_float(&packet[70], (float)(aocs_manager->quaternion_target_i2t.vector_part[1]));
-  TF_copy_float(&packet[74], (float)(aocs_manager->quaternion_target_i2t.vector_part[2]));
-  TF_copy_float(&packet[78], (float)(aocs_manager->quaternion_target_i2t.scalar_part));
-  TF_copy_float(&packet[82], (float)(aocs_manager->quaternion_error_b2t.vector_part[0]));
-  TF_copy_float(&packet[86], (float)(aocs_manager->quaternion_error_b2t.vector_part[1]));
-  TF_copy_float(&packet[90], (float)(aocs_manager->quaternion_error_b2t.vector_part[2]));
-  TF_copy_float(&packet[94], (float)(aocs_manager->quaternion_error_b2t.scalar_part));
-  TF_copy_float(&packet[98], (float)(aocs_manager->sun_vec_est_body[0]));
-  TF_copy_float(&packet[102], (float)(aocs_manager->sun_vec_est_body[1]));
-  TF_copy_float(&packet[106], (float)(aocs_manager->sun_vec_est_body[2]));
-  TF_copy_float(&packet[110], (float)(aocs_manager->sun_vec_target_body[0]));
-  TF_copy_float(&packet[114], (float)(aocs_manager->sun_vec_target_body[1]));
-  TF_copy_float(&packet[118], (float)(aocs_manager->sun_vec_target_body[2]));
-  TF_copy_float(&packet[122], (float)(aocs_manager->sun_vec_error_rad));
-  TF_copy_float(&packet[126], (float)(aocs_manager->mag_vec_est_body_nT[0]));
-  TF_copy_float(&packet[130], (float)(aocs_manager->mag_vec_est_body_nT[1]));
-  TF_copy_float(&packet[134], (float)(aocs_manager->mag_vec_est_body_nT[2]));
-  TF_copy_float(&packet[138], (float)(aocs_manager->internal_torque_target_body_Nm[0]));
-  TF_copy_float(&packet[142], (float)(aocs_manager->internal_torque_target_body_Nm[1]));
-  TF_copy_float(&packet[146], (float)(aocs_manager->internal_torque_target_body_Nm[2]));
-  TF_copy_float(&packet[150], (float)(aocs_manager->external_torque_target_body_Nm[0]));
-  TF_copy_float(&packet[154], (float)(aocs_manager->external_torque_target_body_Nm[1]));
-  TF_copy_float(&packet[158], (float)(aocs_manager->external_torque_target_body_Nm[2]));
-  TF_copy_double(&packet[162], (double)(aocs_manager->reference_jday));
-  TF_copy_double(&packet[170], (double)(aocs_manager->sat_pos_est_ecef_m[0]));
-  TF_copy_double(&packet[178], (double)(aocs_manager->sat_pos_est_ecef_m[1]));
-  TF_copy_double(&packet[186], (double)(aocs_manager->sat_pos_est_ecef_m[2]));
-  TF_copy_double(&packet[194], (double)(aocs_manager->sat_vel_est_ecef_m_s[0]));
-  TF_copy_double(&packet[202], (double)(aocs_manager->sat_vel_est_ecef_m_s[1]));
-  TF_copy_double(&packet[210], (double)(aocs_manager->sat_vel_est_ecef_m_s[2]));
-  TF_copy_float(&packet[218], (float)(unloading->angular_velocity_upper_threshold_rad_s[0]));
-  TF_copy_float(&packet[222], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
-  TF_copy_float(&packet[226], (float)(unloading->angular_velocity_target_rad_s[0]));
-  TF_copy_u8(&packet[230], (uint8_t)(aocs_mode_manager->bdot_retry_count));
-  TF_copy_u8(&packet[231], (uint8_t)(aocs_manager->flags_for_tlm));
+  TF_copy_u8(&packet[66], (uint8_t)(quaternion_interpolator->index));
+  TF_copy_float(&packet[67], (float)(aocs_manager->quaternion_target_i2t.vector_part[0]));
+  TF_copy_float(&packet[71], (float)(aocs_manager->quaternion_target_i2t.vector_part[1]));
+  TF_copy_float(&packet[75], (float)(aocs_manager->quaternion_target_i2t.vector_part[2]));
+  TF_copy_float(&packet[79], (float)(aocs_manager->quaternion_target_i2t.scalar_part));
+  TF_copy_float(&packet[83], (float)(aocs_manager->sun_vec_est_eci[0]));
+  TF_copy_float(&packet[87], (float)(aocs_manager->sun_vec_est_eci[1]));
+  TF_copy_float(&packet[91], (float)(aocs_manager->sun_vec_est_eci[2]));
+  TF_copy_float(&packet[95], (float)(aocs_manager->sun_vec_est_body[0]));
+  TF_copy_float(&packet[99], (float)(aocs_manager->sun_vec_est_body[1]));
+  TF_copy_float(&packet[103], (float)(aocs_manager->sun_vec_est_body[2]));
+  TF_copy_float(&packet[107], (float)(aocs_manager->sun_vec_target_body[0]));
+  TF_copy_float(&packet[111], (float)(aocs_manager->sun_vec_target_body[1]));
+  TF_copy_float(&packet[115], (float)(aocs_manager->sun_vec_target_body[2]));
+  TF_copy_float(&packet[119], (float)(aocs_manager->mag_vec_est_eci_nT[0]));
+  TF_copy_float(&packet[123], (float)(aocs_manager->mag_vec_est_eci_nT[1]));
+  TF_copy_float(&packet[127], (float)(aocs_manager->mag_vec_est_eci_nT[2]));
+  TF_copy_float(&packet[131], (float)(aocs_manager->mag_vec_est_body_nT[0]));
+  TF_copy_float(&packet[135], (float)(aocs_manager->mag_vec_est_body_nT[1]));
+  TF_copy_float(&packet[139], (float)(aocs_manager->mag_vec_est_body_nT[2]));
+  TF_copy_float(&packet[143], (float)(aocs_manager->internal_torque_target_body_Nm[0]));
+  TF_copy_float(&packet[147], (float)(aocs_manager->internal_torque_target_body_Nm[1]));
+  TF_copy_float(&packet[151], (float)(aocs_manager->internal_torque_target_body_Nm[2]));
+  TF_copy_float(&packet[155], (float)(aocs_manager->external_torque_target_body_Nm[0]));
+  TF_copy_float(&packet[159], (float)(aocs_manager->external_torque_target_body_Nm[1]));
+  TF_copy_float(&packet[163], (float)(aocs_manager->external_torque_target_body_Nm[2]));
+  TF_copy_double(&packet[167], (double)(aocs_manager->reference_jday));
+  TF_copy_double(&packet[175], (double)(aocs_manager->sat_pos_est_ecef_m[0]));
+  TF_copy_double(&packet[183], (double)(aocs_manager->sat_pos_est_ecef_m[1]));
+  TF_copy_double(&packet[191], (double)(aocs_manager->sat_pos_est_ecef_m[2]));
+  TF_copy_double(&packet[199], (double)(aocs_manager->sat_vel_est_ecef_m_s[0]));
+  TF_copy_double(&packet[207], (double)(aocs_manager->sat_vel_est_ecef_m_s[1]));
+  TF_copy_double(&packet[215], (double)(aocs_manager->sat_vel_est_ecef_m_s[2]));
+  TF_copy_u8(&packet[223], (uint8_t)(aocs_mode_manager->bdot_retry_count));
+  TF_copy_u8(&packet[224], (uint8_t)(aocs_manager->flags_for_tlm));
 #endif
 
-  *len = 232;
+  *len = 225;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (230 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (231 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.accel_compo_m_s2[0]));
@@ -1970,33 +1960,34 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint
   TF_copy_u8(&packet[115], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.termination_mode));
   TF_copy_u8(&packet[116], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.low_pass_filter_frequency));
   TF_copy_u8(&packet[117], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.sample_rate));
-  TF_copy_i16(&packet[118], (uint16_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week));
-  TF_copy_i32(&packet[120], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms));
-  TF_copy_u8(&packet[124], (uint8_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.num_of_visible_sats));
-  TF_copy_double(&packet[125], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[0]));
-  TF_copy_double(&packet[133], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[1]));
-  TF_copy_double(&packet[141], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[2]));
-  TF_copy_double(&packet[149], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[0]));
-  TF_copy_double(&packet[157], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[1]));
-  TF_copy_double(&packet[165], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[2]));
-  TF_copy_u32(&packet[173], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.uart_baudrate));
-  TF_copy_u32(&packet[177], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.unix_time_ms));
-  TF_copy_float(&packet[181], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[0]));
-  TF_copy_float(&packet[185], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[1]));
-  TF_copy_float(&packet[189], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[2]));
-  TF_copy_float(&packet[193], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.scalar_part));
-  TF_copy_u8(&packet[197], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.is_valid_quaternion));
-  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
-  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
-  TF_copy_float(&packet[206], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
-  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
-  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
-  TF_copy_float(&packet[218], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
-  TF_copy_float(&packet[222], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
-  TF_copy_float(&packet[226], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
+  TF_copy_u8(&packet[118], (uint8_t)(stim210_driver[STIM210_IDX_IN_UNIT]->info.status));
+  TF_copy_i16(&packet[119], (uint16_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_week));
+  TF_copy_i32(&packet[121], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.times.gps_time_ms));
+  TF_copy_u8(&packet[125], (uint8_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.num_of_visible_sats));
+  TF_copy_double(&packet[126], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[0]));
+  TF_copy_double(&packet[134], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[1]));
+  TF_copy_double(&packet[142], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.pos_antenna_ecef_m[2]));
+  TF_copy_double(&packet[150], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[0]));
+  TF_copy_double(&packet[158], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[1]));
+  TF_copy_double(&packet[166], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[2]));
+  TF_copy_u32(&packet[174], (uint32_t)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.uart_baudrate));
+  TF_copy_u32(&packet[178], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.unix_time_ms));
+  TF_copy_float(&packet[182], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[0]));
+  TF_copy_float(&packet[186], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[1]));
+  TF_copy_float(&packet[190], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[2]));
+  TF_copy_float(&packet[194], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.scalar_part));
+  TF_copy_u8(&packet[198], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.is_valid_quaternion));
+  TF_copy_float(&packet[199], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
+  TF_copy_float(&packet[203], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
+  TF_copy_float(&packet[207], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
+  TF_copy_float(&packet[211], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
+  TF_copy_float(&packet[215], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_float(&packet[219], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
+  TF_copy_float(&packet[223], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
+  TF_copy_float(&packet[227], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
 #endif
 
-  *len = 230;
+  *len = 231;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
