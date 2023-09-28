@@ -2,8 +2,10 @@
 
 .# ===== POWER =====
 .# OC閾値設定を確認
-.check_value AOBC_POWER.STIM_OC_EL_THRE_MA == 5
-.check_value AOBC_POWER.STIM_SW_OC_MA == 500
+.AOBC_RT.TG_GENERATE_RT_TLM 0x24 # POWERをDL
+ wait_sec 2
+ check_value AOBC.AOBC_POWER.STIM.OC_THRE_MA == 5
+ check_value AOBC.AOBC_POWER.STIM.SW_OC_MA == 500
 .# 設定できていない場合改めて実行
 .AOBC_RT.APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD 1 5
 .AOBC_RT.APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION 1 500
@@ -33,7 +35,9 @@
 .AOBC_RT.DI_INA260_SET_OVER_CURRENT_PROTECTION 1 1
 .# OBCに過電流検知閾値設定コマンドが届いたか確認する
  # ここのcheck valueが通っても、INAまで設定が通っているかどうかは分からないことに注意
-.check_value AOBC_HK_GEN.FINE_GYRO.OC_LIMIT_mA == 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x24 # POWERをDL
+ wait_sec 2
+ check_value AOBC.AOBC_POWER.STIM.OC_THRE_MA == 1
 
 .# ===== STIM210 =====
 .# [Chk] H/W過電流検知によるprotectionを検知し、1段目のEHが発動していることを確認->RESET
@@ -51,13 +55,17 @@
 .AOBC_RT.DI_INA260_SET_OVER_CURRENT_PROTECTION 1 500
 .# OBCに過電流検知閾値設定コマンドが届いたか確認する
  # ここのcheck valueが通っても、INAまで設定が通っているかどうかは分からないことに注意
-.check_value AOBC_HK_GEN.FINE_GYRO.OC_LIMIT_mA == 500
+ AOBC_RT.TG_GENERATE_RT_TLM 0x24 # POWERをDL
+ wait_sec 2
+ check_value AOBC.AOBC_POWER.STIM.OC_THRE_MA == 500
 
 .# 過電流検知の設定値を変更する
 .# S/W OCが起きるように小さい値を設定
 .AOBC_RT.APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION 1 1
 .# OBCに過電流検知閾値設定コマンドが届いたか確認する
-.check_value AOBC_HK_GEN.FINE_GYRO_OC_EL_THRE_MA == 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x24 # POWERをDL
+ wait_sec 2
+ check_value AOBC.AOBC_POWER.STIM.OC_THRE_MA == 1
 
 .# ===== STIM210 =====
 .# STIM210の電源投入・テレコマ疎通を確認する
