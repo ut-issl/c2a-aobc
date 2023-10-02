@@ -85,8 +85,8 @@
      - IDE: Arduino 1.6/1.8
      - Board: PIC32MX795F512L(80MHz)
      - Port: depends on your environment
-
-
+　 - **NOTE** If you cannot include DTWI.h and DSPI.h and cannot build, add DTWI and DSPI from Add Library in vMicro settings.
+       
 ### How to edit TLM/CMD (Telemetry/Command)
 1. Edit TLM/CMD DB in `c2a-aobc/database/`
    - Please find detailed information on [How to use TLM/CMD DB](https://github.com/ut-issl/tlm-cmd-db).
