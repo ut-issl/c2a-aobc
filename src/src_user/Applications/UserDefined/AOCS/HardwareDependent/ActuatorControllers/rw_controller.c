@@ -43,6 +43,55 @@ void APP_RW_CONTROLLER_exec_(void)
       EL_record_event(el_group_error, (uint32_t)idx_rw, EL_ERROR_LEVEL_LOW, (uint32_t)RW0003_EL_NOTE_TORQUE_CMD);
     }
   }
+  
+  
+  /*
+    // 回転数指令でのRW制御    TODO:今後トルク指令との場合分けを行う
+    static int cnt_come_here = 0;
+    if (0 < cnt_come_here++ % rw_controller_.set_speed_interval)
+    {
+      return;
+    }
+    
+    // 時刻差分計算
+    ObcTime current_obc_time = TMGR_get_master_clock();
+    float dt_s = (float)OBCT_diff_in_sec(&rw_controller_.previous_obc_time, &current_obc_time);
+    if (dt_s < 0.0f || dt_s > 10.0f)
+    {
+      // 時刻差分が異常値の場合は何もせずに終了し、次のタイミングで正常になることを期待する
+      rw_controller_.previous_obc_time = TMGR_get_master_clock();
+      return;
+    }
+
+    float acceleration_rw_rad_s2[CUBEWHEEL_IDX_MAX];
+    float calc_speed_rw_rad_s[CUBEWHEEL_IDX_MAX];
+    float filtered_target_speed_rw_rad_s[CUBEWHEEL_IDX_MAX];
+    float target_speed_rw_rpm[CUBEWHEEL_IDX_MAX];
+    for (uint8_t idx = 0; idx < CUBEWHEEL_IDX_MAX; idx++)
+    {
+      // トルク制限
+      float max_torque = 0.00023f;
+      float min_torque = -max_torque;
+      if (max_torque < torque_rw_Nm[idx])
+      {
+        torque_rw_Nm[idx] = max_torque;
+      }
+      else if (torque_rw_Nm[idx] < min_torque)
+      {
+        torque_rw_Nm[idx] = min_torque;
+      }
+
+      // 積分計算
+      acceleration_rw_rad_s2[idx] = torque_rw_Nm[idx] / aocs_manager->rw_moment_of_inertia_kgm2[idx] * rw_controller_.torque_scaler;
+      calc_speed_rw_rad_s[idx] = aocs_manager->rw_angular_velocity_rad_s[idx] + acceleration_rw_rad_s2[idx] * dt_s;
+      // LPF
+      filtered_target_speed_rw_rad_s[idx] = Z_FILTER_calc_output(&rw_controller_.lpf_ctrl[idx], calc_speed_rw_rad_s[idx]);
+      // 指令
+      target_speed_rw_rpm[idx] = PHYSICAL_CONST_rad_sec_to_rpm(filtered_target_speed_rw_rad_s[idx]);
+      DI_CUBEWHEEL_set_speed_rpm((CUBEWHEEL_IDX)idx, target_speed_rw_rpm[idx]); 
+    }
+    rw_controller_.previous_obc_time = TMGR_get_master_clock();  
+  */
 }
 
 #pragma section
