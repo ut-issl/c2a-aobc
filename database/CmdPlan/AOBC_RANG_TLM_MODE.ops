@@ -120,13 +120,13 @@
 .# OEM7600の電源ON
 .AOBC_RT.TLCD_DEPLOY_BLOCK 1 40
 .# [Chk] AOBC_HK_GEN.POWER.UNREG_SW_STATE.GPS_RがONになることを確認する
- check_value AOBC_HK_GEN.POWER.UNREG_SW_STATE.GPS_R == ON
+ check_value AOBC.AOBC_HK_GEN.POWER.UNREG_SW_STATE.GPS_R == ON
 .# [Chk] AOBC.HK_COMPO.GPS_R.GPS_TIME_msecに値が入ることを確認する
- check_value AOBC_HK_COMPO.GPS_R.GPS_TIME_msec != 0
+ check_value AOBC.AOBC_HK_COMPO.GPS_R.GPS_TIME_msec != 0
 .#
 .# GPSSimの電源を入れ,可視衛星数が4機以上確保できるまで待つ
 .# [Chk] AOBC.HK_COMPO.GPS_R.GPS_TIME_msecに値が入ることを確認する
- check_value AOBC_HK_COMPO.GPS_R.VISIBLE_SAT > 3
+ check_value AOBC.AOBC_HK_COMPO.GPS_R.VISIBLE_SAT > 3
 .#
 .# レンジテレメ取得操作
 .#
@@ -135,7 +135,7 @@
  wait_sec 5
  AOBC_RT.TG_GENERATE_RT_TLM 0x23 # AOBC_COMPONENTSをDL
 .# [Chk] 正しく設定されていることを確認する
- check_value AOBC_COMPONENTS.OEM_BAUDRATE == 9600
+ check_value AOBC.AOBC_COMPONENTS.OEM_BAUDRATE == 9600
 .#
 .# 位置テレメ停止
  Cmd_DI_OEM7600_SET_TLM_CONTENTS 0 0 0xf1

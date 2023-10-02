@@ -5,31 +5,31 @@
 .#
 .# ----- 制御ゲイン設定コマンド -----
  # omega X軸
- Cmd_APP_TAC_RW_SET_GAIN 0 0 0.11 0.12 0.13
+ AOBC_RT.APP_TAC_RW_SET_GAIN 0 0 0.11 0.12 0.13
  wait_sec 1
  # omega Y軸
- Cmd_APP_TAC_RW_SET_GAIN 0 1 0.21 0.22 0.23
+ AOBC_RT.APP_TAC_RW_SET_GAIN 0 1 0.21 0.22 0.23
  wait_sec 1
  # omega Z軸
- Cmd_APP_TAC_RW_SET_GAIN 0 2 0.31 0.32 0.33
+ AOBC_RT.APP_TAC_RW_SET_GAIN 0 2 0.31 0.32 0.33
  wait_sec 1
  AOBC_RT.TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 正しく設定されていることを確認
 .#
  # att X軸
- Cmd_APP_TAC_RW_SET_GAIN 1 0 1.11 1.12 1.13
+ AOBC_RT.APP_TAC_RW_SET_GAIN 1 0 1.11 1.12 1.13
  wait_sec 1
  # att Y軸
- Cmd_APP_TAC_RW_SET_GAIN 1 1 1.21 1.22 1.23
+ AOBC_RT.APP_TAC_RW_SET_GAIN 1 1 1.21 1.22 1.23
  wait_sec 1
  # att Z軸
- Cmd_APP_TAC_RW_SET_GAIN 1 2 1.31 1.32 1.33
+ AOBC_RT.APP_TAC_RW_SET_GAIN 1 2 1.31 1.32 1.33
  wait_sec 1
  AOBC_RT.TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 正しく設定されていることを確認
 .#
 .# 制御ゲインを使い始める
- Cmd_APP_TAC_RW_SAVE_GAIN
+ AOBC_RT.APP_TAC_RW_SAVE_GAIN
  wait_sec 1
  AOBC_RT.TG_GENERATE_RT_TLM 0x30 # THREE_AXIS_RWをDL
 .# 正しく設定されていることを確認
