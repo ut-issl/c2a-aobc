@@ -116,7 +116,7 @@ static AOCS_MANAGER_ERROR DI_CUBEWHEEL_set_direction_matrix_to_aocs_manager_(voi
   return ret;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
 
@@ -133,7 +133,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CTCP* packet)
   return DS_conv_cmd_err_to_ccp_exec_sts(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
 
@@ -154,7 +154,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EndProcess(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EndProcess(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
 
@@ -168,11 +168,11 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EndProcess(const CTCP* packet)
   return DS_conv_cmd_err_to_ccp_exec_sts(ret);
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetSpeed(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetSpeed(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
-  uint8_t raw_val[4] = { 0,0,0,0 };
+  uint8_t raw_val[4] = { 0, 0, 0, 0 };
   float f_speed = 0.0f;
 
   cubewheel_idx = (CUBEWHEEL_IDX)param[0];
@@ -197,11 +197,11 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetSpeed(const CTCP* packet)
 
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetDutyCycle(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetDutyCycle(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
-  uint8_t raw_val[4] = { 0,0,0,0 };
+  uint8_t raw_val[4] = { 0, 0, 0, 0 };
   float f_duty = 0.0f;
 
   cubewheel_idx = (CUBEWHEEL_IDX)param[0];
@@ -225,7 +225,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetDutyCycle(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetControlMode(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetControlMode(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
@@ -244,7 +244,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetControlMode(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetPwmGain(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetPwmGain(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
@@ -264,7 +264,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetPwmGain(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetMainGain(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetMainGain(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
@@ -288,7 +288,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetMainGain(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_GetStatus(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_GetStatus(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
 
@@ -302,7 +302,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_GetStatus(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetBackupmode(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetBackupmode(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
@@ -322,7 +322,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetBackupmode(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableEncoder(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableEncoder(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
@@ -342,7 +342,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableEncoder(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableHallsensor(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableHallsensor(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX cubewheel_idx;
@@ -362,7 +362,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableHallsensor(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SET_ROTATION_DIRECTION_VECTOR(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SET_ROTATION_DIRECTION_VECTOR(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   CUBEWHEEL_IDX idx = (CUBEWHEEL_IDX)param[0];
