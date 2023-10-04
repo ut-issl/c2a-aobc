@@ -1,7 +1,5 @@
-// CubeWheel.h
-
-#ifndef CUBEWHEEL_H_
-#define CUBEWHEEL_H_
+#ifndef CUBE_WHEEL_H_
+#define CUBE_WHEEL_H_
 
 
 #include <src_user/Settings/port_config.h>
@@ -20,8 +18,8 @@
 #define RW_BACKUP_MODE_ON 1
 
 /**
- * @struct CUBEWHEEL_Info
- * @brief  CUBEWHEELのテレメトリ情報
+ * @struct CUBE_WHEEL_Info
+ * @brief  CUBE_WHEELのテレメトリ情報
  */
 typedef struct
 {
@@ -51,11 +49,11 @@ typedef struct
   uint8_t integrator_gain_multiplier;
   float rotation_direction_b[3];
 
-} CUBEWHEEL_Info;
+} CUBE_WHEEL_Info;
 
 /**
-* @struct CUBEWHEEL_Driver
-* @brief  CUBEWHEEL_Driver構造体
+* @struct CUBE_WHEEL_Driver
+* @brief  CUBE_WHEEL_Driver構造体
 */
 typedef struct
 {
@@ -65,46 +63,46 @@ typedef struct
     I2C_Config i2c_read;
     I2C_Config i2c_slave;  //!< I2C class
   } driver;
-  CUBEWHEEL_Info info;
+  CUBE_WHEEL_Info info;
 
-} CUBEWHEEL_Driver;
+} CUBE_WHEEL_Driver;
 
 
-int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id);
+int CUBE_WHEEL_init(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id);
 
 // これは必要そう
-DS_CMD_ERR_CODE CUBEWHEEL_Disable(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-DS_CMD_ERR_CODE CUBEWHEEL_Enable(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-DS_CMD_ERR_CODE CUBEWHEEL_Startup(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-DS_CMD_ERR_CODE CUBEWHEEL_GetStatus(CUBEWHEEL_Driver* CUBEWHEEL_driver);
+DS_CMD_ERR_CODE CUBE_WHEEL_Disable(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+DS_CMD_ERR_CODE CUBE_WHEEL_Enable(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+DS_CMD_ERR_CODE CUBE_WHEEL_Startup(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+DS_CMD_ERR_CODE CUBE_WHEEL_GetStatus(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
 
 
-uint8_t CUBEWHEEL_SetReferenceSpeed(CUBEWHEEL_Driver* CUBEWHEEL_driver, int16_t speed);
-uint8_t CUBEWHEEL_SetDutyCycle(CUBEWHEEL_Driver* CUBEWHEEL_driver, int16_t duty);
+uint8_t CUBE_WHEEL_SetReferenceSpeed(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, int16_t speed);
+uint8_t CUBE_WHEEL_SetDutyCycle(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, int16_t duty);
 
-uint8_t CUBEWHEEL_SetControlMode(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t value);
-uint8_t CUBEWHEEL_SetPwmGain(CUBEWHEEL_Driver* CUBEWHEEL_driver, int Ki, uint8_t KiMultiplier);
-uint8_t CUBEWHEEL_SetMainGain(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint16_t Ki, uint8_t KiMultiplier, uint16_t Kd, uint8_t KdMultiplier);
+uint8_t CUBE_WHEEL_SetControlMode(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, uint8_t value);
+uint8_t CUBE_WHEEL_SetPwmGain(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, int Ki, uint8_t KiMultiplier);
+uint8_t CUBE_WHEEL_SetMainGain(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, uint16_t Ki, uint8_t KiMultiplier, uint16_t Kd, uint8_t KdMultiplier);
 
-uint8_t CUBEWHEEL_GetWheelData(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-uint8_t CUBEWHEEL_GetWheelStatus(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-uint8_t CUBEWHEEL_GetWheelSpeed(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-uint8_t CUBEWHEEL_GetWheelDuty(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-uint8_t CUBEWHEEL_GetPwmGain(CUBEWHEEL_Driver* CUBEWHEEL_driver);
-uint8_t CUBEWHEEL_GetMainGain(CUBEWHEEL_Driver* CUBEWHEEL_driver);
+uint8_t CUBE_WHEEL_GetWheelData(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+uint8_t CUBE_WHEEL_GetWheelStatus(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+uint8_t CUBE_WHEEL_GetWheelSpeed(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+uint8_t CUBE_WHEEL_GetWheelDuty(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+uint8_t CUBE_WHEEL_GetPwmGain(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
+uint8_t CUBE_WHEEL_GetMainGain(CUBE_WHEEL_Driver* CUBE_WHEEL_driver);
 
 
-uint8_t CUBEWHEEL_SetBackupmode(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t en);
-uint8_t CUBEWHEEL_EnableEncoder(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t en);
-uint8_t CUBEWHEEL_EnableHallsensor(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t en);
+uint8_t CUBE_WHEEL_SetBackupmode(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, uint8_t en);
+uint8_t CUBE_WHEEL_EnableEncoder(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, uint8_t en);
+uint8_t CUBE_WHEEL_EnableHallsensor(CUBE_WHEEL_Driver* CUBE_WHEEL_driver, uint8_t en);
 
 /**
  * @brief  回転方向ベクトル設定関数
- * @param  *CUBEWHEEL_driver       : CUBEWHEEL_Driver構造体へのポインタ
+ * @param  *CUBE_WHEEL_driver       : CUBE_WHEEL_Driver構造体へのポインタ
  * @param  rotation_direction_b : 機体固定座標系での回転方向ベクトル
  * @return C2A_MATH_ERRORに準じる
  */
-C2A_MATH_ERROR CUBEWHEEL_set_rotation_direction_b(CUBEWHEEL_Driver* CUBEWHEEL_driver,
+C2A_MATH_ERROR CUBE_WHEEL_set_rotation_direction_b(CUBE_WHEEL_Driver* CUBE_WHEEL_driver,
   const float rotation_direction_b[PHYSICAL_CONST_THREE_DIM]);
 
 #endif

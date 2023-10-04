@@ -63,11 +63,11 @@ void APP_RW_CONTROLLER_exec_(void)
       return;
     }
 
-    float acceleration_rw_rad_s2[CUBEWHEEL_IDX_MAX];
-    float calc_speed_rw_rad_s[CUBEWHEEL_IDX_MAX];
-    float filtered_target_speed_rw_rad_s[CUBEWHEEL_IDX_MAX];
-    float target_speed_rw_rpm[CUBEWHEEL_IDX_MAX];
-    for (uint8_t idx = 0; idx < CUBEWHEEL_IDX_MAX; idx++)
+    float acceleration_rw_rad_s2[CUBE_WHEEL_IDX_MAX];
+    float calc_speed_rw_rad_s[CUBE_WHEEL_IDX_MAX];
+    float filtered_target_speed_rw_rad_s[CUBE_WHEEL_IDX_MAX];
+    float target_speed_rw_rpm[CUBE_WHEEL_IDX_MAX];
+    for (uint8_t idx = 0; idx < CUBE_WHEEL_IDX_MAX; idx++)
     {
       // トルク制限
       float max_torque = 0.00023f;
@@ -88,7 +88,7 @@ void APP_RW_CONTROLLER_exec_(void)
       filtered_target_speed_rw_rad_s[idx] = Z_FILTER_calc_output(&rw_controller_.lpf_ctrl[idx], calc_speed_rw_rad_s[idx]);
       // 指令
       target_speed_rw_rpm[idx] = PHYSICAL_CONST_rad_sec_to_rpm(filtered_target_speed_rw_rad_s[idx]);
-      DI_CUBEWHEEL_set_speed_rpm((CUBEWHEEL_IDX)idx, target_speed_rw_rpm[idx]);
+      DI_CUBE_WHEEL_set_speed_rpm((CUBE_WHEEL_IDX)idx, target_speed_rw_rpm[idx]);
     }
     rw_controller_.previous_obc_time = TMGR_get_master_clock();
   */
