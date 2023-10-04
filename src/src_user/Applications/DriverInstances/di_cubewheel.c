@@ -288,9 +288,6 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetMainGain(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-
-
-
 CCP_EXEC_STS Cmd_DI_CUBEWHEEL_GetStatus(const CTCP* packet)
 {
   DS_CMD_ERR_CODE ret;

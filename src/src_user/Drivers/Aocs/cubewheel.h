@@ -20,57 +20,57 @@
 #define RW_BACKUP_MODE_ON 1
 
 /**
-	* @struct CUBEWHEEL_Info
-	* @brief  CUBEWHEELのテレメトリ情報
-	*/
+ * @struct CUBEWHEEL_Info
+ * @brief  CUBEWHEELのテレメトリ情報
+ */
 typedef struct
 {
-	uint8_t enable_port_no;
-	uint8_t axis_id;
-	bool valid;
-	uint16_t runtime;
-	uint16_t runtime_in_msec;
-	float speed_in_rpm;
-	float speed_backup_in_rpm;
-	float maxspeed_in_rpm;
-	float reference_in_rpm;
-	float max_torque;
-	float current;
-	float duty;
-	uint8_t motor_mode;
-	bool backup_mode_state;
-	bool motor_state;
-	bool hall_sensor_state;
-	bool encoder_state;
-	bool error_flag;
-	float gain_pwm;
-	uint8_t gain_pwm_multiplier;
-	uint16_t feedback_gain;
-	uint8_t feedback_gain_multiplier;
-	uint16_t integrator_gain;
-	uint8_t integrator_gain_multiplier;
-	float rotation_direction_b[3];
+  uint8_t enable_port_no;
+  uint8_t axis_id;
+  bool valid;
+  uint16_t runtime;
+  uint16_t runtime_in_msec;
+  float speed_in_rpm;
+  float speed_backup_in_rpm;
+  float maxspeed_in_rpm;
+  float reference_in_rpm;
+  float max_torque;
+  float current;
+  float duty;
+  uint8_t motor_mode;
+  bool backup_mode_state;
+  bool motor_state;
+  bool hall_sensor_state;
+  bool encoder_state;
+  bool error_flag;
+  float gain_pwm;
+  uint8_t gain_pwm_multiplier;
+  uint16_t feedback_gain;
+  uint8_t feedback_gain_multiplier;
+  uint16_t integrator_gain;
+  uint8_t integrator_gain_multiplier;
+  float rotation_direction_b[3];
 
 } CUBEWHEEL_Info;
 
 /**
-	* @struct CUBEWHEEL_Driver
-	* @brief  CUBEWHEEL_Driver構造体
-	*/
+* @struct CUBEWHEEL_Driver
+* @brief  CUBEWHEEL_Driver構造体
+*/
 typedef struct
 {
-	struct
-	{
-		I2C_Config i2c_write;
-		I2C_Config i2c_read;
-		I2C_Config i2c_slave;;  //!< I2C class
-	} driver;
-	CUBEWHEEL_Info info;
+  struct
+  {
+    I2C_Config i2c_write;
+    I2C_Config i2c_read;
+    I2C_Config i2c_slave;  //!< I2C class
+  } driver;
+  CUBEWHEEL_Info info;
 
 } CUBEWHEEL_Driver;
 
 
-int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver,uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id);
+int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id);
 
 // これは必要そう
 DS_CMD_ERR_CODE CUBEWHEEL_Disable(CUBEWHEEL_Driver* CUBEWHEEL_driver);

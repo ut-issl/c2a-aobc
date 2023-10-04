@@ -43,8 +43,8 @@ void APP_RW_CONTROLLER_exec_(void)
       EL_record_event(el_group_error, (uint32_t)idx_rw, EL_ERROR_LEVEL_LOW, (uint32_t)RW0003_EL_NOTE_TORQUE_CMD);
     }
   }
-  
-  
+
+
   /*
     // 回転数指令でのRW制御    TODO:今後トルク指令との場合分けを行う
     static int cnt_come_here = 0;
@@ -52,7 +52,7 @@ void APP_RW_CONTROLLER_exec_(void)
     {
       return;
     }
-    
+
     // 時刻差分計算
     ObcTime current_obc_time = TMGR_get_master_clock();
     float dt_s = (float)OBCT_diff_in_sec(&rw_controller_.previous_obc_time, &current_obc_time);
@@ -88,9 +88,9 @@ void APP_RW_CONTROLLER_exec_(void)
       filtered_target_speed_rw_rad_s[idx] = Z_FILTER_calc_output(&rw_controller_.lpf_ctrl[idx], calc_speed_rw_rad_s[idx]);
       // 指令
       target_speed_rw_rpm[idx] = PHYSICAL_CONST_rad_sec_to_rpm(filtered_target_speed_rw_rad_s[idx]);
-      DI_CUBEWHEEL_set_speed_rpm((CUBEWHEEL_IDX)idx, target_speed_rw_rpm[idx]); 
+      DI_CUBEWHEEL_set_speed_rpm((CUBEWHEEL_IDX)idx, target_speed_rw_rpm[idx]);
     }
-    rw_controller_.previous_obc_time = TMGR_get_master_clock();  
+    rw_controller_.previous_obc_time = TMGR_get_master_clock();
   */
 }
 
