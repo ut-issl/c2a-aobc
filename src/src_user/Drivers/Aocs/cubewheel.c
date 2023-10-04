@@ -151,7 +151,8 @@ DS_CMD_ERR_CODE CUBEWHEEL_Enable(CUBEWHEEL_Driver* CUBEWHEEL_driver)
     Printf("Error: I2C_init in i2c_rw_slave_.\n");
     return DS_CMD_UNKNOWN_ERR;
   }
-  else {
+  else 
+  {
     return DS_CMD_OK;
   }
 
