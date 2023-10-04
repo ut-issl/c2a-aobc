@@ -5,7 +5,6 @@
 
 
 #include <src_user/Settings/port_config.h>
-#include <src_core//IfWrapper/I2C.h>
 #include <src_core/Library/print.h>
 #include <src_core/Drivers/Super/driver_super.h>
 #include "../../Library/physical_constants.h"
@@ -32,7 +31,7 @@ typedef struct
 	uint16_t runtime;
 	uint16_t runtime_in_msec;
 	float speed_in_rpm;
-  float speed_backup_in_rpm;
+	float speed_backup_in_rpm;
 	float maxspeed_in_rpm;
 	float reference_in_rpm;
 	float max_torque;
@@ -50,7 +49,7 @@ typedef struct
 	uint8_t feedback_gain_multiplier;
 	uint16_t integrator_gain;
 	uint8_t integrator_gain_multiplier;
-  float rotation_direction_b[3];
+	float rotation_direction_b[3];
 
 } CUBEWHEEL_Info;
 
@@ -73,7 +72,7 @@ typedef struct
 
 int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver,uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id);
 
-//これは必要そう
+// これは必要そう
 DS_CMD_ERR_CODE CUBEWHEEL_Disable(CUBEWHEEL_Driver* CUBEWHEEL_driver);
 DS_CMD_ERR_CODE CUBEWHEEL_Enable(CUBEWHEEL_Driver* CUBEWHEEL_driver);
 DS_CMD_ERR_CODE CUBEWHEEL_Startup(CUBEWHEEL_Driver* CUBEWHEEL_driver);

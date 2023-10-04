@@ -98,7 +98,7 @@ static void DI_CUBEWHEEL_update_(void)
       APP_ANOMALY_IDX idx = (APP_ANOMALY_IDX)(APP_ANOMALY_IDX_COMM_RWX + i);
       if (APP_ANOMALY_SET_LAST_RESULT(idx, (DS_CMD_ERR_CODE)last_result) == APP_ANOMALY_STATE_TO_ON)
       {
-        //Printf("to initial by RW(%d) comm error.\n", i);App内のPrintは避ける
+        // Printf("to initial by RW(%d) comm error.\n", i);App内のPrintは避ける
         APP_ANOMALY_TRANSITION_TO_INITIAL();
       }
     }
@@ -192,7 +192,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetSpeed(const CTCP* packet)
 
   CUBEWHEEL_SetReferenceSpeed(&cubewheel_driver_[cubewheel_idx], speed);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 
 }
@@ -221,7 +221,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetDutyCycle(const CTCP* packet)
 
   CUBEWHEEL_SetDutyCycle(&cubewheel_driver_[cubewheel_idx], duty);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -240,7 +240,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetControlMode(const CTCP* packet)
 
   CUBEWHEEL_SetControlMode(&cubewheel_driver_[cubewheel_idx], control_mode);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -260,7 +260,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetPwmGain(const CTCP* packet)
 
   CUBEWHEEL_SetPwmGain(&cubewheel_driver_[cubewheel_idx], Ki, KiMultiplier);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -284,7 +284,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetMainGain(const CTCP* packet)
 
 
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -301,7 +301,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_GetStatus(const CTCP* packet)
     ret = CUBEWHEEL_GetStatus(&cubewheel_driver_[idx]);
   }
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -321,7 +321,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_SetBackupmode(const CTCP* packet)
 
   CUBEWHEEL_SetBackupmode(&cubewheel_driver_[cubewheel_idx], enable_status);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -341,7 +341,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableEncoder(const CTCP* packet)
 
   CUBEWHEEL_EnableEncoder(&cubewheel_driver_[cubewheel_idx], enable_status);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -361,7 +361,7 @@ CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EnableHallsensor(const CTCP* packet)
 
   CUBEWHEEL_EnableHallsensor(&cubewheel_driver_[cubewheel_idx], enable_status);
 
-  //return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // return DS_conv_cmd_err_to_ccp_exec_sts(ret);
   return CCP_EXEC_SUCCESS;
 }
 
@@ -400,7 +400,7 @@ int DI_CUBEWHEEL_set_torque_Nm(CUBEWHEEL_IDX idx, float torque_rw_Nm)
 
   duty = (int)(f_duty * 100);
 
-  //set max/min limit to duty value
+  // set max/min limit to duty value
   if (duty > 100)
   {
     duty = 100;

@@ -75,7 +75,7 @@ const static uint8_t CUBEWHEEL_kTlmLengthGetStatusErrorFlag_ = 1;
 
 const static uint8_t CUBEWHEEL_kConvertValueOfCurrentFactor_ = 0.48828125;
 
-//Endianがビッグエンディアン
+// Endianがビッグエンディアン
 
 int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id)
 {
@@ -84,8 +84,8 @@ int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t devic
   GPIO_set_direction(CUBEWHEEL_driver->info.enable_port_no, GPIO_OUTPUT);
 
   CUBEWHEEL_driver->info.axis_id = axis_id;
-  CUBEWHEEL_driver->info.maxspeed_in_rpm = 8000; //rpm
-  CUBEWHEEL_driver->info.max_torque = 0.23; //mNm
+  CUBEWHEEL_driver->info.maxspeed_in_rpm = 8000; // rpm
+  CUBEWHEEL_driver->info.max_torque = 0.23; // mNm
 
   CUBEWHEEL_driver->info.rotation_direction_b[0] = 1.0f;
   CUBEWHEEL_driver->info.rotation_direction_b[1] = 0.0f;
@@ -93,12 +93,12 @@ int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t devic
 
   CUBEWHEEL_driver->driver.i2c_write.ch = ch;
   CUBEWHEEL_driver->driver.i2c_write.frequency_khz = 100;
-  CUBEWHEEL_driver->driver.i2c_write.device_address = (device_address << 1); //write
+  CUBEWHEEL_driver->driver.i2c_write.device_address = (device_address << 1); // write
   CUBEWHEEL_driver->driver.i2c_write.stop_flag = 1;
   CUBEWHEEL_driver->driver.i2c_write.timeout_threshold = 500;
   CUBEWHEEL_driver->driver.i2c_write.rx_length = 8;
 
-  //todo: ここはreopen?
+  // todo: ここはreopen?
   if (I2C_init(&CUBEWHEEL_driver->driver.i2c_write) != 0)
   {
     Printf("Error: I2C_init in i2c_rw_write_.\n");
@@ -106,12 +106,12 @@ int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t devic
 
   CUBEWHEEL_driver->driver.i2c_read.ch = ch;
   CUBEWHEEL_driver->driver.i2c_read.frequency_khz = 100;
-  CUBEWHEEL_driver->driver.i2c_read.device_address = (device_address << 1) + 1; //read
+  CUBEWHEEL_driver->driver.i2c_read.device_address = (device_address << 1) + 1; // read
   CUBEWHEEL_driver->driver.i2c_read.stop_flag = 1;
   CUBEWHEEL_driver->driver.i2c_read.timeout_threshold = 500;
   CUBEWHEEL_driver->driver.i2c_read.rx_length = 8;
 
-  //todo: ここはreopen?
+  // todo: ここはreopen?
   if (I2C_init(&CUBEWHEEL_driver->driver.i2c_read) != 0)
   {
     Printf("Error: I2C_init in i2c_rw_read_.\n");
@@ -119,12 +119,12 @@ int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t ch, uint8_t devic
 
   CUBEWHEEL_driver->driver.i2c_slave.ch = ch;
   CUBEWHEEL_driver->driver.i2c_slave.frequency_khz = 100;
-  CUBEWHEEL_driver->driver.i2c_slave.device_address = device_address; //slave
+  CUBEWHEEL_driver->driver.i2c_slave.device_address = device_address; // slave
   CUBEWHEEL_driver->driver.i2c_slave.stop_flag = 1;
   CUBEWHEEL_driver->driver.i2c_slave.timeout_threshold = 500;
   CUBEWHEEL_driver->driver.i2c_slave.rx_length = 8;
 
-  //todo: ここはreopen?
+  // todo: ここはreopen?
   if (I2C_init(&CUBEWHEEL_driver->driver.i2c_slave) != 0)
   {
     Printf("Error: I2C_init in i2c_rw_slave_.\n");
@@ -311,8 +311,8 @@ uint8_t CUBEWHEEL_GetWheelStatus(CUBEWHEEL_Driver* CUBEWHEEL_driver)
   raw_value += data[2];
   CUBEWHEEL_driver->info.runtime_in_msec = (uint16_t)raw_value;
 
-  raw_value = data[5] << 8; //reserve
-  raw_value += data[4];	//reserve
+  raw_value = data[5] << 8; // reserve
+  raw_value += data[4];	// reserve
 
   raw_value = data[6];
   CUBEWHEEL_driver->info.motor_mode = (uint8_t)raw_value;
@@ -473,7 +473,7 @@ static void WriteRegister(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t register_a
   // Make send data
   send_data_buffer[0] = register_address;
 
-  //todo error処理
+  // todo error処理
   if (length > 10)
   {
     return;
@@ -505,7 +505,7 @@ static uint8_t ReadID(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t* data)
   ReadRegister(CUBEWHEEL_driver, CUBEWHEEL_kCmdIdGetIdentification_, data, CUBEWHEEL_kTlmLengthGetIdentification_);
 
   // TLM128のdata[0]は8固定。
-  //Printf("ReadID = %d\n", data[0]);	
+  // Printf("ReadID = %d\n", data[0]);	
   if (data[0] != 0x08)
   {
     return(1);
@@ -520,7 +520,7 @@ static uint8_t ReadExtendedID(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t* data)
   ReadRegister(CUBEWHEEL_driver, CUBEWHEEL_kCmdIdGetExIdentification_, data, CUBEWHEEL_kTlmLengthGetExIdentification_);
 
   // TLM129のdata[2]はI2Cアドレス
-  //Printf("ReadExtendedID = %d : %d", data[2], CUBEWHEEL_driver->driver.i2c_write.device_address);
+  // Printf("ReadExtendedID = %d : %d", data[2], CUBEWHEEL_driver->driver.i2c_write.device_address);
   if (data[2] != CUBEWHEEL_driver->driver.i2c_write.device_address)
   {
     return(1);
@@ -537,13 +537,13 @@ uint8_t ReadErrorFlag(CUBEWHEEL_Driver* CUBEWHEEL_driver)
   ReadRegister(CUBEWHEEL_driver, CUBEWHEEL_kCmdIdGetStatusErrorFlag_, data, CUBEWHEEL_kTlmLengthGetStatusErrorFlag_);
 
 
-  //Printf("CubeWheel Error flag:");
+  // Printf("CubeWheel Error flag:");
   int i;
   for (i = 0; i < CUBEWHEEL_kTlmLengthGetStatusErrorFlag_; i++)
   {
     //		Printf(data[i], HEX); Printf(" ");
   }
-  //Printf("");
+  // Printf("");
 
   return i_ret;
 }

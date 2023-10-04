@@ -29,8 +29,8 @@ extern const CUBEWHEEL_Driver* const cubewheel_driver[CUBEWHEEL_IDX_MAX];
  */
 AppInfo DI_CUBEWHEEL_update(void);
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CTCP *packet);//旧 RW_startup
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CTCP* packet);//旧 RW_startup+enable
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CTCP *packet);// 旧 RW_startup
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CTCP* packet);// 旧 RW_startup+enable
 CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EndProcess(const CTCP* packet);
 
 
