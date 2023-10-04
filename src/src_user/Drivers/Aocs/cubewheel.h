@@ -1,7 +1,7 @@
 // CubeWheel.h
 
-#ifndef _CUBEWHEEL_h
-#define _CUBEWHEEL_h
+#ifndef CUBEWHEEL_H_
+#define CUBEWHEEL_H_
 
 
 #include <src_user/Settings/port_config.h>
@@ -108,4 +108,3 @@ C2A_MATH_ERROR CUBEWHEEL_set_rotation_direction_b(CUBEWHEEL_Driver* CUBEWHEEL_dr
   const float rotation_direction_b[PHYSICAL_CONST_THREE_DIM]);
 
 #endif
-

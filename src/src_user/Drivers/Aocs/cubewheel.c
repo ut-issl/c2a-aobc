@@ -140,8 +140,6 @@ DS_CMD_ERR_CODE CUBEWHEEL_Disable(CUBEWHEEL_Driver* CUBEWHEEL_driver)
   return DS_CMD_OK;
 }
 
-
-
 DS_CMD_ERR_CODE CUBEWHEEL_Enable(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 {
   int i_ret = 0;
@@ -247,7 +245,6 @@ uint8_t CUBEWHEEL_SetPwmGain(CUBEWHEEL_Driver* CUBEWHEEL_driver, int Ki, uint8_t
   return i_ret;
 }
 
-
 uint8_t CUBEWHEEL_SetMainGain(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint16_t Ki, uint8_t KiMultiplier, uint16_t Kd, uint8_t KdMultiplier)
 {
 
@@ -266,8 +263,6 @@ uint8_t CUBEWHEEL_SetMainGain(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint16_t Ki, u
 
   return i_ret;
 }
-
-
 
 uint8_t CUBEWHEEL_GetWheelData(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 {
@@ -312,7 +307,7 @@ uint8_t CUBEWHEEL_GetWheelStatus(CUBEWHEEL_Driver* CUBEWHEEL_driver)
   CUBEWHEEL_driver->info.runtime_in_msec = (uint16_t)raw_value;
 
   raw_value = data[5] << 8; // reserve
-  raw_value += data[4];	// reserve
+  raw_value += data[4];  // reserve
 
   raw_value = data[6];
   CUBEWHEEL_driver->info.motor_mode = (uint8_t)raw_value;
@@ -326,7 +321,6 @@ uint8_t CUBEWHEEL_GetWheelStatus(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 
   return i_ret;
 }
-
 
 uint8_t CUBEWHEEL_GetWheelSpeed(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 {
@@ -366,7 +360,6 @@ uint8_t CUBEWHEEL_GetWheelDuty(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 
   return 0;
 }
-
 
 uint8_t CUBEWHEEL_GetPwmGain(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 {
@@ -414,8 +407,6 @@ uint8_t CUBEWHEEL_GetMainGain(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 
 }
 
-
-
 uint8_t CUBEWHEEL_SetBackupmode(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t enable_status)
 {
   int i_ret = 0;
@@ -445,13 +436,6 @@ uint8_t CUBEWHEEL_EnableHallsensor(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t e
 
   return i_ret;
 }
-
-
-
-
-
-
-
 
 static uint8_t GetStartupStatus(CUBEWHEEL_Driver* CUBEWHEEL_driver)
 {
@@ -499,13 +483,12 @@ static void ReadRegister(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t register_ad
   return;
 }
 
-
 static uint8_t ReadID(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t* data)
 {
   ReadRegister(CUBEWHEEL_driver, CUBEWHEEL_kCmdIdGetIdentification_, data, CUBEWHEEL_kTlmLengthGetIdentification_);
 
   // TLM128のdata[0]は8固定。
-  // Printf("ReadID = %d\n", data[0]);	
+  // Printf("ReadID = %d\n", data[0]);
   if (data[0] != 0x08)
   {
     return(1);
@@ -541,7 +524,7 @@ uint8_t ReadErrorFlag(CUBEWHEEL_Driver* CUBEWHEEL_driver)
   int i;
   for (i = 0; i < CUBEWHEEL_kTlmLengthGetStatusErrorFlag_; i++)
   {
-    //		Printf(data[i], HEX); Printf(" ");
+    // Printf(data[i], HEX); Printf(" ");
   }
   // Printf("");
 
