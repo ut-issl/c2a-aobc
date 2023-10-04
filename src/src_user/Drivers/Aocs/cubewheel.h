@@ -22,7 +22,7 @@
 
 /**
 	* @struct CUBEWHEEL_Info
-	* @brief  CUBEWHEEL‚ÌƒeƒŒƒƒgƒŠî•ñ
+	* @brief  CUBEWHEELã®ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªæƒ…å ±
 	*/
 typedef struct
 {
@@ -56,7 +56,7 @@ typedef struct
 
 /**
 	* @struct CUBEWHEEL_Driver
-	* @brief  CUBEWHEEL_Driver\‘¢‘Ì
+	* @brief  CUBEWHEEL_Driveræ§‹é€ ä½“
 	*/
 typedef struct
 {
@@ -73,7 +73,7 @@ typedef struct
 
 int CUBEWHEEL_init(CUBEWHEEL_Driver* CUBEWHEEL_driver,uint8_t ch, uint8_t device_address, uint8_t enable_port_no, uint8_t axis_id);
 
-//‚±‚ê‚Í•K—v‚»‚¤
+//ã“ã‚Œã¯å¿…è¦ãã†
 DS_CMD_ERR_CODE CUBEWHEEL_Disable(CUBEWHEEL_Driver* CUBEWHEEL_driver);
 DS_CMD_ERR_CODE CUBEWHEEL_Enable(CUBEWHEEL_Driver* CUBEWHEEL_driver);
 DS_CMD_ERR_CODE CUBEWHEEL_Startup(CUBEWHEEL_Driver* CUBEWHEEL_driver);
@@ -100,10 +100,10 @@ uint8_t CUBEWHEEL_EnableEncoder(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t en);
 uint8_t CUBEWHEEL_EnableHallsensor(CUBEWHEEL_Driver* CUBEWHEEL_driver, uint8_t en);
 
 /**
- * @brief  ‰ñ“]•ûŒüƒxƒNƒgƒ‹İ’èŠÖ”
- * @param  *CUBEWHEEL_driver       : CUBEWHEEL_Driver\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param  rotation_direction_b : ‹@‘ÌŒÅ’èÀ•WŒn‚Å‚Ì‰ñ“]•ûŒüƒxƒNƒgƒ‹
- * @return C2A_MATH_ERROR‚É€‚¶‚é
+ * @brief  å›è»¢æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«è¨­å®šé–¢æ•°
+ * @param  *CUBEWHEEL_driver       : CUBEWHEEL_Driveræ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  rotation_direction_b : æ©Ÿä½“å›ºå®šåº§æ¨™ç³»ã§ã®å›è»¢æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+ * @return C2A_MATH_ERRORã«æº–ã˜ã‚‹
  */
 C2A_MATH_ERROR CUBEWHEEL_set_rotation_direction_b(CUBEWHEEL_Driver* CUBEWHEEL_driver,
   const float rotation_direction_b[PHYSICAL_CONST_THREE_DIM]);

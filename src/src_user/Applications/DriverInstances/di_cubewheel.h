@@ -1,6 +1,6 @@
 /**
 * @file   di_cubewheel.h
-* @brief  CUBEWHEEL‚ÌDriver Instance
+* @brief  CUBEWHEELã®Driver Instance
 */
 #ifndef DI_CUBEWHEEL_H_
 #define DI_CUBEWHEEL_H_
@@ -23,14 +23,14 @@ typedef enum
 extern const CUBEWHEEL_Driver* const cubewheel_driver[CUBEWHEEL_IDX_MAX];
 
 /**
- * @brief  CUBEWHEEL’èŠúÀsƒAƒvƒŠ¶¬ŠÖ”
+ * @brief  CUBEWHEELå®šæœŸå®Ÿè¡Œã‚¢ãƒ—ãƒªç”Ÿæˆé–¢æ•°
  * @param  void
  * @return AppInfo
  */
 AppInfo DI_CUBEWHEEL_update(void);
 
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CTCP *packet);//‹Œ RW_startup
-CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CTCP* packet);//‹Œ RW_startup+enable
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Enable(const CTCP *packet);//æ—§ RW_startup
+CCP_EXEC_STS Cmd_DI_CUBEWHEEL_Init(const CTCP* packet);//æ—§ RW_startup+enable
 CCP_EXEC_STS Cmd_DI_CUBEWHEEL_EndProcess(const CTCP* packet);
 
 
