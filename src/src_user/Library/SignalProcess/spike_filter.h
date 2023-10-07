@@ -81,4 +81,16 @@ C2A_MATH_ERROR SPIKE_FILTER_calc_output(SpikeFilter* filter, float* output, cons
 C2A_MATH_ERROR SPIKE_FILTER_calc_output_double(SpikeFilter* filter, double* output, const double input);
 
 
+/**
+ * @brief  SPIKE_FILTERの出力を得る (uint32_t ver.)
+ * @param[in,out]  *filter  : 使用するフィルタ
+ * @param[out]  output      : フィルタ出力値
+ * @param[in]   input       : フィルタ入力値
+ * @return C2A_MATH_ERROR_RANGE_OVER : スパイク値として入力を除外した場合
+ * @return C2A_MATH_ERROR_OTHERS     : 入力値除外回数連続値が指定値以上になった場合
+ * @return C2A_MATH_ERROR_OK         : それ以外
+ */
+C2A_MATH_ERROR SPIKE_FILTER_calc_output_uint32t(SpikeFilter* filter, uint32_t* output, const uint32_t input);
+
+
 #endif
