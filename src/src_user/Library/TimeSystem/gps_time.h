@@ -26,4 +26,12 @@ typedef struct
  */
 GpsTime GPS_TIME_create_gps_time(const uint16_t week_number, const uint32_t msec_of_week);
 
+
+/**
+ * @brief      GPS時刻積算ミリ秒計算
+ * @param[in]  GPS_TIME
+ * @return     積算ミリ秒
+ */
+float GPS_TIME_calc_total_time_msec(const GpsTime gpstime);
+
 #endif
