@@ -24,7 +24,4 @@ extern uint8_t OEM7600_PARAMETERS_gpstime_total_msec_spike_filter_config_count_l
 extern double OEM7600_PARAMETERS_gpstime_total_msec_spike_filter_config_reject_threshold_ms;                      //!< Reject threshold about gpstime [ms]
 extern double OEM7600_PARAMETERS_gpstime_total_msec_spike_filter_config_amplitude_limit_to_accept_as_step_ms;     //!< Amplitude limit to accept as step input about gpstime [ms]
 
-
-
-
 #endif // OEM7600_PARAMETERS_H_
