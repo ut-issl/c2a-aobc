@@ -53,6 +53,17 @@ C2A_MATH_ERROR SPIKE_FILTER_calc_output(SpikeFilter* filter, float* output, cons
 }
 
 
+C2A_MATH_ERROR SPIKE_FILTER_calc_output_uint32_t(SpikeFilter* filter, uint32_t* output, const uint32_t input)
+{
+  double output_double = 0.0;
+
+  C2A_MATH_ERROR judgement_result = SPIKE_FILTER_calc_output_double(filter, &output_double, (double)(input));
+  *output = (uint32_t)(output_double);
+
+  return judgement_result;
+}
+
+
 C2A_MATH_ERROR SPIKE_FILTER_calc_output_double(SpikeFilter* filter, double* output, const double input)
 {
   C2A_MATH_ERROR judgement_result = C2A_MATH_ERROR_OK;
