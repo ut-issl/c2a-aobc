@@ -96,7 +96,8 @@ static void APP_OEM7600_FILTER_exec_(void)
   SPIKE_FILTER_calc_output_uint32_t(&APP_OEM7600_FILTER_gps_time_total_sec_spike_, &gps_time_total_sec_filtered, gps_time_total_sec);
 #else
   oem7600_filter_.gps_time_total_sec_filter_error =
-  SPIKE_FILTER_calc_output_uint32_t(&APP_OEM7600_FILTER_gps_time_total_sec_spike_, &oem7600_filter_.debug_gps_time_total_sec_filtered, gps_time_total_sec);
+  SPIKE_FILTER_calc_output_uint32_t(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
+                                    &oem7600_filter_.debug_gps_time_total_sec_filtered, gps_time_total_sec);
   gps_time_total_sec_filtered = oem7600_filter_.debug_gps_time_total_sec_filtered;
 #endif
 
