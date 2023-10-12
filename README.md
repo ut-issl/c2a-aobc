@@ -142,6 +142,13 @@
   - Perform `git submodule update`.
   - Delete CMake cache of S2E.
 
+## Used Projects
+
+| Project Name          | Developer                             | Launch  | Refs       |
+| ----------------------| ------------------------------------  | ------- | ---------- |
+| SPHERE-1 EYE          | Sony Group Corporation and ISSL, UT   | 2023    | [Sekine 2023](https://archive.ists.ne.jp/upload_pdf/2023-f-6-02.pdf) |
+| ONGLAISAT             | ISSL, UT                              | -       | [Ikari 2022](https://doi.org/10.57350/jesa.63) |
+
 ## Brief history of development
 ### History
 - 21st Jan. 2021: Development started in a private repository at GitLab.
