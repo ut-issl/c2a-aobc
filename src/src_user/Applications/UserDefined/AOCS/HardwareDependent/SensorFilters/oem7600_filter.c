@@ -90,15 +90,8 @@ static void APP_OEM7600_FILTER_exec_(void)
   // 通算秒計算結果がゼロの場合は時間が巻き戻っているため，スパイク判定とは別基準で除外すべき値
   if (total_gps_time_s == 0) return;
 
-#ifndef OEM7600_FILTER_IS_UNDER_DEBUG
   oem7600_filter_.total_gps_time_filter_error =
   SPIKE_FILTER_calc_output_uint32(&APP_OEM7600_FILTER_gps_time_total_sec_spike_, &total_gps_time_filtered_s, total_gps_time_s);
-#else
-  oem7600_filter_.gps_time_total_sec_filter_error =
-  SPIKE_FILTER_calc_output_uint32(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
-                                  &oem7600_filter_.debug_gps_time_total_sec_filtered, gps_time_total_sec);
-  gps_time_total_sec_filtered = oem7600_filter_.debug_gps_time_total_sec_filtered;
-#endif
 
   if (total_gps_time_s == total_gps_time_filtered_s)
   {

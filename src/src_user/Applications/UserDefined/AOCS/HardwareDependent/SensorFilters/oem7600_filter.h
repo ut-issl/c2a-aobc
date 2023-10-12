@@ -35,7 +35,6 @@ typedef struct
   C2A_MATH_ERROR total_gps_time_filter_error;                    //!< スパイク除去フィルタ入力判定ログ for 受信機時刻通算秒
 
   uint32_t total_gps_time_epoch_week;                            //!< 受信機時刻通算秒の元紀とするGPS週番号
-  // uint32_t debug_gps_time_total_sec_filtered;                        //!< フィルタリング後の受信機時刻通算秒（デバッグ用途）
 } Oem7600Filter;
 
 extern const Oem7600Filter* const oem7600_filter;
