@@ -9,7 +9,7 @@
   - For real AOBC (Attitude On Board Computer)
     - [vMicro](https://www.visualmicro.com/) + Visual Studio 2019
   - For SILS test
-    - [S2E-AOBC v4.0.0](https://github.com/ut-issl/s2e-aobc/releases/tag/v4.0.0)
+    - [S2E-AOBC v5.0.0](https://github.com/ut-issl/s2e-aobc/releases/tag/v5.0.0)
   - Telemetry/Command interface
     - [WINGS v2.1.0](https://github.com/ut-issl/wings/releases/tag/v2.1.0)
 - How to use
