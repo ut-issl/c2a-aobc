@@ -7,6 +7,8 @@
 
 #include "stdint.h"
 
+#define GPS_TIME_EPOCH_JULIAN_DAY  (2444244.5)  //!< GPS時刻元紀におけるユリウス日 (UTC 1980/1/6 mid night)
+
  /**
   * @struct   GPS_TIME_OF_WEEK
   * @brief    GPS時刻構造体
@@ -34,6 +36,6 @@ GpsTime GPS_TIME_create_gps_time(const uint16_t week_number, const uint32_t msec
  * @return     GPS時刻元紀週番号先頭からの積算秒
  * @note       ロールオーバーまで，元紀から約7000週有効
  */
-uint32_t GPS_TIME_calc_total_time_sec(const GpsTime gpstime, const uint16_t epoch_gps_week);
+uint32_t GPS_TIME_calc_total_time_s(const GpsTime gpstime, const uint16_t epoch_gps_week);
 
 #endif

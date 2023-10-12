@@ -19,9 +19,9 @@ extern uint8_t OEM7600_PARAMETERS_velocity_spike_filter_config_count_limit_to_re
 extern double OEM7600_PARAMETERS_velocity_spike_filter_config_reject_threshold_m_s[PHYSICAL_CONST_THREE_DIM];                     //!< Reject threshold about velocity [m/s]
 extern double OEM7600_PARAMETERS_velocity_spike_filter_config_amplitude_limit_to_accept_as_step_m_s[PHYSICAL_CONST_THREE_DIM];    //!< Amplitude limit to accept as step input about velocity [m/s]
 
-extern uint8_t OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_count_limit_to_accept;                   //!< Count limit to accept about gpstime
-extern uint8_t OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_count_limit_to_reject_continued_warning; //!< Count limit to reject continued warning about gpstime
-extern double OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_reject_threshold_s;                      //!< Reject threshold about gpstime [ms]
-extern double OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_amplitude_limit_to_accept_as_step_s;     //!< Amplitude limit to accept as step input about gpstime [ms]
+extern uint8_t OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit_to_accept;                   //!< Count limit to accept about gpstime
+extern uint8_t OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit_to_reject_continued_warning; //!< Count limit to reject continued warning about gpstime
+extern double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_reject_threshold_s;                      //!< Reject threshold about gpstime [ms]
+extern double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_amplitude_limit_to_accept_as_step_s;     //!< Amplitude limit to accept as step input about gpstime [ms]
 
 #endif // OEM7600_PARAMETERS_H_

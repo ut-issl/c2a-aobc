@@ -15,13 +15,12 @@
 #include <src_user/Library/matrix33.h>
 #include <src_user/Library/time_space.h>
 #include <src_user/Library/math_constants.h>
+#include <src_user/Library/physical_constants.h>
 
 // Satellite Parameters
 #include <src_user/Settings/SatelliteParameters/oem7600_parameters.h>
 
 #define OEM7600_FILTER_POS_VEL_SIX_DIM (6)
-#define OEM7600_FILTER_DAY_OF_WEEK     (7)
-#define OEM7600_FILTER_GPS_TIME_EPOCH_JULIAN_DAY  (2444244.5)  //!< GPS時刻元紀におけるユリウス日 (UTC 1980/1/6 mid night)
 // #define OEM7600_FILTER_IS_UNDER_DEBUG
 
 static Oem7600Filter        oem7600_filter_;
@@ -57,7 +56,7 @@ static void APP_OEM7600_FILTER_init_(void)
   oem7600_filter_.gps_time_filtered.week_number  = 0;
   oem7600_filter_.gps_time_filtered.msec_of_week = 0;
   oem7600_filter_.obct_gps_time_observed_filtered  = OBCT_create(0, 0, 0);
-  oem7600_filter_.gps_time_total_sec_filter_error = C2A_MATH_ERROR_OK;
+  oem7600_filter_.total_gps_time_filter_error = C2A_MATH_ERROR_OK;
 
   int spike_filter_init_result = APP_OEM7600_FILTER_init_spike_filter_();
   if (spike_filter_init_result != 0)
@@ -66,8 +65,8 @@ static void APP_OEM7600_FILTER_init_(void)
   }
 
   // 軌道計算等に用いるreference_jdayの初期値に対応するGPS週番号をGPS通算秒の元紀にする
-  oem7600_filter_.gps_time_total_sec_epoch_week =
-    (uint16_t)((float)(aocs_manager->reference_jday - (double)(OEM7600_FILTER_GPS_TIME_EPOCH_JULIAN_DAY)) / (float)(OEM7600_FILTER_DAY_OF_WEEK));
+  oem7600_filter_.total_gps_time_epoch_week =
+    (uint16_t)((float)(aocs_manager->reference_jday - (double)(GPS_TIME_EPOCH_JULIAN_DAY)) / (float)(PHYSICAL_CONST_DAY_OF_WEEK));
 
 #ifdef OEM7600_FILTER_IS_UNDER_DEBUG
   oem7600_filter_.debug_gps_time_total_sec_filtered = 0;
@@ -84,24 +83,24 @@ static void APP_OEM7600_FILTER_exec_(void)
   // 諸々のデータの流れを追うと，フィルタを掛ける前にまずはaocs_managerのobsを更新して，
   // その後でaocs_managerのobsを改めてフィルタリングする，という流れが慣例なので，その流れに従う
   //!< フィルタリング後の通算秒
-  uint32_t gps_time_total_sec_filtered = 0;
+  uint32_t total_gps_time_filtered_s = 0;
   //!< フィルタリング前の通算秒
-  uint32_t gps_time_total_sec = GPS_TIME_calc_total_time_sec(aocs_manager->current_gps_time_obs, oem7600_filter_.gps_time_total_sec_epoch_week);
+  uint32_t total_gps_time_s = GPS_TIME_calc_total_time_s(aocs_manager->current_gps_time_obs, oem7600_filter_.total_gps_time_epoch_week);
 
   // 通算秒計算結果がゼロの場合は時間が巻き戻っているため，スパイク判定とは別基準で除外すべき値
-  if (gps_time_total_sec == 0) return;
+  if (total_gps_time_s == 0) return;
 
 #ifndef OEM7600_FILTER_IS_UNDER_DEBUG
-  oem7600_filter_.gps_time_total_sec_filter_error =
-  SPIKE_FILTER_calc_output_uint32_t(&APP_OEM7600_FILTER_gps_time_total_sec_spike_, &gps_time_total_sec_filtered, gps_time_total_sec);
+  oem7600_filter_.total_gps_time_filter_error =
+  SPIKE_FILTER_calc_output_uint32(&APP_OEM7600_FILTER_gps_time_total_sec_spike_, &total_gps_time_filtered_s, total_gps_time_s);
 #else
   oem7600_filter_.gps_time_total_sec_filter_error =
-  SPIKE_FILTER_calc_output_uint32_t(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
-                                    &oem7600_filter_.debug_gps_time_total_sec_filtered, gps_time_total_sec);
+  SPIKE_FILTER_calc_output_uint32(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
+                                  &oem7600_filter_.debug_gps_time_total_sec_filtered, gps_time_total_sec);
   gps_time_total_sec_filtered = oem7600_filter_.debug_gps_time_total_sec_filtered;
 #endif
 
-  if (gps_time_total_sec == gps_time_total_sec_filtered)
+  if (total_gps_time_s == total_gps_time_filtered_s)
   {
     // フィルタリング前後の通算秒が一致するならobsの値を信用できるため，フィルタリング後の値をobsで更新する
     // 一致しない場合は，前回フィルタリング後の値を残したまま，その値でobsを上書きする
@@ -112,7 +111,7 @@ static void APP_OEM7600_FILTER_exec_(void)
 
 
   // 時刻スパイク判定に掛かった場合，以降の測位関係の更新は時刻が矛盾することになり精度劣化に繋がるため，処理スキップすることで更新を避ける
-  if (oem7600_filter_.gps_time_total_sec_filter_error != C2A_MATH_ERROR_OK) return;
+  if (oem7600_filter_.total_gps_time_filter_error != C2A_MATH_ERROR_OK) return;
 
 
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
@@ -192,14 +191,14 @@ static int APP_OEM7600_FILTER_init_spike_filter_(void)
       OEM7600_PARAMETERS_velocity_spike_filter_config_amplitude_limit_to_accept_as_step_m_s[axis_id];
   }
 
-  oem7600_filter_.gps_time_total_sec_spike_filter_config.count_limit_to_accept =
-    OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_count_limit_to_accept;
-  oem7600_filter_.gps_time_total_sec_spike_filter_config.count_limit_to_reject_continued_warning =
-    OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_count_limit_to_reject_continued_warning;
-  oem7600_filter_.gps_time_total_sec_spike_filter_config.reject_threshold =
-    OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_reject_threshold_s;
-  oem7600_filter_.gps_time_total_sec_spike_filter_config.amplitude_limit_to_accept_as_step =
-    OEM7600_PARAMETERS_gps_time_total_sec_spike_filter_config_amplitude_limit_to_accept_as_step_s;
+  oem7600_filter_.total_gps_time_spike_filter_config.count_limit_to_accept =
+    OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit_to_accept;
+  oem7600_filter_.total_gps_time_spike_filter_config.count_limit_to_reject_continued_warning =
+    OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit_to_reject_continued_warning;
+  oem7600_filter_.total_gps_time_spike_filter_config.reject_threshold =
+    OEM7600_PARAMETERS_total_gps_time_spike_filter_config_reject_threshold_s;
+  oem7600_filter_.total_gps_time_spike_filter_config.amplitude_limit_to_accept_as_step =
+    OEM7600_PARAMETERS_total_gps_time_spike_filter_config_amplitude_limit_to_accept_as_step_s;
 
   C2A_MATH_ERROR position_filter_setting_result = C2A_MATH_ERROR_OK;
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
@@ -228,7 +227,7 @@ static int APP_OEM7600_FILTER_init_spike_filter_(void)
   }
 
   C2A_MATH_ERROR gpstime_filter_setting_result = SPIKE_FILTER_init(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
-                                                                   oem7600_filter_.gps_time_total_sec_spike_filter_config);
+                                                                   oem7600_filter_.total_gps_time_spike_filter_config);
 
 
   // TODO_L: position_filter_settingとvelocity_filter_settingのどちらでエラーが出たかを区別するか要検討

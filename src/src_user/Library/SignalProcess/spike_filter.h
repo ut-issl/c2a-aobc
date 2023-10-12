@@ -90,7 +90,7 @@ C2A_MATH_ERROR SPIKE_FILTER_calc_output_double(SpikeFilter* filter, double* outp
  * @return C2A_MATH_ERROR_OTHERS     : 入力値除外回数連続値が指定値以上になった場合
  * @return C2A_MATH_ERROR_OK         : それ以外
  */
-C2A_MATH_ERROR SPIKE_FILTER_calc_output_uint32_t(SpikeFilter* filter, uint32_t* output, const uint32_t input);
+C2A_MATH_ERROR SPIKE_FILTER_calc_output_uint32(SpikeFilter* filter, uint32_t* output, const uint32_t input);
 
 
 #endif
