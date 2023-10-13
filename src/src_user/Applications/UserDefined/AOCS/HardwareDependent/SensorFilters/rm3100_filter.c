@@ -63,11 +63,12 @@ static void APP_RM3100_FILTER_init_(void)
     Printf("RM3100 on AOBC SpikeFilter init Failed ! \n");
   }
 
-  int spike_filter_external_init_result = APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX_EXTERNAL,
-                                                                               RM3100_PARAMETERS_mag_ext_spike_count_limit_to_accept,
-                                                                               RM3100_PARAMETERS_mag_ext_spike_count_limit_to_reject_continued_warning,
-                                                                               RM3100_PARAMETERS_mag_ext_spike_reject_threshold_nT,
-                                                                               RM3100_PARAMETERS_mag_ext_spike_amplitude_limit_to_accept_as_step_nT);
+  int spike_filter_external_init_result =
+    APP_RM3100_FILTER_init_spike_filter_(RM3100_IDX_EXTERNAL,
+                                         RM3100_PARAMETERS_mag_ext_spike_count_limit_to_accept,
+                                         RM3100_PARAMETERS_mag_ext_spike_count_limit_to_reject_continued_warning,
+                                         RM3100_PARAMETERS_mag_ext_spike_reject_threshold_nT,
+                                         RM3100_PARAMETERS_mag_ext_spike_amplitude_limit_to_accept_as_step_nT);
   if (spike_filter_external_init_result != 0)
   {
     Printf("RM3100 external SpikeFilter init Failed ! \n");

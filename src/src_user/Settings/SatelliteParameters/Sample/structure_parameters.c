@@ -11,4 +11,4 @@ const float STRUCTURE_PARAMETERS_rmm_sc_body_Am2[PHYSICAL_CONST_THREE_DIM] = {0.
 
 const float STRUCTURE_PARAMETERS_inertia_tensor_sc_body_kgm2[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM] = {{0.1f, 0.0f, 0.0f},
                                                                                                                     {0.0f, 0.2f, 0.0f},
-                                                                                                                    {0.0f, 0.0f, 0.3f}};
+                                                                                                                    {0.0f, 0.0f, 0.3f} };

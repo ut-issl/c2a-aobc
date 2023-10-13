@@ -118,7 +118,7 @@ CCP_CmdRet Cmd_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD(const CommonCmdPacket* pack
   APP_TEMPERATURE_ANOMALY_TemperatureThreshold threshold;
   threshold.upper_degC = CCP_get_param_from_packet(packet, arg_position, float);
   arg_position++;
-  if (threshold.lower_degC >= APP_TEMPERATURE_ANOMALY_kMaxTemperatureDegC_) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (threshold.upper_degC >= APP_TEMPERATURE_ANOMALY_kMaxTemperatureDegC_) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   threshold.lower_degC = CCP_get_param_from_packet(packet, arg_position, float);
   arg_position++;

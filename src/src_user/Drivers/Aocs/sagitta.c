@@ -222,8 +222,6 @@ DS_REC_ERR_CODE SAGITTA_rec(SAGITTA_Driver* sagitta_driver)
   DS_ERR_CODE ret;
   DS_StreamConfig* stream_config;
 
-  DS_clear_rx_buffer(&(sagitta_driver->driver.super)); // ここでクリアしないとずれる
-
   ret = DS_receive(&(sagitta_driver->driver.super));
 
 #ifdef DRIVER_SAGITTA_DEBUG_SHOW_REC_DATA
@@ -1098,9 +1096,11 @@ static DS_ERR_CODE SAGITTA_load_driver_super_init_settings_(DriverSuper* p_super
 
   stream_config = &(p_super->stream_config[SAGITTA_STREAM_TLM_CMD]);
   DSSC_enable(stream_config);
+  DSSC_enable_strict_frame_search(stream_config); // ヘッダとフッタの文字列が共通しており，テレメ長ものっていないので，フレーム確定に失敗しやすいため
 
+  // 送信側
   DSSC_set_tx_frame(stream_config, SAGITTA_tx_frame_);
-  DSSC_set_tx_frame_size(stream_config, SAGITTA_tx_frame_length_);
+  DSSC_set_tx_frame_size(stream_config, 0); // 送る直前に値をセットする
 
   // 定期的な受信はする
   DSSC_set_rx_header(stream_config, SAGITTA_kRxHeader_, SAGITTA_RX_HEADER_SIZE);
@@ -1751,7 +1751,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
     SAGITTA_memcpy_float_from_rx_frame_decoded_(&(track_quaternion_array_i2c[i]), offset);
     offset += (uint16_t)sizeof(track_quaternion_array_i2c[i]);
   }
-  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.track_quaternion_i2c, track_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.track_quaternion_i2c,
+                             track_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_removed), offset);
   offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.num_stars_removed);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_centroided), offset);
@@ -1763,7 +1764,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_
     SAGITTA_memcpy_float_from_rx_frame_decoded_(&(lisa_quaternion_array_i2c[i]), offset);
     offset += (uint16_t)sizeof(lisa_quaternion_array_i2c[i]);
   }
-  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.lisa_quaternion_i2c, lisa_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
+  QUATERNION_make_from_array(&sagitta_driver->info.telemetry.solution.lisa_quaternion_i2c,
+                             lisa_quaternion_array_i2c, QUATERNION_SCALAR_POSITION_FIRST);
   SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.lisa_percentage_close), offset);
   offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.solution.lisa_percentage_close);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.solution.num_stars_lisa_close), offset);

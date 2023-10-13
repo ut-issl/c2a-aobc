@@ -52,7 +52,7 @@ static void APP_GPSROP_init_(void)
   gpsr_orbit_propagator_.orbital_elements_threshold.eccentricity = ORBIT_PARAMETERS_gpsr_threshold_eccentricity;
   gpsr_orbit_propagator_.orbital_elements_threshold.inclination_rad = ORBIT_PARAMETERS_gpsr_threshold_inclination_rad;
   gpsr_orbit_propagator_.orbital_elements_threshold.raan_rad = ORBIT_PARAMETERS_gpsr_threshold_raan_rad;
-  gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad =ORBIT_PARAMETERS_gpsr_threshold_arg_perigee_rad;
+  gpsr_orbit_propagator_.orbital_elements_threshold.arg_perigee_rad = ORBIT_PARAMETERS_gpsr_threshold_arg_perigee_rad;
   gpsr_orbit_propagator_.orbital_elements_threshold.epoch_jday = ORBIT_PARAMETERS_gpsr_threshold_epoch_jday;
 
   KEPLER_ORBIT_init_constants(&gpsr_orbit_propagator_.orbit_constants,
@@ -115,7 +115,7 @@ C2A_MATH_ERROR GPSR_ORBIT_PROPAGATOR_calc_position(float position_eci_km[PHYSICA
     // gpsrテレメをもとに接触軌道要素を計算
     float position_eci_km_tmp[PHYSICAL_CONST_THREE_DIM];
     float velocity_eci_km_s_tmp[PHYSICAL_CONST_THREE_DIM];
-    double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(aocs_manager->current_gps_time_obs);
+    double reference_jday = TIME_SPACE_convert_gps_time_to_julian_day(aocs_manager->current_gps_time_obs);
     for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
     {
       position_eci_km_tmp[idx]   = (float)aocs_manager->sat_pos_obs_eci_m[idx]   / 1000.0f;

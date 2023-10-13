@@ -16,4 +16,7 @@ uint8_t OEM7600_PARAMETERS_velocity_spike_filter_config_count_limit_to_reject_co
 double OEM7600_PARAMETERS_velocity_spike_filter_config_reject_threshold_m_s[PHYSICAL_CONST_THREE_DIM] = {1000.0, 1000.0, 1000.0};
 double OEM7600_PARAMETERS_velocity_spike_filter_config_amplitude_limit_to_accept_as_step_m_s[PHYSICAL_CONST_THREE_DIM] = {100.0, 100.0, 100.0};
 
-// Sun intensity threshold
+uint8_t OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit_to_accept = 5;
+uint8_t OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit_to_reject_continued_warning = 60;
+double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_reject_threshold_s = 3000.0;
+double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_amplitude_limit_to_accept_as_step_s = 3000.0;
