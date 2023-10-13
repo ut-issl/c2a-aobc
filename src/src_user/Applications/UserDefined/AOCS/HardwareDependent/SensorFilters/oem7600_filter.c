@@ -27,7 +27,7 @@ const  Oem7600Filter* const oem7600_filter = &oem7600_filter_;
 
 static SpikeFilter APP_OEM7600_FILTER_position_spike_[PHYSICAL_CONST_THREE_DIM];       //!< スパイク除去フィルタ for 衛星位置
 static SpikeFilter APP_OEM7600_FILTER_velocity_spike_[PHYSICAL_CONST_THREE_DIM];       //!< スパイク除去フィルタ for 衛星速度
-static SpikeFilter APP_OEM7600_FILTER_gps_time_total_sec_spike_;                       //!< スパイク除去フィルタ for gpstime
+static SpikeFilter APP_OEM7600_FILTER_gps_time_total_sec_spike_;                       //!< スパイク除去フィルタ for gps time
 
 static void APP_OEM7600_FILTER_init_(void);
 static void APP_OEM7600_FILTER_exec_(void);
