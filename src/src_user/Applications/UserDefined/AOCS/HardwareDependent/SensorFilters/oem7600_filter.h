@@ -34,7 +34,7 @@ typedef struct
   C2A_MATH_ERROR velocity_filter_error[PHYSICAL_CONST_THREE_DIM];    //!< スパイク除去フィルタ入力判定ログ for 衛星速度
   C2A_MATH_ERROR total_gps_time_filter_error;                    //!< スパイク除去フィルタ入力判定ログ for 受信機時刻通算秒
 
-  uint32_t total_gps_time_epoch_week;                            //!< 受信機時刻通算秒の元紀とするGPS週番号
+  uint16_t total_gps_time_epoch_week;                            //!< 受信機時刻通算秒の元紀とするGPS週番号
 } Oem7600Filter;
 
 extern const Oem7600Filter* const oem7600_filter;

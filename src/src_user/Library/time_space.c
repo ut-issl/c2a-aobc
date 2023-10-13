@@ -59,7 +59,7 @@ static C2A_MATH_ERROR TIME_SPACE_nutation_(const double julian_century_terrestri
                                                  double* epsilon_rad, double* delta_epsilon_rad, double* delta_psi_rad);
 
 
-double TIME_SPACE_convert_gpstime_to_julian_day(const GpsTime gps_time)
+double TIME_SPACE_convert_gps_time_to_julian_day(const GpsTime gps_time)
 {
   const double kMsecToSec = 1.0e-3;                       //!< conversion from msec to sec
   const double kDayOfWeek_day = 7.0;                      //!< days of a week

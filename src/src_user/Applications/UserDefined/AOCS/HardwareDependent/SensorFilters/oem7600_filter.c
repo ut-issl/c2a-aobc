@@ -21,7 +21,6 @@
 #include <src_user/Settings/SatelliteParameters/oem7600_parameters.h>
 
 #define OEM7600_FILTER_POS_VEL_SIX_DIM (6)
-// #define OEM7600_FILTER_IS_UNDER_DEBUG
 
 static Oem7600Filter        oem7600_filter_;
 const  Oem7600Filter* const oem7600_filter = &oem7600_filter_;
@@ -67,10 +66,6 @@ static void APP_OEM7600_FILTER_init_(void)
   // 軌道計算等に用いるreference_jdayの初期値に対応するGPS週番号をGPS通算秒の元紀にする
   oem7600_filter_.total_gps_time_epoch_week =
     (uint16_t)((float)(aocs_manager->reference_jday - (double)(GPS_TIME_EPOCH_JULIAN_DAY)) / (float)(PHYSICAL_CONST_DAY_OF_WEEK));
-
-#ifdef OEM7600_FILTER_IS_UNDER_DEBUG
-  oem7600_filter_.debug_gps_time_total_sec_filtered = 0;
-#endif
 
   return;
 }
@@ -140,7 +135,7 @@ static void APP_OEM7600_FILTER_exec_(void)
 
   // EKF用の座標変換
   // ここではセンサ取得時のECEFをECIに戻すので，obsの時刻で座標変換行列を計算する
-  double reference_jday = TIME_SPACE_convert_gpstime_to_julian_day(aocs_manager->current_gps_time_obs);
+  double reference_jday = TIME_SPACE_convert_gps_time_to_julian_day(aocs_manager->current_gps_time_obs);
   double ref_gmst_rad = TIME_SPACE_calc_gmst_rad(reference_jday);
 
   double dcm_eci_to_ecef[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM];
@@ -219,14 +214,14 @@ static int APP_OEM7600_FILTER_init_spike_filter_(void)
     }
   }
 
-  C2A_MATH_ERROR gpstime_filter_setting_result = SPIKE_FILTER_init(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
+  C2A_MATH_ERROR gps_time_filter_setting_result = SPIKE_FILTER_init(&APP_OEM7600_FILTER_gps_time_total_sec_spike_,
                                                                    oem7600_filter_.total_gps_time_spike_filter_config);
 
 
   // TODO_L: position_filter_settingとvelocity_filter_settingのどちらでエラーが出たかを区別するか要検討
   if ((((position_filter_setting_result != C2A_MATH_ERROR_OK) ||
         (velocity_filter_setting_result != C2A_MATH_ERROR_OK))) ||
-        (gpstime_filter_setting_result != C2A_MATH_ERROR_OK))
+        (gps_time_filter_setting_result != C2A_MATH_ERROR_OK))
   {
     return -1;
   }

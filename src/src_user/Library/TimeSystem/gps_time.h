@@ -36,6 +36,6 @@ GpsTime GPS_TIME_create_gps_time(const uint16_t week_number, const uint32_t msec
  * @return     GPS時刻元紀週番号先頭からの積算秒
  * @note       ロールオーバーまで，元紀から約7000週有効
  */
-uint32_t GPS_TIME_calc_total_time_s(const GpsTime gpstime, const uint16_t epoch_gps_week);
+uint32_t GPS_TIME_calc_total_time_s(const GpsTime gps_time, const uint16_t epoch_gps_week);
 
 #endif
