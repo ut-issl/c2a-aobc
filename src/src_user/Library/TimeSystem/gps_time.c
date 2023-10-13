@@ -25,7 +25,7 @@ uint32_t GPS_TIME_calc_total_time_s(const GpsTime gps_time, const uint16_t epoch
   // 通常，受信機出力はGPS時刻正秒と同期してタグ付けされるため，ミリ秒以下は切る
   uint32_t diff_gps_week = (uint32_t)(gps_time.week_number) - (uint32_t)(epoch_gps_week);
   uint32_t elapsed_sec = (uint32_t)(PHYSICAL_CONST_EARTH_SOLAR_DAY_s) * diff_gps_week * (uint32_t)(PHYSICAL_CONST_DAY_OF_WEEK) +
-    gps_time.msec_of_week / (uint32_t)(PHYSICAL_CONST_SEC_TO_MSEC);
+    gps_time.msec_of_week / (uint32_t)(PHYSICAL_CONST_TO_MILI);
 
   return elapsed_sec;
 }

@@ -38,7 +38,7 @@
 
 // 日付・時刻関連
 #define PHYSICAL_CONST_DAY_OF_WEEK                (7)          //!< 週当たりの日数
-#define PHYSICAL_CONST_SEC_TO_MSEC                (1000)       //!< 秒からミリ秒への換算係数
+#define PHYSICAL_CONST_TO_MILI                (1000)       //!< 秒からミリ秒への換算係数
 
 
 // 単位変換関数
