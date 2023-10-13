@@ -9,7 +9,7 @@
   - For real AOBC (Attitude On Board Computer)
     - [vMicro](https://www.visualmicro.com/) + Visual Studio 2019
   - For SILS test
-    - [S2E-AOBC v4.0.0](https://github.com/ut-issl/s2e-aobc/releases/tag/v4.0.0)
+    - [S2E-AOBC v5.0.0](https://github.com/ut-issl/s2e-aobc/releases/tag/v5.0.0)
   - Telemetry/Command interface
     - [WINGS v2.1.0](https://github.com/ut-issl/wings/releases/tag/v2.1.0)
 - How to use
@@ -28,6 +28,8 @@
 
 - Please refer [c2a-aobc-example](https://github.com/ut-issl/c2a-aobc-example) repository.
 - Users can fork or copy of this example repository.
+- We also have manuals to construct SILS test environment. Please visit the [Google Drive](https://drive.google.com/drive/folders/19g8cxltzAX10oCNxCCKT4S8HwTYReHKe) to find the manuals.
+  - Sorry, but we only have manuals written in Japanese now. We need help to translate them.
 
 ### How to join the development of this repository
 
@@ -142,6 +144,13 @@
   - Perform `git submodule update`.
   - Delete CMake cache of S2E.
 
+## Used Projects
+
+| Project Name          | Developer                             | Launch  | Refs       |
+| ----------------------| ------------------------------------  | ------- | ---------- |
+| SPHERE-1 EYE          | Sony Group Corporation and ISSL, UT   | 2023    | [Sekine 2023](https://archive.ists.ne.jp/upload_pdf/2023-f-6-02.pdf) |
+| ONGLAISAT             | ISSL, UT                              | -       | [Ikari 2022](https://doi.org/10.57350/jesa.63) |
+
 ## Brief history of development
 ### History
 - 21st Jan. 2021: Development started in a private repository at GitLab.
@@ -164,4 +173,5 @@
   - sksat: 8 commits
 
 ## Publications
-1. S. Ikari, and et al., "Development of Compact and Highly Capable Integrated AOCS Module for CubeSats", [2022-f-41](https://archive.ists.ne.jp/upload_pdf/F-9-05.pdf), 33rd ISTS, 2022.
+1. S. Ikari, and et al., "Development of Compact and Highly Capable Integrated AOCS Module for CubeSats", Journal of Evolving Space Activities, vol. 1, ID 63, 2023. [Link](https://doi.org/10.57350/jesa.63)
+1. H. Sekine, and et al., "Development of Software-In-the-Loop Simulator and Hardware-In-the-Loop Simulator of AOCS Module for CubeSats", 34th ISTS, Kurume, 2023. [Link](https://archive.ists.ne.jp/upload_pdf/2023-f-6-02.pdf)
