@@ -28,6 +28,8 @@
 
 - Please refer [c2a-aobc-example](https://github.com/ut-issl/c2a-aobc-example) repository.
 - Users can fork or copy of this example repository.
+- We also have manuals to construct SILS test environment. Please visit the [Google Drive](https://drive.google.com/drive/folders/19g8cxltzAX10oCNxCCKT4S8HwTYReHKe) to find the manuals.
+  - Sorry, but we only have manuals written in Japanese now. We need help to translate them.
 
 ### How to join the development of this repository
 
