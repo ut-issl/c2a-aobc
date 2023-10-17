@@ -15,9 +15,6 @@
 // Satellite Parameters
 #include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
 
-#define NANOSSOC_D60_UPPER_LIMIT_ANGLE_DEGREE (60)  //!< コンポ検出上限
-#define NANOSSOC_D60_LOWER_LIMIT_ANGLE_DEGREE (-60) //!< コンポ検出下限
-
 static SunSensorSelector        sun_sensor_selector_;
 const  SunSensorSelector* const sun_sensor_selector = &sun_sensor_selector_;
 
