@@ -109,6 +109,8 @@ static void APP_SS_SELECTOR_generate_available_list_(void)
 static APP_SS_SELECTOR_AVAILABLE APP_SS_SELECTOR_check_availability_(NANOSSOC_D60_IDX idx)
 {
   float sun_intensity_percent = nanossoc_d60_driver[idx]->info.sun_intensity_percent;
+  float sun_angle_compo_alpha_deg = nanossoc_d60_driver[idx]->info.sun_angle_compo_deg[NANOSSOC_D60_ANGLE_ELEMENT_ALPHA];
+  float sun_angle_compo_beta_deg = nanossoc_d60_driver[idx]->info.sun_angle_compo_deg[NANOSSOC_D60_ANGLE_ELEMENT_BETA];
 
   if (nanossoc_d60_driver[idx]->info.checksum_state != NANOSSOC_D60_CHECKSUM_STATE_OK)
   {
@@ -119,6 +121,14 @@ static APP_SS_SELECTOR_AVAILABLE APP_SS_SELECTOR_check_availability_(NANOSSOC_D6
     return APP_SS_SELECTOR_AVAILABLE_NG;
   }
   else if (sun_intensity_percent > sun_sensor_selector->sun_intensity_upper_threshold_percent)
+  {
+    return APP_SS_SELECTOR_AVAILABLE_NG;
+  }
+  else if (sun_angle_compo_alpha_deg <= NANOSSOC_D60_LOWER_LIMIT_ANGLE_DEGREE || NANOSSOC_D60_UPPER_LIMIT_ANGLE_DEGREE <= sun_angle_compo_alpha_deg)
+  {
+    return APP_SS_SELECTOR_AVAILABLE_NG;
+  }
+  else if (sun_angle_compo_beta_deg <= NANOSSOC_D60_LOWER_LIMIT_ANGLE_DEGREE || NANOSSOC_D60_UPPER_LIMIT_ANGLE_DEGREE <= sun_angle_compo_beta_deg)
   {
     return APP_SS_SELECTOR_AVAILABLE_NG;
   }
