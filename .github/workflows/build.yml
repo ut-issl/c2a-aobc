@@ -16,7 +16,7 @@ on:
 
 env:
   # renovate: datasource=github-releases depName=ut-issl/s2e-aobc
-  S2E_AOBC_VERSION: v5.0.0
+  S2E_AOBC_VERSION: vv5.0.1
 
 jobs:
   build_c2a_with_s2e_win:
