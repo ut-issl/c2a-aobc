@@ -11,8 +11,8 @@
 #include <src_user/Library/quaternion.h>
 #include <src_user/Library/physical_constants.h>
 
-#define NANOSSOC_D60_UPPER_LIMIT_ANGLE_DEGREE (60)  //!< コンポ検出上限
-#define NANOSSOC_D60_LOWER_LIMIT_ANGLE_DEGREE (-60) //!< コンポ検出下限
+#define NANOSSOC_D60_UPPER_LIMIT_ANGLE_DEGREE (60.0f)	//!< 検出上限角度
+#define NANOSSOC_D60_LOWER_LIMIT_ANGLE_DEGREE (-60.0f) 	//!< 検出下限角度
 
 /**
 * @enum  NANOSSOC_D60_ErrorCode
