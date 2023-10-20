@@ -19,7 +19,6 @@ void MD_load_mode_list(void)
   MM_set_mode_list(MD_MODEID_ROUGH_THREE_AXIS,    BC_TL_ROUGH_THREE_AXIS);
   MM_set_mode_list(MD_MODEID_ROUGH_THREE_AXIS_RW, BC_TL_ROUGH_THREE_AXIS_RW);
   MM_set_mode_list(MD_MODEID_FINE_THREE_AXIS,     BC_TL_FINE_THREE_AXIS);
-  MM_set_mode_list(MD_MODEID_GPSR_RANGE_OBSERVE,  BC_TL_GPSR_RANGE_OBSERVE);
 }
 
 void MD_load_transition_table(void)
@@ -53,12 +52,6 @@ void MD_load_transition_table(void)
   // from Fine Three Axis
   MM_set_transition_table(MD_MODEID_FINE_THREE_AXIS, MD_MODEID_BDOT, BC_SL_ANY_TO_BDOT);
   MM_set_transition_table(MD_MODEID_FINE_THREE_AXIS, MD_MODEID_FINE_THREE_AXIS, BC_SL_NOP);
-  MM_set_transition_table(MD_MODEID_FINE_THREE_AXIS, MD_MODEID_GPSR_RANGE_OBSERVE, BC_SL_NOP);
-
-  // from GPSR Range Observe
-  MM_set_transition_table(MD_MODEID_GPSR_RANGE_OBSERVE, MD_MODEID_BDOT, BC_SL_ANY_TO_BDOT);
-  MM_set_transition_table(MD_MODEID_GPSR_RANGE_OBSERVE, MD_MODEID_FINE_THREE_AXIS, BC_SL_NOP);
-  MM_set_transition_table(MD_MODEID_GPSR_RANGE_OBSERVE, MD_MODEID_GPSR_RANGE_OBSERVE, BC_SL_NOP);
 }
 
 #pragma section

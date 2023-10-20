@@ -14,7 +14,6 @@ typedef enum
   MD_MODEID_ROUGH_THREE_AXIS      = 4,  //!< 粗三軸制御モード
   MD_MODEID_ROUGH_THREE_AXIS_RW   = 5,  //!< RWを使った粗三軸捕捉制御モード
   MD_MODEID_FINE_THREE_AXIS       = 6,  //!< 精三軸制御モード
-  MD_MODEID_GPSR_RANGE_OBSERVE    = 7,  //!< GPSRのレンジテレメ取得を行うモード
   MD_MODEID_MODE_MAX                    // NOTE: tlmサイズ調整のため，最大モード数を8とする．増やすときはそちらとも調整する．
 } MD_MODEID;
 
