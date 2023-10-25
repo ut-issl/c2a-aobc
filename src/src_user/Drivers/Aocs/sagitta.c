@@ -59,6 +59,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_reply_(SAGITTA_Driver* sag
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_log_level_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_limits_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_mounting_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_distortion_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_camera_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_image_processor_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_centroiding_(SAGITTA_Driver* sagitta_driver);
@@ -69,6 +70,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_validation_(SAGITTA_Driver
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_algo_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_subscription_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_auto_threshold_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_fast_lisa_(SAGITTA_Driver* sagitta_driver);
 // action
 static DS_ERR_CODE SAGITTA_analyze_rec_data_action_reply_(SAGITTA_Driver* sagitta_driver);
 // telemetry
@@ -143,6 +145,7 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
   memset(&(sagitta_driver->info.set_parameter.limits.max_value), 0x00, sizeof(sagitta_driver->info.set_parameter.limits.max_value));
   sagitta_driver->info.set_parameter.mounting.scalar_part = 1.0f;
   memset(&(sagitta_driver->info.set_parameter.mounting.vector_part), 0x00, sizeof(sagitta_driver->info.set_parameter.mounting.vector_part));
+  memset(&(sagitta_driver->info.set_parameter.distortion), 0x00, sizeof(sagitta_driver->info.set_parameter.distortion));
   sagitta_driver->info.set_parameter.camera.mode = 2;
   sagitta_driver->info.set_parameter.camera.focal_length_mm = 25.2f;
   sagitta_driver->info.set_parameter.camera.exposure_s = 0.2f;
@@ -212,6 +215,8 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
   sagitta_driver->info.set_parameter.auto_threshold.min_threshold = 1;
   sagitta_driver->info.set_parameter.auto_threshold.max_threshold = 255;
   sagitta_driver->info.set_parameter.auto_threshold.threshold_kp = 0.10;
+  sagitta_driver->info.set_parameter.fast_lisa.limit_angle = 0.1;
+  sagitta_driver->info.set_parameter.fast_lisa.limit_distance = 0.2;
 
   return DS_INIT_OK;
 }
@@ -357,6 +362,35 @@ DS_CMD_ERR_CODE SAGITTA_set_mounting(SAGITTA_Driver* sagitta_driver)
   offset += (uint8_t)sizeof(qy);
   memcpy(&(SAGITTA_tx_data_frame_[offset]), &(qz), sizeof(qz));
   offset += (uint8_t)sizeof(qz);
+
+  return SAGITTA_send_cmd_(sagitta_driver, offset);
+}
+
+DS_CMD_ERR_CODE SAGITTA_set_distortion(SAGITTA_Driver* sagitta_driver)
+{
+  const uint8_t mode = sagitta_driver->info.set_parameter.distortion.mode;
+  const float* k0_coefficient = &(sagitta_driver->info.set_parameter.distortion.k0_coefficient[0]);
+  const float* h0_coefficient = &(sagitta_driver->info.set_parameter.distortion.h0_coefficient[0]);
+  uint8_t offset = 0;
+
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kAddress_;
+  offset += (uint8_t)sizeof(SAGITTA_kAddress_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kCmdSetParameter_;
+  offset += (uint8_t)sizeof(SAGITTA_kCmdSetParameter_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_PARAMETER_ID_DISTORTION;
+  offset += (uint8_t)sizeof(uint8_t);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(mode), sizeof(mode));
+  offset += (uint8_t)sizeof(mode);
+  for (int i = 0; i < SAGITTA_PARAMETER_DISTORTION_LENGTH; i++)
+  {
+    memcpy(&(SAGITTA_tx_data_frame_[offset]), &(k0_coefficient[i]), sizeof(k0_coefficient[i]));
+    offset += (uint8_t)sizeof(k0_coefficient[i]);
+  }
+  for (int i = 0; i < SAGITTA_PARAMETER_DISTORTION_LENGTH; i++)
+  {
+    memcpy(&(SAGITTA_tx_data_frame_[offset]), &(h0_coefficient[i]), sizeof(h0_coefficient[i]));
+    offset += (uint8_t)sizeof(h0_coefficient[i]);
+  }
 
   return SAGITTA_send_cmd_(sagitta_driver, offset);
 }
@@ -701,6 +735,27 @@ DS_CMD_ERR_CODE SAGITTA_set_auto_threshold(SAGITTA_Driver* sagitta_driver)
   return SAGITTA_send_cmd_(sagitta_driver, offset);
 }
 
+DS_CMD_ERR_CODE SAGITTA_set_fast_lisa(SAGITTA_Driver* sagitta_driver)
+{
+  const float limit_angle = sagitta_driver->info.set_parameter.fast_lisa.limit_angle;
+  const float limit_distance = sagitta_driver->info.set_parameter.fast_lisa.limit_distance;
+
+  uint8_t offset = 0;
+
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kAddress_;
+  offset += (uint8_t)sizeof(SAGITTA_kAddress_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kCmdSetParameter_;
+  offset += (uint8_t)sizeof(SAGITTA_kCmdSetParameter_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_PARAMETER_ID_FAST_LISA;
+  offset += (uint8_t)sizeof(uint8_t);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(limit_angle), sizeof(limit_angle));
+  offset += (uint8_t)sizeof(limit_angle);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(limit_distance), sizeof(limit_distance));
+  offset += (uint8_t)sizeof(limit_distance);
+
+  return SAGITTA_send_cmd_(sagitta_driver, offset);
+}
+
 DS_CMD_ERR_CODE SAGITTA_change_log_level(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
 {
   if (param_idx >= SAGITTA_PARAMETER_LOG_LEVEL_LENGTH) return DS_CMD_ILLEGAL_PARAMETER;
@@ -747,6 +802,26 @@ DS_CMD_ERR_CODE SAGITTA_change_mounting(SAGITTA_Driver* sagitta_driver, uint8_t 
   default:
     // NOT REACHED
     break;
+  }
+
+  return DS_CMD_OK;
+}
+
+DS_CMD_ERR_CODE SAGITTA_change_distortion(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
+{
+  if (param_idx >= 17) return DS_CMD_ILLEGAL_PARAMETER;
+
+  if (param_idx == 0)
+  {
+    sagitta_driver->info.set_parameter.distortion.mode = (uint8_t)value;
+  }
+  else if (param_idx < 9)
+  {
+    sagitta_driver->info.set_parameter.distortion.k0_coefficient[param_idx - 1] = value;
+  }
+  else
+  {
+    sagitta_driver->info.set_parameter.distortion.h0_coefficient[param_idx - 9] = value;
   }
 
   return DS_CMD_OK;
@@ -1067,6 +1142,26 @@ DS_CMD_ERR_CODE SAGITTA_change_auto_threshold(SAGITTA_Driver* sagitta_driver, ui
   return DS_CMD_OK;
 }
 
+DS_CMD_ERR_CODE SAGITTA_change_fast_lisa(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
+{
+  if (param_idx >= 2) return DS_CMD_ILLEGAL_PARAMETER;
+
+  switch (param_idx)
+  {
+  case 0:
+    sagitta_driver->info.set_parameter.fast_lisa.limit_angle = value;
+    break;
+  case 1:
+    sagitta_driver->info.set_parameter.fast_lisa.limit_distance = value;
+    break;
+  default:
+    // NOT REACHED
+    break;
+  }
+
+  return DS_CMD_OK;
+}
+
 C2A_MATH_ERROR SAGITTA_set_frame_transform_c2b(SAGITTA_Driver* sagitta_driver, const Quaternion q_c2b)
 {
   C2A_MATH_ERROR ret;
@@ -1341,6 +1436,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_reply_(SAGITTA_Driver* sag
     return SAGITTA_analyze_rec_data_parameter_limits_(sagitta_driver);
   case SAGITTA_PARAMETER_ID_MOUNTING:
     return SAGITTA_analyze_rec_data_parameter_mounting_(sagitta_driver);
+  case SAGITTA_PARAMETER_ID_DISTORTION:
+    return SAGITTA_analyze_rec_data_parameter_distortion_(sagitta_driver);
   case SAGITTA_PARAMETER_ID_CAMERA:
     return SAGITTA_analyze_rec_data_parameter_camera_(sagitta_driver);
   case SAGITTA_PARAMETER_ID_IMAGE_PROCESSOR:
@@ -1361,6 +1458,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_reply_(SAGITTA_Driver* sag
     return SAGITTA_analyze_rec_data_parameter_subscription_(sagitta_driver);
   case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
     return SAGITTA_analyze_rec_data_parameter_auto_threshold_(sagitta_driver);
+  case SAGITTA_PARAMETER_ID_FAST_LISA:
+    return SAGITTA_analyze_rec_data_parameter_fast_lisa_(sagitta_driver);
   default:
     return DS_ERR_CODE_ERR;
   }
@@ -1412,6 +1511,28 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_mounting_(SAGITTA_Driver* 
   offset += (uint16_t)sizeof(float);
   SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.mounting.vector_part[2]), offset);
   offset += (uint16_t)sizeof(float);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_distortion_(SAGITTA_Driver* sagitta_driver)
+{
+  uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetTlmID_ + (uint16_t)(sizeof(sagitta_driver->info.tlm_id));
+
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.distortion.mode), offset);
+  offset += (uint16_t)sizeof(uint8_t);
+  for (int i = 0; i < SAGITTA_PARAMETER_DISTORTION_LENGTH; i++)
+  {
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.distortion.k0_coefficient[i]), offset);
+    offset += (uint16_t)sizeof(float);
+  }
+  for (int i = 0; i < SAGITTA_PARAMETER_DISTORTION_LENGTH; i++)
+  {
+    SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.distortion.h0_coefficient[i]), offset);
+    offset += (uint16_t)sizeof(float);
+  }
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
@@ -1641,6 +1762,20 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_auto_threshold_(SAGITTA_Dr
   SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.max_threshold), offset);
   offset += (uint16_t)sizeof(uint16_t);
   SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.auto_threshold.threshold_kp), offset);
+  offset += (uint16_t)sizeof(float);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_fast_lisa_(SAGITTA_Driver* sagitta_driver)
+{
+  uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetTlmID_ + (uint16_t)(sizeof(sagitta_driver->info.tlm_id));
+
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.fast_lisa.limit_angle), offset);
+  offset += (uint16_t)sizeof(float);
+  SAGITTA_memcpy_float_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.fast_lisa.limit_distance), offset);
   offset += (uint16_t)sizeof(float);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
