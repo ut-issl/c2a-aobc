@@ -358,6 +358,7 @@ DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const 
   if (cmd_status != DS_CMD_OK) return cmd_status;
 
   oem7600_driver->info.uart_baudrate = baudrate;
+  oem7600_driver->driver.uart_config.baudrate = oem7600_driver->info.uart_baudrate;
   DS_ERR_CODE ret_driver_super_setting = DS_init(&(oem7600_driver->driver.super),
                                                  &(oem7600_driver->driver.uart_config),
                                                  rx_buffer,
