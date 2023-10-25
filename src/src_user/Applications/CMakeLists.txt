@@ -47,6 +47,7 @@ set(C2A_SRCS
   UserDefined/Cdh/non_volatile_memory_manager.c
   UserDefined/Cdh/non_volatile_memory_partition.c
   UserDefined/Cdh/non_volatile_memory_parameter.c
+  UserDefined/Cdh/non_volatile_bc_manager.c
   UserDefined/Cdh/aocs_data_recorder.c
   UserDefined/Power/power_switch_control.c
   UserDefined/Thermal/thermo_sensor.c
