@@ -54,7 +54,7 @@ typedef enum
   // その他: 120-127
   EL_GROUP_DR_WRITE = 120,       //!< DR書き込みエラー
   EL_GROUP_DR_READ,              //!< DR読み出しエラー
-  EL_GROUP_NVBC_WRITE,           //!< 不揮発BCコピー時のエラー
+  EL_GROUP_NV_BC_MGR,            //!< 不揮発BC操作時のエラー
   EL_GROUP_NVM_TRIPLE_REDUNDANT, //!< 不揮発メモリ三重冗長エラー
 
   // とりあえず最大値は0x7f(127)に！
