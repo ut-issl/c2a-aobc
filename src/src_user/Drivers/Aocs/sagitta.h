@@ -260,9 +260,9 @@ typedef struct
  */
 typedef struct
 {
-  uint8_t mode;
-  float k0_coefficient[SAGITTA_PARAMETER_DISTORTION_LENGTH];
-  float h0_coefficient[SAGITTA_PARAMETER_DISTORTION_LENGTH];
+  uint8_t mode; //!< 0: No compensation, 1: Hershel polynomial function, 2: Radial polynomial function
+  float k0_coefficient[SAGITTA_PARAMETER_DISTORTION_LENGTH]; //!< coefficient of the polynomial function for x coordinate
+  float h0_coefficient[SAGITTA_PARAMETER_DISTORTION_LENGTH]; //!< coefficient of the polynomial function for y coordinate
 } SAGITTA_PARAMETER_DISTORTION;
 
 /**
@@ -406,8 +406,8 @@ typedef struct
  */
 typedef struct
 {
-  float limit_angle;
-  float limit_distance;
+  float limit_angle;    //!< Limit on angle of the triplets for fastLISA
+  float limit_distance; //!< Limit on angle of the triplets for fastLISA
 } SAGITTA_PARAMETER_FAST_LISA;
 
 /**
