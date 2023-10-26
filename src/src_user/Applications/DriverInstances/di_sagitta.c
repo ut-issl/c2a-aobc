@@ -154,6 +154,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_MOUNTING:
     ret = SAGITTA_set_mounting(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
+  case SAGITTA_PARAMETER_ID_DISTORTION:
+    ret = SAGITTA_set_distortion(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
   case SAGITTA_PARAMETER_ID_CAMERA:
     ret = SAGITTA_set_camera(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
@@ -184,6 +187,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
     ret = SAGITTA_set_auto_threshold(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
+  case SAGITTA_PARAMETER_ID_FAST_LISA:
+    ret = SAGITTA_set_fast_lisa(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -208,6 +214,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
     break;
   case SAGITTA_PARAMETER_ID_MOUNTING:
     ret = SAGITTA_change_mounting(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
+  case SAGITTA_PARAMETER_ID_DISTORTION:
+    ret = SAGITTA_change_distortion(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
   case SAGITTA_PARAMETER_ID_CAMERA:
     ret = SAGITTA_change_camera(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
@@ -238,6 +247,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
     break;
   case SAGITTA_PARAMETER_ID_AUTO_THRESHOLD:
     ret = SAGITTA_change_auto_threshold(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
+  case SAGITTA_PARAMETER_ID_FAST_LISA:
+    ret = SAGITTA_change_fast_lisa(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);

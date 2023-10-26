@@ -16,6 +16,7 @@
 #define SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH        (16)
 #define SAGITTA_PARAMETER_LOG_LEVEL_LENGTH                (16)
 #define SAGITTA_PARAMETER_LIMITS_LENGTH                   (10)
+#define SAGITTA_PARAMETER_DISTORTION_LENGTH               (8)
 #define SAGITTA_PARAMETER_CAMERA_OVERRIDE_REGISTER_LENGTH (16)
 #define SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH             (16)
 
@@ -43,6 +44,7 @@ typedef enum
   SAGITTA_PARAMETER_ID_LOG_LEVEL = 3,
   SAGITTA_PARAMETER_ID_LIMITS = 5,
   SAGITTA_PARAMETER_ID_MOUNTING = 6,
+  SAGITTA_PARAMETER_ID_DISTORTION = 8,
   SAGITTA_PARAMETER_ID_CAMERA = 9,
   SAGITTA_PARAMETER_ID_IMAGE_PROCESSOR = 10,
   SAGITTA_PARAMETER_ID_CENTROIDING = 11,
@@ -52,7 +54,8 @@ typedef enum
   SAGITTA_PARAMETER_ID_VALIDATION = 15,
   SAGITTA_PARAMETER_ID_ALGO = 16,
   SAGITTA_PARAMETER_ID_SUBSCRIPTION = 18,
-  SAGITTA_PARAMETER_ID_AUTO_THRESHOLD = 23
+  SAGITTA_PARAMETER_ID_AUTO_THRESHOLD = 23,
+  SAGITTA_PARAMETER_ID_FAST_LISA = 25
 } SAGITTA_PARAMETER_ID;
 
 /**
@@ -252,6 +255,17 @@ typedef struct
 } SAGITTA_PARAMETER_LIMITS;
 
 /**
+ * @struct SAGITTA_PARAMETER_DISTORTION
+ * @brief  SagittaのDISTORTIONパラメータを格納する
+ */
+typedef struct
+{
+  uint8_t mode; //!< 0: No compensation, 1: Hershel polynomial function, 2: Radial polynomial function
+  float k0_coefficient[SAGITTA_PARAMETER_DISTORTION_LENGTH]; //!< coefficient of the polynomial function for x coordinate
+  float h0_coefficient[SAGITTA_PARAMETER_DISTORTION_LENGTH]; //!< coefficient of the polynomial function for y coordinate
+} SAGITTA_PARAMETER_DISTORTION;
+
+/**
  * @struct SAGITTA_PARAMETER_CAMERA
  * @brief  SagittaのCAMERAパラメータを格納する
  */
@@ -385,6 +399,17 @@ typedef struct
   float threshold_kp;
 } SAGITTA_PARAMETER_AUTO_THRESHOLD;
 
+
+/**
+ * @struct SAGITTA_PARAMETER_FAST_LISA
+ * @brief  SagittaのFAST_LISAパラメータを格納する
+ */
+typedef struct
+{
+  float limit_angle;    //!< Limit on angle of the triplets for fastLISA
+  float limit_distance; //!< Limit on angle of the triplets for fastLISA
+} SAGITTA_PARAMETER_FAST_LISA;
+
 /**
  * @struct SAGITTA_Parameter
  * @brief  Sagittaの内部パラメータを格納する
@@ -394,6 +419,7 @@ typedef struct
   uint8_t log_level[SAGITTA_PARAMETER_LOG_LEVEL_LENGTH];
   SAGITTA_PARAMETER_LIMITS limits;
   Quaternion mounting;
+  SAGITTA_PARAMETER_DISTORTION distortion;
   SAGITTA_PARAMETER_CAMERA camera;
   SAGITTA_PARAMETER_IMAGE_PROCESSOR image_processor;
   SAGITTA_PARAMETER_CENTROIDING centroiding;
@@ -404,6 +430,7 @@ typedef struct
   SAGITTA_PARAMETER_ALGO algo;
   uint8_t subscription[SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH];
   SAGITTA_PARAMETER_AUTO_THRESHOLD auto_threshold;
+  SAGITTA_PARAMETER_FAST_LISA fast_lisa;
 } SAGITTA_PARAMETER;
 
 /**
@@ -499,6 +526,13 @@ DS_CMD_ERR_CODE SAGITTA_set_limits(SAGITTA_Driver* sagitta_driver);
 DS_CMD_ERR_CODE SAGITTA_set_mounting(SAGITTA_Driver* sagitta_driver);
 
 /**
+ * @brief  SAGITTAのDistortionパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_distortion(SAGITTA_Driver* sagitta_driver);
+
+/**
  * @brief  SAGITTAのCameraパラメータを設定する
  * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @return DS_CMD_ERR_CODEを参照
@@ -570,6 +604,13 @@ DS_CMD_ERR_CODE SAGITTA_set_subscription(SAGITTA_Driver* sagitta_driver);
 DS_CMD_ERR_CODE SAGITTA_set_auto_threshold(SAGITTA_Driver* sagitta_driver);
 
 /**
+ * @brief  SAGITTAのFast LISAパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_fast_lisa(SAGITTA_Driver* sagitta_driver);
+
+/**
  * @brief  SAGITTAのLog Levelパラメータを変更する
  * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
@@ -595,6 +636,15 @@ DS_CMD_ERR_CODE SAGITTA_change_limits(SAGITTA_Driver* sagitta_driver, uint8_t pa
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_change_mounting(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのDistortionパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_distortion(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
 
 /**
  * @brief  SAGITTAのCameraパラメータを変更する
@@ -686,6 +736,15 @@ DS_CMD_ERR_CODE SAGITTA_change_subscription(SAGITTA_Driver* sagitta_driver, uint
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_change_auto_threshold(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのFast LISAパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_fast_lisa(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
 
 /**
  * @brief  SAGITTAのパラメータを読み取る
