@@ -340,7 +340,7 @@ DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const 
   // snprintfはNULL文字が強制的に書き込まれるので、文字数+1個分の長さの確保が必要
   baudrate_char_length = 1;
   uint32_t baudrate_for_digit_count = baudrate;
-  while (baudrate_for_digit_count / 10 > 0)
+  while (baudrate_for_digit_count != 0)
   {
     baudrate_for_digit_count = baudrate_for_digit_count / 10;
     baudrate_char_length++;
