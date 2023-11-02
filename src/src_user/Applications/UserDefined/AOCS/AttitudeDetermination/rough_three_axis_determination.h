@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/System/TimeManager/time_manager.h>
+#include <src_user/Library/quaternion.h>
 
 /**
 * @enum  APP_RTAD_METHOD
@@ -44,6 +45,23 @@ typedef struct
   float sun_vec_weight; //!< 推定における，太陽方向ベクトルの重み
   float mag_vec_weight; //!< 推定における，磁場方向ベクトルの重み
 } QMethodInfo;
+
+/**
+* @enum  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS
+* @brief QMethod計算時に固有方程式の求解が収束したかどうか
+* @note  uint_8を想定
+*/
+typedef enum
+{
+  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_OK = 0, //!< 収束した
+  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_NG      //!< 収束しなかった
+} APP_RTAD_Q_METHOD_CONVERGENCE_STATUS;
+
+typedef struct
+{
+  Quaternion q_eci_to_body;
+  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS convergence_status;
+} QMethodResult;
 
 /**
  * @struct ROUGH_THREE_AXIS_DETERMINATION
