@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/System/TimeManager/time_manager.h>
-#include <src_user/Library/quaternion.h>
 
 /**
 * @enum  APP_RTAD_METHOD

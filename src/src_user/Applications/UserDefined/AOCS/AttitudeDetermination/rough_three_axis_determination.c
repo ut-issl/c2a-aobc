@@ -14,6 +14,7 @@
 #include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
 #include <src_user/Library/vector3.h>
 #include <src_user/Library/matrix33.h>
+#include <src_user/Library/quaternion.h>
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/math_constants.h>
 
