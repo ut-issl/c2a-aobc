@@ -47,23 +47,6 @@ typedef struct
 } QMethodInfo;
 
 /**
-* @enum  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS
-* @brief QMethod計算時に固有方程式の求解が収束したかどうか
-* @note  uint_8を想定
-*/
-typedef enum
-{
-  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_OK = 0, //!< 収束した
-  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_NG      //!< 収束しなかった
-} APP_RTAD_Q_METHOD_CONVERGENCE_STATUS;
-
-typedef struct
-{
-  Quaternion q_eci_to_body;
-  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS convergence_status;
-} QMethodResult;
-
-/**
  * @struct ROUGH_THREE_AXIS_DETERMINATION
  * @brief  粗三軸姿勢決定に必要な情報を格納する構造体
  */

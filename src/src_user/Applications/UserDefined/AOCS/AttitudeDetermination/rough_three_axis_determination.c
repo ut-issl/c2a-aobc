@@ -58,18 +58,20 @@ static void APP_RTAD_generate_triad_mat_(float triad_mat[PHYSICAL_CONST_THREE_DI
 
 /**
 * @brief        Qmethodによる三軸姿勢決定
+* @param[out]   calc_status      : 三軸姿勢決定計算結果のエラーステータス
 * @param[in]    sun_ref_vec      : 基準の座標系における太陽方向単位ベクトル
 * @param[in]    mag_ref_vec      : 基準の座標系における磁場単位ベクトル
 * @param[in]    sun_obs_vec      : 衛星が観測した太陽方向単位ベクトル
 * @param[in]    mag_obs_vec      : 衛星が観測した磁場単位ベクトル
 * @param[in]    q_method_info    : QMethod関連情報
-* @return                        : Qmethodによって計算されたECI->body変換クオータニオンと固有方程式求解メソッドの収束状態
+* @return       q_eci_to_body    : Qmethodによって計算されたECI->body変換クオータニオン
 */
-static QMethodResult APP_RTAD_q_method_(const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
-                                        const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
-                                        const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
-                                        const float mag_obs_vec[PHYSICAL_CONST_THREE_DIM],
-                                        const QMethodInfo q_method_info);
+static Quaternion APP_RTAD_q_method_(AOCS_ERROR*  calc_status,
+                                     const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
+                                     const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
+                                     const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
+                                     const float mag_obs_vec[PHYSICAL_CONST_THREE_DIM],
+                                     const QMethodInfo q_method_info);
 
 /**
 * @brief   Qmethodで使われるパラメータを計算関数
@@ -108,22 +110,21 @@ static void APP_RTAD_calculate_q_method_parameters_(float* sigma,
 
 /**
 * @brief        Qmethodにおける固有方程式求解関数
-* @param[out]   lambda          : 固有方程式の解λ
+* @param[out]   calc_status     : 固有方程式の求解メソッドにおけるエラーステータス
 * @param[in]    sigma           : 固有方程式のパラメータ σ
 * @param[in]    kappa           : 3×3行列Sに対するtr(adj(S))
 * @param[in]    delta           : 3×3行列Sに対するdet(S)
 * @param[in]    s_matrix        : 固有方程式のパラメータになる3×3行列S
 * @param[in]    s_square_matrix : 3×3行列Sに対するS^2
-* @return                       : 固有方程式求解メソッドの収束結果
+* @return       lambda          : 固有方程式の解λ
 */
-static APP_RTAD_Q_METHOD_CONVERGENCE_STATUS APP_RTAD_solve_q_method_characteristic_equation_(
-                                              float* lambda,
-                                              const float sigma,
-                                              const float kappa,
-                                              const float delta,
-                                              const float z_vector[PHYSICAL_CONST_THREE_DIM],
-                                              const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
-                                              const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM]);
+static float APP_RTAD_solve_q_method_characteristic_equation_(AOCS_ERROR* calc_status,
+                                                              const float sigma,
+                                                              const float kappa,
+                                                              const float delta,
+                                                              const float z_vector[PHYSICAL_CONST_THREE_DIM],
+                                                              const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
+                                                              const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM]);
 
 /**
 * @brief        Qmethodにおける，固有方程式の解から姿勢変換クオータニオンを計算する関数
@@ -228,13 +229,18 @@ static void APP_RTAD_exec_(void)
   }
   else
   {
-    QMethodResult q_method_result = APP_RTAD_q_method_(sun_ref_vec, mag_ref_vec, sun_obs_vec, mag_obs_vec, rough_three_axis_determination_.q_method_info);
-    if (q_method_result.convergence_status == APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_OK)
+    AOCS_ERROR q_method_calc_status;
+    q_eci_to_body = APP_RTAD_q_method_(&q_method_calc_status,
+                                       sun_ref_vec,
+                                       mag_ref_vec,
+                                       sun_obs_vec,
+                                       mag_obs_vec,
+                                       rough_three_axis_determination_.q_method_info);
+    if (q_method_calc_status == AOCS_ERROR_OK)
     {
-      q_eci_to_body = q_method_result.q_eci_to_body;
       AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
     }
-    else // q_method_result.convergence_status == APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_NG
+    else
     {
       // Q Methodの中の固有方程式計算が収束しなかったら、収束しなかったQuaternionは使わず、前回の姿勢決定結果を伝搬する。
       q_eci_to_body =  QUATERNION_euler_propagate(aocs_manager->quaternion_est_i2b, aocs_manager->ang_vel_obs_body_rad_s, time_step_s);
@@ -291,7 +297,8 @@ static void APP_RTAD_generate_triad_mat_(float triad_mat[PHYSICAL_CONST_THREE_DI
   }
 }
 
-QMethodResult APP_RTAD_q_method_(const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
+Quaternion APP_RTAD_q_method_(AOCS_ERROR* calc_status,
+                              const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
                               const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                               const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                               const float mag_obs_vec[PHYSICAL_CONST_THREE_DIM],
@@ -311,17 +318,12 @@ QMethodResult APP_RTAD_q_method_(const float sun_ref_vec[PHYSICAL_CONST_THREE_DI
                                          sun_ref_vec, mag_ref_vec, sun_obs_vec, mag_obs_vec, sun_weight, mag_weight);
 
   float lambda; //!< 姿勢変換クオータニオンqに対する固有方程式 Kq = λqの解 λ
-  APP_RTAD_Q_METHOD_CONVERGENCE_STATUS convergence_status;
-  convergence_status = APP_RTAD_solve_q_method_characteristic_equation_(&lambda, sigma, kappa, delta, z_vector, s_matrix, s_square_matrix);
+  lambda = APP_RTAD_solve_q_method_characteristic_equation_(calc_status, sigma, kappa, delta, z_vector, s_matrix, s_square_matrix);
 
   Quaternion q_eci_to_body;
   q_eci_to_body = APP_RTAD_calculate_q_method_quaternion(lambda, sigma, kappa, delta, s_matrix, s_square_matrix, z_vector);
 
-  QMethodResult result;
-  result.convergence_status = convergence_status;
-  result.q_eci_to_body = q_eci_to_body;
-
-  return result;
+  return q_eci_to_body;
 }
 
 
@@ -377,14 +379,13 @@ void APP_RTAD_calculate_q_method_parameters_(float* sigma,
   MATRIX33_multiply_matrix_matrix(s_square_matrix, s_matrix, s_matrix);
 }
 
-APP_RTAD_Q_METHOD_CONVERGENCE_STATUS APP_RTAD_solve_q_method_characteristic_equation_(
-                                       float* lambda,
-                                       const float sigma,
-                                       const float kappa,
-                                       const float delta,
-                                       const float z_vector[PHYSICAL_CONST_THREE_DIM],
-                                       const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
-                                       const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM])
+float APP_RTAD_solve_q_method_characteristic_equation_(AOCS_ERROR* calc_status,
+                                                       const float sigma,
+                                                       const float kappa,
+                                                       const float delta,
+                                                       const float z_vector[PHYSICAL_CONST_THREE_DIM],
+                                                       const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
+                                                       const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM])
 {
   float a, b, c, d; //!< 固有方程式の係数
   a = sigma * sigma - kappa;
@@ -393,27 +394,27 @@ APP_RTAD_Q_METHOD_CONVERGENCE_STATUS APP_RTAD_solve_q_method_characteristic_equa
   d = MATRIX33_multiply_matrix_vector_quadratic(s_square_matrix, z_vector);
 
   // ニュートン・ラフソン法により固有方程式を解く
-  float solution = 1.0f;                  //!< 固有方程式の解
+  float lambda = 1.0f;                  //!< 固有方程式の解
   float lhs;                            //!< 固有方程式 f(λ) = 0の左辺
   float lhs_derivative;                  //!< f(λ)の微分
 
   for (int i = 0; i < APP_RTAD_kMaxNumOfIteration_; i++)
   {
-    lhs = solution * solution * solution * solution - (a + b) * solution * solution - c * solution + (a * b + c * sigma - d);
-    lhs_derivative = 4.0f * solution * solution * solution - 2.0f * (a + b) * solution - c;
+    lhs = lambda * lambda * lambda * lambda - (a + b) * lambda * lambda - c * lambda + (a * b + c * sigma - d);
+    lhs_derivative = 4.0f * lambda * lambda * lambda - 2.0f * (a + b) * lambda - c;
     float diff = lhs / lhs_derivative; //!< 解の変化量
-    solution -= diff;
+    lambda -= diff;
 
     if (fabs(diff) < APP_RTAD_kConvergenceThreshold_)
     {
-      *lambda = solution;
-      return APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_OK;
+      *calc_status = AOCS_ERROR_OK;
+      return lambda;
     }
   }
 
   // 規定回数以内に解が収束しなければ、求解結果をNGとしてreturnする
-  *lambda = solution;
-  return APP_RTAD_Q_METHOD_CONVERGENCE_STATUS_NG;
+  *calc_status = AOCS_ERROR_NOT_CONVERGED;
+  return lambda;
 }
 
 Quaternion APP_RTAD_calculate_q_method_quaternion(const float lambda,
