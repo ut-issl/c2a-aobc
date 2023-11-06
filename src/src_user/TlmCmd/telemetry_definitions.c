@@ -1809,7 +1809,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (218 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (215 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.ang_vel_body_rad_s[0]));
@@ -1859,15 +1859,12 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_double(&packet[179], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[0]));
   TF_copy_double(&packet[187], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[1]));
   TF_copy_double(&packet[195], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[2]));
-  TF_copy_i8(&packet[203], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_X]->info.pwm_signed_duty_percent);
-  TF_copy_i8(&packet[204], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Y]->info.pwm_signed_duty_percent);
-  TF_copy_i8(&packet[205], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Z]->info.pwm_signed_duty_percent);
-  TF_copy_float(&packet[206], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
-  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
-  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_float(&packet[203], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
+  TF_copy_float(&packet[207], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
+  TF_copy_float(&packet[211], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
 #endif
 
-  *len = 218;
+  *len = 215;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
