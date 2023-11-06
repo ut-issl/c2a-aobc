@@ -19,9 +19,9 @@
  */
 typedef enum
 {
-  MTQ_SEIREN_POLARITY_POSITIVE = 1,
-  MTQ_SEIREN_POLARITY_NEGATIVE = -1,
-  MTQ_SEIREN_NO_OUTPUT = 0
+  MTQ_SEIREN_POLARITY_POSITIVE = 1,  //!< 正方向に出力
+  MTQ_SEIREN_POLARITY_NEGATIVE = -1, //!< 負方向に出力
+  MTQ_SEIREN_NO_OUTPUT = 0           //!< 出力ゼロ
 } MTQ_SEIREN_POLARITY;
 
 /**
@@ -43,7 +43,6 @@ typedef struct
   {
     uint8_t ch_gpio_positive;
     uint8_t ch_gpio_negative;
-    MTQ_SEIREN_POLARITY polarity;         //!< MTQ極性
     float max_mag_moment;                 //!< 出力可能な最大磁気モーメント
   } driver;
   MTQ_SEIREN_Info info;
@@ -61,6 +60,14 @@ typedef struct
  * @return GPIO_ERR_CODEに準じる
  */
 GPIO_ERR_CODE MTQ_SEIREN_init(MTQ_SEIREN_Driver* mtq_seiren_driver, uint8_t ch_gpio_positive, uint8_t ch_gpio_negative, float max_mag_moment);
+
+/**
+ * @brief  MTQ_SEIREN 磁気モーメント出力
+ * @param  MTQ_SEIREN に極性を指定し、磁気モーメントを出力する。出力方向はMTQ_SEIREN_POLARITYの定義に従う。
+ * @param  *mtq_seiren_driver    : 出力させるMTQ_SEIREN_Driver構造体へのポインタ
+ * @param  polarity              : 出力する極性
+*/
+GPIO_ERR_CODE MTQ_SEIREN_output(MTQ_SEIREN_Driver* mtq_seiren_driver, MTQ_SEIREN_POLARITY polarity);
 
 /**
  * @brief  磁気モーメント方向ベクトル設定関数
