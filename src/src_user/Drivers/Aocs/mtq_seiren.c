@@ -38,7 +38,6 @@ GPIO_ERR_CODE MTQ_SEIREN_init(MTQ_SEIREN_Driver* mtq_seiren_driver, uint8_t ch_g
   mtq_seiren_driver->info.pwm_signed_duty_percent          = 0;
   mtq_seiren_driver->driver.pwm_info.last_set_time         = TMGR_get_master_clock();
   mtq_seiren_driver->driver.pwm_info.internal_timer_ms     = 950;
-  mtq_seiren_driver->driver.drive_status                   = MTQ_SEIREN_IDLE;
   mtq_seiren_driver->driver.polarity_buffer                = MTQ_SEIREN_NO_OUTPUT;
   mtq_seiren_driver->driver.unsigned_duty_percent_buffer   = 0;
 
@@ -161,7 +160,6 @@ static GPIO_ERR_CODE MTQ_SEIREN_output_turn_on_(MTQ_SEIREN_Driver* mtq_seiren_dr
     ret2 = (GPIO_ERR_CODE)GPIO_set_output(mtq_seiren_driver->driver.ch_gpio_negative, GPIO_LOW);
     if (ret1 == GPIO_OK && ret2 == GPIO_OK)
     {
-      mtq_seiren_driver->driver.drive_status = MTQ_SEIREN_ACTIVE;
       return GPIO_OK;
     }
     else if (ret1 != GPIO_OK)
@@ -179,7 +177,6 @@ static GPIO_ERR_CODE MTQ_SEIREN_output_turn_on_(MTQ_SEIREN_Driver* mtq_seiren_dr
     ret2 = (GPIO_ERR_CODE)GPIO_set_output(mtq_seiren_driver->driver.ch_gpio_negative, GPIO_HIGH);
     if (ret1 == GPIO_OK && ret2 == GPIO_OK)
     {
-      mtq_seiren_driver->driver.drive_status = MTQ_SEIREN_ACTIVE;
       return GPIO_OK;
     }
     else if (ret1 != GPIO_OK)
@@ -197,7 +194,6 @@ static GPIO_ERR_CODE MTQ_SEIREN_output_turn_on_(MTQ_SEIREN_Driver* mtq_seiren_dr
     ret2 = (GPIO_ERR_CODE)GPIO_set_output(mtq_seiren_driver->driver.ch_gpio_negative, GPIO_LOW);
     if (ret1 == GPIO_OK && ret2 == GPIO_OK)
     {
-      mtq_seiren_driver->driver.drive_status = MTQ_SEIREN_IDLE;
       return GPIO_OK;
     }
     else if (ret1 != GPIO_OK)
@@ -226,7 +222,6 @@ static GPIO_ERR_CODE MTQ_SEIREN_output_turn_off_(MTQ_SEIREN_Driver* mtq_seiren_d
   // とにかくpositiveピンとnegativeピンをLOWにさせたいので，negativeのLOW化でエラーが出ていても，positiveのLOW化はトライする．
   if (ret1 == GPIO_OK && ret2 == GPIO_OK)
   {
-    mtq_seiren_driver->driver.drive_status = MTQ_SEIREN_IDLE;
     return GPIO_OK;
   }
   else if (ret1 != GPIO_OK)
