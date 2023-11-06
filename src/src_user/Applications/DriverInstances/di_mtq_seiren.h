@@ -33,18 +33,6 @@ extern const MTQ_SEIREN_Driver* const mtq_seiren_driver[MTQ_SEIREN_IDX_MAX];
  */
 AppInfo DI_MTQ_SEIREN_update(void);
 
-/**
- * @brief  MTQ_SEIRENデューティー設定関数
- *         mtq_seiren_controllerから呼ばれることを想定
- * @param  axis                    : MTQ_SEIRENのインデックス
- * @param  pwm_signed_duty_percent : 符号付きduty
- * @return AOCS_ERRORに準拠
- */
-AOCS_ERROR DI_MTQ_SEIREN_set_pwm_duty(MTQ_SEIREN_IDX axis, int8_t pwm_signed_duty_percent);
-
-// コマンド関数
-CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet);
 
 #endif
