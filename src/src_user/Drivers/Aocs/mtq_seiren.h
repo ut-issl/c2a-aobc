@@ -7,7 +7,6 @@
 #define MTQ_SEIREN_H_
 
 #include <src_core/Drivers/Super/driver_super.h>
-#include <src_core/System/TimeManager/time_manager.h>
 #include <src_user/IfWrapper/GPIO.h>
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/c2a_math.h>

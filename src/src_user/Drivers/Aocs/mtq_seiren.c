@@ -6,7 +6,6 @@
 
 #include "mtq_seiren.h"
 
-#include  <src_core/System/TimeManager/time_manager.h>
 #include <src_user/Library/vector3.h>
 
 GPIO_ERR_CODE MTQ_SEIREN_init(MTQ_SEIREN_Driver* mtq_seiren_driver, uint8_t ch_gpio_positive, uint8_t ch_gpio_negative, float max_mag_moment)
