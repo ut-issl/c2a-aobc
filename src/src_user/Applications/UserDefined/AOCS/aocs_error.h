@@ -14,10 +14,11 @@
  */
 typedef enum
 {
-  AOCS_ERROR_OK = 0,     //!< 数値エラーなし
-  AOCS_ERROR_SINGULAR,   //!< callされた関数の処理内で極端に大きい or 小さい値が発生している
-  AOCS_ERROR_RANGE_OVER, //!< 値が指定された値域を超えている
-  AOCS_ERROR_OTHERS      //!< その他
+  AOCS_ERROR_OK = 0,        //!< 数値エラーなし
+  AOCS_ERROR_SINGULAR,      //!< callされた関数の処理内で極端に大きい or 小さい値が発生している
+  AOCS_ERROR_RANGE_OVER,    //!< 値が指定された値域を超えている
+  AOCS_ERROR_NOT_CONVERGED, //!< 収束すべき値が収束しなかった
+  AOCS_ERROR_OTHERS         //!< その他
 } AOCS_ERROR;
 
 #endif
