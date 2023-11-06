@@ -128,8 +128,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION].cmd_func = Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION;
   cmd_table[Cmd_CODE_DI_RM3100_INIT].cmd_func = Cmd_DI_RM3100_INIT;
   cmd_table[Cmd_CODE_DI_MPU9250_INIT].cmd_func = Cmd_DI_MPU9250_INIT;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS].cmd_func = Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_DUTY].cmd_func = Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY;
   cmd_table[Cmd_CODE_DI_STIM210_INIT].cmd_func = Cmd_DI_STIM210_INIT;
   cmd_table[Cmd_CODE_DI_STIM210_SET_MODE].cmd_func = Cmd_DI_STIM210_SET_MODE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_NORMAL_MODE_FORMAT].cmd_func = Cmd_DI_STIM210_SET_NORMAL_MODE_FORMAT;
@@ -409,9 +407,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_DI_RM3100_INIT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_DUTY].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_DUTY].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_MODE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_NORMAL_MODE_FORMAT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_GYRO_OUTPUT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
