@@ -21,6 +21,7 @@ set(C2A_SRCS
   UserDefined/AOCS/AttitudeDetermination/stt_gyro_ekf.c
   UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.c
   UserDefined/AOCS/HardwareDependent/ActuatorControllers/rw_controller.c
+  UserDefined/AOCS/HardwareDependent/ExclusiveControlHandlers/magnetic_exclusive_control_handler.c
   UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.c
   UserDefined/AOCS/HardwareDependent/SensorSelectors/gyro_selector.c
   UserDefined/AOCS/HardwareDependent/SensorSelectors/sun_sensor_selector.c
