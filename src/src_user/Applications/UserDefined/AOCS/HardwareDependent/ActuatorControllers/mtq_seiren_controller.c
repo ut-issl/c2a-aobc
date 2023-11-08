@@ -2,11 +2,6 @@
 /**
 * @file   mtq_seiren_controller.c
 * @brief  aocs_managerの目標磁気情報から，MTQ_SEIRENのPWMデューティー比を計算・設定するアプリ
-* @note   本来なら，PWMデューティー比 (DI等の下位側でやること) とMTQ駆動・消磁の比率 (ここでやること) は別物となる
-* @note   ここでやるべきはMTQ駆動・消磁の比率の計算か，PWMデューティー比の計算のどちらかのはずだが，両者が混ざっている
-* @note   とはいえ，PWM周期の遅い現状では，両者の周期を近づけざるを得ず，その状態でDI側のSWを現状維持するために，下記制約を課す
-* @note   mtq_output_time_length_msとmtq_demagnetization_required_time_msの和が，遅いPWM周期 (1sec)の整数倍 -100msec と合致する様に定める
-* @note   上記制約が満たされない場合，DI側と上位側 (3軸制御やこのアプリ) が思うMTQ駆動動作に齟齬が発生する (100msecはcase処理による余分な分岐で生じる時間)
 */
 
 #include "mtq_seiren_controller.h"
@@ -18,14 +13,12 @@
 #include <src_user/Library/c2a_math.h>
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/math_constants.h>
+#include <src_user/Library/ControlUtility/cross_product_control.h>
 #include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static MtqSeirenController        mtq_seiren_controller_;
 const  MtqSeirenController* const mtq_seiren_controller = &mtq_seiren_controller_;
-
-//!< 元のcase文仕様に伴って生じる，MTQ off期間の余分な長さ [msec]
-static const uint32_t APP_MTQ_SEIREN_CONTROLLER_kDelayForMTQStopExec_ms_ = 100;
 
 static void APP_MTQ_SEIREN_CONTROLLER_init_(void);
 static void APP_MTQ_SEIREN_CONTROLLER_exec_(void);
@@ -39,38 +32,12 @@ static void APP_MTQ_SEIREN_CONTROLLER_exec_(void);
 static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_pwm_duty_(void);
 
 /**
- * @brief  MTQ出力状態管理関数
- * @param  void
- * @return void
- * @note   出力目標磁気モーメントから，MTQの出力状態をAOCSマネージャーに伝える関数
- */
-static void APP_MTQ_SEIREN_CONTROLLER_set_mtq_output_state_(void);
-
-/**
  * @brief  クロスプロダクト制御時MTQ目標磁気モーメント出力設定関数
  * @param  void
  * @return void
  * @note   MTQの出力がOFFのときに呼び出され，MTQ目標磁気モーメント出力を計算し，AOCSマネージャーに伝える役割を持つ
  */
 static void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_output_(const CrossProductControl cross_product_cntrl);
-
-/**
- * @brief  MTQ目標磁気モーメント維持関数
- * @param  void
- * @return void
- * @note   MTQの出力がONのときに呼び出され，所定の時間だけMTQ出力を維持する役割を持つ
- * @note   所定のMTQ出力時間が過ぎたら，MTQ出力を切る
- */
-static void APP_MTQ_SEIREN_CONTROLLER_maintain_mtq_output_();
-
-/**
- * @brief  MTQ消磁待機関数
- * @param  void
- * @return void
- * @note   MTQの出力が切られてから，消磁まで待機する役割を持つ
- * @note   消磁までの時間が過ぎたら，MTQ出力を完全にOFFにしたとみなす
- */
-static void APP_MTQ_SEIREN_CONTROLLER_wait_for_demagnitization_(void);
 
 /**
  * @brief  MTQ出力磁気モーメント実効値clip関数
@@ -81,12 +48,6 @@ static void APP_MTQ_SEIREN_CONTROLLER_wait_for_demagnitization_(void);
  */
 static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],
                                                          const float mag_moment_cmd_Am2[PHYSICAL_CONST_THREE_DIM]);
-
-/**
- * @brief  駆動 + 消磁動作の実行状態制御用カウンタの更新
- * @note   PWM制御が遅い現状では，こういうタイマを用意して，OBC時刻正秒相当のタイミングでMTQ指令値を更新しないとMTQ DriverのPWMと整合が取れない
- */
-static void APP_MTQ_SEIREN_CONTROLLER_update_internal_state_timer_(void);
 
 /**
  * @brief  指令トルクの積分バッファのゼロクリア
@@ -109,23 +70,6 @@ AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void)
 
 void APP_MTQ_SEIREN_CONTROLLER_init_(void)
 {
-  mtq_seiren_controller_.previous_obc_time = TMGR_get_master_clock();
-  mtq_seiren_controller_.mtq_output_turned_on_obc_time = TMGR_get_master_clock();
-
-  /* APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_outputのcase文の仕様から，
-     実際の消磁時間 (MTQ OFF期間) の長さは下記の値+余分に1回分のカウント (100msec) が入ることに注意 */
-  mtq_seiren_controller_.mtq_demagnetization_required_time_ms = 100; // 実機計測などの結果、100msで決めた
-  mtq_seiren_controller_.mtq_output_time_length_ms   = 800;
-
-  /* APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_outputのcase文の仕様から，
-     駆動 + 消磁の1cycleの長さは，各々の長さ+余分に1回分のカウント (100msec) が入るため，100msecを加算 */
-  mtq_seiren_controller_.max_count_internal_timer_ms =
-    mtq_seiren_controller_.mtq_output_time_length_ms +
-    mtq_seiren_controller_.mtq_demagnetization_required_time_ms +
-    APP_MTQ_SEIREN_CONTROLLER_kDelayForMTQStopExec_ms_;
-
-  mtq_seiren_controller_.internal_timer_ms = 0;
-
   APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_();
   mtq_seiren_controller_.previous_trq_integration_obc_time = TMGR_get_master_clock();
   mtq_seiren_controller_.cross_product_error = CROSS_PRODUCT_CONTROL_ERROR_OK;
@@ -134,11 +78,11 @@ void APP_MTQ_SEIREN_CONTROLLER_init_(void)
 
 void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
 {
-  APP_MTQ_SEIREN_CONTROLLER_update_internal_state_timer_();
   APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_pwm_duty_();
   APP_MTQ_SEIREN_CONTROLLER_set_mtq_output_state_();
 }
 
+// 実際にMTQに指令する関数に置き換える
 void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_pwm_duty_(void)
 {
   float mag_moment_target_body_Am2[PHYSICAL_CONST_THREE_DIM];
@@ -167,35 +111,6 @@ void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_pwm_duty_(void)
       DI_MTQ_SEIREN_set_pwm_duty((MTQ_SEIREN_IDX)idx, signed_duty_percent);
     }
   }
-}
-
-void APP_MTQ_SEIREN_CONTROLLER_set_mtq_output_state_(void)
-{
-  if (aocs_manager->mag_exclusive_state == AOCS_MANAGER_MAG_EXCLUSIVE_STATE_IDLE)
-  {
-    // MTQが非駆動なのか消磁中なのかをこの中だけで区別してフラグ操作するのはツライので，別の上位フラグで操作
-    // TODO_L: 全体的に元の排他制御操作が複雑というか何というかなので，正直，時間のある時にゼロから全部直したい…．
-    AOCS_MANAGER_set_mtq_output_state(AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF);
-    return;
-  }
-
-  if (mtq_seiren_controller_.internal_timer_ms < mtq_seiren_controller_.mtq_output_time_length_ms)
-  {
-    AOCS_MANAGER_set_mtq_output_state(AOCS_MANAGER_MTQ_OUTPUT_STATE_ON);
-  }
-  else if ((mtq_seiren_controller_.internal_timer_ms >=
-           (mtq_seiren_controller_.mtq_output_time_length_ms - APP_MTQ_SEIREN_CONTROLLER_kDelayForMTQStopExec_ms_)) &&
-           (mtq_seiren_controller_.internal_timer_ms <
-           (mtq_seiren_controller_.max_count_internal_timer_ms - APP_MTQ_SEIREN_CONTROLLER_kDelayForMTQStopExec_ms_)))
-  {
-    AOCS_MANAGER_set_mtq_output_state(AOCS_MANAGER_MTQ_OUTPUT_STATE_DEMAGNITIZING);
-  }
-  else
-  {
-    AOCS_MANAGER_set_mtq_output_state(AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF);
-  }
-
-  return;
 }
 
 void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProductControl cross_product_cntrl)
@@ -237,29 +152,6 @@ void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_output_(const CrossProductContr
   return;
 }
 
-void APP_MTQ_SEIREN_CONTROLLER_maintain_mtq_output_()
-{
-  ObcTime current_obc_time = TMGR_get_master_clock();
-  uint32_t mtq_driving_time_ms = OBCT_diff_in_msec(&(mtq_seiren_controller->mtq_output_turned_on_obc_time), &current_obc_time);
-  // 目標の時間長さだけMTQに磁気モーメントを出力させたら，MTQの出力を切り，消磁に入る
-  // TODO: 時間アサーションが正しいかどうか検討する
-  if (mtq_driving_time_ms >= mtq_seiren_controller->mtq_output_time_length_ms)
-  {
-    float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
-    VECTOR3_initialize(mag_moment_target_Am2, 0.0f);
-    AOCS_MANAGER_set_mag_moment_target_body_Am2(mag_moment_target_Am2);
-  }
-  return;
-}
-
-void APP_MTQ_SEIREN_CONTROLLER_wait_for_demagnitization_(void)
-{
-  float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
-  VECTOR3_initialize(mag_moment_target_Am2, 0.0f);
-  AOCS_MANAGER_set_mag_moment_target_body_Am2(mag_moment_target_Am2);
-  return;
-}
-
 static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],
                                                          const float mag_moment_cmd_Am2[PHYSICAL_CONST_THREE_DIM])
 {
@@ -296,22 +188,6 @@ static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_momen
   return;
 }
 
-static void APP_MTQ_SEIREN_CONTROLLER_update_internal_state_timer_(void)
-{
-  ObcTime current_obc_time = TMGR_get_master_clock();
-  uint32_t step_time_ms = OBCT_diff_in_msec(&(mtq_seiren_controller_.previous_obc_time), &current_obc_time);
-  mtq_seiren_controller_.previous_obc_time = current_obc_time;
-
-  mtq_seiren_controller_.internal_timer_ms += step_time_ms;
-
-  if (mtq_seiren_controller_.internal_timer_ms >= mtq_seiren_controller_.max_count_internal_timer_ms)
-  {
-    mtq_seiren_controller_.internal_timer_ms = 0;
-  }
-
-  return;
-}
-
 static void APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_(void)
 {
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
@@ -343,25 +219,6 @@ static void APP_MTQ_SEIREN_CONTROLLER_integrate_trq_(void)
   }
 
   return;
-}
-
-
-// コマンド関数
-CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME(const CommonCmdPacket* packet)
-{
-  const uint8_t* param = CCP_get_param_head(packet);
-
-  uint32_t mtq_demagnetization_required_time_ms;
-  ENDIAN_memcpy(&mtq_demagnetization_required_time_ms, param, sizeof(uint32_t));
-
-  if (mtq_demagnetization_required_time_ms < 0)
-  {
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  }
-
-  mtq_seiren_controller_.mtq_demagnetization_required_time_ms = mtq_demagnetization_required_time_ms;
-
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
