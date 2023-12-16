@@ -20,7 +20,7 @@ static void  APP_NVBC_MGR_exec_(void);
 
 AppInfo APP_NVBC_MGR_create_app(void)
 {
-  return AI_create_app_info("AOCS Data Recorder", APP_NVBC_MGR_init_, APP_NVBC_MGR_exec_);
+  return AI_create_app_info("Non-volatile BC Manager", APP_NVBC_MGR_init_, APP_NVBC_MGR_exec_);
 }
 
 static void APP_NVBC_MGR_init_(void)
@@ -56,21 +56,22 @@ static void APP_NVBC_MGR_exec_(void)
 
 static void APP_NVBC_MGR_copy_bc_(bct_id_t begin_bc_id, uint8_t len)
 {
-  uint32_t write_address;
   bct_id_t bc_id;
-  BCT_Table block;
+  uint32_t write_address;
+  uint8_t data_tmp[sizeof(BCT_Table)];
   APP_NVM_MANAGER_ERROR ret;
 
   for (uint8_t i = 0; i < len; ++i)
   {
     bc_id = begin_bc_id + i;
-    block = *block_command_table->blocks[bc_id];  // TODO: アサーション入れる
     write_address = APP_NVBC_MGR_get_address_from_bc_id_(bc_id);
+
+    memcpy(data_tmp, block_command_table->blocks[bc_id], sizeof(BCT_Table));
 
     ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
                                         write_address,
                                         sizeof(BCT_Table),
-                                        &block);
+                                        data_tmp);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)ret, EL_ERROR_LEVEL_LOW, bc_id);
@@ -80,24 +81,30 @@ static void APP_NVBC_MGR_copy_bc_(bct_id_t begin_bc_id, uint8_t len)
   return;
 }
 
-static void APP_NVBC_MGR_restore_bc_from_nvm_(bct_id_t bc_id)
+static APP_NVM_MANAGER_ERROR APP_NVBC_MGR_restore_bc_from_nvm_(bct_id_t bc_id)
 {
-  BCT_Table block;
+  uint8_t data_tmp[sizeof(BCT_Table)];
   APP_NVM_MANAGER_ERROR ret;
+  BCT_ACK ack;
   uint32_t read_address = APP_NVBC_MGR_get_address_from_bc_id_(bc_id);
 
-  ret = APP_NVM_PARTITION_read_bytes(&block,
+  ret = APP_NVM_PARTITION_read_bytes(data_tmp,
                                      APP_NVM_PARTITION_ID_BCT,
                                      read_address,
                                      sizeof(BCT_Table));
   if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
-    EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)ret, EL_ERROR_LEVEL_HIGH, bc_id);
+    return ret;
   }
 
-  memcpy(block_command_table->blocks[bc_id], &block, sizeof(BCT_Table));  // FIXME: BCT は static const 確保されているので無理な気がする
+  ack = BCT_copy_bct_from_bytes(bc_id, data_tmp);
+  if (ack != BCT_SUCCESS)
+  {
+    EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)ack, EL_ERROR_LEVEL_HIGH, bc_id);
+    return APP_NVM_MANAGER_ERROR_NG_OTHERS;
+  }
 
-  return;
+  return APP_NVM_MANAGER_ERROR_OK;
 }
 
 static uint32_t APP_NVBC_MGR_get_address_from_bc_id_(bct_id_t bc_id)
@@ -134,7 +141,12 @@ CCP_CmdRet Cmd_APP_NVBC_MGR_RESTORE_BC_FROM_NVM(const CommonCmdPacket* packet)
 {
   bct_id_t bc_id = CCP_get_param_from_packet(packet, 0, bct_id_t);
 
-  APP_NVBC_MGR_restore_bc_from_nvm_(bc_id);
+  APP_NVM_MANAGER_ERROR ret = APP_NVBC_MGR_restore_bc_from_nvm_(bc_id);
+
+  if (ret != APP_NVM_MANAGER_ERROR_OK)
+  {
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, ret);
+  }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
