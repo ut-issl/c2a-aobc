@@ -15,6 +15,7 @@
 #include <string.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/TlmCmd/block_command_executor.h>
 
 static NonVolatileBCManager nv_bc_manager_;
 const  NonVolatileBCManager* const nv_bc_manager = &nv_bc_manager_;
@@ -38,6 +39,13 @@ static void APP_NVBC_MGR_copy_bc_(bct_id_t begin_bc_id, uint8_t num);
  * @note 地上局コマンドで実行される
  */
 static APP_NVBC_MGR_ERROR APP_NVBC_MGR_restore_bc_from_nvm_(bct_id_t bc_id);
+
+/**
+ * @brief 指定した BC が保存されている不揮発メモリ上のアドレスを返す
+ * @param[in] bc_id
+ * @return 不揮発メモリ上のアドレス
+ */
+static uint32_t APP_NVBC_MGR_get_address_from_bc_id_(bct_id_t bc_id);
 
 
 AppInfo APP_NVBC_MGR_create_app(void)
@@ -171,6 +179,16 @@ static APP_NVBC_MGR_ERROR APP_NVBC_MGR_restore_bc_from_nvm_(bct_id_t bc_id)
   }
 
   return APP_NVBC_MGR_ERR_OK;
+}
+
+static uint32_t APP_NVBC_MGR_get_address_from_bc_id_(bct_id_t bc_id)
+{
+  if (bc_id >= BCT_MAX_BLOCKS)
+  {
+    return 0;
+  }
+
+  return nv_bc_manager_.address_for_bc + sizeof(BCT_Table) * bc_id;
 }
 
 CCP_CmdRet Cmd_APP_NVBC_MGR_SET_ENABLE(const CommonCmdPacket* packet)
