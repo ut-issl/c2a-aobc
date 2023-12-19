@@ -78,8 +78,6 @@ static void APP_NVM_BC_MANAGER_init_(void)
 
 static void APP_NVM_BC_MANAGER_exec_(void)
 {
-  APP_NVM_MANAGER_ERROR ret;
-
   // 有効化するまでは何もしない
   if (!nvm_bc_manager_.is_active) return;
 
@@ -93,10 +91,10 @@ static void APP_NVM_BC_MANAGER_exec_(void)
     nvm_bc_manager_.bc_id_to_copy = 0;
 
     // 1周したので is_ready_to_restore の魚拓も取る
-    ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
-                                        nvm_bc_manager_.address_for_ready_flags,
-                                        sizeof(nvm_bc_manager_.is_ready_to_restore),
-                                        nvm_bc_manager_.is_ready_to_restore);
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
+                                                              nvm_bc_manager_.address_for_ready_flags,
+                                                              sizeof(nvm_bc_manager_.is_ready_to_restore),
+                                                              nvm_bc_manager_.is_ready_to_restore);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)APP_NVM_MANAGER_ERROR_COPY_READY_FLAG, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
@@ -155,24 +153,24 @@ static void APP_NVM_BC_MANAGER_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
 
 static APP_NVM_MANAGER_ERROR APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bct_id_t bc_id)
 {
-  uint8_t data_tmp[sizeof(BCT_Table)];
-  APP_NVM_MANAGER_ERROR ret;
-  BCT_ACK ack;
+  if (!nvm_bc_manager_.is_ready_to_restore[bc_id]) return APP_NVM_MANAGER_ERROR_NOT_READY_TO_RESTORE;
+
   uint32_t read_address = APP_NVM_BC_MANAGER_get_address_from_bc_id_(bc_id);
 
-  if (!nvm_bc_manager_.is_ready_to_restore[bc_id]) return APP_NVM_MANAGER_ERROR_NOT_READY_TO_RESTORE;
   if (read_address < nvm_bc_manager_.address_for_bc) return APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC;
 
-  ret = APP_NVM_PARTITION_read_bytes(data_tmp,
-                                     APP_NVM_PARTITION_ID_BCT,
-                                     read_address,
-                                     sizeof(BCT_Table));
+  uint8_t data_tmp[sizeof(BCT_Table)];
+
+  APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(data_tmp,
+                                                           APP_NVM_PARTITION_ID_BCT,
+                                                           read_address,
+                                                           sizeof(BCT_Table));
   if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
     return ret;
   }
 
-  ack = BCT_copy_bct_from_bytes(bc_id, data_tmp);
+  BCT_ACK ack = BCT_copy_bct_from_bytes(bc_id, data_tmp);
   if (ack != BCT_SUCCESS)
   {
     return APP_NVM_MANAGER_ERROR_BCT_COPY_FAIL;
@@ -223,6 +221,8 @@ CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_RESTORE_BC_FROM_NVM(const CommonCmdPacket* pac
 {
   bct_id_t bc_id = CCP_get_param_from_packet(packet, 0, bct_id_t);
 
+  if (bc_id >= BCT_MAX_BLOCKS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+
   APP_NVM_MANAGER_ERROR ret = APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bc_id);
 
   if (ret != APP_NVM_MANAGER_ERROR_OK)
@@ -242,8 +242,10 @@ CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_OTHER_SETTINGS(const CommonCmdPacket* packet)
   switch (idx)
   {
   case 0:
+    if (value >= BCT_MAX_BLOCKS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     nvm_bc_manager_.bc_id_to_copy = (bct_id_t)value;
   case 1:
+    if (value > 255) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     nvm_bc_manager_.bc_num_to_copy = (uint8_t)value;
   case 2:
     nvm_bc_manager_.address_for_ready_flags = value;
