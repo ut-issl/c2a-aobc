@@ -10,20 +10,6 @@
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/block_command_table.h>
 
-/**
- * @enum  APP_NVM_BC_MANAGER_ERROR
- * @brief エラー用enum
- * @note  APP_NVM_MANAGER_ERROR の値を共用したいので値続きにしている
- */
-typedef enum
-{
-  APP_NVM_BC_MANAGER_ERR_OK = 0,
-  APP_NVM_BC_MANAGER_ERR_BCT_COPY_FAIL = APP_NVM_MANAGER_ERROR_NG_OTHERS + 1,  //!< BCT の関数でエラー発生
-  APP_NVM_BC_MANAGER_ERR_NOT_READY_TO_RESTORE,                                 //!< 復元できる状態ではない
-  APP_NVM_BC_MANAGER_ERR_INVALID_ADDRESS,                                      //!< アドレスがおかしい
-  APP_NVM_BC_MANAGER_ERR_COPY_READY_FLAG,                                      //!< ready flag のコピーに失敗
-  APP_NVM_BC_MANAGER_ERR_RESTORE_READY_FLAG                                    //!< ready flag の復元に失敗
-} APP_NVM_BC_MANAGER_ERROR;
 
 /**
  * @struct
@@ -31,12 +17,12 @@ typedef enum
  */
 typedef struct
 {
-  uint8_t is_active;
-  uint8_t is_ready_to_restore[BCT_MAX_BLOCKS]; // 各 BC が復元できる状態かどうか
-  bct_id_t bc_id_to_copy;                      // 次にコピーする BC の ID
-  uint8_t bc_num_to_copy;                      // 一度に何個の BC をコピーするか
-  uint32_t address_for_ready_flags;            // is_ready_to_restore を保存している領域の開始アドレス
-  uint32_t address_for_bc;                     // BCT を保存している領域の開始アドレス
+  uint8_t is_active;                           //!< アプリが有効かどうか
+  uint8_t is_ready_to_restore[BCT_MAX_BLOCKS]; //!< 各 BC が復元できる状態かどうか
+  bct_id_t bc_id_to_copy;                      //!< 次にコピーする BC の ID
+  uint8_t bc_num_to_copy;                      //!< 一度に何個の BC をコピーするか
+  uint32_t address_for_ready_flags;            //!< is_ready_to_restore を保存している領域の開始アドレス
+  uint32_t address_for_bc;                     //!< BCT を保存している領域の開始アドレス
 } NonVolatileMemoryBcManager;
 
 extern const NonVolatileMemoryBcManager* const nvm_bc_manager;

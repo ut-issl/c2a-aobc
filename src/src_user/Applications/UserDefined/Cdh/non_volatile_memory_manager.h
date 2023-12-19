@@ -21,15 +21,21 @@
  * @enum  APP_NVM_MANAGER_ERROR
  * @brief エラー用enum
  * @note  型はuint8_tを想定
+ * @note  non_volatile_memory_bc_manager でも用いる
  */
 typedef enum
 {
-  APP_NVM_MANAGER_ERROR_OK = 0,     //!< エラーなし
-  APP_NVM_MANAGER_ERROR_NG_ADDRESS, //!< 先頭アドレス指定エラー
-  APP_NVM_MANAGER_ERROR_NG_LENGTH,  //!< データ長関連エラー
-  APP_NVM_MANAGER_ERROR_NG_READ,    //!< 読み出しエラー
-  APP_NVM_MANAGER_ERROR_NG_WRITE,   //!< 書き込みエラー
-  APP_NVM_MANAGER_ERROR_NG_OTHERS,  //!< その他未分類のエラー
+  APP_NVM_MANAGER_ERROR_OK = 0,                //!< エラーなし
+  APP_NVM_MANAGER_ERROR_NG_ADDRESS,            //!< 先頭アドレス指定エラー
+  APP_NVM_MANAGER_ERROR_NG_LENGTH,             //!< データ長関連エラー
+  APP_NVM_MANAGER_ERROR_NG_READ,               //!< 読み出しエラー
+  APP_NVM_MANAGER_ERROR_NG_WRITE,              //!< 書き込みエラー
+  APP_NVM_MANAGER_ERROR_BCT_COPY_FAIL,         //!< BCT の関数でエラー発生
+  APP_NVM_MANAGER_ERROR_NOT_READY_TO_RESTORE,  //!< NVM 上の BC を復元できる状態ではない
+  APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC,     //!< NVM_BC アプリでの無効アドレスエラー
+  APP_NVM_MANAGER_ERROR_COPY_READY_FLAG,       //!< ready flag のコピーに失敗
+  APP_NVM_MANAGER_ERROR_RESTORE_READY_FLAG,    //!< ready flag の復元に失敗
+  APP_NVM_MANAGER_ERROR_NG_OTHERS              //!< その他未分類のエラー
 } APP_NVM_MANAGER_ERROR;
 
 /**

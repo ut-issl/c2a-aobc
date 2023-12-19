@@ -35,10 +35,10 @@ static void APP_NVM_BC_MANAGER_copy_bc_(bct_id_t begin_bc_id, uint8_t num);
 /**
  * @brief 指定された BC を１つ不揮発から復元する
  * @param[in] bc_id : 復元する BC の id
- * @return APP_NVM_BC_MANAGER_ERROR
+ * @return APP_NVM_MANAGER_ERROR
  * @note 地上局コマンドで実行される
  */
-static APP_NVM_BC_MANAGER_ERROR APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bct_id_t bc_id);
+static APP_NVM_MANAGER_ERROR APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bct_id_t bc_id);
 
 /**
  * @brief 指定した BC が保存されている不揮発メモリ上のアドレスを返す
@@ -70,7 +70,7 @@ static void APP_NVM_BC_MANAGER_init_(void)
                                      sizeof(nvm_bc_manager_.is_ready_to_restore));
   if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
-    EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_BC_MANAGER_ERR_RESTORE_READY_FLAG, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
+    EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_MANAGER_ERROR_RESTORE_READY_FLAG, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
   }
 
   return;
@@ -99,7 +99,7 @@ static void APP_NVM_BC_MANAGER_exec_(void)
                                         nvm_bc_manager_.is_ready_to_restore);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
-      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_BC_MANAGER_ERR_COPY_READY_FLAG, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
+      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_MANAGER_ERROR_COPY_READY_FLAG, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
     }
   }
   else
@@ -128,7 +128,7 @@ static void APP_NVM_BC_MANAGER_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
     write_address = APP_NVM_BC_MANAGER_get_address_from_bc_id_(bc_id);
     if (write_address < nvm_bc_manager_.address_for_bc)
     {
-      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_BC_MANAGER_ERR_INVALID_ADDRESS, EL_ERROR_LEVEL_LOW, (uint32_t)bc_id);
+      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC, EL_ERROR_LEVEL_LOW, (uint32_t)bc_id);
       break;
     }
 
@@ -153,15 +153,15 @@ static void APP_NVM_BC_MANAGER_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
   return;
 }
 
-static APP_NVM_BC_MANAGER_ERROR APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bct_id_t bc_id)
+static APP_NVM_MANAGER_ERROR APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bct_id_t bc_id)
 {
   uint8_t data_tmp[sizeof(BCT_Table)];
   APP_NVM_MANAGER_ERROR ret;
   BCT_ACK ack;
   uint32_t read_address = APP_NVM_BC_MANAGER_get_address_from_bc_id_(bc_id);
 
-  if (!nvm_bc_manager_.is_ready_to_restore[bc_id]) return APP_NVM_BC_MANAGER_ERR_NOT_READY_TO_RESTORE;
-  if (read_address < nvm_bc_manager_.address_for_bc) return APP_NVM_BC_MANAGER_ERR_INVALID_ADDRESS;
+  if (!nvm_bc_manager_.is_ready_to_restore[bc_id]) return APP_NVM_MANAGER_ERROR_NOT_READY_TO_RESTORE;
+  if (read_address < nvm_bc_manager_.address_for_bc) return APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC;
 
   ret = APP_NVM_PARTITION_read_bytes(data_tmp,
                                      APP_NVM_PARTITION_ID_BCT,
@@ -169,16 +169,16 @@ static APP_NVM_BC_MANAGER_ERROR APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bct_id_t
                                      sizeof(BCT_Table));
   if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
-    return (APP_NVM_BC_MANAGER_ERROR)ret;
+    return ret;
   }
 
   ack = BCT_copy_bct_from_bytes(bc_id, data_tmp);
   if (ack != BCT_SUCCESS)
   {
-    return APP_NVM_BC_MANAGER_ERR_BCT_COPY_FAIL;
+    return APP_NVM_MANAGER_ERROR_BCT_COPY_FAIL;
   }
 
-  return APP_NVM_BC_MANAGER_ERR_OK;
+  return APP_NVM_MANAGER_ERROR_OK;
 }
 
 static uint32_t APP_NVM_BC_MANAGER_get_address_from_bc_id_(bct_id_t bc_id)
@@ -223,9 +223,9 @@ CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_RESTORE_BC_FROM_NVM(const CommonCmdPacket* pac
 {
   bct_id_t bc_id = CCP_get_param_from_packet(packet, 0, bct_id_t);
 
-  APP_NVM_BC_MANAGER_ERROR ret = APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bc_id);
+  APP_NVM_MANAGER_ERROR ret = APP_NVM_BC_MANAGER_restore_bc_from_nvm_(bc_id);
 
-  if (ret != APP_NVM_BC_MANAGER_ERR_OK)
+  if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
     return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, ret);
   }
