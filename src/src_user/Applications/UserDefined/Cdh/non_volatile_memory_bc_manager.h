@@ -3,8 +3,8 @@
 * @brief BCT のコピーを不揮発メモリに保存する
 * @note 使い方は .c を参照
 */
-#ifndef NON_VOLATILE_BC_MANAGER_H_
-#define NON_VOLATILE_BC_MANAGER_H_
+#ifndef NON_VOLATILE_MEMORY_BC_MANAGER_H_
+#define NON_VOLATILE_MEMORY_BC_MANAGER_H_
 
 #include "non_volatile_memory_partition.h"
 #include <src_core/System/ApplicationManager/app_info.h>
