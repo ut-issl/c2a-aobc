@@ -70,7 +70,7 @@ static void APP_NVM_BC_MANAGER_init_(void)
                                      sizeof(nvm_bc_manager_.is_ready_to_restore));
   if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
-    EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_MANAGER_ERROR_RESTORE_READY_FLAG, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
+    EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)APP_NVM_MANAGER_ERROR_RESTORE_READY_FLAG, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
   }
 
   return;
@@ -99,7 +99,7 @@ static void APP_NVM_BC_MANAGER_exec_(void)
                                         nvm_bc_manager_.is_ready_to_restore);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
-      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_MANAGER_ERROR_COPY_READY_FLAG, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
+      EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)APP_NVM_MANAGER_ERROR_COPY_READY_FLAG, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
     }
   }
   else
@@ -128,7 +128,7 @@ static void APP_NVM_BC_MANAGER_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
     write_address = APP_NVM_BC_MANAGER_get_address_from_bc_id_(bc_id);
     if (write_address < nvm_bc_manager_.address_for_bc)
     {
-      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC, EL_ERROR_LEVEL_LOW, (uint32_t)bc_id);
+      EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC, EL_ERROR_LEVEL_LOW, (uint32_t)bc_id);
       break;
     }
 
@@ -141,7 +141,7 @@ static void APP_NVM_BC_MANAGER_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
                                         data_tmp);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
-      EL_record_event(EL_GROUP_NV_BC_MGR, (uint32_t)ret, EL_ERROR_LEVEL_LOW, bc_id);
+      EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)ret, EL_ERROR_LEVEL_LOW, bc_id);
     }
     else
     {
