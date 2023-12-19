@@ -11,19 +11,19 @@
 #include <src_core/TlmCmd/block_command_table.h>
 
 /**
- * @enum  APP_NVBC_MGR_ERROR
+ * @enum  APP_NVM_BC_MANAGER_ERROR
  * @brief エラー用enum
  * @note  APP_NVM_MANAGER_ERROR の値を共用したいので値続きにしている
  */
 typedef enum
 {
-  APP_NVBC_MGR_ERR_OK = 0,
-  APP_NVBC_MGR_ERR_BCT_COPY_FAIL = APP_NVM_MANAGER_ERROR_NG_OTHERS + 1,  //!< BCT の関数でエラー発生
-  APP_NVBC_MGR_ERR_NOT_READY_TO_RESTORE,                                 //!< 復元できる状態ではない
-  APP_NVBC_MGR_ERR_INVALID_ADDRESS,                                      //!< アドレスがおかしい
-  APP_NVBC_MGR_ERR_COPY_READY_FLAG,                                      //!< ready flag のコピーに失敗
-  APP_NVBC_MGR_ERR_RESTORE_READY_FLAG                                    //!< ready flag の復元に失敗
-} APP_NVBC_MGR_ERROR;
+  APP_NVM_BC_MANAGER_ERR_OK = 0,
+  APP_NVM_BC_MANAGER_ERR_BCT_COPY_FAIL = APP_NVM_MANAGER_ERROR_NG_OTHERS + 1,  //!< BCT の関数でエラー発生
+  APP_NVM_BC_MANAGER_ERR_NOT_READY_TO_RESTORE,                                 //!< 復元できる状態ではない
+  APP_NVM_BC_MANAGER_ERR_INVALID_ADDRESS,                                      //!< アドレスがおかしい
+  APP_NVM_BC_MANAGER_ERR_COPY_READY_FLAG,                                      //!< ready flag のコピーに失敗
+  APP_NVM_BC_MANAGER_ERR_RESTORE_READY_FLAG                                    //!< ready flag の復元に失敗
+} APP_NVM_BC_MANAGER_ERROR;
 
 /**
  * @struct
@@ -37,14 +37,14 @@ typedef struct
   uint8_t bc_num_to_copy;                      // 一度に何個の BC をコピーするか
   uint32_t address_for_ready_flags;            // is_ready_to_restore を保存している領域の開始アドレス
   uint32_t address_for_bc;                     // BCT を保存している領域の開始アドレス
-} NonVolatileBCManager;
+} NonVolatileMemoryBcManager;
 
-extern const NonVolatileBCManager* const nv_bc_manager;
+extern const NonVolatileMemoryBcManager* const nvm_bc_manager;
 
-AppInfo APP_NVBC_MGR_create_app(void);
+AppInfo APP_NVM_BC_MANAGER_create_app(void);
 
-CCP_CmdRet Cmd_APP_NVBC_MGR_SET_ENABLE(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_NVBC_MGR_RESTORE_BC_FROM_NVM(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_NVBC_MGR_OTHER_SETTINGS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_SET_ENABLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_RESTORE_BC_FROM_NVM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_OTHER_SETTINGS(const CommonCmdPacket* packet);
 
 #endif
