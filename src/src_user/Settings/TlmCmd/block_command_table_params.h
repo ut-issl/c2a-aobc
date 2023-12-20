@@ -14,9 +14,9 @@
 
 #define BCT_CMD_MAX_LENGTH (32)
 #define BCT_MAX_CMD_NUM (16)
-#define BCT_MAX_BLOCKS (80)
-// ここ変えたら，Cmd_RESET_(RE)STORE_BCT* も変える！
+#define BCT_MAX_BLOCKS (80)  /*!< Application/UserDefined/Cdh/non_volatile_memory_bc の bc_num_to_copy は BCT_MAX_BLOCKS の約数としている
+                                  BCT_MAX_BLOCKS を変更するときは気を付けること */
 
-#define SIZE_OF_BCT_ID_T     (2)
+#define SIZE_OF_BCT_ID_T (2)
 
 #endif
