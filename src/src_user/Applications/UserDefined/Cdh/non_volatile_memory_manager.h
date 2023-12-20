@@ -21,7 +21,7 @@
  * @enum  APP_NVM_MANAGER_ERROR
  * @brief エラー用enum
  * @note  型はuint8_tを想定
- * @note  non_volatile_memory_bc_manager でも用いる
+ * @note  non_volatile_memory_bc でも用いる
  */
 typedef enum
 {

@@ -10,7 +10,7 @@
 *       3. 復元が終わったら再度有効化する
 */
 
-#include "non_volatile_memory_bc_manager.h"
+#include "non_volatile_memory_bc.h"
 
 #include <string.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>

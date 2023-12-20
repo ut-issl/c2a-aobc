@@ -82,7 +82,7 @@
 #include "UserDefined/Cdh/non_volatile_memory_manager.h"
 #include "UserDefined/Cdh/non_volatile_memory_partition.h"
 #include "UserDefined/Cdh/non_volatile_memory_parameter.h"
-#include "UserDefined/Cdh/non_volatile_memory_bc_manager.h"
+#include "UserDefined/Cdh/non_volatile_memory_bc.h"
 #include "UserDefined/Cdh/aocs_data_recorder.h"
 
 // Thermal
