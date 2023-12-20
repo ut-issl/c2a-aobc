@@ -23,14 +23,14 @@ typedef struct
   uint8_t bc_num_to_copy;                      //!< 一度に何個の BC をコピーするか
   uint32_t address_for_ready_flags;            //!< is_ready_to_restore を保存している領域の開始アドレス
   uint32_t address_for_bc;                     //!< BCT を保存している領域の開始アドレス
-} NonVolatileMemoryBcManager;
+} NonVolatileMemoryBc;
 
-extern const NonVolatileMemoryBcManager* const nvm_bc_manager;
+extern const NonVolatileMemoryBc* const nvm_bc;
 
-AppInfo APP_NVM_BC_MANAGER_create_app(void);
+AppInfo APP_NVM_BC_create_app(void);
 
-CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_SET_ENABLE(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_RESTORE_BC_FROM_NVM(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_NVM_BC_MANAGER_OTHER_SETTINGS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_BC_SET_ENABLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_BC_RESTORE_BC_FROM_NVM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_NVM_BC_OTHER_SETTINGS(const CommonCmdPacket* packet);
 
 #endif
