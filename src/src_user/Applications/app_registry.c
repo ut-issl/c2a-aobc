@@ -98,7 +98,7 @@ void AR_load_initial_settings(void)
   add_application_(AR_APP_NVM_MANAGER, APP_NVM_MANAGER_create_app);
   add_application_(AR_APP_NVM_PARTITION, APP_NVM_PARTITION_create_app);
   add_application_(AR_APP_NVM_PARAMETER, APP_NVM_PARAMETER_create_app);
-  add_application_(AR_APP_NV_BC_MGR, APP_NVM_BC_create_app);
+  add_application_(AR_APP_NVM_BC, APP_NVM_BC_create_app);
   add_application_(AR_APP_AOCS_DATA_RECORDER, APP_AOCS_DR_create_app);
 
   // Thermal

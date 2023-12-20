@@ -21,7 +21,7 @@ void BCL_load_cdh_update()
   BCL_tool_register_app(6, AR_DI_MOBC_RT_TLM_PH);
   BCL_tool_register_app(7, AR_EVENT_UTILITY);
   BCL_tool_register_app(8, AR_APP_AOCS_DATA_RECORDER);
-  BCL_tool_register_app(9, AR_APP_NV_BC_MGR);  // TODO: これだと10Hzで頻度高すぎる
+  BCL_tool_register_app(9, AR_APP_NVM_BC);  // TODO: これだと10Hzで頻度高すぎる
 }
 
 #pragma section
