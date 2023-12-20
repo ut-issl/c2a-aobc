@@ -55,8 +55,6 @@ AppInfo APP_NVM_BC_create_app(void)
 
 static void APP_NVM_BC_init_(void)
 {
-  APP_NVM_MANAGER_ERROR ret;
-
   nvm_bc_.is_active = 0;  // 起動直後は無効化しておく
   nvm_bc_.bc_id_to_copy = 0;
   nvm_bc_.bc_num_to_copy = 10;
@@ -64,10 +62,10 @@ static void APP_NVM_BC_init_(void)
   nvm_bc_.address_for_bc = nvm_bc_.address_for_ready_flags + sizeof(nvm_bc_.is_ready_to_restore);
 
   // is_ready_to_restore を不揮発から復元する
-  ret = APP_NVM_PARTITION_read_bytes(nvm_bc_.is_ready_to_restore,
-                                     APP_NVM_PARTITION_ID_BCT,
-                                     nvm_bc_.address_for_ready_flags,
-                                     sizeof(nvm_bc_.is_ready_to_restore));
+  APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(nvm_bc_.is_ready_to_restore,
+                                                           APP_NVM_PARTITION_ID_BCT,
+                                                           nvm_bc_.address_for_ready_flags,
+                                                           sizeof(nvm_bc_.is_ready_to_restore));
   if (ret != APP_NVM_MANAGER_ERROR_OK)
   {
     EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)APP_NVM_MANAGER_ERROR_RESTORE_READY_FLAG, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
@@ -110,20 +108,17 @@ static void APP_NVM_BC_exec_(void)
 
 static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
 {
-  bct_id_t bc_id;
-  uint32_t write_address;
   uint8_t data_tmp[sizeof(BCT_Table)];
-  APP_NVM_MANAGER_ERROR ret;
 
   for (uint8_t i = 0; i < num; ++i)
   {
-    bc_id = begin_bc_id + i;
+    bct_id_t bc_id = begin_bc_id + i;
     nvm_bc_.is_ready_to_restore[bc_id] = 0;
 
     // 有効化されている BC のみコピーする
     if (!BCE_is_active(bc_id)) continue;
 
-    write_address = APP_NVM_BC_get_address_from_bc_id_(bc_id);
+    uint32_t write_address = APP_NVM_BC_get_address_from_bc_id_(bc_id);
     if (write_address < nvm_bc_.address_for_bc)
     {
       EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC, EL_ERROR_LEVEL_LOW, (uint32_t)bc_id);
@@ -133,10 +128,10 @@ static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
     memcpy(data_tmp, block_command_table->blocks[bc_id], sizeof(BCT_Table));
 
     // 不揮発に BC をコピー
-    ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
-                                        write_address,
-                                        sizeof(BCT_Table),
-                                        data_tmp);
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
+                                                              write_address,
+                                                              sizeof(BCT_Table),
+                                                              data_tmp);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       EL_record_event(EL_GROUP_NVM_BC_MANAGER, (uint32_t)ret, EL_ERROR_LEVEL_LOW, bc_id);
@@ -191,7 +186,6 @@ static uint32_t APP_NVM_BC_get_address_from_bc_id_(bct_id_t bc_id)
 
 CCP_CmdRet Cmd_APP_NVM_BC_SET_ENABLE(const CommonCmdPacket* packet)
 {
-  APP_NVM_MANAGER_ERROR ret;
   uint8_t is_active = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (is_active > 0)
@@ -200,10 +194,10 @@ CCP_CmdRet Cmd_APP_NVM_BC_SET_ENABLE(const CommonCmdPacket* packet)
 
     // ready flag を全て下ろす
     memset(nvm_bc_.is_ready_to_restore, 0, sizeof(nvm_bc_.is_ready_to_restore));
-    ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
-                                        nvm_bc_.address_for_ready_flags,
-                                        sizeof(nvm_bc_.is_ready_to_restore),
-                                        nvm_bc_.is_ready_to_restore);
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
+                                                              nvm_bc_.address_for_ready_flags,
+                                                              sizeof(nvm_bc_.is_ready_to_restore),
+                                                              nvm_bc_.is_ready_to_restore);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, ret);
