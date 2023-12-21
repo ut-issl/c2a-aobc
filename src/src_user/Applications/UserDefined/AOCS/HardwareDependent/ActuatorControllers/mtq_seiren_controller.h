@@ -34,8 +34,6 @@ AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void);
 
 /**
  * @brief  クロスプロダクト制御時MTQ目標磁気モーメント出力関数
- * @note   MTQの出力がONのときに呼び出され，所定の時間だけMTQ出力を維持する役割を持つ
- * @note   所定のMTQ出力時間が過ぎたら，MTQ出力を切る
  */
 void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProductControl cross_product_cntrl);
 

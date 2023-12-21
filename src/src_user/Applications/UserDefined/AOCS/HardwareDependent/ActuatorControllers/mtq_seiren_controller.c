@@ -117,18 +117,15 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
                                   aocs_manager->mtq_distribution_matrix,
                                   mag_moment_target_body_Am2);
 
-  float clipped_mag_moment_mtq_Am2[PHYSICAL_CONST_THREE_DIM];
-  APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(clipped_mag_moment_mtq_Am2, mag_moment_mtq_Am2);
-
   for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
   {
-    if (clipped_mag_moment_mtq_Am2[idx] > mtq_seiren_driver[idx]->driver.max_mag_moment)
+    if (mag_moment_mtq_Am2[idx] > mtq_seiren_driver[idx]->driver.max_mag_moment)
     {
       // 出力最大で制御する必要がある場合、排他制御でMTQ出力のために確保している時間すべてを使う
       mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->control_duration_ms;
       mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
     }
-    else if (clipped_mag_moment_mtq_Am2[idx] < -1.0f * mtq_seiren_driver[idx]->driver.max_mag_moment)
+    else if (mag_moment_mtq_Am2[idx] < -1.0f * mtq_seiren_driver[idx]->driver.max_mag_moment)
     {
       // 出力最大で制御する必要がある場合、排他制御でMTQ出力のために確保している時間すべてを使う
       mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->control_duration_ms;
@@ -136,13 +133,30 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
     }
     else
     {
-      mtq_seiren_controller_.mtq_output_duration_ms[idx] = fabsf((clipped_mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
+      mtq_seiren_controller_.mtq_output_duration_ms[idx] = fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
                                                                   magnetic_exclusive_control_timer->control_duration_ms);
       
       // [TODO_H] 消磁のために出力時間が薄まる効果を補正する
-      mtq_seiren_controller_.mtq_output_polarity[idx] = (clipped_mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
+      mtq_seiren_controller_.mtq_output_polarity[idx] = (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
     }
   }
+}
+
+void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_output_(const CrossProductControl cross_product_cntrl)
+{
+  float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
+  CROSS_PRODUCT_CONTROL_calc_mag_moment_from_ext_torque(cross_product_cntrl,
+                                                        mag_moment_target_Am2,
+                                                        mtq_seiren_controller_.integrated_trq_Nms,
+                                                        aocs_manager->mag_vec_est_body_nT,
+                                                        &mtq_seiren_controller_.cross_product_error_ratio);
+
+  // 現状に合わせて，指令磁気モーメント連続出力値[Am^2sec]最大値を補正し，その結果を元に指令磁気モーメント連続出力値をクリップする
+  float clipped_mag_moment_target_Am2s[PHYSICAL_CONST_THREE_DIM];
+  APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(clipped_mag_moment_target_Am2s, mag_moment_target_Am2);
+
+  AOCS_MANAGER_set_mag_moment_target_body_Am2(clipped_mag_moment_target_Am2s);
+  return;
 }
 
 static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],
