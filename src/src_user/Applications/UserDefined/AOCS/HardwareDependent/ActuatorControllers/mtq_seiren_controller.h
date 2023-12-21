@@ -9,6 +9,7 @@
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_user/Library/physical_constants.h>
+#include <src_user/Drivers/Aocs/mtq_seiren.h>
 
 /**
  * @struct MtqSeirenController
@@ -16,8 +17,8 @@
  */
 typedef struct
 {
-  uint32_t internal_timer_ms;                     //!< 実行状態制御用カウンタ[ms], 駆動 + 消磁動作1cycleに相当する周期 (OBCTime) でroll over
-  uint32_t mtq_output_time_length_ms;             //!< 1回の駆動でMTQのON状態を維持する時間[ms]
+  float mtq_output_duration_ms[PHYSICAL_CONST_THREE_DIM];            //!< 一回の制御期間中にMTQが出力する時間 [ms]
+  MTQ_SEIREN_POLARITY mtq_output_polarity[PHYSICAL_CONST_THREE_DIM]; //!< この制御期間中に出力するMTQ電流極性
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ
   float integrated_trq_Nms[PHYSICAL_CONST_THREE_DIM]; //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
