@@ -231,7 +231,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_REFERENCE_TIME].cmd_func = Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION].cmd_func = Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION;
-  cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE;
   cmd_table[Cmd_CODE_APP_ORBIT_CALC_SET_METHOD].cmd_func = Cmd_APP_ORBIT_CALC_SET_METHOD;
@@ -709,7 +708,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;

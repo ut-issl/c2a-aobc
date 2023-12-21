@@ -26,20 +26,6 @@ typedef enum
 } AOCS_MANAGER_ERROR;
 
 /**
- * @enum   AOCS_MANAGER_MTQ_OUTPUT_STATE
- * @brief  MTQの出力状態
- * @note   MTQ_OUTPUT_STATE_ONまたなMTQ_OUTPUT_DEMAGNITIZINGのとき，MTQ出力と地磁場が干渉するため，磁気センサの値が正しくなくなる
- * @note   制御アプリがMTQをONにしているかどうかを決定アプリに伝えるために使う
- * @note   uint8_tを想定
- */
-typedef enum
-{
-  AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF           = 0, //!< MTQ出力オフ
-  AOCS_MANAGER_MTQ_OUTPUT_STATE_ON            = 1, //!< MTQ出力オン
-  AOCS_MANAGER_MTQ_OUTPUT_STATE_DEMAGNITIZING = 2  //!< MTQ消磁中
-} AOCS_MANAGER_MTQ_OUTPUT_STATE;
-
-/**
  * @enum   AOCS_MANAGER_SUN_VISIBILITY
  * @brief  太陽がサンセンサから見えているかどうか
  * @note   複数あるサンセンサの中で，どれか一つでも太陽方向ベクトルが取れていればVISIBLEとなる
@@ -86,19 +72,6 @@ typedef enum
   AOCS_MANAGER_CONSTANT_TORQUE_ENABLE  = 1, //!< 定常トルクを出力する
   AOCS_MANAGER_CONSTANT_TORQUE_MAX
 } AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION;
-
-/**
- * @enum   AOCS_MANAGER_MAG_EXCLUSIVE_STATE
- * @brief  排他制御タイミング管理のOFF/ON状態
- * @note   uint8_tを想定
- */
-typedef enum
-{
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE_IDLE   = 0, //!< 排他制御タイミング管理を停止
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE_ACTIVE = 1, //!< 排他制御タイミング管理を開始
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE_MAX
-} AOCS_MANAGER_MAG_EXCLUSIVE_STATE;
-
 
 #define AOCS_MANAGER_NUM_OF_MTQ (MTQ_SEIREN_IDX_MAX) //!< MTQ搭載個数
 #define AOCS_MANAGER_NUM_OF_RW  (RW0003_IDX_MAX)     //!< RW搭載個数
@@ -150,8 +123,6 @@ typedef struct
   // MTQ情報
   float mtq_magnetic_moment_direction_matrix[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM]; //!< MTQの磁気モーメント方向をまとめたもの
   float mtq_distribution_matrix[PHYSICAL_CONST_THREE_DIM][AOCS_MANAGER_NUM_OF_MTQ];              //!< MTQの磁気モーメントの分配行列
-  AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state;                                                //!< MTQ出力状態
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state;                                          //!< MTQ/磁気センサ排他制御タイミング管理状態
   // RW情報
   float rw_angular_velocity_rad_s[AOCS_MANAGER_NUM_OF_RW];                              //!< RWそれぞれの回転数(body座標系でないので注意) [rad/s]
   float rw_angular_momentum_Nms[AOCS_MANAGER_NUM_OF_RW];                                //!< RWそれぞれの角運動量(body座標系でないので注意) [Nms]
@@ -232,8 +203,6 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_mag_moment_target_body_Am2(const float mag_m
 // MTQ
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(
   const float mtq_magnetic_moment_direction_matrix[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM]);
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_output_state(const AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state);
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_mag_exclusive_state(const AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state);
 // RW
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_angular_velocity_rad_s(const float rw_angular_velocity_rad_s[AOCS_MANAGER_NUM_OF_RW]);
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_rotation_direction_matrix(
@@ -298,7 +267,6 @@ CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY(const CommonCmdPacket
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* packet);
 
