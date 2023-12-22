@@ -36,6 +36,12 @@ void BCL_load_initial_to_bdot(void)
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_MTQ, TLCD_ID_DEPLOY_BC); // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
 
+  BCL_tool_prepare_param_uint32(200);
+  BCL_tool_prepare_param_uint32(1000);
+  BCL_tool_prepare_param_uint32(100);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION);
+  bc_cycle += OBCT_sec2cycle(1);
+
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_MM_FINISH_TRANSITION);
 }
 
@@ -75,9 +81,9 @@ void BCL_load_any_to_bdot(void)
   BCL_tool_register_deploy(OBCT_sec2cycle(time_sec), BC_POWER_OFF_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
   time_sec += 7;  // OFF BCで4秒使う
 
-  // INA Reset
-  BCL_tool_register_deploy(OBCT_sec2cycle(time_sec), BC_RESET_INA260, TLCD_ID_DEPLOY_BC);
-  time_sec += 16;  // Reset BCで15秒使う
+  // INA Reset [FIXME] コメントアウトしているので、戻す
+  // BCL_tool_register_deploy(OBCT_sec2cycle(time_sec), BC_RESET_INA260, TLCD_ID_DEPLOY_BC);
+  // time_sec += 16;  // Reset BCで15秒使う
 
   // MTQ Reset
   BCL_tool_register_deploy(OBCT_sec2cycle(time_sec), BC_RESET_MTQ, TLCD_ID_DEPLOY_BC);
@@ -104,6 +110,15 @@ void BCL_load_any_to_bdot(void)
   // 使う磁気センサを設定
   BCL_tool_prepare_param_uint8(COMPONENT_SELECTOR_PARAMETERS_initial_selected_magnetometer);
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_APP_MAG_SELECTOR_SET_STATE);
+  time_sec += 1;
+
+  // 磁気排他制御タイマー設定
+  // 磁場微分値の計算のために、磁気センサ観測に200ms確保する。
+  // 出力時間は長めに1000ms確保する。
+  BCL_tool_prepare_param_uint32(200);
+  BCL_tool_prepare_param_uint32(1000);
+  BCL_tool_prepare_param_uint32(100);
+  BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION);
   time_sec += 1;
 
   BCL_tool_register_cmd(OBCT_sec2cycle(time_sec), Cmd_CODE_MM_FINISH_TRANSITION);
