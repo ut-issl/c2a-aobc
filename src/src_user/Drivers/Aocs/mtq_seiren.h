@@ -66,7 +66,7 @@ GPIO_ERR_CODE MTQ_SEIREN_init(MTQ_SEIREN_Driver* mtq_seiren_driver, uint8_t ch_g
  * @param  *mtq_seiren_driver    : 出力させるMTQ_SEIREN_Driver構造体へのポインタ
  * @param  polarity              : 出力する極性
 */
-GPIO_ERR_CODE MTQ_SEIREN_output(MTQ_SEIREN_Driver* mtq_seiren_driver, MTQ_SEIREN_POLARITY polarity);
+GPIO_ERR_CODE MTQ_SEIREN_output(const MTQ_SEIREN_Driver* mtq_seiren_driver, MTQ_SEIREN_POLARITY polarity);
 
 /**
  * @brief  磁気モーメント方向ベクトル設定関数

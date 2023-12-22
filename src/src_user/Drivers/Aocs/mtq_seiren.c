@@ -31,7 +31,7 @@ GPIO_ERR_CODE MTQ_SEIREN_init(MTQ_SEIREN_Driver* mtq_seiren_driver, uint8_t ch_g
 }
 
 
-GPIO_ERR_CODE MTQ_SEIREN_output(MTQ_SEIREN_Driver* mtq_seiren_driver, MTQ_SEIREN_POLARITY polarity)
+GPIO_ERR_CODE MTQ_SEIREN_output(const MTQ_SEIREN_Driver* mtq_seiren_driver, MTQ_SEIREN_POLARITY polarity)
 {
   GPIO_ERR_CODE ret1, ret2;
 
