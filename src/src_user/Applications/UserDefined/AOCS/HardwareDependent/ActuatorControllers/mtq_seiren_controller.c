@@ -45,6 +45,13 @@ static void APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_(void);
  */
 static void APP_MTQ_SEIREN_CONTROLLER_integrate_trq_(void);
 
+/**
+ * @brief  MTQ出力磁気モーメント実効値clip関数
+ * @param[out]  clipped_mag_moment_cmd_Am2s    : clip後のMTQ駆動/消磁の合計インターバルの間に出力できる磁気モーメント積算値 [Am^2sec]
+ * @param[in]   mag_moment_cmd_Am2             : clip前の磁気モーメント出力指令値 [Am^2]
+ */
+static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],
+                                                         const float mag_moment_cmd_Am2[PHYSICAL_CONST_THREE_DIM]);
 
 AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void)
 {
