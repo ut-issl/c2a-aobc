@@ -76,34 +76,19 @@ static void APP_BDOT_init_(void)
 {
   VECTOR3_copy(bdot_.control_gain, ATTITUDE_CONTROL_PARAMETERS_bdot_control_gain);
   bdot_.minimum_time_derivative_step_ms = ATTITUDE_CONTROL_PARAMETERS_bdot_minimum_time_derivative_step_ms;
-  bdot_.mtq_output_time_length_ms = ATTITUDE_CONTROL_PARAMETERS_bdot_mtq_output_time_length_ms;
-  bdot_.mtq_output_turned_on_obc_time = TMGR_get_master_clock();
 
   bdot_.time_derivative_variables.previous_obc_time = TMGR_get_master_clock();
   bdot_.time_derivative_variables.current_obc_time = TMGR_get_master_clock();
   VECTOR3_initialize(bdot_.time_derivative_variables.mag_vec_before_nT, 0.0);
   VECTOR3_initialize(bdot_.time_derivative_variables.mag_vec_after_nT, 0.0);
-  bdot_.time_derivative_variables.num_of_mag_observation = 0;
   VECTOR3_initialize(bdot_.time_derivative_variables.mag_vec_time_derivative_nT_s, 0.0);
 }
 
 void APP_BDOT_exec_(void)
 {
-  switch (aocs_manager->mtq_output_state)
-  {
-  case AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF:
-    APP_BDOT_calculate_target_mtq_output_();
-    break;
-  case AOCS_MANAGER_MTQ_OUTPUT_STATE_ON:
-    APP_BDOT_maintain_mtq_output_();
-    break;
-  case AOCS_MANAGER_MTQ_OUTPUT_STATE_DEMAGNITIZING:
-    APP_BDOT_wait_for_demagnitization_();
-    break;
-  default:
-    // NOT REACHED
-    break;
-  }
+  // 磁気モーメント目標値を計算し、AOCS MANAGERにセットする
+  APP_BDOT_calculate_target_mtq_output_();
+  // 実際にMTQの出力を行うのは、MTQ_SEIREN_CONTROLLERの中になる
 }
 
 void APP_BDOT_calculate_target_mtq_output_(void)
@@ -118,66 +103,33 @@ void APP_BDOT_calculate_target_mtq_output_(void)
   VECTOR3_hadamard_product(mag_moment_target_Am2, bdot->control_gain, bdot_.time_derivative_variables.mag_vec_time_derivative_nT_s);
 
   AOCS_MANAGER_set_mag_moment_target_body_Am2(mag_moment_target_Am2);
-  bdot_.mtq_output_turned_on_obc_time = TMGR_get_master_clock();
-}
-
-void APP_BDOT_maintain_mtq_output_(void)
-{
-  ObcTime current_obc_time = TMGR_get_master_clock();
-  uint32_t mtq_driving_time_ms = OBCT_diff_in_msec(&(bdot_.mtq_output_turned_on_obc_time), &current_obc_time);
-  // 目標の時間長さだけMTQに磁気モーメントを出力させたら，MTQの出力を切り，消磁に入る
-  if (mtq_driving_time_ms >= bdot->mtq_output_time_length_ms)
-  {
-    float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
-    VECTOR3_initialize(mag_moment_target_Am2, 0.0f);
-    AOCS_MANAGER_set_mag_moment_target_body_Am2(mag_moment_target_Am2);
-  }
-}
-
-void APP_BDOT_wait_for_demagnitization_(void)
-{
-  float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
-  VECTOR3_initialize(mag_moment_target_Am2, 0.0f);
-  AOCS_MANAGER_set_mag_moment_target_body_Am2(mag_moment_target_Am2);
 }
 
 AOCS_ERROR APP_BDOT_calculate_mag_vec_time_derivative_(void)
 {
-  if (bdot->time_derivative_variables.num_of_mag_observation == 0)
+  // 磁気センサの観測が開始していない場合，磁場ベクトルが0となっているので，その場合はすぐにリターンする
+  if (VECTOR3_norm(aocs_manager->mag_vec_est_body_nT) < MATH_CONST_NORMAL_CHECK_THRESHOLD) return AOCS_ERROR_OTHERS;
+
+  bdot_.time_derivative_variables.current_obc_time = TMGR_get_master_clock();
+  VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_after_nT, aocs_manager->mag_vec_est_body_nT);
+
+  // 時間微分のインターバルが一定以下の場合は，姿勢レートの変化が不十分とみなし，磁場の時間微分を計算しない
+  if (OBCT_diff_in_msec(&(bdot->time_derivative_variables.previous_obc_time), &(bdot->time_derivative_variables.current_obc_time))
+    < bdot->minimum_time_derivative_step_ms)
   {
-    // 磁気センサの観測が開始していない場合，磁場ベクトルが0となっているので，その場合はすぐにリターンする
-    if (VECTOR3_norm(aocs_manager->mag_vec_est_body_nT) < MATH_CONST_NORMAL_CHECK_THRESHOLD) return AOCS_ERROR_OTHERS;
-
-    bdot_.time_derivative_variables.previous_obc_time = TMGR_get_master_clock();
-    VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_before_nT, aocs_manager->mag_vec_est_body_nT);
-
-    // 1回目の観測が終了した段階では，磁場ベクトルの微分はまだ計算できないので，エラーを出してリターンする．
-    bdot_.time_derivative_variables.num_of_mag_observation = 1;
     return AOCS_ERROR_OTHERS;
   }
-  else // bdot->time_derivative_variables.num_of_mag_observation == 1
-  {
-    bdot_.time_derivative_variables.current_obc_time = TMGR_get_master_clock();
-    VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_after_nT, aocs_manager->mag_vec_est_body_nT);
 
-    // 時間微分のインターバルが一定以下の場合は，姿勢レートの変化が不十分とみなし，磁場の時間微分を計算しない
-    if (OBCT_diff_in_msec(&(bdot->time_derivative_variables.previous_obc_time), &(bdot->time_derivative_variables.current_obc_time))
-      < bdot->minimum_time_derivative_step_ms)
-    {
-      return AOCS_ERROR_OTHERS;
-    }
+  VECTOR3_time_derivative(bdot_.time_derivative_variables.mag_vec_time_derivative_nT_s,
+                          bdot_.time_derivative_variables.mag_vec_after_nT,
+                          bdot_.time_derivative_variables.mag_vec_before_nT,
+                          OBCT_get_total_cycle_in_sec(&(bdot_.time_derivative_variables.current_obc_time)),
+                          OBCT_get_total_cycle_in_sec(&(bdot_.time_derivative_variables.previous_obc_time)));
 
-    VECTOR3_time_derivative(bdot_.time_derivative_variables.mag_vec_time_derivative_nT_s,
-                           bdot_.time_derivative_variables.mag_vec_after_nT,
-                           bdot_.time_derivative_variables.mag_vec_before_nT,
-                           OBCT_get_total_cycle_in_sec(&(bdot_.time_derivative_variables.current_obc_time)),
-                           OBCT_get_total_cycle_in_sec(&(bdot_.time_derivative_variables.previous_obc_time)));
+  bdot_.time_derivative_variables.previous_obc_time = bdot_.time_derivative_variables.current_obc_time;
+  VECTOR3_copy(bdot_.time_derivative_variables.mag_vec_before_nT, aocs_manager->mag_vec_est_body_nT);
 
-    // 磁場ベクトルの微分計算ができたら，次回の微分計算に備えて，磁場観測回数を0に戻す
-    bdot_.time_derivative_variables.num_of_mag_observation = 0;
-
-    return AOCS_ERROR_OK;
-  }
+  return AOCS_ERROR_OK;
 }
 
 AOCS_ERROR APP_BDOT_set_control_gain(float* control_gain)
@@ -220,23 +172,8 @@ CCP_CmdRet Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
 
-  uint32_t minimum_time_derivative_step_ms;
-  uint32_t mtq_output_time_length_ms;
-
-  ENDIAN_memcpy(&minimum_time_derivative_step_ms, param, sizeof(uint32_t));
-  ENDIAN_memcpy(&mtq_output_time_length_ms, param + sizeof(uint32_t), sizeof(uint32_t));
-
-  AOCS_ERROR ret = AOCS_ERROR_OK;
-  if (minimum_time_derivative_step_ms <= 0) ret = AOCS_ERROR_RANGE_OVER;
-  if (mtq_output_time_length_ms <= 0) ret = AOCS_ERROR_RANGE_OVER;
-
-  if (ret != AOCS_ERROR_OK)
-  {
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  }
-
+  uint32_t minimum_time_derivative_step_ms = CCP_get_param_from_packet(packet, 0, uint32_t);
   bdot_.minimum_time_derivative_step_ms = minimum_time_derivative_step_ms;
-  bdot_.mtq_output_time_length_ms = mtq_output_time_length_ms;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
