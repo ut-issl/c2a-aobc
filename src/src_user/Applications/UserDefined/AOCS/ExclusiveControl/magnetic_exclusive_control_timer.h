@@ -49,7 +49,7 @@ typedef struct
   MagneticExclusiveControlTimerConfig buffered_config; //!< 排他制御の時間設定のバッファ
 } MagneticExclusiveControlTimer;
 
-extern const MagneticExclusiveControlTimer* magnetic_exclusive_control_timer;
+extern const MagneticExclusiveControlTimer* const magnetic_exclusive_control_timer;
 
 /*
 * @brief  MTQ-磁気センサ排他制御タイマーの時間設定
