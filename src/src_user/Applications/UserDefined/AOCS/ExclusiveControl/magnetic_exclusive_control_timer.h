@@ -26,6 +26,17 @@ typedef enum
 } APP_MECT_STATE;
 
 /**
+ * @struct MagneticExclusiveControlTimerConfig
+ * @brief  排他制御の時間設定
+*/
+typedef struct
+{
+  uint32_t observe_duration_ms; //!< 磁気センサ観測状態の持続時間
+  uint32_t control_duration_ms; //!< MTQ出力状態の持続時間
+  uint32_t standby_duration_ms; //!< スタンバイ状態の持続時間
+} MagneticExclusiveControlTimerConfig;
+
+/**
  * @struct MagneticExclusiveControlTimer
  * @brief  排他制御に必要な情報を管理する構造体
 */
@@ -34,12 +45,18 @@ typedef struct
   ObcTime  previous_obc_time;   //!< 前回のアプリ実行時刻
   APP_MECT_STATE current_state; //!< 現在の排他制御状態
   uint32_t state_timer_ms;      //!< 現在の排他制御状態に入ってから経過した時間
-  uint32_t observe_duration_ms; //!< 磁気センサ観測状態の持続時間
-  uint32_t control_duration_ms; //!< MTQ出力状態の持続時間
-  uint32_t standby_duration_ms; //!< スタンバイ状態の持続時間
+  MagneticExclusiveControlTimerConfig config;          //!< 排他制御の時間設定
+  MagneticExclusiveControlTimerConfig buffered_config; //!< 排他制御の時間設定のバッファ
 } MagneticExclusiveControlTimer;
 
 extern const MagneticExclusiveControlTimer* magnetic_exclusive_control_timer;
+
+/*
+* @brief  MTQ-磁気センサ排他制御タイマーの時間設定
+* @param  CommonCmdPacket
+* @return CCP_EXEC_STSに準拠
+*/
+CCP_CmdRet Cmd_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet);
 
 AppInfo APP_MECt_create_app(void);
 

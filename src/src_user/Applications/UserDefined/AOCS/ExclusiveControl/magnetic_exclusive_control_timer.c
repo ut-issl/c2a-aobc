@@ -5,6 +5,7 @@
 */
 
 #include "magnetic_exclusive_control_timer.h"
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 
 static MagneticExclusiveControlTimer        magnetic_exclusive_control_timer_;
 const  MagneticExclusiveControlTimer* const magnetic_exclusive_control_timer = &magnetic_exclusive_control_timer_;
@@ -14,6 +15,13 @@ static void APP_MECT_exec_(void);
 
 static void APP_MECT_update_timer_(void);
 static void APP_MECT_update_state_(void);
+
+/*
+ * @brief  MTQ-磁気センサ排他制御タイマーの時間設定をロードし、今のコンフィグに反映する
+ * @note   MTQ駆動中に外部からコンフィグをロードすると制御が崩れるので、
+ *         コマンドによる時間設定の変更は一度バッファリングし、MTQ駆動が終わったタイミングで反映する
+ */
+static void APP_MECT_load_buffered_config_(void);
 
 AppInfo APP_MECT_create_app(void)
 {
@@ -25,9 +33,12 @@ void APP_MECT_init_(void)
   magnetic_exclusive_control_timer_.previous_obc_time = TMGR_get_master_clock();
   magnetic_exclusive_control_timer_.current_state     = APP_MECT_STATE_STANDBY;
   magnetic_exclusive_control_timer_.state_timer_ms    = 0;
-  magnetic_exclusive_control_timer_.observe_duration_ms = 100;
-  magnetic_exclusive_control_timer_.control_duration_ms = 800;
-  magnetic_exclusive_control_timer_.standby_duration_ms = 100;
+  magnetic_exclusive_control_timer_.config.observe_duration_ms = 100;
+  magnetic_exclusive_control_timer_.config.control_duration_ms = 800;
+  magnetic_exclusive_control_timer_.config.standby_duration_ms = 100;
+  magnetic_exclusive_control_timer_.buffered_config.observe_duration_ms = 100;
+  magnetic_exclusive_control_timer_.buffered_config.control_duration_ms = 800;
+  magnetic_exclusive_control_timer_.buffered_config.standby_duration_ms = 100;
 }
 
 void APP_MECT_exec_(void)
@@ -51,21 +62,22 @@ void APP_MECT_update_state_(void)
   switch (magnetic_exclusive_control_timer_.current_state)
   {
   case APP_MECT_STATE_OBSERVE:
-    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.observe_duration_ms)
+    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.observe_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
       magnetic_exclusive_control_timer_.current_state = APP_MECT_STATE_CONTROL;
     }
     break;
   case APP_MECT_STATE_CONTROL:
-    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.control_duration_ms)
+    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.control_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
       magnetic_exclusive_control_timer_.current_state = APP_MECT_STATE_STANDBY;
     }
     break;
   case APP_MECT_STATE_STANDBY:
-    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.standby_duration_ms)
+    APP_MECT_load_buffered_config_();
+    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.standby_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
       magnetic_exclusive_control_timer_.current_state = APP_MECT_STATE_OBSERVE;
@@ -75,4 +87,42 @@ void APP_MECT_update_state_(void)
     // NOT REACHED
     break;
   }
+}
+
+static void APP_MECT_load_buffered_config_(void)
+{
+  magnetic_exclusive_control_timer_.config.observe_duration_ms = magnetic_exclusive_control_timer_.buffered_config.observe_duration_ms;
+  magnetic_exclusive_control_timer_.config.control_duration_ms = magnetic_exclusive_control_timer_.buffered_config.control_duration_ms;
+  magnetic_exclusive_control_timer_.config.standby_duration_ms = magnetic_exclusive_control_timer_.buffered_config.standby_duration_ms;
+  return;
+}
+
+CCP_CmdRet Cmd_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet)
+{
+  uint32_t kAcceptableMaxDuration_ms = 10000;
+  uint32_t kAcceptableMinDuration_ms = 10;
+
+  uint32_t observe_duration_ms = CCP_get_param_from_packet(packet, 0, uint32_t);
+  if (observe_duration_ms > kAcceptableMaxDuration_ms || observe_duration_ms < kAcceptableMinDuration_ms)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  uint32_t control_duration_ms = CCP_get_param_from_packet(packet, 1, uint32_t);
+  if (control_duration_ms > kAcceptableMaxDuration_ms || control_duration_ms < kAcceptableMinDuration_ms)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  uint32_t standby_duration_ms = CCP_get_param_from_packet(packet, 2, uint32_t);
+  if (standby_duration_ms > kAcceptableMaxDuration_ms || standby_duration_ms < kAcceptableMinDuration_ms)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  magnetic_exclusive_control_timer_.buffered_config.observe_duration_ms = observe_duration_ms;
+  magnetic_exclusive_control_timer_.buffered_config.control_duration_ms = control_duration_ms;
+  magnetic_exclusive_control_timer_.buffered_config.standby_duration_ms = standby_duration_ms;
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

@@ -122,19 +122,19 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
     if (mag_moment_mtq_Am2[idx] > mtq_seiren_driver[idx]->driver.max_mag_moment)
     {
       // 出力最大で制御する必要がある場合、排他制御でMTQ出力のために確保している時間すべてを使う
-      mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->control_duration_ms;
+      mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->config.control_duration_ms;
       mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
     }
     else if (mag_moment_mtq_Am2[idx] < -1.0f * mtq_seiren_driver[idx]->driver.max_mag_moment)
     {
       // 出力最大で制御する必要がある場合、排他制御でMTQ出力のために確保している時間すべてを使う
-      mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->control_duration_ms;
+      mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->config.control_duration_ms;
       mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_NEGATIVE;
     }
     else
     {
       mtq_seiren_controller_.mtq_output_duration_ms[idx] = fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
-                                                                  magnetic_exclusive_control_timer->control_duration_ms);
+                                                                  magnetic_exclusive_control_timer->config.control_duration_ms);
       
       // [TODO_H] 消磁のために出力時間が薄まる効果を補正する
       mtq_seiren_controller_.mtq_output_polarity[idx] = (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
@@ -162,11 +162,11 @@ void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_output_(const CrossProductContr
 static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],
                                                          const float mag_moment_cmd_Am2[PHYSICAL_CONST_THREE_DIM])
 {
-  float drive_cycle_time_length_ms = magnetic_exclusive_control_timer->observe_duration_ms +
-                                     magnetic_exclusive_control_timer->control_duration_ms +
-                                     magnetic_exclusive_control_timer->standby_duration_ms;
+  float drive_cycle_time_length_ms = magnetic_exclusive_control_timer->config.observe_duration_ms +
+                                     magnetic_exclusive_control_timer->config.control_duration_ms +
+                                     magnetic_exclusive_control_timer->config.standby_duration_ms;
 
-  float ratio_of_output_time_to_cycle = magnetic_exclusive_control_timer->control_duration_ms / drive_cycle_time_length_ms;
+  float ratio_of_output_time_to_cycle = magnetic_exclusive_control_timer->config.control_duration_ms / drive_cycle_time_length_ms;
 
   float max_mag_flux_Am2s[PHYSICAL_CONST_THREE_DIM]; //!< max mag moment integrated during one-drive-cycle [Am^2sec]
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
