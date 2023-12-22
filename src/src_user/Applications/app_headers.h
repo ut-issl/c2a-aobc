@@ -47,6 +47,7 @@
 #include "UserDefined/AOCS/AttitudeDetermination/rough_three_axis_determination.h"
 #include "UserDefined/AOCS/AttitudeDetermination/fine_three_axis_determination.h"
 #include "UserDefined/AOCS/AttitudeDetermination/stt_gyro_ekf.h"
+#include "UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h"
 #include "UserDefined/AOCS/OrbitEstimation/orbit_calculator.h"
 #include "UserDefined/AOCS/OrbitEstimation/kepler_orbit_propagator.h"
 #include "UserDefined/AOCS/OrbitEstimation/sgp4_orbit_propagator.h"

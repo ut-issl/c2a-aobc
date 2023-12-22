@@ -61,6 +61,8 @@ void AR_load_initial_settings(void)
   add_application_(AR_APP_ROUGH_THREE_AXIS_DETERMINATION, APP_RTAD_create_app);
   add_application_(AR_APP_FINE_THREE_AXIS_DETERMINATION, APP_FTAD_create_app);
   add_application_(AR_APP_STT_GYRO_EKF, APP_STT_GYRO_EKF_create_app);
+  // Exclusive Control
+  add_application_(AR_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER, APP_MECT_create_app);
   // Hardware Dependent
   add_application_(AR_APP_AOCS_MTQ_SEIREN_CONTROLLER, APP_MTQ_SEIREN_CONTROLLER_create_app);
   add_application_(AR_APP_AOCS_RW_CONTROLLER, APP_RW_CONTROLLER_create_app);

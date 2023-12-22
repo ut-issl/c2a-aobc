@@ -61,6 +61,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA1_(uint8_t* packet, uint16_t* len, uint16
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA3_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
@@ -117,6 +118,7 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_AOBC_SAGITTA2].tlm_func = Tlm_AOBC_SAGITTA2_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA3].tlm_func = Tlm_AOBC_SAGITTA3_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA4].tlm_func = Tlm_AOBC_SAGITTA4_;
+  tlm_table[Tlm_CODE_AOBC_MAG_EXCLUSIVE_CONTROL].tlm_func = Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_OBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
@@ -1926,7 +1928,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (191 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (187 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.accel_compo_m_s2[0]));
@@ -1975,10 +1977,9 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint
   TF_copy_float(&packet[175], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[1]));
   TF_copy_float(&packet[179], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[2]));
   TF_copy_float(&packet[183], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.scalar_part));
-  TF_copy_u32(&packet[187], (uint32_t)(mtq_seiren_controller->mtq_demagnetization_required_time_ms));
 #endif
 
-  *len = 191;
+  *len = 187;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -2558,7 +2559,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_ORBIT_(uint8_t* packet, uint16_t* len, uint16_t 
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_AOCS_MANAGER_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (212 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (211 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(aocs_manager->mass_sc_kg));
@@ -2584,33 +2585,32 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOCS_MANAGER_(uint8_t* packet, uint16_t* len, ui
   TF_copy_float(&packet[110], (float)(aocs_manager->external_torque_max_body_Nm[0]));
   TF_copy_float(&packet[114], (float)(aocs_manager->external_torque_max_body_Nm[1]));
   TF_copy_float(&packet[118], (float)(aocs_manager->external_torque_max_body_Nm[2]));
-  TF_copy_u8(&packet[122], (uint8_t)(aocs_manager->mag_exclusive_state));
-  TF_copy_float(&packet[123], (float)(aocs_manager->rw_rotation_direction_matrix[0][0]));
-  TF_copy_float(&packet[127], (float)(aocs_manager->rw_rotation_direction_matrix[0][1]));
-  TF_copy_float(&packet[131], (float)(aocs_manager->rw_rotation_direction_matrix[0][2]));
-  TF_copy_float(&packet[135], (float)(aocs_manager->rw_rotation_direction_matrix[1][0]));
-  TF_copy_float(&packet[139], (float)(aocs_manager->rw_rotation_direction_matrix[1][1]));
-  TF_copy_float(&packet[143], (float)(aocs_manager->rw_rotation_direction_matrix[1][2]));
-  TF_copy_float(&packet[147], (float)(aocs_manager->rw_rotation_direction_matrix[2][0]));
-  TF_copy_float(&packet[151], (float)(aocs_manager->rw_rotation_direction_matrix[2][1]));
-  TF_copy_float(&packet[155], (float)(aocs_manager->rw_rotation_direction_matrix[2][2]));
-  TF_copy_float(&packet[159], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][0]));
-  TF_copy_float(&packet[163], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][1]));
-  TF_copy_float(&packet[167], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][2]));
-  TF_copy_float(&packet[171], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][0]));
-  TF_copy_float(&packet[175], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][1]));
-  TF_copy_float(&packet[179], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][2]));
-  TF_copy_float(&packet[183], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][0]));
-  TF_copy_float(&packet[187], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][1]));
-  TF_copy_float(&packet[191], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][2]));
-  TF_copy_u8(&packet[195], (uint8_t)(aocs_manager->constant_torque_permission));
-  TF_copy_float(&packet[196], (float)(aocs_manager->constant_torque_body_Nm[0]));
-  TF_copy_float(&packet[200], (float)(aocs_manager->constant_torque_body_Nm[1]));
-  TF_copy_float(&packet[204], (float)(aocs_manager->constant_torque_body_Nm[2]));
-  TF_copy_float(&packet[208], (float)(time_space_calculator->offset_sec));
+  TF_copy_float(&packet[122], (float)(aocs_manager->rw_rotation_direction_matrix[0][0]));
+  TF_copy_float(&packet[126], (float)(aocs_manager->rw_rotation_direction_matrix[0][1]));
+  TF_copy_float(&packet[130], (float)(aocs_manager->rw_rotation_direction_matrix[0][2]));
+  TF_copy_float(&packet[134], (float)(aocs_manager->rw_rotation_direction_matrix[1][0]));
+  TF_copy_float(&packet[138], (float)(aocs_manager->rw_rotation_direction_matrix[1][1]));
+  TF_copy_float(&packet[142], (float)(aocs_manager->rw_rotation_direction_matrix[1][2]));
+  TF_copy_float(&packet[146], (float)(aocs_manager->rw_rotation_direction_matrix[2][0]));
+  TF_copy_float(&packet[150], (float)(aocs_manager->rw_rotation_direction_matrix[2][1]));
+  TF_copy_float(&packet[154], (float)(aocs_manager->rw_rotation_direction_matrix[2][2]));
+  TF_copy_float(&packet[158], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][0]));
+  TF_copy_float(&packet[162], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][1]));
+  TF_copy_float(&packet[166], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][2]));
+  TF_copy_float(&packet[170], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][0]));
+  TF_copy_float(&packet[174], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][1]));
+  TF_copy_float(&packet[178], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][2]));
+  TF_copy_float(&packet[182], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][0]));
+  TF_copy_float(&packet[186], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][1]));
+  TF_copy_float(&packet[190], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][2]));
+  TF_copy_u8(&packet[194], (uint8_t)(aocs_manager->constant_torque_permission));
+  TF_copy_float(&packet[195], (float)(aocs_manager->constant_torque_body_Nm[0]));
+  TF_copy_float(&packet[199], (float)(aocs_manager->constant_torque_body_Nm[1]));
+  TF_copy_float(&packet[203], (float)(aocs_manager->constant_torque_body_Nm[2]));
+  TF_copy_float(&packet[207], (float)(time_space_calculator->offset_sec));
 #endif
 
-  *len = 212;
+  *len = 211;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -4016,6 +4016,23 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16
 #endif
 
   *len = 234;
+  return TF_TLM_FUNC_ACK_SUCCESS;
+}
+
+static TF_TLM_FUNC_ACK Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+{
+  if (50 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+
+#ifndef BUILD_SETTINGS_FAST_BUILD
+  TF_copy_u32(&packet[26], (uint32_t)(magnetic_exclusive_control_timer->config.observe_duration_ms));
+  TF_copy_u32(&packet[30], (uint32_t)(magnetic_exclusive_control_timer->config.control_duration_ms));
+  TF_copy_u32(&packet[34], (uint32_t)(magnetic_exclusive_control_timer->config.standby_duration_ms));
+  TF_copy_u32(&packet[38], (uint32_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
+  TF_copy_u32(&packet[42], (uint32_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
+  TF_copy_u32(&packet[46], (uint32_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
+#endif
+
+  *len = 50;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 

@@ -97,7 +97,7 @@ static void APP_MECT_load_buffered_config_(void)
   return;
 }
 
-CCP_CmdRet Cmd_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet)
 {
   uint32_t kAcceptableMaxDuration_ms = 10000;
   uint32_t kAcceptableMinDuration_ms = 10;

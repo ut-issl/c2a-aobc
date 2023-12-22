@@ -56,7 +56,7 @@ extern const MagneticExclusiveControlTimer* magnetic_exclusive_control_timer;
 * @param  CommonCmdPacket
 * @return CCP_EXEC_STSに準拠
 */
-CCP_CmdRet Cmd_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet);
 
 AppInfo APP_MECt_create_app(void);
 
