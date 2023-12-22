@@ -10,6 +10,7 @@
 #include <src_core/Library/print.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
 // Satellite Parameters
 #include <src_user/Settings/SatelliteParameters/rm3100_parameters.h>
@@ -81,7 +82,7 @@ static void APP_RM3100_FILTER_exec_(void)
 {
   float spike_filter_out[RM3100_IDX_MAX];
 
-  if (aocs_manager->mtq_output_state != AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF)
+  if (magnetic_exclusive_control_timer->current_state != APP_MECT_STATE_OBSERVE)
   {
     return;  // 消磁対応
   }

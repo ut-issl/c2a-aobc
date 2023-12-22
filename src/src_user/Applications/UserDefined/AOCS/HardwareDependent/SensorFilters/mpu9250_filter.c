@@ -11,6 +11,7 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_user/Applications/DriverInstances/di_mpu9250.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 #include <src_user/Library/vector3.h>
 
 // Satellite Parameters
@@ -78,7 +79,7 @@ static void APP_MPU9250_FILTER_exec_(void)
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
     // 磁場
-    if (aocs_manager->mtq_output_state == AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF)
+    if (magnetic_exclusive_control_timer->current_state == APP_MECT_STATE_OBSERVE)
     {
       // spike noise should be removed before put the sensor output into lpf
       mpu9250_filter_.filter_mag_error[axis_id] =
