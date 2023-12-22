@@ -17,7 +17,7 @@
  */
 typedef struct
 {
-  float mtq_output_duration_ms[PHYSICAL_CONST_THREE_DIM];            //!< 一回の制御期間中にMTQが出力する時間 [ms]
+  uint32_t mtq_output_duration_ms[PHYSICAL_CONST_THREE_DIM];            //!< 一回の制御期間中にMTQが出力する時間 [ms]
   MTQ_SEIREN_POLARITY mtq_output_polarity[PHYSICAL_CONST_THREE_DIM]; //!< この制御期間中に出力するMTQ電流極性
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ

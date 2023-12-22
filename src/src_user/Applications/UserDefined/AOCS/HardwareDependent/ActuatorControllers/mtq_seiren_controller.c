@@ -53,9 +53,9 @@ AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void)
 
 void APP_MTQ_SEIREN_CONTROLLER_init_(void)
 {
-  VECTOR3_initialize(mtq_seiren_controller_.mtq_output_duration_ms, 0.0f);
   for (size_t idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
   {
+    mtq_seiren_controller_.mtq_output_duration_ms[idx] = 0;
     mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;
   }
 
@@ -133,10 +133,9 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
     }
     else
     {
-      mtq_seiren_controller_.mtq_output_duration_ms[idx] = fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
-                                                                  magnetic_exclusive_control_timer->config.control_duration_ms);
-      
-      // [TODO_H] 消磁のために出力時間が薄まる効果を補正する
+      mtq_seiren_controller_.mtq_output_duration_ms[idx] = (uint32_t)(fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
+                                                                             magnetic_exclusive_control_timer->config.control_duration_ms));
+
       mtq_seiren_controller_.mtq_output_polarity[idx] = (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
     }
   }
