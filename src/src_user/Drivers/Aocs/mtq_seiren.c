@@ -88,7 +88,7 @@ GPIO_ERR_CODE MTQ_SEIREN_output(const MTQ_SEIREN_Driver* mtq_seiren_driver, MTQ_
   }
   else
   { // NOT REACHED
-    return DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER;
+    return GPIO_UNKNOWN_ERR;
   }
 }
 
