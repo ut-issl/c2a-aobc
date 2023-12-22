@@ -58,6 +58,6 @@ extern const MagneticExclusiveControlTimer* const magnetic_exclusive_control_tim
 */
 CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet);
 
-AppInfo APP_MECt_create_app(void);
+AppInfo APP_MECT_create_app(void);
 
 #endif
