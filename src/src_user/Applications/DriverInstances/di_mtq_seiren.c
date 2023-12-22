@@ -100,4 +100,29 @@ CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCm
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_OUTPUT(const CommonCmdPacket* packet)
+{
+  uint8_t arg_position = 0;
+
+  MTQ_SEIREN_IDX idx = (MTQ_SEIREN_IDX)CCP_get_param_from_packet(packet, arg_position, uint8_t);
+  if (idx >= MTQ_SEIREN_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  arg_position++;
+
+  int8_t polarity = (int8_t)CCP_get_param_from_packet(packet, arg_position, int8_t);
+
+  if (polarity != (int8_t)MTQ_SEIREN_POLARITY_POSITIVE &&
+      polarity != (int8_t)MTQ_SEIREN_POLARITY_NEGATIVE &&
+      polarity != (int8_t)MTQ_SEIREN_NO_OUTPUT)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  arg_position++;
+
+  GPIO_ERR_CODE ret = MTQ_SEIREN_output(&mtq_seiren_driver_[idx], (MTQ_SEIREN_POLARITY)polarity);
+  if (ret != GPIO_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
 #pragma section

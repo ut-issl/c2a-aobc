@@ -35,4 +35,6 @@ AppInfo DI_MTQ_SEIREN_update(void);
 
 CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet);
 
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_OUTPUT(const CommonCmdPacket* packet);
+
 #endif
