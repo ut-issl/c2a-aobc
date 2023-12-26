@@ -140,10 +140,12 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
     }
     else
     {
-      mtq_seiren_controller_.mtq_output_duration_ms[idx] = (uint32_t)(fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
-                                                                             magnetic_exclusive_control_timer->config.control_duration_ms));
+      mtq_seiren_controller_.mtq_output_duration_ms[idx] =
+        (uint32_t)(fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
+                          magnetic_exclusive_control_timer->config.control_duration_ms));
 
-      mtq_seiren_controller_.mtq_output_polarity[idx] = (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
+      mtq_seiren_controller_.mtq_output_polarity[idx] =
+        (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
     }
   }
 }
