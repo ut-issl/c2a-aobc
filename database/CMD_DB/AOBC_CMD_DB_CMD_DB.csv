@@ -254,7 +254,7 @@ Comment,,,,,Type,Description,Type,Description,Type,Description,Type,Description,
 ,APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD,AOBC,0x00BA,2,float,3axis_error_limit [rad],float,3axis_error_time_limit [sec],,,,,,,,,,,三軸制御失敗判定閾値設定,
 ,APP_AOCS_MM_SET_INVISIBLE_THRESHOLD,AOBC,0x00BB,2,float,sun_invisible_time_limit[sec],float,stt_invisible_time_limit[sec],,,,,,,,,,,センサー異常判定時間閾値設定,
 **,姿勢決定,,,,,,,,,,,,,,,,,,,
-,APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION,AOBC,0x00B7,3,uint32_t,observe_duration[ms],uint32_t,control_duration[ms],uint32_t,standby_duration[ms],,,,,,,,,磁気排他制御に関する時間コンフィグ設定,
+,APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION,AOBC,0x00B7,3,uint16_t,observe_duration[ms],uint16_t,control_duration[ms],uint16_t,standby_duration[ms],,,,,,,,,磁気排他制御に関する時間コンフィグ設定,
 ,APP_RTAD_SET_METHOD,AOBC,0x00B8,2,uint8_t,0=TRIAD; 1=Qmethod,uint8_t,0=Sun vector; 1=Quaternion,,,,,,,,,,,粗三軸姿勢決定手法を設定する,
 ,APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT,AOBC,0x00B9,1,float,sun_vec_weight,,,,,,,,,,,,,Qmethodで使用する太陽方向ベクトルの重みを[0.0; 1.0]の範囲で設定する,磁場ベクトルの重みは1.0からこの値を引いた値になる
 ,APP_FTAD_SET_METHOD,AOBC,0x00BA,1,uint8_t,0=STT; 1=EKF,,,,,,,,,,,,,精三軸姿勢決定手法を設定する,

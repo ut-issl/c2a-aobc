@@ -31,9 +31,9 @@ typedef enum
 */
 typedef struct
 {
-  uint32_t observe_duration_ms; //!< 磁気センサ観測状態の持続時間
-  uint32_t control_duration_ms; //!< MTQ出力状態の持続時間
-  uint32_t standby_duration_ms; //!< スタンバイ状態の持続時間
+  uint16_t observe_duration_ms; //!< 磁気センサ観測状態の持続時間
+  uint16_t control_duration_ms; //!< MTQ出力状態の持続時間
+  uint16_t standby_duration_ms; //!< スタンバイ状態の持続時間
 } MagneticExclusiveControlTimerConfig;
 
 /**
@@ -44,7 +44,7 @@ typedef struct
 {
   ObcTime  previous_obc_time;   //!< 前回のアプリ実行時刻
   APP_MECT_STATE current_state; //!< 現在の排他制御状態
-  uint32_t state_timer_ms;      //!< 現在の排他制御状態に入ってから経過した時間
+  uint16_t state_timer_ms;      //!< 現在の排他制御状態に入ってから経過した時間
   MagneticExclusiveControlTimerConfig config;          //!< 排他制御の時間設定
   MagneticExclusiveControlTimerConfig buffered_config; //!< 排他制御の時間設定のバッファ
 } MagneticExclusiveControlTimer;

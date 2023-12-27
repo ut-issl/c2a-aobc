@@ -4020,18 +4020,18 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (50 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (38 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u32(&packet[26], (uint32_t)(magnetic_exclusive_control_timer->config.observe_duration_ms));
-  TF_copy_u32(&packet[30], (uint32_t)(magnetic_exclusive_control_timer->config.control_duration_ms));
-  TF_copy_u32(&packet[34], (uint32_t)(magnetic_exclusive_control_timer->config.standby_duration_ms));
-  TF_copy_u32(&packet[38], (uint32_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
-  TF_copy_u32(&packet[42], (uint32_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
-  TF_copy_u32(&packet[46], (uint32_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
+  TF_copy_u16(&packet[26], (uint16_t)(magnetic_exclusive_control_timer->config.observe_duration_ms));
+  TF_copy_u16(&packet[28], (uint16_t)(magnetic_exclusive_control_timer->config.control_duration_ms));
+  TF_copy_u16(&packet[30], (uint16_t)(magnetic_exclusive_control_timer->config.standby_duration_ms));
+  TF_copy_u16(&packet[32], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
+  TF_copy_u16(&packet[34], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
+  TF_copy_u16(&packet[36], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
 #endif
 
-  *len = 50;
+  *len = 38;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 

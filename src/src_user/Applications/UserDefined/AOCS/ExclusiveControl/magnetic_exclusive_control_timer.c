@@ -99,22 +99,22 @@ static void APP_MECT_load_buffered_config_(void)
 
 CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet)
 {
-  uint32_t kAcceptableMaxDuration_ms = 10000;
-  uint32_t kAcceptableMinDuration_ms = 10;
+  uint16_t kAcceptableMaxDuration_ms = 10000;
+  uint16_t kAcceptableMinDuration_ms = 10;
 
-  uint32_t observe_duration_ms = CCP_get_param_from_packet(packet, 0, uint32_t);
+  uint16_t observe_duration_ms = CCP_get_param_from_packet(packet, 0, uint16_t);
   if (observe_duration_ms > kAcceptableMaxDuration_ms || observe_duration_ms < kAcceptableMinDuration_ms)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  uint32_t control_duration_ms = CCP_get_param_from_packet(packet, 1, uint32_t);
+  uint16_t control_duration_ms = CCP_get_param_from_packet(packet, 1, uint16_t);
   if (control_duration_ms > kAcceptableMaxDuration_ms || control_duration_ms < kAcceptableMinDuration_ms)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  uint32_t standby_duration_ms = CCP_get_param_from_packet(packet, 2, uint32_t);
+  uint16_t standby_duration_ms = CCP_get_param_from_packet(packet, 2, uint16_t);
   if (standby_duration_ms > kAcceptableMaxDuration_ms || standby_duration_ms < kAcceptableMinDuration_ms)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
