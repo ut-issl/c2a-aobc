@@ -14,7 +14,6 @@
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/math_constants.h>
 #include <src_user/Library/ControlUtility/cross_product_control.h>
-#include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 #include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
@@ -60,7 +59,7 @@ AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void)
 
 void APP_MTQ_SEIREN_CONTROLLER_init_(void)
 {
-  for (size_t idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
+  for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
   {
     mtq_seiren_controller_.mtq_output_duration_ms[idx] = 0;
     mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;

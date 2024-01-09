@@ -10,7 +10,7 @@
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_user/Library/physical_constants.h>
 #include <src_user/Library/ControlUtility/cross_product_control.h>
-#include <src_user/Drivers/Aocs/mtq_seiren.h>
+#include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 
 /**
  * @struct MtqSeirenController
@@ -18,8 +18,8 @@
  */
 typedef struct
 {
-  uint32_t mtq_output_duration_ms[PHYSICAL_CONST_THREE_DIM];         //!< 一回の制御期間中にMTQが出力する時間 [ms]
-  MTQ_SEIREN_POLARITY mtq_output_polarity[PHYSICAL_CONST_THREE_DIM]; //!< この制御期間中に出力するMTQ電流極性
+  uint32_t mtq_output_duration_ms[MTQ_SEIREN_IDX_MAX];         //!< 一回の制御期間中にMTQが出力する時間 [ms]
+  MTQ_SEIREN_POLARITY mtq_output_polarity[MTQ_SEIREN_IDX_MAX]; //!< この制御期間中に出力するMTQ電流極性
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ
   float integrated_trq_Nms[PHYSICAL_CONST_THREE_DIM]; //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
