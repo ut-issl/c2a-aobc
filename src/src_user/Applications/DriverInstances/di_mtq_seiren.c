@@ -32,7 +32,7 @@ static const float DI_MTQ_SEIREN_kMaxMagMoment_Am2_ = 0.32f; //!< MTQのが出�
 
 AppInfo DI_MTQ_SEIREN_update(void)
 {
-  return AI_create_app_info("update_DI_MTQ_SEIREN", DI_MTQ_SEIREN_init_, DI_MTQ_SEIREN_update_);
+  return AI_create_app_info("update_DI_MTQ_SEIREN", DI_MTQ_SEIREN_init_, NULL);
 }
 
 static void DI_MTQ_SEIREN_init_(void)
@@ -56,12 +56,6 @@ static void DI_MTQ_SEIREN_init_(void)
   MTQ_SEIREN_set_magnetic_moment_direction_b(&mtq_seiren_driver_[MTQ_SEIREN_IDX_Z], direction_z);
   AOCS_MANAGER_ERROR ret_manager = DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_();
   if (ret_manager != AOCS_MANAGER_ERROR_OK) Printf("MTQ direction setting Failed ! %d \n", ret);
-}
-
-
-static void DI_MTQ_SEIREN_update_(void)
-{
-  // Empty by design
 }
 
 static AOCS_MANAGER_ERROR DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_(void)
