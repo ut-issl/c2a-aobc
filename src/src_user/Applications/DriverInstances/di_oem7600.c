@@ -235,7 +235,7 @@ CCP_CmdRet Cmd_DI_OEM7600_SET_UART_BAUDRATE(const CommonCmdPacket* packet)
   if (baudrate_cmd < kMinBaudRate) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   OEM7600_UART_BAUDRATE_SET_DEVICE_ID device_id = (OEM7600_UART_BAUDRATE_SET_DEVICE_ID)CCP_get_param_from_packet(packet, 2, uint8_t);
-  if(device_id >= OEM7600_UART_BAUDRATE_SET_DEVICE_ID_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (device_id >= OEM7600_UART_BAUDRATE_SET_DEVICE_ID_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   ret = OEM7600_set_uart_baudrate(&oem7600_driver_[oem7600_id], baudrate_cmd, device_id, &DI_OEM7600_rx_buffer_);
 

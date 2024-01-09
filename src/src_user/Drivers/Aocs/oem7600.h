@@ -238,7 +238,8 @@ DS_CMD_ERR_CODE OEM7600_save_tlm_setting(OEM7600_Driver* oem7600_driver);
  * @param  uint32_t: baudrate
  * @return DS_CMD_ERR_CODE
  */
-DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate, const OEM7600_UART_BAUDRATE_SET_DEVICE_ID device_id,
+DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate,
+                                          const OEM7600_UART_BAUDRATE_SET_DEVICE_ID device_id,
                                           DS_StreamRecBuffer* rx_buffer);
 
 
