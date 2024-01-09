@@ -22,8 +22,8 @@ typedef struct
   MTQ_SEIREN_POLARITY mtq_output_polarity[MTQ_SEIREN_IDX_MAX]; //!< この制御期間中に出力するMTQ電流極性
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ
-  float integrated_trq_Nms[PHYSICAL_CONST_THREE_DIM]; //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
-  ObcTime  previous_trq_integration_obc_time;         //!< 前回積分した時間
+  float integrated_torque_Nms[PHYSICAL_CONST_THREE_DIM]; //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
+  ObcTime  previous_torque_integration_obc_time;         //!< 前回積分した時間
 
   CROSS_PRODUCT_CONTROL_ERROR cross_product_error;    //!< CrossProductの実行エラー記録 (TODO_L: 残すか要検討，デバッグ用)
   float cross_product_error_ratio;

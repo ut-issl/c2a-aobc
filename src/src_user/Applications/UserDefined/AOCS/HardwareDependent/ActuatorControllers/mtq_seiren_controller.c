@@ -35,14 +35,14 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
  * @brief  指令トルクの積分バッファのゼロクリア
  * @note   積分区間 dt [sec]が長すぎるが長すぎる場合，および指令角運動量を出力した際にバッファをゼロクリアする
  */
-static void APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_(void);
+static void APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_(void);
 
 /**
  * @brief  指令トルクの積分による角運動量指令値の計算
  * @note   駆動 + 消磁動作中の指令トルクを積分して角運動量化することで，MTQへの指令可能タイミング以外のタイミングの計算結果も出力に反映させる
  * @note   PWM周期が遅い場合，実際のMTQ出力の単位は実質 [Am^2sec]となり，角運動量の単位となる
  */
-static void APP_MTQ_SEIREN_CONTROLLER_integrate_trq_(void);
+static void APP_MTQ_SEIREN_CONTROLLER_integrate_torque_(void);
 
 /**
  * @brief  MTQ出力磁気モーメント実効値clip関数
@@ -65,15 +65,15 @@ void APP_MTQ_SEIREN_CONTROLLER_init_(void)
     mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;
   }
 
-  APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_();
-  mtq_seiren_controller_.previous_trq_integration_obc_time = TMGR_get_master_clock();
+  APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_();
+  mtq_seiren_controller_.previous_torque_integration_obc_time = TMGR_get_master_clock();
   mtq_seiren_controller_.cross_product_error = CROSS_PRODUCT_CONTROL_ERROR_OK;
   mtq_seiren_controller_.cross_product_error_ratio = 0.0f;
 }
 
 void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
 {
-  APP_MTQ_SEIREN_CONTROLLER_integrate_trq_();
+  APP_MTQ_SEIREN_CONTROLLER_integrate_torque_();
 
   switch (aocs_manager->magnetic_exclusive_control_timer_state)
   {
@@ -81,7 +81,7 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
     // 次にMTQを出力するとき、何秒間電流を流すかを決める
     APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_();
     // 次回の出力を決めたら、トルク積分値をリセットする
-    APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_();
+    APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_();
     break;
   case APP_MECT_STATE_CONTROL:
     // APP_MECT_STATE_OBSERVEのケースで計算していた出力時間の分だけMTQを出力する
@@ -154,7 +154,7 @@ void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProdu
   float mag_moment_target_Am2[PHYSICAL_CONST_THREE_DIM];
   CROSS_PRODUCT_CONTROL_calc_mag_moment_from_ext_torque(cross_product_cntrl,
                                                         mag_moment_target_Am2,
-                                                        mtq_seiren_controller_.integrated_trq_Nms,
+                                                        mtq_seiren_controller_.integrated_torque_Nms,
                                                         aocs_manager->mag_vec_est_body_nT,
                                                         &mtq_seiren_controller_.cross_product_error_ratio);
 
@@ -198,34 +198,34 @@ static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_momen
   return;
 }
 
-static void APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_(void)
+static void APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_(void)
 {
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    mtq_seiren_controller_.integrated_trq_Nms[i] = 0.0f;
+    mtq_seiren_controller_.integrated_torque_Nms[i] = 0.0f;
   }
 
   return;
 }
 
-static void APP_MTQ_SEIREN_CONTROLLER_integrate_trq_(void)
+static void APP_MTQ_SEIREN_CONTROLLER_integrate_torque_(void)
 {
   static const float kDtLimitSec = 10.0f; //!< モード遷移等が入って間が空いた際に積分が跳ばないようにするためのdt制限値 [sec]
 
   ObcTime current_obc_time = TMGR_get_master_clock();
-  float dt = (float)OBCT_diff_in_sec(&(mtq_seiren_controller_.previous_trq_integration_obc_time), &current_obc_time);
-  mtq_seiren_controller_.previous_trq_integration_obc_time = current_obc_time;
+  float dt = (float)OBCT_diff_in_sec(&(mtq_seiren_controller_.previous_torque_integration_obc_time), &current_obc_time);
+  mtq_seiren_controller_.previous_torque_integration_obc_time = current_obc_time;
 
   if (dt > kDtLimitSec || dt <= MATH_CONST_PROHIBIT_DIVISION_VALUE)
   {
     // この場合，一旦リセット
-    APP_MTQ_SEIREN_CONTROLLER_reset_integrated_trq_();
+    APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_();
     dt = 0.0f;
   }
 
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)
   {
-    mtq_seiren_controller_.integrated_trq_Nms[i] += aocs_manager->external_torque_target_body_Nm[i] * dt;
+    mtq_seiren_controller_.integrated_torque_Nms[i] += aocs_manager->external_torque_target_body_Nm[i] * dt;
   }
 
   return;
