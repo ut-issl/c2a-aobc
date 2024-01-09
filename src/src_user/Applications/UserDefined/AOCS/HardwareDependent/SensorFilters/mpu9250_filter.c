@@ -79,7 +79,7 @@ static void APP_MPU9250_FILTER_exec_(void)
   for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
   {
     // 磁場
-    if (magnetic_exclusive_control_timer->current_state == APP_MECT_STATE_OBSERVE)
+    if (aocs_manager->magnetic_exclusive_control_timer_state == APP_MECT_STATE_OBSERVE)
     {
       // spike noise should be removed before put the sensor output into lpf
       mpu9250_filter_.filter_mag_error[axis_id] =

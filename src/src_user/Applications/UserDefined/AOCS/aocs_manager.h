@@ -13,6 +13,7 @@
 #include <src_user/Library/TimeSystem/gps_time.h>
 #include <src_user/Applications/DriverInstances/di_rw0003.h>
 #include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
 /**
  * @enum   AOCS_MANAGER_ERROR
@@ -123,6 +124,8 @@ typedef struct
   // MTQ情報
   float mtq_magnetic_moment_direction_matrix[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM]; //!< MTQの磁気モーメント方向をまとめたもの
   float mtq_distribution_matrix[PHYSICAL_CONST_THREE_DIM][AOCS_MANAGER_NUM_OF_MTQ];              //!< MTQの磁気モーメントの分配行列
+  // 磁気センサ <--> MTQ排他制御
+  APP_MECT_STATE magnetic_exclusive_control_timer_state; //!< 磁気センサとMTQとの排他制御タイマーの状態
   // RW情報
   float rw_angular_velocity_rad_s[AOCS_MANAGER_NUM_OF_RW];                              //!< RWそれぞれの回転数(body座標系でないので注意) [rad/s]
   float rw_angular_momentum_Nms[AOCS_MANAGER_NUM_OF_RW];                                //!< RWそれぞれの角運動量(body座標系でないので注意) [Nms]
@@ -203,6 +206,8 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_mag_moment_target_body_Am2(const float mag_m
 // MTQ
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(
   const float mtq_magnetic_moment_direction_matrix[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM]);
+// 磁気センサ <--> MTQ排他制御
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(const APP_MECT_STATE magnetic_exclusive_control_timer_state);
 // RW
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_angular_velocity_rad_s(const float rw_angular_velocity_rad_s[AOCS_MANAGER_NUM_OF_RW]);
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_rotation_direction_matrix(

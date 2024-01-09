@@ -16,6 +16,7 @@
  * @enum  APP_MECT_STATE
  * @brief 排他制御の現在の状態
  * @note  状態は観測 --> 制御 --> スタンバイ --> 観測 --> ... と切り替わる
+ *        App間の結合パスを単純化するため、構造体変数はAOCS managerに持たせる
  * @note  uint8_tを想定
 */
 typedef enum
@@ -43,7 +44,6 @@ typedef struct
 typedef struct
 {
   ObcTime  previous_obc_time;   //!< 前回のアプリ実行時刻
-  APP_MECT_STATE current_state; //!< 現在の排他制御状態
   uint16_t state_timer_ms;      //!< 現在の排他制御状態に入ってから経過した時間
   MagneticExclusiveControlTimerConfig config;          //!< 排他制御の時間設定
   MagneticExclusiveControlTimerConfig buffered_config; //!< 排他制御の時間設定のバッファ

@@ -199,7 +199,7 @@ static void APP_RTAD_exec_(void)
   VECTOR3_normalize(mag_obs_vec, aocs_manager->mag_vec_est_body_nT);
 
   AOCS_ERROR sensor_availability = APP_RTAD_judge_availability_(sun_ref_vec, mag_ref_vec, sun_obs_vec, mag_obs_vec,
-                                                                magnetic_exclusive_control_timer->current_state, aocs_manager->sun_visibility);
+                                                                aocs_manager->magnetic_exclusive_control_timer_state, aocs_manager->sun_visibility);
 
   Quaternion q_eci_to_body;
 

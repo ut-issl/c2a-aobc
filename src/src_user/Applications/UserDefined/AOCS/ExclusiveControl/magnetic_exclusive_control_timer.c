@@ -6,6 +6,7 @@
 
 #include "magnetic_exclusive_control_timer.h"
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
+#include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 
 static MagneticExclusiveControlTimer        magnetic_exclusive_control_timer_;
 const  MagneticExclusiveControlTimer* const magnetic_exclusive_control_timer = &magnetic_exclusive_control_timer_;
@@ -31,7 +32,6 @@ AppInfo APP_MECT_create_app(void)
 void APP_MECT_init_(void)
 {
   magnetic_exclusive_control_timer_.previous_obc_time = TMGR_get_master_clock();
-  magnetic_exclusive_control_timer_.current_state     = APP_MECT_STATE_STANDBY;
   magnetic_exclusive_control_timer_.state_timer_ms    = 0;
   magnetic_exclusive_control_timer_.config.observe_duration_ms = 100;
   magnetic_exclusive_control_timer_.config.control_duration_ms = 800;
@@ -59,20 +59,20 @@ void APP_MECT_update_timer_(void)
 
 void APP_MECT_update_state_(void)
 {
-  switch (magnetic_exclusive_control_timer_.current_state)
+  switch (aocs_manager->magnetic_exclusive_control_timer_state)
   {
   case APP_MECT_STATE_OBSERVE:
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.observe_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
-      magnetic_exclusive_control_timer_.current_state = APP_MECT_STATE_CONTROL;
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_CONTROL);
     }
     break;
   case APP_MECT_STATE_CONTROL:
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.control_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
-      magnetic_exclusive_control_timer_.current_state = APP_MECT_STATE_STANDBY;
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_STANDBY);
     }
     break;
   case APP_MECT_STATE_STANDBY:
@@ -80,7 +80,7 @@ void APP_MECT_update_state_(void)
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.standby_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
-      magnetic_exclusive_control_timer_.current_state = APP_MECT_STATE_OBSERVE;
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_OBSERVE);
     }
     break;
   default:

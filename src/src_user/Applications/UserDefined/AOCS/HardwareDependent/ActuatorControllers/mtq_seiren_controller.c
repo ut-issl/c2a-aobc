@@ -76,7 +76,7 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
 {
   APP_MTQ_SEIREN_CONTROLLER_integrate_trq_();
 
-  switch (magnetic_exclusive_control_timer->current_state)
+  switch (aocs_manager->magnetic_exclusive_control_timer_state)
   {
   case APP_MECT_STATE_OBSERVE:
     // 次にMTQを出力するとき、何秒間電流を流すかを決める
