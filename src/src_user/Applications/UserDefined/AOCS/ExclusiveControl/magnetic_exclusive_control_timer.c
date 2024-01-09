@@ -126,3 +126,5 @@ CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmd
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
+
+#pragma section
