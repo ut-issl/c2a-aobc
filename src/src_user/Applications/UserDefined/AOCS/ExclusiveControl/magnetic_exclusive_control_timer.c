@@ -91,9 +91,7 @@ void APP_MECT_update_state_(void)
 
 static void APP_MECT_load_buffered_config_(void)
 {
-  magnetic_exclusive_control_timer_.config.observe_duration_ms = magnetic_exclusive_control_timer_.buffered_config.observe_duration_ms;
-  magnetic_exclusive_control_timer_.config.control_duration_ms = magnetic_exclusive_control_timer_.buffered_config.control_duration_ms;
-  magnetic_exclusive_control_timer_.config.standby_duration_ms = magnetic_exclusive_control_timer_.buffered_config.standby_duration_ms;
+  magnetic_exclusive_control_timer_.config = magnetic_exclusive_control_timer_.buffered_config;
   return;
 }
 
