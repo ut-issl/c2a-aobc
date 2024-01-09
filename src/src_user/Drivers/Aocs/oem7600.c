@@ -323,11 +323,13 @@ DS_CMD_ERR_CODE OEM7600_save_tlm_setting(OEM7600_Driver* oem7600_driver)
   return OEM7600_send_cmd_(oem7600_driver, (size_t)(kCmdPayloadLength), kCmdPayload);
 }
 
-DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate, DS_StreamRecBuffer* rx_buffer)
+DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate,
+                                          const OEM7600_UART_BAUDRATE_SET_DEVICE_ID device_id,
+                                          DS_StreamRecBuffer* rx_buffer)
 {
-  const char    kCmdPrefixChar[] = "serialconfig com1 ";
+  const char    kCmdPrefixChar[] = "serialconfig ";
   const uint8_t kCmdPrefixCharLength = (uint8_t)(sizeof(kCmdPrefixChar) / sizeof(kCmdPrefixChar[0])) - 1; // NULL文字分を消す
-  const char    kCmdPrefixArg[] = " n 8 1 n on";
+  const char    kCmdPrefixArg[] = " N 8 1 N ON";
   const uint8_t kCmdOnceCharLength = (uint8_t)(sizeof(kCmdPrefixArg) / sizeof(kCmdPrefixArg[0])) - 1;     // NULL文字分を消す
   uint8_t current_cmd_length = 0;
   uint8_t baudrate_char_length = 0;
@@ -352,19 +354,27 @@ DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const 
   memcpy(&(cmd_payload[current_cmd_length]), &(kCmdPrefixArg), (size_t)(kCmdOnceCharLength));
   current_cmd_length += kCmdOnceCharLength;
 
-  DS_CMD_ERR_CODE cmd_status =  OEM7600_send_cmd_(oem7600_driver, (size_t)(current_cmd_length), cmd_payload);
+  if (device_id == OEM7600_UART_BAUDRATE_SET_DEVICE_ID_GPSR)
+  {
+    DS_CMD_ERR_CODE cmd_status = OEM7600_send_cmd_(oem7600_driver, (size_t)(current_cmd_length), cmd_payload);
 
-  // DS側も変更しないとデータ撮れない
-  if (cmd_status != DS_CMD_OK) return cmd_status;
+    if (cmd_status != DS_ERR_CODE_OK) return DS_CMD_UNKNOWN_ERR;
+  }
+  else if (device_id == OEM7600_UART_BAUDRATE_SET_DEVICE_ID_GPSR)
+  {
+    oem7600_driver->info.uart_baudrate = baudrate;
+    oem7600_driver->driver.uart_config.baudrate = oem7600_driver->info.uart_baudrate;
+    DS_ERR_CODE ret_driver_super_setting = DS_init(&(oem7600_driver->driver.super),
+                                                   &(oem7600_driver->driver.uart_config),
+                                                   rx_buffer,
+                                                   OEM7600_load_driver_super_init_settings_);
 
-  oem7600_driver->info.uart_baudrate = baudrate;
-  oem7600_driver->driver.uart_config.baudrate = oem7600_driver->info.uart_baudrate;
-  DS_ERR_CODE ret_driver_super_setting = DS_init(&(oem7600_driver->driver.super),
-                                                 &(oem7600_driver->driver.uart_config),
-                                                 rx_buffer,
-                                                 OEM7600_load_driver_super_init_settings_);
-
-  if (ret_driver_super_setting != DS_ERR_CODE_OK) return DS_CMD_UNKNOWN_ERR;
+    if (ret_driver_super_setting != DS_ERR_CODE_OK) return DS_CMD_UNKNOWN_ERR;
+  }
+  else
+  {
+    return DS_CMD_ILLEGAL_PARAMETER;
+  }
 
   return DS_CMD_OK;
 }
