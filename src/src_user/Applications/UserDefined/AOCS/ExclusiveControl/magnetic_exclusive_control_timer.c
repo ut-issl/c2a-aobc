@@ -17,6 +17,8 @@ static void APP_MECT_exec_(void);
 static void APP_MECT_update_timer_(void);
 static void APP_MECT_update_state_(void);
 
+static uint16_t APP_MECT_kAcceptableMaxTimeStep_ms = 1000; //!< これより長いステップのタイマアップデートは異常とみなす
+
 /*
  * @brief  MTQ-磁気センサ排他制御タイマーの時間設定をロードし、今のコンフィグに反映する
  * @note   MTQ駆動中に外部からコンフィグをロードすると制御が崩れるので、
@@ -54,7 +56,17 @@ void APP_MECT_update_timer_(void)
   uint32_t step_time_ms = OBCT_diff_in_msec(&(magnetic_exclusive_control_timer_.previous_obc_time), &current_obc_time);
   magnetic_exclusive_control_timer_.previous_obc_time = current_obc_time;
 
-  magnetic_exclusive_control_timer_.state_timer_ms += step_time_ms;
+  // previous_obc_timeが非常に古い場合、途中でモード遷移などを挟んだ可能性があるので、その回はstate_timerをリセットする
+  if (step_time_ms > APP_MECT_kAcceptableMaxTimeStep_ms)
+  {
+    magnetic_exclusive_control_timer_.state_timer_ms = 0;
+  }
+  else
+  {
+    magnetic_exclusive_control_timer_.state_timer_ms += step_time_ms;
+  }
+
+  return;
 }
 
 void APP_MECT_update_state_(void)
