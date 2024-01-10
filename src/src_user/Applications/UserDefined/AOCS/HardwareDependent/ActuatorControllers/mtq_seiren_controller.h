@@ -38,4 +38,12 @@ AppInfo APP_MTQ_SEIREN_CONTROLLER_create_app(void);
  */
 void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProductControl cross_product_cntrl);
 
+/**
+ * @brief  MTQ出力比を手動で設定する
+ * @note   地上での電気試験で使うことを想定。出力比は [-1.0, +1.0] の範囲で指定する。
+ * @param  CommonCmdPacket
+ * @return CCP_CmdRetに準拠
+*/
+CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonCmdPacket* packet);
+
 #endif
