@@ -239,11 +239,13 @@ CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonC
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  float output_ratio = CCP_get_param_from_packet(packet, 1, float);
-  if (output_ratio > 1.0f || output_ratio < -1.0f)
+  int8_t output_percent = CCP_get_param_from_packet(packet, 1, int8_t);
+  if (output_percent > 100 || output_percent < -100)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
+
+  float output_ratio = (float)output_percent / 100.0f;
 
   mtq_seiren_controller_.mtq_output_duration_ms[idx] =
     (uint16_t)(fabsf(output_ratio) * magnetic_exclusive_control_timer->config.control_duration_ms);

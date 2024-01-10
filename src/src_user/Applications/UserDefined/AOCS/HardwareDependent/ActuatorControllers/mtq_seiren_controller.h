@@ -40,7 +40,7 @@ void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProdu
 
 /**
  * @brief  MTQ出力比を手動で設定する
- * @note   地上での電気試験で使うことを想定。出力比は [-1.0, +1.0] の範囲で指定する。
+ * @note   地上での電気試験で使うことを想定。出力比は [-100, +100] （単位：％）の範囲で指定する。
  *         MTQ-磁気センサ排他制御が有効である場合、手動で設定した出力比が APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_()
  *         によって上書きされることに注意すること。
  * @param  CommonCmdPacket
