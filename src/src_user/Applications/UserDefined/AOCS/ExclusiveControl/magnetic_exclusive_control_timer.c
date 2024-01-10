@@ -34,6 +34,7 @@ AppInfo APP_MECT_create_app(void)
 void APP_MECT_init_(void)
 {
   magnetic_exclusive_control_timer_.previous_obc_time = TMGR_get_master_clock();
+  magnetic_exclusive_control_timer_.is_enable = APP_MECT_EXCLUSIVE_CONTROL_DISABLE;
   magnetic_exclusive_control_timer_.state_timer_ms    = 0;
   magnetic_exclusive_control_timer_.config.observe_duration_ms = 100;
   magnetic_exclusive_control_timer_.config.control_duration_ms = 800;
@@ -71,6 +72,22 @@ void APP_MECT_update_timer_(void)
 
 void APP_MECT_update_state_(void)
 {
+  if (magnetic_exclusive_control_timer_.is_enable == APP_MECT_EXCLUSIVE_CONTROL_DISABLE)
+  {
+    // 排他制御が無効であるときは、磁気センサとMTQとの干渉を気にしないため、常にSTATE == CONTROLとする
+    if (aocs_manager->magnetic_exclusive_control_timer_state != APP_MECT_STATE_CONTROL)
+    {
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_CONTROL);
+    }
+    // 排他制御が無効であっても、state timerはMTQ controllerに必要なのでサイクルさせる
+    if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.control_duration_ms)
+    {
+      magnetic_exclusive_control_timer_.state_timer_ms = 0;
+    }
+    return;
+  }
+
+  // 排他制御が有効である場合は、磁気センサとMTQとが干渉しないようにstateを遷移させる
   switch (aocs_manager->magnetic_exclusive_control_timer_state)
   {
   case APP_MECT_STATE_OBSERVE:
@@ -105,6 +122,19 @@ static void APP_MECT_load_buffered_config_(void)
 {
   magnetic_exclusive_control_timer_.config = magnetic_exclusive_control_timer_.buffered_config;
   return;
+}
+
+CCP_CmdRet Cmd_APP_Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE(const CommonCmdPacket* packet)
+{
+  uint8_t is_enable = CCP_get_param_from_packet(packet, 0, uint8_t);
+  if (is_enable != APP_MECT_EXCLUSIVE_CONTROL_DISABLE && is_enable != APP_MECT_EXCLUSIVE_CONTROL_ENABLE)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  magnetic_exclusive_control_timer_.is_enable = is_enable;
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmdPacket* packet)

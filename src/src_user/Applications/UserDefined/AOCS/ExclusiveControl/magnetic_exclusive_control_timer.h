@@ -13,9 +13,21 @@
 #include <src_user/Library/physical_constants.h>
 
 /**
+ * @enum  APP_MECT_EXCLUSIVE_CONTROL
+ * @brief 排他制御が有効か無効か
+ * @note  uint8_tを想定
+*/
+typedef enum
+{
+  APP_MECT_EXCLUSIVE_CONTROL_DISABLE = 0, //!< 排他制御を無効化する
+  APP_MECT_EXCLUSIVE_CONTROL_ENABLE       //!< 排他制御を有効化する
+} APP_MECT_EXCLUSIVE_CONTROL;
+
+/**
  * @enum  APP_MECT_STATE
  * @brief 排他制御の現在の状態
  * @note  状態は観測 --> 制御 --> スタンバイ --> 観測 --> ... と切り替わる
+ *        排他制御が無効であるときは、常に制御状態となる
  *        App間の結合パスを単純化するため、構造体変数はAOCS managerに持たせる
  * @note  uint8_tを想定
 */
@@ -43,15 +55,23 @@ typedef struct
 */
 typedef struct
 {
-  ObcTime  previous_obc_time;   //!< 前回のアプリ実行時刻
-  uint16_t state_timer_ms;      //!< 現在の排他制御状態に入ってから経過した時間
+  ObcTime  previous_obc_time;           //!< 前回のアプリ実行時刻
+  uint16_t state_timer_ms;              //!< 現在の排他制御状態に入ってから経過した時間
+  APP_MECT_EXCLUSIVE_CONTROL is_enable; //!< 排他制御が有効か無効か
   MagneticExclusiveControlTimerConfig config;          //!< 排他制御の時間設定
   MagneticExclusiveControlTimerConfig buffered_config; //!< 排他制御の時間設定のバッファ
 } MagneticExclusiveControlTimer;
 
 extern const MagneticExclusiveControlTimer* const magnetic_exclusive_control_timer;
 
-/*
+/**
+ * @brief  MTQ-磁気センサ排他制御を有効化・無効化する
+ * @param  CommonCmdPacket
+ * @return CCP_EXEC_STSに準拠
+*/
+CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE(const CommonCmdPacket* packet);
+
+/**
 * @brief  MTQ-磁気センサ排他制御タイマーの時間設定
 * @param  CommonCmdPacket
 * @return CCP_EXEC_STSに準拠
