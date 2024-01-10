@@ -61,7 +61,6 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA1_(uint8_t* packet, uint16_t* len, uint16
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA2_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA3_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
@@ -118,7 +117,6 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_AOBC_SAGITTA2].tlm_func = Tlm_AOBC_SAGITTA2_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA3].tlm_func = Tlm_AOBC_SAGITTA3_;
   tlm_table[Tlm_CODE_AOBC_SAGITTA4].tlm_func = Tlm_AOBC_SAGITTA4_;
-  tlm_table[Tlm_CODE_AOBC_MAG_EXCLUSIVE_CONTROL].tlm_func = Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_OBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
@@ -1811,7 +1809,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (215 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (224 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.ang_vel_body_rad_s[0]));
@@ -1864,9 +1862,15 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_float(&packet[203], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
   TF_copy_float(&packet[207], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
   TF_copy_float(&packet[211], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_i8(&packet[215], (int8_t)(mtq_seiren_controller->mtq_output_polarity[MTQ_SEIREN_IDX_X]));
+  TF_copy_u16(&packet[216], (uint16_t)(mtq_seiren_controller->mtq_output_duration_ms[MTQ_SEIREN_IDX_X]));
+  TF_copy_i8(&packet[218], (int8_t)(mtq_seiren_controller->mtq_output_polarity[MTQ_SEIREN_IDX_Y]));
+  TF_copy_u16(&packet[219], (uint16_t)(mtq_seiren_controller->mtq_output_duration_ms[MTQ_SEIREN_IDX_Y]));
+  TF_copy_i8(&packet[221], (int8_t)(mtq_seiren_controller->mtq_output_polarity[MTQ_SEIREN_IDX_Z]));
+  TF_copy_u16(&packet[222], (uint16_t)(mtq_seiren_controller->mtq_output_duration_ms[MTQ_SEIREN_IDX_Z]));
 #endif
 
-  *len = 215;
+  *len = 224;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -1928,7 +1932,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (187 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (199 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.accel_compo_m_s2[0]));
@@ -1977,9 +1981,15 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint
   TF_copy_float(&packet[175], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[1]));
   TF_copy_float(&packet[179], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[2]));
   TF_copy_float(&packet[183], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.scalar_part));
+  TF_copy_u16(&packet[187], (uint16_t)(magnetic_exclusive_control_timer->config.observe_duration_ms));
+  TF_copy_u16(&packet[189], (uint16_t)(magnetic_exclusive_control_timer->config.control_duration_ms));
+  TF_copy_u16(&packet[191], (uint16_t)(magnetic_exclusive_control_timer->config.standby_duration_ms));
+  TF_copy_u16(&packet[193], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
+  TF_copy_u16(&packet[195], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
+  TF_copy_u16(&packet[197], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
 #endif
 
-  *len = 187;
+  *len = 199;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -4015,23 +4025,6 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA4_(uint8_t* packet, uint16_t* len, uint16
 #endif
 
   *len = 234;
-  return TF_TLM_FUNC_ACK_SUCCESS;
-}
-
-static TF_TLM_FUNC_ACK Tlm_AOBC_MAG_EXCLUSIVE_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
-{
-  if (38 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
-
-#ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u16(&packet[26], (uint16_t)(magnetic_exclusive_control_timer->config.observe_duration_ms));
-  TF_copy_u16(&packet[28], (uint16_t)(magnetic_exclusive_control_timer->config.control_duration_ms));
-  TF_copy_u16(&packet[30], (uint16_t)(magnetic_exclusive_control_timer->config.standby_duration_ms));
-  TF_copy_u16(&packet[32], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
-  TF_copy_u16(&packet[34], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
-  TF_copy_u16(&packet[36], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
-#endif
-
-  *len = 38;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
