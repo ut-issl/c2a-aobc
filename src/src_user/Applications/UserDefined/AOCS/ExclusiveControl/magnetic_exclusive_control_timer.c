@@ -126,7 +126,7 @@ static void APP_MECT_load_buffered_config_(void)
 
 CCP_CmdRet Cmd_APP_Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE(const CommonCmdPacket* packet)
 {
-  uint8_t is_enable = CCP_get_param_from_packet(packet, 0, uint8_t);
+  APP_MECT_EXCLUSIVE_CONTROL is_enable = (APP_MECT_EXCLUSIVE_CONTROL)CCP_get_param_from_packet(packet, 0, uint8_t);
   if (is_enable != APP_MECT_EXCLUSIVE_CONTROL_DISABLE && is_enable != APP_MECT_EXCLUSIVE_CONTROL_ENABLE)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);

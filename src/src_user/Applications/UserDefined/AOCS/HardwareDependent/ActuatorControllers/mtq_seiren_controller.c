@@ -233,7 +233,7 @@ static void APP_MTQ_SEIREN_CONTROLLER_integrate_torque_(void)
 
 CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonCmdPacket* packet)
 {
-  MTQ_SEIREN_IDX idx = CCP_get_param_from_packet(packet, 0, uint8_t);
+  MTQ_SEIREN_IDX idx = (MTQ_SEIREN_IDX)CCP_get_param_from_packet(packet, 0, uint8_t);
   if (idx >= MTQ_SEIREN_IDX_MAX)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
