@@ -233,34 +233,32 @@ static void APP_MTQ_SEIREN_CONTROLLER_integrate_torque_(void)
 
 CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonCmdPacket* packet)
 {
-  float output_ratio[MTQ_SEIREN_IDX_MAX];
-  for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
+  MTQ_SEIREN_IDX idx = CCP_get_param_from_packet(packet, 0, uint8_t);
+  if (idx >= MTQ_SEIREN_IDX_MAX)
   {
-    output_ratio[idx] = CCP_get_param_from_packet(packet, idx, float);
-
-    if (output_ratio[idx] > 1.0f || output_ratio[idx] < -1.0f)
-    {
-      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-    }
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
+  float output_ratio = CCP_get_param_from_packet(packet, 1, float);
+  if (output_ratio > 1.0f || output_ratio < -1.0f)
   {
-    mtq_seiren_controller_.mtq_output_duration_ms[idx] =
-      (uint16_t)(fabsf(output_ratio[idx]) * magnetic_exclusive_control_timer->config.control_duration_ms);
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
 
-    if (output_ratio[idx] > 0.0f)
-    {
-      mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
-    }
-    else if (output_ratio[idx] < 0.0f)
-    {
-      mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_NEGATIVE;
-    }
-    else
-    {
-      mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;
-    }
+  mtq_seiren_controller_.mtq_output_duration_ms[idx] =
+    (uint16_t)(fabsf(output_ratio) * magnetic_exclusive_control_timer->config.control_duration_ms);
+  
+  if (output_ratio > 0.0f)
+  {
+    mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
+  }
+  else if (output_ratio < 0.0f)
+  {
+    mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_NEGATIVE;
+  }
+  else
+  {
+    mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
