@@ -18,7 +18,7 @@
  */
 typedef struct
 {
-  uint32_t mtq_output_duration_ms[MTQ_SEIREN_IDX_MAX];         //!< 一回の制御期間中にMTQが出力する時間 [ms]
+  uint16_t mtq_output_duration_ms[MTQ_SEIREN_IDX_MAX];         //!< 一回の制御期間中にMTQが出力する時間 [ms]
   MTQ_SEIREN_POLARITY mtq_output_polarity[MTQ_SEIREN_IDX_MAX]; //!< この制御期間中に出力するMTQ電流極性
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ

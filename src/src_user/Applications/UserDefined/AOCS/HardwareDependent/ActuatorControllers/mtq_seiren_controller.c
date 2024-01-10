@@ -140,7 +140,7 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
     else
     {
       mtq_seiren_controller_.mtq_output_duration_ms[idx] =
-        (uint32_t)(fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
+        (uint16_t)(fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
                           magnetic_exclusive_control_timer->config.control_duration_ms));
 
       mtq_seiren_controller_.mtq_output_polarity[idx] =
@@ -247,7 +247,7 @@ CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonC
   for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
   {
     mtq_seiren_controller_.mtq_output_duration_ms[idx] =
-      (uint32_t)(fabsf(output_ratio[idx]) * magnetic_exclusive_control_timer->config.control_duration_ms);
+      (uint16_t)(fabsf(output_ratio[idx]) * magnetic_exclusive_control_timer->config.control_duration_ms);
 
     if (output_ratio[idx] > 0.0f)
     {
