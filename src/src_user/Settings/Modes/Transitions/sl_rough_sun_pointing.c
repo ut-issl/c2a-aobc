@@ -30,15 +30,6 @@ void BCL_load_bdot_to_rough_sun_pointing(void)
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC); // 6.5sec
   bc_cycle += OBCT_sec2cycle(10);
 
-  // 磁気排他制御タイマー設定
-  // Bdotでは2回の磁場観測に200msかけていたが、クロスプロダクト制御では1回の観測で十分であるため、
-  // 観測時間を切り詰める。
-  BCL_tool_prepare_param_uint32(100);
-  BCL_tool_prepare_param_uint32(800);
-  BCL_tool_prepare_param_uint32(100);
-  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION);
-  bc_cycle += OBCT_sec2cycle(1);
-
   // モード遷移完了
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_MM_FINISH_TRANSITION);
 
