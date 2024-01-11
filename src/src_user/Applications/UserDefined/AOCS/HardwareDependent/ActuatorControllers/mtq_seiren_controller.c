@@ -169,11 +169,11 @@ void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProdu
 static void APP_MTQ_SEIREN_CONTROLLER_clip_mtq_out_Am2s_(float clipped_mag_moment_cmd_Am2s[PHYSICAL_CONST_THREE_DIM],
                                                          const float mag_moment_cmd_Am2[PHYSICAL_CONST_THREE_DIM])
 {
-  float drive_cycle_time_length_ms = magnetic_exclusive_control_timer->config.observe_duration_ms +
-                                     magnetic_exclusive_control_timer->config.control_duration_ms +
-                                     magnetic_exclusive_control_timer->config.standby_duration_ms;
+  uint16_t drive_cycle_time_length_ms = magnetic_exclusive_control_timer->config.observe_duration_ms +
+                                        magnetic_exclusive_control_timer->config.control_duration_ms +
+                                        magnetic_exclusive_control_timer->config.standby_duration_ms;
 
-  float ratio_of_output_time_to_cycle = magnetic_exclusive_control_timer->config.control_duration_ms / drive_cycle_time_length_ms;
+  float ratio_of_output_time_to_cycle = (float)magnetic_exclusive_control_timer->config.control_duration_ms / drive_cycle_time_length_ms;
 
   float max_mag_flux_Am2s[PHYSICAL_CONST_THREE_DIM]; //!< max mag moment integrated during one-drive-cycle [Am^2sec]
   for (int i = 0; i < PHYSICAL_CONST_THREE_DIM; i++)

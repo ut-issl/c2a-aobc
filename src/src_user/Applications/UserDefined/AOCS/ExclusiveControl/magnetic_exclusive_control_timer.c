@@ -58,7 +58,7 @@ void APP_MECT_update_timer_(void)
   }
   else
   {
-    magnetic_exclusive_control_timer_.state_timer_ms += step_time_ms;
+    magnetic_exclusive_control_timer_.state_timer_ms += (uint16_t)step_time_ms;
   }
 
   return;
