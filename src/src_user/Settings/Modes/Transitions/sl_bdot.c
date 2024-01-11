@@ -11,6 +11,7 @@
 #include <src_user/Applications/UserDefined/Power/power_switch_control.h>
 #include <src_user/Applications/DriverInstances/di_rm3100.h>
 #include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
@@ -35,6 +36,10 @@ void BCL_load_initial_to_bdot(void)
   // MTQ ON
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_MTQ, TLCD_ID_DEPLOY_BC); // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
+
+  // 磁気・MTQ排他制御有効化
+  BCL_tool_prepare_param_uint8(APP_MECT_EXCLUSIVE_CONTROL_ENABLE);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE);
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_MM_FINISH_TRANSITION);
 }
