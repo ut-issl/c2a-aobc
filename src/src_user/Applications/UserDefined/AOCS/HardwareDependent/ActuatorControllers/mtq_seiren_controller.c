@@ -249,7 +249,7 @@ CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonC
 
   mtq_seiren_controller_.mtq_output_duration_ms[idx] =
     (uint16_t)(fabsf(output_ratio) * magnetic_exclusive_control_timer->config.control_duration_ms);
-  
+
   if (output_ratio > 0.0f)
   {
     mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
