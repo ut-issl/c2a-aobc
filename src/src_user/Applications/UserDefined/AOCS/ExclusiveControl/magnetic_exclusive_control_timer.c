@@ -19,13 +19,6 @@ static void APP_MECT_update_state_(void);
 
 static uint16_t APP_MECT_kAcceptableMaxTimeStep_ms = 1000; //!< これより長いステップのタイマアップデートは異常とみなす
 
-/*
- * @brief  MTQ-磁気センサ排他制御タイマーの時間設定をロードし、今のコンフィグに反映する
- * @note   MTQ駆動中に外部からコンフィグをロードすると制御が崩れるので、
- *         コマンドによる時間設定の変更は一度バッファリングし、MTQ駆動が終わったタイミングで反映する
- */
-static void APP_MECT_load_buffered_config_(void);
-
 AppInfo APP_MECT_create_app(void)
 {
   return AI_create_app_info("MagneticExclusiveControlTimer", APP_MECT_init_, APP_MECT_exec_);
@@ -108,7 +101,7 @@ void APP_MECT_update_state_(void)
   case APP_MECT_STATE_STANDBY:
     if (magnetic_exclusive_control_timer_.is_config_buffered)
     {
-      APP_MECT_load_buffered_config_();
+      magnetic_exclusive_control_timer_.config = magnetic_exclusive_control_timer_.buffered_config;
       magnetic_exclusive_control_timer_.is_config_buffered = false;
     }
 
@@ -122,12 +115,6 @@ void APP_MECT_update_state_(void)
     // NOT REACHED
     break;
   }
-}
-
-static void APP_MECT_load_buffered_config_(void)
-{
-  magnetic_exclusive_control_timer_.config = magnetic_exclusive_control_timer_.buffered_config;
-  return;
 }
 
 CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE(const CommonCmdPacket* packet)
