@@ -40,6 +40,7 @@ void BCL_load_initial_to_bdot(void)
   // 磁気・MTQ排他制御有効化
   BCL_tool_prepare_param_uint8(APP_MECT_EXCLUSIVE_CONTROL_ENABLE);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE);
+  bc_cycle += OBCT_sec2cycle(1);
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_MM_FINISH_TRANSITION);
 }
