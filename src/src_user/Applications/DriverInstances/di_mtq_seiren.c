@@ -20,7 +20,6 @@ const  MTQ_SEIREN_Driver* const mtq_seiren_driver[MTQ_SEIREN_IDX_MAX] = {&mtq_se
                                                                          &mtq_seiren_driver_[MTQ_SEIREN_IDX_Z]};
 
 static void DI_MTQ_SEIREN_init_(void);
-static void DI_MTQ_SEIREN_update_(void);
 
 /**
  * @brief  AOCS MANAGERに磁気モーメント方向行列をセットする

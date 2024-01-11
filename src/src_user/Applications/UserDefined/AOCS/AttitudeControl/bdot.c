@@ -49,24 +49,6 @@ static AOCS_ERROR APP_BDOT_calculate_mag_vec_time_derivative_(void);
  */
 static void APP_BDOT_calculate_target_mtq_output_(void);
 
-/**
- * @brief  MTQ目標磁気モーメント維持関数
- * @param  void
- * @return void
- * @note   MTQの出力がONのときに呼び出され，所定の時間だけMTQ出力を維持する役割を持つ
- * @note   所定のMTQ出力時間が過ぎたら，MTQ出力を切る
- */
-static void APP_BDOT_maintain_mtq_output_(void);
-
-/**
- * @brief  MTQ消磁待機関数
- * @param  void
- * @return void
- * @note   MTQの出力が切られてから，消磁まで待機する役割を持つ
- * @note   消磁までの時間が過ぎたら，MTQ出力を完全にOFFにしたとみなす
- */
-static void APP_BDOT_wait_for_demagnitization_(void);
-
 AppInfo APP_BDOT_create_app(void)
 {
   return AI_create_app_info("Bdot", APP_BDOT_init_, APP_BDOT_exec_);
