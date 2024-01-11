@@ -42,6 +42,7 @@ void APP_MECT_init_(void)
   magnetic_exclusive_control_timer_.buffered_config.observe_duration_ms = 100;
   magnetic_exclusive_control_timer_.buffered_config.control_duration_ms = 800;
   magnetic_exclusive_control_timer_.buffered_config.standby_duration_ms = 100;
+  magnetic_exclusive_control_timer_.is_config_buffered = false;
 }
 
 void APP_MECT_exec_(void)
@@ -105,7 +106,12 @@ void APP_MECT_update_state_(void)
     }
     break;
   case APP_MECT_STATE_STANDBY:
-    APP_MECT_load_buffered_config_();
+    if (magnetic_exclusive_control_timer_.is_config_buffered)
+    {
+      APP_MECT_load_buffered_config_();
+      magnetic_exclusive_control_timer_.is_config_buffered = false;
+    }
+
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.standby_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
@@ -163,6 +169,7 @@ CCP_CmdRet Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION(const CommonCmd
   magnetic_exclusive_control_timer_.buffered_config.observe_duration_ms = observe_duration_ms;
   magnetic_exclusive_control_timer_.buffered_config.control_duration_ms = control_duration_ms;
   magnetic_exclusive_control_timer_.buffered_config.standby_duration_ms = standby_duration_ms;
+  magnetic_exclusive_control_timer_.is_config_buffered = true;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

@@ -7,6 +7,7 @@
 #define MAGNETIC_EXCLUSIVE_CONTROL_TIMER_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/System/TimeManager/time_manager.h>
@@ -60,6 +61,7 @@ typedef struct
   APP_MECT_EXCLUSIVE_CONTROL is_enable; //!< 排他制御が有効か無効か
   MagneticExclusiveControlTimerConfig config;          //!< 排他制御の時間設定
   MagneticExclusiveControlTimerConfig buffered_config; //!< 排他制御の時間設定のバッファ
+  bool is_config_buffered;                             //!< バッファに設定があるかどうか
 } MagneticExclusiveControlTimer;
 
 extern const MagneticExclusiveControlTimer* const magnetic_exclusive_control_timer;
