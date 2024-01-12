@@ -360,7 +360,7 @@ DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const 
 
     if (cmd_status != DS_ERR_CODE_OK) return DS_CMD_UNKNOWN_ERR;
   }
-  else if (device_id == OEM7600_UART_BAUDRATE_SET_DEVICE_ID_GPSR)
+  else if (device_id == OEM7600_UART_BAUDRATE_SET_DEVICE_ID_AOBC)
   {
     oem7600_driver->info.uart_baudrate = baudrate;
     oem7600_driver->driver.uart_config.baudrate = oem7600_driver->info.uart_baudrate;
