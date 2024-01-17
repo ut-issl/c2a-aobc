@@ -55,7 +55,7 @@ jobs:
 
       - name: cache extlib
         id: cache-extlib
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-aobc/s2e-core/ExtLibraries/**') }}
           path: ./s2e-aobc/s2e-core/ExtLibraries
@@ -153,7 +153,7 @@ jobs:
 
       - name: cache extlib
         id: cache-extlib
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-aobc/s2e-core/ExtLibraries/**') }}-BUILD_64BIT=OFF
           path: ./s2e-aobc/s2e-core/ExtLibraries
