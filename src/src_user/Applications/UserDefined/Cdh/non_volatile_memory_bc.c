@@ -113,6 +113,13 @@ static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
   for (uint8_t i = 0; i < num; ++i)
   {
     bct_id_t bc_id = begin_bc_id + i;
+    if (bc_id >= BCT_MAX_BLOCKS)
+    {
+      // ここに来るのはおかしい. bc_num_to_copy が BCT_MAX_BLOCKS の約数になっていない
+      // ただ, 動作に問題があるわけではないので EL 登録せずに return する
+      return;
+    }
+
     nvm_bc_.is_ready_to_restore[bc_id] = 0;
 
     // 有効化されている BC のみコピーする
@@ -238,18 +245,20 @@ CCP_CmdRet Cmd_APP_NVM_BC_OTHER_SETTINGS(const CommonCmdPacket* packet)
   case 0:
     if (value >= BCT_MAX_BLOCKS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     nvm_bc_.bc_id_to_copy = (bct_id_t)value;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case 1:
     if (value > 255) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     nvm_bc_.bc_num_to_copy = (uint8_t)value;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case 2:
     nvm_bc_.address_for_ready_flags = value;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case 3:
     nvm_bc_.address_for_bc = value;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
-
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

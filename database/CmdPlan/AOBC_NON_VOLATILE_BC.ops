@@ -24,9 +24,10 @@
 .AOBC_RT.TG_GENERATE_RT_TLM 0x2b # NON_VOLATILE
 .AOBC_RT.TG_GENERATE_RT_TLM 0x0b # EL_TLOG
  #
-.# EL のテレメ表示レベル変更用
+.# EL 操作用
 .AOBC_RT.EL_TLOG_SET_PAGE_FOR_TLM 0 0 # high
 .AOBC_RT.EL_TLOG_SET_PAGE_FOR_TLM 0 1 # low
+.AOBC_RT.EL_CLEAR_TLOG 0 # high
  #
  #
 .# ===== 1. 有効化/無効化 =====
@@ -84,15 +85,13 @@
  wait_sec 1
  AOBC_BL.TLCD_SET_SOE_FLAG 200 0 0
  wait_sec 1
- AOBC_BL.TLCD_SET_SOE_FLAG 250 0 1
- wait_sec 1
  AOBC_RT.BCE_ACTIVATE_BLOCK
  wait_sec 1
  AOBC_RT.TG_GENERATE_RT_TLM 0x02 # BL
  # 変更確認
  wait_until AOBC_BL.BLOCK_NO == 78
  check_value AOBC_BL.IS_ACTIVE == ACTIVE:G
- check_value AOBC_BL.CMD5_TI == 250
+ check_value AOBC_BL.CMD5_TI == 200
  #
 .AOBC_RT.TLCD_DEPLOY_BLOCK 1 78
 .# HK_GENテレメで TLC_GS.SOE_FLAG のグラフ出す
