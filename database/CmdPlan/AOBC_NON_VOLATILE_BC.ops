@@ -1,0 +1,209 @@
+.# ===== 0. テレメ登録 =====
+.# HK再生用のBCをいじって定期テレメを増やす
+ # ALGO はいらなそうなので消す
+.let bc_id = 30 # BC_HK_CYCLIC_TLM
+ AOBC_RT.BCT_SET_BLOCK_POSITION {bc_id} 2
+ wait_sec 1
+ AOBC_BL.TG_GENERATE_RT_TLM 4 0x2b # NON_VOLATILE
+ wait_sec 1
+ AOBC_BL.TG_GENERATE_RT_TLM 6 0x0b # EL_TLOG
+ wait_sec 1
+ AOBC_BL.TLCD_DEPLOY_BLOCK 10 2 {bc_id}
+ #
+ # HK テレメが止まるはず
+ #
+.# 有効化と設定の確認
+ AOBC_RT.BCE_ACTIVATE_BLOCK
+ wait_sec 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x02 # AOBC_BL
+ #
+.# 無限ループ開始
+ AOBC_RT.TLCD_DEPLOY_BLOCK 2 {bc_id}
+ #
+.# 念のため 1shot
+.AOBC_RT.TG_GENERATE_RT_TLM 0x2b # NON_VOLATILE
+.AOBC_RT.TG_GENERATE_RT_TLM 0x0b # EL_TLOG
+ #
+.# EL のテレメ表示レベル変更用
+.AOBC_RT.EL_TLOG_SET_PAGE_FOR_TLM 0 0 # high
+.AOBC_RT.EL_TLOG_SET_PAGE_FOR_TLM 0 1 # low
+ #
+ #
+.# ===== 1. 有効化/無効化 =====
+.# デフォルトで無効化されていることを確認
+ #
+.AOBC_RT.APP_NVM_BC_SET_ENABLE 1 # 有効化
+.# 有効化されているBCは、テレメの IS_READY_TO_RESTORE = YES になるはず
+.# tasklist の chd update のとこで テレメ生成->NVM_BCアプリ の順に実行される
+ #
+.AOBC_RT.APP_NVM_BC_SET_ENABLE 0 # 無効化
+ #
+ #
+.# ===== 2. 予備コマンド =====
+.# まず無効化する
+ AOBC_RT.APP_NVM_BC_SET_ENABLE 0
+ #
+.# bc_id_to_copy をいじる
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 0 27
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 0 0
+ #
+.# bc_num_to_copy をいじる
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 20
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 10
+ #
+.# address_for_ready_flags をいじる
+.# 最初の値をメモっておくこと
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 2 0xff
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 2 0xff
+ #
+.# address_for_bc をいじる
+.# 最初の値をメモっておくこと
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 3 0xff
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 3 0xff
+ #
+.# 設定を戻したことを確認したら、有効化する
+ AOBC_RT.APP_NVM_BC_SET_ENABLE 1
+ #
+ #
+.# ===== 3. 復元テスト =====
+ # 適当な BC を修正->再起動->復元コマンド->修正が保持されているか確認
+ #
+.# ===== 3.1 BC 修正 =====
+ #
+.### BC78 実験
+ # もともと BC_INACTIVATE_OEM7600_EL_EH = 78
+.AOBC_RT.BCT_CLEAR_BLOCK 78
+ wait_sec 1
+ AOBC_BL.TLCD_SET_SOE_FLAG 1 0 0
+ wait_sec 1
+ AOBC_BL.TLCD_SET_SOE_FLAG 50 0 1
+ wait_sec 1
+ AOBC_BL.TLCD_SET_SOE_FLAG 100 0 0
+ wait_sec 1
+ AOBC_BL.TLCD_SET_SOE_FLAG 150 0 1
+ wait_sec 1
+ AOBC_BL.TLCD_SET_SOE_FLAG 200 0 0
+ wait_sec 1
+ AOBC_BL.TLCD_SET_SOE_FLAG 250 0 1
+ wait_sec 1
+ AOBC_RT.BCE_ACTIVATE_BLOCK
+ wait_sec 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x02 # BL
+ # 変更確認
+ wait_until AOBC_BL.BLOCK_NO == 78
+ check_value AOBC_BL.IS_ACTIVE == ACTIVE:G
+ check_value AOBC_BL.CMD5_TI == 250
+ #
+.AOBC_RT.TLCD_DEPLOY_BLOCK 1 78
+.# HK_GENテレメで TLC_GS.SOE_FLAG のグラフ出す
+ # 5秒ごとに 0/1 が変わるはず
+.AOBC_RT.TLCD_SET_SOE_FLAG 0 0
+.AOBC_RT.TLCD_SET_SOE_FLAG 0 1
+ #
+ #
+.### BC4 SL_RTA_MTQ
+.AOBC_RT.BCT_SET_BLOCK_POSITION 4 1
+ wait_sec 1
+ # 自動モード遷移の条件を緩和する
+ AOBC_BL.APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD 15 1.0472 10800 # 1.0472rad (60deg), 180min
+ wait_sec 1
+ # STIM210をONする
+ AOBC_BL.TLCD_DEPLOY_BLOCK 20 1 38 # STIM210 ON 14sec
+ wait_sec 1
+ # モード遷移完了
+ AOBC_BL.MM_FINISH_TRANSITION 160
+ wait_sec 1
+ # 自動モード遷移までの時間を緩和する
+ AOBC_BL.APP_AOCS_MM_SET_AUTO_MODE_TRANSITION 24160 1
+ wait_sec 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x02 # AOBC_BL
+ # 変更確認
+ wait_until AOBC_BL.BLOCK_NO == 4
+ check_value AOBC_BL.IS_ACTIVE == ACTIVE:G
+ check_value AOBC_BL.CMD1_ID == 183 #APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD
+ check_value AOBC_BL.CMD1_TI == 15
+ check_value AOBC_BL.CMD2_ID == 14  #TLCD_DEPLOY_BLOCK
+ check_value AOBC_BL.CMD2_TI == 20
+ check_value AOBC_BL.CMD3_ID == 10  #MM_FINISH_TRANSITION
+ check_value AOBC_BL.CMD3_TI == 160
+ check_value AOBC_BL.CMD4_ID == 180 #APP_AOCS_MM_SET_AUTO_MODE_TRANSITION
+ check_value AOBC_BL.CMD4_TI == 24160
+ #
+ #
+.### BC14 TL_RTA_MTQ
+.AOBC_RT.BCT_SET_BLOCK_POSITION 14 12
+ wait_sec 1
+ # STT DI
+ AOBC_BL.AM_EXECUTE_APP 94 7 # STTつけたいなら、DIだけでなく関連アプリBCL_load_stt_update
+ wait_sec 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x02 # BL
+ # 変更確認
+ wait_until AOBC_BL.BLOCK_NO == 14
+ check_value AOBC_BL.IS_ACTIVE == ACTIVE:G
+ check_value AOBC_BL.CMD12_ID == 4
+ check_value AOBC_BL.CMD12_TI == 94
+ #
+ #
+.### BC39 STT_ON
+.AOBC_RT.BCT_CLEAR_BLOCK 39  # BC_POWER_ON_SAGITTA
+ wait_sec 1
+ AOBC_BL.EL_DISABLE_LOGGING 10 41 # HW OCのELを一時的に無効化
+ wait_sec 1
+ AOBC_BL.DI_INA260_SET_OVER_CURRENT_PROTECTION 11 2 1200 # 過電流閾値を一時的に緩和
+ wait_sec 1
+ AOBC_BL.APP_PSC_CONTROL_UNREG_PORT 20 1 1 # ON
+ wait_sec 1
+ AOBC_BL.DI_SAGITTA_BOOT 40 # boot
+ wait_sec 1
+ AOBC_BL.DI_RM3100_SET_MAG_BIAS_COMPO_NT 50 0 -2.34 162.42 -571.90 1 # 磁気バイアス
+ wait_sec 1
+ AOBC_BL.DI_RM3100_SET_MAG_BIAS_COMPO_NT 51 1 55.22 -36.99 66.81 1 # 磁気バイアス
+ wait_sec 1
+ AOBC_BL.TLCD_DEPLOY_BLOCK 60 1 33 # parameter write
+ wait_sec 1
+ AOBC_BL.TLCD_DEPLOY_BLOCK 180 1 34 # read parameter
+ wait_sec 1
+ AOBC_BL.DI_INA260_INIT 310 2 2 0 1 # HW OCの閾値設定
+ wait_sec 1
+ AOBC_BL.TLCD_DEPLOY_BLOCK 320 1 75 # EL/EH有効化（この中で、過電流閾値をもとに戻している）
+ wait_sec 1
+ AOBC_RT.BCE_ACTIVATE_BLOCK
+ wait_sec 1
+ AOBC_RT.TG_GENERATE_RT_TLM 0x02 # BL
+ wait_until AOBC_BL.BLOCK_NO == 39
+ check_value AOBC_BL.IS_ACTIVE == ACTIVE:G
+ check_value AOBC_BL.CMD9_ID == 14
+ check_value AOBC_BL.CMD9_TI == 320
+ #
+ #
+.# ===== 3.2 修正した BC の ready flag が YES なのを確認 =====
+ #
+.# ===== 3.3 AOBC 再起動 =====
+ #
+.# ===== 3.4 FRAM から復元してみる =====
+.### BC78 実験
+.AOBC_RT.APP_NVM_BC_RESTORE_BC_FROM_NVM 78
+.# check value をやってみる
+.# 実行してグラフ見てみる
+ #
+.### BC4 SL_RTA_MTQ
+.AOBC_RT.APP_NVM_BC_RESTORE_BC_FROM_NVM 4
+.# check value をやってみる
+ #
+.### BC14 TL_RTA_MTQ
+.AOBC_RT.APP_NVM_BC_RESTORE_BC_FROM_NVM 14
+.# check value をやってみる
+ #
+.### BC39 STT_ON
+.AOBC_RT.APP_NVM_BC_RESTORE_BC_FROM_NVM 39
+.# check value をやってみる
+ #
+ #
+.# ===== 4. 一度にコピーする量を変更してみる =====
+ # 実行し終わらないと 3-3 アノマリとかが出るはず
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 2
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 5
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 10 # デフォルト
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 20
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 40
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 80
