@@ -177,14 +177,14 @@ static APP_NVM_MANAGER_ERROR APP_NVM_BC_copy_bc_(bct_id_t bc_id, uint32_t write_
     BCT_CmdData cmd = block_command_table->blocks[bc_id]->cmds[i];
     APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
                                                               current_addr,
-                                                              sizeof(cmd),
+                                                              sizeof(BCT_CmdData),
                                                               &cmd);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       EL_record_event(EL_GROUP_NVM_BC, APP_NVM_MANAGER_ERROR_COPY_BC_CMD, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
       return ret;
     }
-    current_addr = current_addr + sizeof(cmd);
+    current_addr = current_addr + sizeof(BCT_CmdData);
   }
 
   return APP_NVM_MANAGER_ERROR_OK;
@@ -197,30 +197,37 @@ static APP_NVM_MANAGER_ERROR APP_NVM_BC_restore_bc_from_nvm_(bct_id_t bc_id)
   uint32_t current_addr = APP_NVM_BC_get_address_from_bc_id_(bc_id);
   if (current_addr < nvm_bc_.address_for_bc) return APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC;
 
-  uint8_t len;
+  BCT_clear_block(bc_id);
 
   // BC の長さを復元
+  uint8_t len;
   APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(&len,
                                                            APP_NVM_PARTITION_ID_BCT,
                                                            current_addr,
                                                            sizeof(len));
   if (ret != APP_NVM_MANAGER_ERROR_OK) return ret;
-  // FIXME: set bc length
+
   current_addr = current_addr + sizeof(len);
 
   // BC のコマンドを 1つずつ復元
+  CommonCmdPacket packet;
   for (uint8_t i = 0; i < len; ++i)
   {
-    BCT_CmdData cmd;
-    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(&cmd,
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(packet.packet,
                                                              APP_NVM_PARTITION_ID_BCT,
                                                              current_addr,
-                                                             sizeof(cmd));
+                                                             sizeof(BCT_CmdData));
     if (ret != APP_NVM_MANAGER_ERROR_OK) return ret;
-    // FIXME: set cmd
 
-    current_addr = current_addr + sizeof(cmd);
+    // 復元したコマンドを BCT に登録
+    BCT_ACK ack = BCT_register_cmd(&packet);
+    if (ack != BCT_SUCCESS) return APP_NVM_MANAGER_ERROR_BCT_FAIL;
+
+    current_addr = current_addr + sizeof(BCT_CmdData);
   }
+
+  // 全て問題なく復元できた場合、有効化する
+  BCE_activate_block_by_id(bc_id);
 
   return APP_NVM_MANAGER_ERROR_OK;
 }

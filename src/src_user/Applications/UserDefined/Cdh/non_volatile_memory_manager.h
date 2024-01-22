@@ -36,6 +36,7 @@ typedef enum
   APP_NVM_MANAGER_ERROR_COPY_BC_LEN,           //!< BC の length のコピーに失敗
   APP_NVM_MANAGER_ERROR_COPY_BC_CMD,           //!< BC の コマンド のコピーに失敗
   APP_NVM_MANAGER_ERROR_RESTORE_READY_FLAG,    //!< ready flag の復元に失敗
+  APP_NVM_MANAGER_ERROR_BCT_FAIL,              //!< BCT の操作で失敗
   APP_NVM_MANAGER_ERROR_NG_OTHERS              //!< その他未分類のエラー
 } APP_NVM_MANAGER_ERROR;
 
