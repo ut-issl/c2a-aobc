@@ -178,7 +178,7 @@ static APP_NVM_MANAGER_ERROR APP_NVM_BC_copy_bc_(bct_id_t bc_id, uint32_t write_
     APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
                                                               current_addr,
                                                               sizeof(BCT_CmdData),
-                                                              &cmd);
+                                                              (uint8_t*)&cmd);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       EL_record_event(EL_GROUP_NVM_BC, APP_NVM_MANAGER_ERROR_COPY_BC_CMD, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
