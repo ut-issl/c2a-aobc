@@ -30,7 +30,15 @@ static void APP_NVM_BC_exec_(void);
  * @return void
  * @note アプリで定期実行される
  */
-static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num);
+static void APP_NVM_BC_copy_bcs_(bct_id_t begin_bc_id, uint8_t num);
+
+/**
+ * @brief 指定された BC を不揮発にコピーする
+ * @param[in] bc_id : コピーする BC の id
+ * @param[in] write_address : コピー先の不揮発メモリアドレス
+ * @note APP_NVM_BC_copy_bcs_ にて呼ばれる
+ */
+static APP_NVM_MANAGER_ERROR APP_NVM_BC_copy_bc_(bct_id_t bc_id, uint32_t write_address);
 
 /**
  * @brief 指定された BC を１つ不揮発から復元する
@@ -57,7 +65,7 @@ static void APP_NVM_BC_init_(void)
 {
   nvm_bc_.is_active = 0;  // 起動直後は無効化しておく
   nvm_bc_.bc_id_to_copy = 0;
-  nvm_bc_.bc_num_to_copy = 10;
+  nvm_bc_.bc_num_to_copy = 1;
   nvm_bc_.address_for_ready_flags = non_volatile_memory_partition->elements[APP_NVM_PARTITION_ID_BCT].start_address;
   nvm_bc_.address_for_bc = nvm_bc_.address_for_ready_flags + sizeof(nvm_bc_.is_ready_to_restore);
 
@@ -81,8 +89,7 @@ static void APP_NVM_BC_exec_(void)
 
   // 実行時間を考慮して、1回あたり nvm_bc_.bc_num_to_copy 個ずつコピーを取っていく
   // nvm_bc_.bc_num_to_copy は BCT_MAX_BLOCKS の約数であることを前提とする
-
-  APP_NVM_BC_copy_bc_(nvm_bc_.bc_id_to_copy, nvm_bc_.bc_num_to_copy);
+  APP_NVM_BC_copy_bcs_(nvm_bc_.bc_id_to_copy, nvm_bc_.bc_num_to_copy);
 
   if (nvm_bc_.bc_id_to_copy + nvm_bc_.bc_num_to_copy >= BCT_MAX_BLOCKS)
   {
@@ -106,10 +113,8 @@ static void APP_NVM_BC_exec_(void)
   return;
 }
 
-static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
+static void APP_NVM_BC_copy_bcs_(bct_id_t begin_bc_id, uint8_t num)
 {
-  uint8_t data_tmp[sizeof(BCT_Table)];
-
   for (uint8_t i = 0; i < num; ++i)
   {
     bct_id_t bc_id = begin_bc_id + i;
@@ -132,13 +137,9 @@ static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
       break;
     }
 
-    memcpy(data_tmp, block_command_table->blocks[bc_id], sizeof(BCT_Table));
+    // BC をコピー
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_BC_copy_bc_(bc_id, write_address);
 
-    // 不揮発に BC をコピー
-    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
-                                                              write_address,
-                                                              sizeof(BCT_Table),
-                                                              data_tmp);
     if (ret != APP_NVM_MANAGER_ERROR_OK)
     {
       EL_record_event(EL_GROUP_NVM_BC, (uint32_t)ret, EL_ERROR_LEVEL_LOW, bc_id);
@@ -153,29 +154,72 @@ static void APP_NVM_BC_copy_bc_(bct_id_t begin_bc_id, uint8_t num)
   return;
 }
 
+static APP_NVM_MANAGER_ERROR APP_NVM_BC_copy_bc_(bct_id_t bc_id, uint32_t write_address)
+{
+  uint32_t current_addr = write_address;
+  uint8_t len = block_command_table->blocks[bc_id]->length;
+
+  // BC のコマンド数をコピー
+  APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
+                                                            current_addr,
+                                                            sizeof(len),
+                                                            &len);
+  if (ret != APP_NVM_MANAGER_ERROR_OK)
+  {
+    EL_record_event(EL_GROUP_NVM_BC, APP_NVM_MANAGER_ERROR_COPY_BC_LEN, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
+    return ret;
+  }
+  current_addr = current_addr + sizeof(len);
+
+  // BC のコマンドを1つずつコピーしていく
+  for (uint8_t i = 0; i < len; ++i)
+  {
+    BCT_CmdData cmd = block_command_table->blocks[bc_id]->cmds[i];
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_write_bytes(APP_NVM_PARTITION_ID_BCT,
+                                                              current_addr,
+                                                              sizeof(cmd),
+                                                              &cmd);
+    if (ret != APP_NVM_MANAGER_ERROR_OK)
+    {
+      EL_record_event(EL_GROUP_NVM_BC, APP_NVM_MANAGER_ERROR_COPY_BC_CMD, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
+      return ret;
+    }
+    current_addr = current_addr + sizeof(cmd);
+  }
+
+  return APP_NVM_MANAGER_ERROR_OK;
+}
+
 static APP_NVM_MANAGER_ERROR APP_NVM_BC_restore_bc_from_nvm_(bct_id_t bc_id)
 {
   if (!nvm_bc_.is_ready_to_restore[bc_id]) return APP_NVM_MANAGER_ERROR_NOT_READY_TO_RESTORE;
 
-  uint32_t read_address = APP_NVM_BC_get_address_from_bc_id_(bc_id);
+  uint32_t current_addr = APP_NVM_BC_get_address_from_bc_id_(bc_id);
+  if (current_addr < nvm_bc_.address_for_bc) return APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC;
 
-  if (read_address < nvm_bc_.address_for_bc) return APP_NVM_MANAGER_ERROR_NG_ADDRESS_NVM_BC;
+  uint8_t len;
 
-  uint8_t data_tmp[sizeof(BCT_Table)];
-
-  APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(data_tmp,
+  // BC の長さを復元
+  APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(&len,
                                                            APP_NVM_PARTITION_ID_BCT,
-                                                           read_address,
-                                                           sizeof(BCT_Table));
-  if (ret != APP_NVM_MANAGER_ERROR_OK)
-  {
-    return ret;
-  }
+                                                           current_addr,
+                                                           sizeof(len));
+  if (ret != APP_NVM_MANAGER_ERROR_OK) return ret;
+  // FIXME: set bc length
+  current_addr = current_addr + sizeof(len);
 
-  BCT_ACK ack = BCT_copy_bct_from_bytes(bc_id, data_tmp);
-  if (ack != BCT_SUCCESS)
+  // BC のコマンドを 1つずつ復元
+  for (uint8_t i = 0; i < len; ++i)
   {
-    return APP_NVM_MANAGER_ERROR_BCT_COPY_FAIL;
+    BCT_CmdData cmd;
+    APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(&cmd,
+                                                             APP_NVM_PARTITION_ID_BCT,
+                                                             current_addr,
+                                                             sizeof(cmd));
+    if (ret != APP_NVM_MANAGER_ERROR_OK) return ret;
+    // FIXME: set cmd
+
+    current_addr = current_addr + sizeof(cmd);
   }
 
   return APP_NVM_MANAGER_ERROR_OK;
@@ -188,6 +232,7 @@ static uint32_t APP_NVM_BC_get_address_from_bc_id_(bct_id_t bc_id)
     return 0;
   }
 
+  // 余裕を持たせて sizeof(BCT_Table) ずつ確保する
   return nvm_bc_.address_for_bc + sizeof(BCT_Table) * bc_id;
 }
 
