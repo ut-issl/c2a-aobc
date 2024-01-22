@@ -6,28 +6,24 @@
  wait_sec 1
  AOBC_BL.TG_GENERATE_RT_TLM 4 0x2b # NON_VOLATILE
  wait_sec 1
- AOBC_BL.TG_GENERATE_RT_TLM 6 0x0b # EL_TLOG
+ AOBC_BL.TG_GENERATE_RT_TLM 6 0x0c # EL_CLOG
  wait_sec 1
  AOBC_BL.TLCD_DEPLOY_BLOCK 10 2 {bc_id}
- #
  # HK テレメが止まるはず
- #
-.# 有効化と設定の確認
+ wait_sec 1
+ # 有効化
  AOBC_RT.BCE_ACTIVATE_BLOCK
  wait_sec 1
- AOBC_RT.TG_GENERATE_RT_TLM 0x02 # AOBC_BL
- #
-.# 無限ループ開始
+ # 再度無限ループ開始
  AOBC_RT.TLCD_DEPLOY_BLOCK 2 {bc_id}
  #
 .# 念のため 1shot
 .AOBC_RT.TG_GENERATE_RT_TLM 0x2b # NON_VOLATILE
-.AOBC_RT.TG_GENERATE_RT_TLM 0x0b # EL_TLOG
+.AOBC_RT.TG_GENERATE_RT_TLM 0x0c # EL_CLOG
  #
 .# EL 操作用
-.AOBC_RT.EL_TLOG_SET_PAGE_FOR_TLM 0 0 # high
-.AOBC_RT.EL_TLOG_SET_PAGE_FOR_TLM 0 1 # low
-.AOBC_RT.EL_CLEAR_TLOG 0 # high
+.AOBC_RT.EL_CLOG_SET_PAGE_FOR_TLM 0 0 # high
+.AOBC_RT.EL_CLOG_SET_PAGE_FOR_TLM 0 1 # low
  #
  #
 .# ===== 1. 有効化/無効化 =====
@@ -200,6 +196,7 @@
  #
 .# ===== 4. 一度にコピーする量を変更してみる =====
  # 実行し終わらないと 3-3 アノマリとかが出るはず
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 1
 .AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 2
 .AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 5
 .AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 10 # デフォルト
