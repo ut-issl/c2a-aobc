@@ -117,6 +117,9 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_NVM_PARTITION_READ_BYTES].cmd_func = Cmd_APP_NVM_PARTITION_READ_BYTES;
   cmd_table[Cmd_CODE_APP_AOCS_DR_SET_WRITE].cmd_func = Cmd_APP_AOCS_DR_SET_WRITE;
   cmd_table[Cmd_CODE_APP_AOCS_DR_READ].cmd_func = Cmd_APP_AOCS_DR_READ;
+  cmd_table[Cmd_CODE_APP_NVM_BC_SET_ENABLE].cmd_func = Cmd_APP_NVM_BC_SET_ENABLE;
+  cmd_table[Cmd_CODE_APP_NVM_BC_RESTORE_BC_FROM_NVM].cmd_func = Cmd_APP_NVM_BC_RESTORE_BC_FROM_NVM;
+  cmd_table[Cmd_CODE_APP_NVM_BC_OTHER_SETTINGS].cmd_func = Cmd_APP_NVM_BC_OTHER_SETTINGS;
   cmd_table[Cmd_CODE_APP_PSC_CONTROL_5V_PORT].cmd_func = Cmd_APP_PSC_CONTROL_5V_PORT;
   cmd_table[Cmd_CODE_APP_PSC_CONTROL_UNREG_PORT].cmd_func = Cmd_APP_PSC_CONTROL_UNREG_PORT;
   cmd_table[Cmd_CODE_DI_INA260_INIT].cmd_func = Cmd_DI_INA260_INIT;
@@ -387,6 +390,10 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_DR_READ].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_DR_READ].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_DR_READ].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_APP_NVM_BC_SET_ENABLE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_NVM_BC_RESTORE_BC_FROM_NVM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_NVM_BC_OTHER_SETTINGS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_NVM_BC_OTHER_SETTINGS].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_PSC_CONTROL_5V_PORT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_PSC_CONTROL_5V_PORT].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_PSC_CONTROL_UNREG_PORT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;

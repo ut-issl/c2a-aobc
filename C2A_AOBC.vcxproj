@@ -207,6 +207,7 @@
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\TargetAttitude\target_attitude_from_orbit.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\AppStatus.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\Cdh\aocs_data_recorder.c" />
+    <ClCompile Include="src\src_user\Applications\UserDefined\Cdh\non_volatile_memory_bc.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\Cdh\non_volatile_memory_manager.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\Cdh\non_volatile_memory_parameter.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\Cdh\non_volatile_memory_partition.c" />
