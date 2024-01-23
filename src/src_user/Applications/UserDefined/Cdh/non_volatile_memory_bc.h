@@ -20,8 +20,8 @@ typedef struct
   uint8_t is_active;                           //!< アプリが有効かどうか
   uint8_t is_ready_to_restore[BCT_MAX_BLOCKS]; //!< 各 BC が復元できる状態かどうか
   bct_id_t bc_id_to_copy;                      //!< 次にコピーする BC の ID
-  uint8_t bc_num_to_copy;                      /*!< 一度に何個の BC をコピーするか
-                                                    必ず BCT_MAX_BLOCKS の約数にすること！！ */
+  uint8_t bc_num_to_copy;                      //!< 一度に何個の BC をコピーするか. BCT_MAX_BLOCKS の約数にすること
+  // 以下二つはパーティッション内のアドレスであることに注意
   uint32_t address_for_ready_flags;            //!< is_ready_to_restore を保存している領域の開始アドレス
   uint32_t address_for_bc;                     //!< BCT を保存している領域の開始アドレス
 } NonVolatileMemoryBc;

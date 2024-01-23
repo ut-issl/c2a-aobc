@@ -66,8 +66,8 @@ static void APP_NVM_BC_init_(void)
   nvm_bc_.is_active = 0;  // 起動直後は無効化しておく
   nvm_bc_.bc_id_to_copy = 0;
   nvm_bc_.bc_num_to_copy = 1;
-  nvm_bc_.address_for_ready_flags = non_volatile_memory_partition->elements[APP_NVM_PARTITION_ID_BCT].start_address;
-  nvm_bc_.address_for_bc = nvm_bc_.address_for_ready_flags + sizeof(nvm_bc_.is_ready_to_restore);
+  nvm_bc_.address_for_ready_flags = 0;  // パーティッション内でのアドレス
+  nvm_bc_.address_for_bc = nvm_bc_.address_for_ready_flags + sizeof(nvm_bc_.is_ready_to_restore);  // パーティッション内でのアドレス
 
   // is_ready_to_restore を不揮発から復元する
   APP_NVM_MANAGER_ERROR ret = APP_NVM_PARTITION_read_bytes(nvm_bc_.is_ready_to_restore,
