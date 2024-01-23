@@ -46,7 +46,7 @@
  #
 .# bc_num_to_copy をいじる
 .AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 20
-.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 10
+.AOBC_RT.APP_NVM_BC_OTHER_SETTINGS 1 1
  #
 .# address_for_ready_flags をいじる
 .# 最初の値をメモっておくこと
@@ -87,7 +87,7 @@
  # 変更確認
  wait_until AOBC_BL.BLOCK_NO == 78
  check_value AOBC_BL.IS_ACTIVE == ACTIVE:G
- check_value AOBC_BL.CMD5_TI == 200
+ check_value AOBC_BL.CMD4_TI == 200
  #
 .AOBC_RT.TLCD_DEPLOY_BLOCK 1 78
 .# HK_GENテレメで TLC_GS.SOE_FLAG のグラフ出す

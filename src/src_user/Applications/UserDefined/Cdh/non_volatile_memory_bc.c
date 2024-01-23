@@ -65,7 +65,7 @@ static void APP_NVM_BC_init_(void)
 {
   nvm_bc_.is_active = 0;  // 起動直後は無効化しておく
   nvm_bc_.bc_id_to_copy = 0;
-  nvm_bc_.bc_num_to_copy = 1;
+  nvm_bc_.bc_num_to_copy = 1;  // 2 以上だと 3-3 アノマリが出るので基本 1 にする
   nvm_bc_.address_for_ready_flags = 0;  // パーティッション内でのアドレス
   nvm_bc_.address_for_bc = nvm_bc_.address_for_ready_flags + sizeof(nvm_bc_.is_ready_to_restore);  // パーティッション内でのアドレス
 
@@ -88,7 +88,6 @@ static void APP_NVM_BC_exec_(void)
   if (!nvm_bc_.is_active) return;
 
   // 実行時間を考慮して、1回あたり nvm_bc_.bc_num_to_copy 個ずつコピーを取っていく
-  // nvm_bc_.bc_num_to_copy は BCT_MAX_BLOCKS の約数であることを前提とする
   APP_NVM_BC_copy_bcs_(nvm_bc_.bc_id_to_copy, nvm_bc_.bc_num_to_copy);
 
   if (nvm_bc_.bc_id_to_copy + nvm_bc_.bc_num_to_copy >= BCT_MAX_BLOCKS)
@@ -120,7 +119,7 @@ static void APP_NVM_BC_copy_bcs_(bct_id_t begin_bc_id, uint8_t num)
     bct_id_t bc_id = begin_bc_id + i;
     if (bc_id >= BCT_MAX_BLOCKS)
     {
-      // ここに来るのはおかしい. bc_num_to_copy が BCT_MAX_BLOCKS の約数になっていない
+      // bc_num_to_copy が BCT_MAX_BLOCKS の約数になっていないと最終周回でここに到達する
       // ただ, 動作に問題があるわけではないので EL 登録せずに return する
       return;
     }
