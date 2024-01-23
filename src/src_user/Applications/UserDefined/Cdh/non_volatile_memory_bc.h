@@ -1,7 +1,26 @@
 /**
 * @file
 * @brief BCT のコピーを不揮発メモリに保存する
-* @note 使い方は .c を参照
+* @note ## コピー: AOBC -> 不揮発メモリ
+*        - アプリ有効化中は, BC が bc_num_to_copy 個 / cycle ずつ不揮発メモリに自動コピーされる
+*          - bc_num_to_copy = 1 の場合, 80 cycle = 8 秒で全ての BC をバックアップし終える
+*          - つまり, BL コマンドで BC を編集した際も, 8 秒後には必ずバックアップされる
+*        - 無効化されている BC は ready flag が下がり, リセット後に復元できなくなる
+*          - 空き番の BC や意図的に使っていない BC がコピーされて復元されて, それが間違って使われることを防ぐため
+* @note ## 復元: AOBC <- 不揮発メモリ
+*        - Cmd_APP_NVM_BC_RESTORE_BC_FROM_NVM {bc_id} で一つずつ復元する
+*        - ready flag が立っていない BC は復元できない. 逆に, flag が立っていれば確実にコピーが取れているはず.
+*        - 復元された BC は activate された状態になるので, すぐに使える
+* @note ## 使い方
+*       0. 起動時はデフォルトでアプリ無効化されている
+*       1. Cmd_APP_NVM_BC_SET_ENABLE で有効化すると BC が不揮発メモリに自動コピーされ始める
+*       2. AOBC がリセットしてしまったら, 復元したい BC だけ Cmd_APP_NVM_BC_RESTORE_BC_FROM_NVM を用いて1つずつ復元する
+*          復元前にアプリ有効化してしまうと, コピーが上書きされて消えてしまうので注意
+*       3. 復元が完了したら Cmd_APP_NVM_BC_SET_ENABLE でアプリ有効化して自動コピーを再開する
+* @note ## 注意点
+*        - 基本的には bc_num_to_copy = 1 にすること. 2 以上になると 3-3 アノマリが出る
+*          - 不揮発メモリの読み書きは実行時間を食う
+*        - AOBC リセット後は, BC 復元が完了するまでアプリを有効化しないように注意！
 */
 #ifndef NON_VOLATILE_MEMORY_BC_H_
 #define NON_VOLATILE_MEMORY_BC_H_

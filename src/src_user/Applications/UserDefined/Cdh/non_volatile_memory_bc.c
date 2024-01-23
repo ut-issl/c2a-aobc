@@ -2,12 +2,7 @@
 /**
 * @file
 * @brief BCT のコピーを不揮発メモリに保存する
-* @note 使い方
-*       0. 起動時はデフォルトで無効化されている
-*       1. Cmd_APP_NVM_BC_SET_ENABLE で有効化すると BC が不揮発に自動同期される
-*       2. OBC がリセットしてしまったら, 復元したい BC だけ Cmd_APP_NVM_BC_RESTORE_BC_FROM_NVM を用いて1つずつ復元する
-*          復元前に Cmd_APP_NVM_BC_SET_ENABLE で有効化するとコピーが消えてしまうので注意
-*       3. 復元が終わったら再度有効化する
+* @note 詳細は .h を参照
 */
 
 #include "non_volatile_memory_bc.h"
