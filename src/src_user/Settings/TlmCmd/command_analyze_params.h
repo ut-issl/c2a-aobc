@@ -12,7 +12,7 @@
 // 1テレメトリパケット(=1ページ)に格納されるコマンド数
 #define CA_TLM_PAGE_SIZE (16)
 // コマンドテーブルページ数
-#define CA_TLM_PAGE_MAX (16)
+#define CA_TLM_PAGE_MAX (18)
 // コマンドテーブルサイズ
 #define CA_MAX_CMDS (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)
 

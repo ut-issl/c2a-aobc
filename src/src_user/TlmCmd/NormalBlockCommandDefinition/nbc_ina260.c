@@ -25,6 +25,14 @@ void BCL_load_power_on_ina260()
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_PSC_CONTROL_5V_PORT);
   bc_cycle += OBCT_sec2cycle(1);
 
+  // Dummy initialize(for bug fix)
+  BCL_tool_prepare_param_uint8(INA260_IDX_PIC);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_averaging_mode);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_voltage_conversion_time);
+  BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_current_conversion_time);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_INIT);
+  bc_cycle++;
+
   // Initialize
   BCL_tool_prepare_param_uint8(INA260_IDX_PIC);
   BCL_tool_prepare_param_uint8(INA260_PARAMETERS_pic_averaging_mode);

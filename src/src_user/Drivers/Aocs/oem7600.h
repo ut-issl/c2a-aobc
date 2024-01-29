@@ -109,6 +109,20 @@ typedef enum
 } OEM7600_CRC_STATE;
 
 /**
+ * @enum  OEM7600_UART_BAUDRATE_SET_DEVICE_ID
+ * @brief UARTボーレート変更対象の指定
+ * @note  uint_8を想定．
+ * @note  1回のUARTボーレート変更CMDでAOBCとGPSR両方を変更しようとするとタイミング的にNGなため，2回に分割が必要
+ *        分割に伴い，どちらの設定を変更するかを指定する必要が生じるため，enumを追加．
+ */
+typedef enum
+{
+  OEM7600_UART_BAUDRATE_SET_DEVICE_ID_AOBC = 0,
+  OEM7600_UART_BAUDRATE_SET_DEVICE_ID_GPSR = 1,
+  OEM7600_UART_BAUDRATE_SET_DEVICE_ID_MAX
+} OEM7600_UART_BAUDRATE_SET_DEVICE_ID;
+
+/**
  * @struct OEM7600_Info
  * @brief  OEM7600のテレメトリ情報
  */
@@ -224,7 +238,9 @@ DS_CMD_ERR_CODE OEM7600_save_tlm_setting(OEM7600_Driver* oem7600_driver);
  * @param  uint32_t: baudrate
  * @return DS_CMD_ERR_CODE
  */
-DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate, DS_StreamRecBuffer* rx_buffer);
+DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate,
+                                          const OEM7600_UART_BAUDRATE_SET_DEVICE_ID device_id,
+                                          DS_StreamRecBuffer* rx_buffer);
 
 
 /**
