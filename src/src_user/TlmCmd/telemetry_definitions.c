@@ -1809,7 +1809,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (224 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (218 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.ang_vel_body_rad_s[0]));
@@ -1862,15 +1862,12 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_float(&packet[203], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
   TF_copy_float(&packet[207], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
   TF_copy_float(&packet[211], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
-  TF_copy_i8(&packet[215], (int8_t)(mtq_seiren_controller->mtq_output_polarity[MTQ_SEIREN_IDX_X]));
-  TF_copy_u16(&packet[216], (uint16_t)(mtq_seiren_controller->mtq_output_duration_ms[MTQ_SEIREN_IDX_X]));
-  TF_copy_i8(&packet[218], (int8_t)(mtq_seiren_controller->mtq_output_polarity[MTQ_SEIREN_IDX_Y]));
-  TF_copy_u16(&packet[219], (uint16_t)(mtq_seiren_controller->mtq_output_duration_ms[MTQ_SEIREN_IDX_Y]));
-  TF_copy_i8(&packet[221], (int8_t)(mtq_seiren_controller->mtq_output_polarity[MTQ_SEIREN_IDX_Z]));
-  TF_copy_u16(&packet[222], (uint16_t)(mtq_seiren_controller->mtq_output_duration_ms[MTQ_SEIREN_IDX_Z]));
+  TF_copy_i8(&packet[215], (int8_t)(mtq_seiren_controller->mtq_output_duty[MTQ_SEIREN_IDX_X]));
+  TF_copy_i8(&packet[216], (int8_t)(mtq_seiren_controller->mtq_output_duty[MTQ_SEIREN_IDX_Y]));
+  TF_copy_i8(&packet[217], (int8_t)(mtq_seiren_controller->mtq_output_duty[MTQ_SEIREN_IDX_Z]));
 #endif
 
-  *len = 224;
+  *len = 218;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 

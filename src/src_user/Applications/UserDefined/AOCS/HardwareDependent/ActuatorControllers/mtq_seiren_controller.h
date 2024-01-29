@@ -20,6 +20,7 @@ typedef struct
 {
   uint16_t mtq_output_duration_ms[MTQ_SEIREN_IDX_MAX];         //!< 一回の制御期間中にMTQが出力する時間 [ms]
   MTQ_SEIREN_POLARITY mtq_output_polarity[MTQ_SEIREN_IDX_MAX]; //!< この制御期間中に出力するMTQ電流極性
+  int8_t mtq_output_duty[MTQ_SEIREN_IDX_MAX];                  //!< 極性と出力時間から計算され、テレメに出力するためのMTQ出力duty比 [-100, +100] （単位：％）
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ
   float integrated_torque_Nms[PHYSICAL_CONST_THREE_DIM]; //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
@@ -46,6 +47,6 @@ void APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(const CrossProdu
  * @param  CommonCmdPacket
  * @return CCP_CmdRetに準拠
 */
-CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO(const CommonCmdPacket* packet);
 
 #endif

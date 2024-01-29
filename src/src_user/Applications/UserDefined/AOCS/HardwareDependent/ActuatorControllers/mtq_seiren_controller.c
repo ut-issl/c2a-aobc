@@ -129,12 +129,16 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
       // 出力最大で制御する必要がある場合、排他制御でMTQ出力のために確保している時間すべてを使う
       mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->config.control_duration_ms;
       mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
+      // テレメ出力用の計算
+      mtq_seiren_controller_.mtq_output_duty[idx] = 100;
     }
     else if (mag_moment_mtq_Am2[idx] < -1.0f * mtq_seiren_driver[idx]->driver.max_mag_moment)
     {
       // 出力最大で制御する必要がある場合、排他制御でMTQ出力のために確保している時間すべてを使う
       mtq_seiren_controller_.mtq_output_duration_ms[idx] = magnetic_exclusive_control_timer->config.control_duration_ms;
       mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_NEGATIVE;
+      // テレメ出力用の計算
+      mtq_seiren_controller_.mtq_output_duty[idx] = -100;
     }
     else
     {
@@ -144,6 +148,10 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
 
       mtq_seiren_controller_.mtq_output_polarity[idx] =
         (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
+
+      // テレメ出力用の計算
+      mtq_seiren_controller_.mtq_output_duty[idx] =
+        (int8_t)(100.0f * (mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment));
     }
   }
 }
@@ -230,7 +238,7 @@ static void APP_MTQ_SEIREN_CONTROLLER_integrate_torque_(void)
   return;
 }
 
-CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO(const CommonCmdPacket* packet)
 {
   MTQ_SEIREN_IDX idx = (MTQ_SEIREN_IDX)CCP_get_param_from_packet(packet, 0, uint8_t);
   if (idx >= MTQ_SEIREN_IDX_MAX)
@@ -243,6 +251,8 @@ CCP_CmdRet Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO_MANUALLY(const CommonC
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
+
+  mtq_seiren_controller_.mtq_output_duty[idx] = output_percent;
 
   float output_ratio = (float)output_percent / 100.0f;
 
