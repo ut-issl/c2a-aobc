@@ -20,15 +20,12 @@ typedef struct
 {
   float control_gain[PHYSICAL_CONST_THREE_DIM];                   //!< 制御ゲイン[ ]．
   uint32_t minimum_time_derivative_step_ms;                       //!< 磁場微分計算のための最小インターバル[ms]
-  uint32_t mtq_output_time_length_ms;                             //!< 1回の駆動でMTQのON状態を維持する時間[ms]
-  ObcTime  mtq_output_turned_on_obc_time;                         //!< MTQの出力をONにした瞬間のOBC Time
   struct
   {
     ObcTime previous_obc_time;                                    //!< 磁場ベクトル微分計算に使うOBC time
     ObcTime current_obc_time;                                     //!< 磁場ベクトル微分計算に使うOBC time
     float mag_vec_before_nT[PHYSICAL_CONST_THREE_DIM];            //!< 磁場ベクトル微分計算に使う磁場ベクトル情報[nT]
     float mag_vec_after_nT[PHYSICAL_CONST_THREE_DIM];             //!< 磁場ベクトル微分計算に使う磁場ベクトル情報[nT]
-    uint8_t num_of_mag_observation;                               //!< 磁場の観測回数．2回観測すると磁場ベクトル微分が計算され，0に戻る．
     float mag_vec_time_derivative_nT_s[PHYSICAL_CONST_THREE_DIM]; //!< 磁場ベクトルの時間微分[nT/s]
   } time_derivative_variables;
 } Bdot;

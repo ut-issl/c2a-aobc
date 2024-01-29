@@ -50,11 +50,6 @@ void BCL_load_rough_three_axis_to_rough_three_axis_rw(void)
   BCL_tool_prepare_param_uint16(BC_POWER_ON_RWZ);
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_TLCD_DEPLOY_BLOCK);
 
-  // deactivate MAG Exclusive Control
-  timing_sec += 5;
-  BCL_tool_prepare_param_uint8(AOCS_MANAGER_MAG_EXCLUSIVE_STATE_IDLE);
-  BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE);
-
   // モード遷移完了
   timing_sec += 5;
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_MM_FINISH_TRANSITION);

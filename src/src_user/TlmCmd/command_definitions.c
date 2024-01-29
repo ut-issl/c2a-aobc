@@ -128,8 +128,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION].cmd_func = Cmd_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION;
   cmd_table[Cmd_CODE_DI_RM3100_INIT].cmd_func = Cmd_DI_RM3100_INIT;
   cmd_table[Cmd_CODE_DI_MPU9250_INIT].cmd_func = Cmd_DI_MPU9250_INIT;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS].cmd_func = Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_DUTY].cmd_func = Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY;
+  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_OUTPUT].cmd_func = Cmd_DI_MTQ_SEIREN_OUTPUT;
   cmd_table[Cmd_CODE_DI_STIM210_INIT].cmd_func = Cmd_DI_STIM210_INIT;
   cmd_table[Cmd_CODE_DI_STIM210_SET_MODE].cmd_func = Cmd_DI_STIM210_SET_MODE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_NORMAL_MODE_FORMAT].cmd_func = Cmd_DI_STIM210_SET_NORMAL_MODE_FORMAT;
@@ -169,6 +168,9 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_GYRO_SELECTOR_SET_STATE].cmd_func = Cmd_APP_GYRO_SELECTOR_SET_STATE;
   cmd_table[Cmd_CODE_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD].cmd_func = Cmd_SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD;
   cmd_table[Cmd_CODE_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD].cmd_func = Cmd_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD;
+  cmd_table[Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE].cmd_func = Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE;
+  cmd_table[Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION].cmd_func = Cmd_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION;
+  cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO].cmd_func = Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO;
   cmd_table[Cmd_CODE_APP_MPU9250_FILTER_SET_ZFILTER_PARAM].cmd_func = Cmd_APP_MPU9250_FILTER_SET_ZFILTER_PARAM;
   cmd_table[Cmd_CODE_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM].cmd_func = Cmd_APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM;
   cmd_table[Cmd_CODE_APP_STIM210_FILTER_SET_ZFILTER_PARAM].cmd_func = Cmd_APP_STIM210_FILTER_SET_ZFILTER_PARAM;
@@ -184,7 +186,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD].cmd_func = Cmd_APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD;
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD].cmd_func = Cmd_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD;
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD].cmd_func = Cmd_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD;
-  cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME].cmd_func = Cmd_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME;
   cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].cmd_func = Cmd_APP_RTAD_SET_METHOD;
   cmd_table[Cmd_CODE_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT].cmd_func = Cmd_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT;
   cmd_table[Cmd_CODE_APP_FTAD_SET_METHOD].cmd_func = Cmd_APP_FTAD_SET_METHOD;
@@ -233,7 +234,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_REFERENCE_TIME].cmd_func = Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION].cmd_func = Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION;
-  cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE;
   cmd_table[Cmd_CODE_APP_ORBIT_CALC_SET_METHOD].cmd_func = Cmd_APP_ORBIT_CALC_SET_METHOD;
@@ -409,9 +409,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_DI_RM3100_INIT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_DUTY].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_SET_PWM_DUTY].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_OUTPUT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_DI_MTQ_SEIREN_OUTPUT].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_MODE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_NORMAL_MODE_FORMAT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_STIM210_SET_GYRO_OUTPUT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
@@ -518,6 +517,12 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_TEMPERATURE_ANOMALY_SET_THRESHOLD].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_MPU9250_FILTER_SET_ZFILTER_PARAM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_MPU9250_FILTER_SET_ZFILTER_PARAM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_MPU9250_FILTER_SET_ZFILTER_PARAM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
@@ -579,7 +584,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MM_SET_INVISIBLE_THRESHOLD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_APP_MTQ_SEIREN_CONTROLLER_SET_DEMAGNITIZATION_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_METHOD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
@@ -610,7 +614,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_BDOT_SET_CONTROL_GAIN].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_BDOT_SET_CONTROL_GAIN].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_BDOT_SET_TIMING].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_APP_BDOT_SET_TIMING].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_SUN_POINTING_SET_GAIN].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_SUN_POINTING_SET_GAIN].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_SUN_POINTING_SET_GAIN].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
@@ -714,7 +717,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;

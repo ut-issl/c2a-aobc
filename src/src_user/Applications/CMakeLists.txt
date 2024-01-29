@@ -19,6 +19,7 @@ set(C2A_SRCS
   UserDefined/AOCS/AttitudeDetermination/rough_three_axis_determination.c
   UserDefined/AOCS/AttitudeDetermination/fine_three_axis_determination.c
   UserDefined/AOCS/AttitudeDetermination/stt_gyro_ekf.c
+  UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.c
   UserDefined/AOCS/HardwareDependent/ActuatorControllers/mtq_seiren_controller.c
   UserDefined/AOCS/HardwareDependent/ActuatorControllers/rw_controller.c
   UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.c

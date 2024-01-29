@@ -93,8 +93,8 @@ static void APP_AOCS_MANAGER_init_(void)
                 mtq_seiren_driver[mtq_idx]->info.magnetic_moment_direction_b);
   }
   AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(aocs_manager_.mtq_magnetic_moment_direction_matrix);
-  aocs_manager_.mtq_output_state = AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF;
-  aocs_manager_.mag_exclusive_state = AOCS_MANAGER_MAG_EXCLUSIVE_STATE_ACTIVE;
+  // 磁気センサ <--> MTQ排他制御
+  aocs_manager_.magnetic_exclusive_control_timer_state = APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_STANDBY;
   // RW情報
   float rw_rotation_direction_matrix[AOCS_MANAGER_NUM_OF_RW][PHYSICAL_CONST_THREE_DIM];
   for (int rw_idx = 0; rw_idx < AOCS_MANAGER_NUM_OF_RW; rw_idx++)
@@ -423,15 +423,10 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(
   return AOCS_MANAGER_ERROR_OK;
 }
 
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_output_state(const AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state)
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(
+  const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_timer_state)
 {
-  aocs_manager_.mtq_output_state = mtq_output_state;
-  return AOCS_MANAGER_ERROR_OK;
-}
-
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_mag_exclusive_state(const AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state)
-{
-  aocs_manager_.mag_exclusive_state = mag_exclusive_state;
+  aocs_manager_.magnetic_exclusive_control_timer_state = magnetic_exclusive_control_timer_state;
   return AOCS_MANAGER_ERROR_OK;
 }
 
@@ -799,20 +794,6 @@ CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPa
   if (permission_flag >= AOCS_MANAGER_CONSTANT_TORQUE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_constant_torque_permission(permission_flag);
-  if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
-}
-
-CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet)
-{
-  const uint8_t* param = CCP_get_param_head(packet);
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state;
-
-  mag_exclusive_state = (AOCS_MANAGER_MAG_EXCLUSIVE_STATE)param[0];
-  if (mag_exclusive_state >= AOCS_MANAGER_MAG_EXCLUSIVE_STATE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-
-  AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_mag_exclusive_state(mag_exclusive_state);
   if (ret != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);

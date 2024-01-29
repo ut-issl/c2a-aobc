@@ -20,7 +20,6 @@ const  MTQ_SEIREN_Driver* const mtq_seiren_driver[MTQ_SEIREN_IDX_MAX] = {&mtq_se
                                                                          &mtq_seiren_driver_[MTQ_SEIREN_IDX_Z]};
 
 static void DI_MTQ_SEIREN_init_(void);
-static void DI_MTQ_SEIREN_update_(void);
 
 /**
  * @brief  AOCS MANAGERに磁気モーメント方向行列をセットする
@@ -32,9 +31,8 @@ static const float DI_MTQ_SEIREN_kMaxMagMoment_Am2_ = 0.32f; //!< MTQのが出�
 
 AppInfo DI_MTQ_SEIREN_update(void)
 {
-  return AI_create_app_info("update_DI_MTQ_SEIREN", DI_MTQ_SEIREN_init_, DI_MTQ_SEIREN_update_);
+  return AI_create_app_info("update_DI_MTQ_SEIREN", DI_MTQ_SEIREN_init_, NULL);
 }
-
 
 static void DI_MTQ_SEIREN_init_(void)
 {
@@ -59,21 +57,6 @@ static void DI_MTQ_SEIREN_init_(void)
   if (ret_manager != AOCS_MANAGER_ERROR_OK) Printf("MTQ direction setting Failed ! %d \n", ret);
 }
 
-
-static void DI_MTQ_SEIREN_update_(void)
-{
-  for (int i = 0; i < MTQ_SEIREN_IDX_MAX; i++)
-  {
-    MTQ_SEIREN_output_pwm(&mtq_seiren_driver_[i]);
-  }
-}
-
-AOCS_ERROR DI_MTQ_SEIREN_set_pwm_duty(MTQ_SEIREN_IDX axis, int8_t pwm_signed_duty_percent)
-{
-  MTQ_SEIREN_set_pwm_signed_duty(&mtq_seiren_driver_[(int)axis], pwm_signed_duty_percent);
-  return AOCS_ERROR_OK;
-}
-
 static AOCS_MANAGER_ERROR DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_(void)
 {
   float mtq_magnetic_moment_direction_body[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM];
@@ -83,38 +66,6 @@ static AOCS_MANAGER_ERROR DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_(vo
   }
   AOCS_MANAGER_ERROR ret = AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(mtq_magnetic_moment_direction_body);
   return ret;
-}
-
-
-// コマンド関数
-CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_PERIOD_MS(const CommonCmdPacket* packet)
-{
-  const uint8_t* param = CCP_get_param_head(packet);
-
-  uint32_t pwm_period_ms;
-  ENDIAN_memcpy(&pwm_period_ms, param, sizeof(uint32_t));
-
-  DS_CMD_ERR_CODE ret;
-  ret = MTQ_SEIREN_set_pwm_period_ms(pwm_period_ms);
-
-  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
-}
-
-CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_PWM_DUTY(const CommonCmdPacket* packet)
-{
-  const uint8_t* param = CCP_get_param_head(packet);
-
-  MTQ_SEIREN_IDX axis;
-  int8_t pwm_signed_duty_percent;
-
-  axis = (MTQ_SEIREN_IDX)param[0];
-  if (axis >= MTQ_SEIREN_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-
-  ENDIAN_memcpy(&pwm_signed_duty_percent, param + sizeof(uint8_t), sizeof(int8_t));
-  if (pwm_signed_duty_percent < -100 || pwm_signed_duty_percent > 100) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-
-  DI_MTQ_SEIREN_set_pwm_duty(axis, pwm_signed_duty_percent);
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCmdPacket* packet)
@@ -138,6 +89,31 @@ CCP_CmdRet Cmd_DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR(const CommonCm
 
   AOCS_MANAGER_ERROR ret_manager = DI_MTQ_SEIREN_set_direction_matrix_to_aocs_manager_();
   if (ret_manager != AOCS_MANAGER_ERROR_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+CCP_CmdRet Cmd_DI_MTQ_SEIREN_OUTPUT(const CommonCmdPacket* packet)
+{
+  uint8_t arg_position = 0;
+
+  MTQ_SEIREN_IDX idx = (MTQ_SEIREN_IDX)CCP_get_param_from_packet(packet, arg_position, uint8_t);
+  if (idx >= MTQ_SEIREN_IDX_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  arg_position++;
+
+  int8_t polarity = (int8_t)CCP_get_param_from_packet(packet, arg_position, int8_t);
+
+  if (polarity != (int8_t)MTQ_SEIREN_POLARITY_POSITIVE &&
+      polarity != (int8_t)MTQ_SEIREN_POLARITY_NEGATIVE &&
+      polarity != (int8_t)MTQ_SEIREN_NO_OUTPUT)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  arg_position++;
+
+  GPIO_ERR_CODE ret = MTQ_SEIREN_output(&mtq_seiren_driver_[idx], (MTQ_SEIREN_POLARITY)polarity);
+  if (ret != GPIO_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

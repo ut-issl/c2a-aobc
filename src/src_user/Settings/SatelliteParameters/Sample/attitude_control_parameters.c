@@ -9,7 +9,6 @@
 // Bdot
 const float ATTITUDE_CONTROL_PARAMETERS_bdot_control_gain[PHYSICAL_CONST_THREE_DIM] = {-0.1f, -0.1f, -0.1f};
 const uint32_t ATTITUDE_CONTROL_PARAMETERS_bdot_minimum_time_derivative_step_ms = 100;
-const uint32_t ATTITUDE_CONTROL_PARAMETERS_bdot_mtq_output_time_length_ms = 1000;
 
 // Sun Pointing
 const SUN_POINTING_AXIS_ID ATTITUDE_CONTROL_PARAMETERS_sun_pointing_axis_id = SUN_POINTING_AXIS_ID_Z;

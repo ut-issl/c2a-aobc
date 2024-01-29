@@ -13,6 +13,7 @@
 #include <src_user/Library/TimeSystem/gps_time.h>
 #include <src_user/Applications/DriverInstances/di_rw0003.h>
 #include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
 /**
  * @enum   AOCS_MANAGER_ERROR
@@ -24,20 +25,6 @@ typedef enum
   AOCS_MANAGER_ERROR_OK = 0,
   AOCS_MANAGER_ERROR_NG = 1,
 } AOCS_MANAGER_ERROR;
-
-/**
- * @enum   AOCS_MANAGER_MTQ_OUTPUT_STATE
- * @brief  MTQの出力状態
- * @note   MTQ_OUTPUT_STATE_ONまたなMTQ_OUTPUT_DEMAGNITIZINGのとき，MTQ出力と地磁場が干渉するため，磁気センサの値が正しくなくなる
- * @note   制御アプリがMTQをONにしているかどうかを決定アプリに伝えるために使う
- * @note   uint8_tを想定
- */
-typedef enum
-{
-  AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF           = 0, //!< MTQ出力オフ
-  AOCS_MANAGER_MTQ_OUTPUT_STATE_ON            = 1, //!< MTQ出力オン
-  AOCS_MANAGER_MTQ_OUTPUT_STATE_DEMAGNITIZING = 2  //!< MTQ消磁中
-} AOCS_MANAGER_MTQ_OUTPUT_STATE;
 
 /**
  * @enum   AOCS_MANAGER_SUN_VISIBILITY
@@ -88,17 +75,19 @@ typedef enum
 } AOCS_MANAGER_CONSTANT_TORQUE_PERMISSION;
 
 /**
- * @enum   AOCS_MANAGER_MAG_EXCLUSIVE_STATE
- * @brief  排他制御タイミング管理のOFF/ON状態
- * @note   uint8_tを想定
- */
+ * @enum  APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE
+ * @brief 排他制御の現在の状態
+ * @note  状態は観測 --> 制御 --> スタンバイ --> 観測 --> ... と切り替わる
+ *        排他制御が無効であるときは、常に制御状態となる
+ *        App間の結合パスを単純化するため、構造体変数はAOCS managerに持たせる
+ * @note  uint8_tを想定
+*/
 typedef enum
 {
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE_IDLE   = 0, //!< 排他制御タイミング管理を停止
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE_ACTIVE = 1, //!< 排他制御タイミング管理を開始
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE_MAX
-} AOCS_MANAGER_MAG_EXCLUSIVE_STATE;
-
+  APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE = 0, //!< 磁気センサで磁場観測する
+  APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL,     //!< MTQ出力によって姿勢制御する
+  APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_STANDBY      //!< 磁気センサの読みからMTQ出力由来のノイズの影響が抜けるのを待つ
+} APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE;
 
 #define AOCS_MANAGER_NUM_OF_MTQ (MTQ_SEIREN_IDX_MAX) //!< MTQ搭載個数
 #define AOCS_MANAGER_NUM_OF_RW  (RW0003_IDX_MAX)     //!< RW搭載個数
@@ -150,8 +139,8 @@ typedef struct
   // MTQ情報
   float mtq_magnetic_moment_direction_matrix[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM]; //!< MTQの磁気モーメント方向をまとめたもの
   float mtq_distribution_matrix[PHYSICAL_CONST_THREE_DIM][AOCS_MANAGER_NUM_OF_MTQ];              //!< MTQの磁気モーメントの分配行列
-  AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state;                                                //!< MTQ出力状態
-  AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state;                                          //!< MTQ/磁気センサ排他制御タイミング管理状態
+  // 磁気センサ <--> MTQ排他制御
+  APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_timer_state; //!< 磁気センサとMTQとの排他制御タイマーの状態
   // RW情報
   float rw_angular_velocity_rad_s[AOCS_MANAGER_NUM_OF_RW];                              //!< RWそれぞれの回転数(body座標系でないので注意) [rad/s]
   float rw_angular_momentum_Nms[AOCS_MANAGER_NUM_OF_RW];                                //!< RWそれぞれの角運動量(body座標系でないので注意) [Nms]
@@ -232,8 +221,9 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_mag_moment_target_body_Am2(const float mag_m
 // MTQ
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(
   const float mtq_magnetic_moment_direction_matrix[AOCS_MANAGER_NUM_OF_MTQ][PHYSICAL_CONST_THREE_DIM]);
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_output_state(const AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state);
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_mag_exclusive_state(const AOCS_MANAGER_MAG_EXCLUSIVE_STATE mag_exclusive_state);
+// 磁気センサ <--> MTQ排他制御
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(
+  const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_timer_state);
 // RW
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_angular_velocity_rad_s(const float rw_angular_velocity_rad_s[AOCS_MANAGER_NUM_OF_RW]);
 AOCS_MANAGER_ERROR AOCS_MANAGER_set_rw_rotation_direction_matrix(
@@ -298,7 +288,6 @@ CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY(const CommonCmdPacket
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_REFERENCE_TIME(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_IN_TORQUE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE(const CommonCmdPacket* packet);
 

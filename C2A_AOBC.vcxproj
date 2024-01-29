@@ -180,6 +180,7 @@
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\AttitudeDetermination\rough_three_axis_determination.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\AttitudeDetermination\stt_gyro_ekf.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\AttitudeDetermination\sun_vector_propagator.c" />
+    <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\ExclusiveControl\magnetic_exclusive_control_timer.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\HardwareDependent\SensorFilters\mpu9250_filter.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\HardwareDependent\SensorFilters\rm3100_filter.c" />
     <ClCompile Include="src\src_user\Applications\UserDefined\AOCS\HardwareDependent\SensorFilters\rw0003_filter.c" />
