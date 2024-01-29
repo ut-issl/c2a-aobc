@@ -28,7 +28,7 @@ AppInfo APP_MECT_create_app(void)
 void APP_MECT_init_(void)
 {
   magnetic_exclusive_control_timer_.previous_obc_time = TMGR_get_master_clock();
-  magnetic_exclusive_control_timer_.is_enable = APP_MECT_EXCLUSIVE_CONTROL_DISABLE;
+  magnetic_exclusive_control_timer_.is_enable = APP_MECT_EXCLUSIVE_CONTROL_ENABLE;
   magnetic_exclusive_control_timer_.state_timer_ms    = 0;
   magnetic_exclusive_control_timer_.config.observe_duration_ms = 100;
   magnetic_exclusive_control_timer_.config.control_duration_ms = 800;
