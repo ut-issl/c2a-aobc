@@ -17,7 +17,8 @@ static void APP_MECT_exec_(void);
 static void APP_MECT_update_timer_(void);
 static void APP_MECT_update_state_(void);
 
-static uint16_t APP_MECT_kAcceptableMaxTimeStep_ms = 1000; //!< これより長いステップのタイマアップデートは異常とみなす
+static const uint16_t APP_MECT_kAcceptableMaxTimeStep_ms = 1000;  //!< これより長いステップのタイマアップデートは異常とみなす
+static const uint16_t APP_MECT_kStateTimerLimit_ms       = 30000; //!< これより長いstate timerは異常とみなす
 
 AppInfo APP_MECT_create_app(void)
 {
@@ -61,6 +62,12 @@ void APP_MECT_update_timer_(void)
     magnetic_exclusive_control_timer_.state_timer_ms += (uint16_t)step_time_ms;
   }
 
+  // update stateがうまくいっておらず、state_timerが想定を超えてカウントアップしていないかどうかを監視する
+  // その場合、state_timerをリセットする
+  if (magnetic_exclusive_control_timer_.state_timer_ms > APP_MECT_kStateTimerLimit_ms)
+  {
+    magnetic_exclusive_control_timer_.state_timer_ms = 0;
+  }
   return;
 }
 
