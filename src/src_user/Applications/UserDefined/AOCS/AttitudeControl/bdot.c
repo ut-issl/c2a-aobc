@@ -152,8 +152,6 @@ CCP_CmdRet Cmd_APP_BDOT_SET_CONTROL_GAIN(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_APP_BDOT_SET_TIMING(const CommonCmdPacket* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-
   uint32_t minimum_time_derivative_step_ms = CCP_get_param_from_packet(packet, 0, uint32_t);
   bdot_.minimum_time_derivative_step_ms = minimum_time_derivative_step_ms;
 
