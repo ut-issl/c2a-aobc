@@ -76,9 +76,9 @@ void APP_MECT_update_state_(void)
   if (magnetic_exclusive_control_timer_.is_enable == APP_MECT_EXCLUSIVE_CONTROL_DISABLE)
   {
     // 排他制御が無効であるときは、磁気センサとMTQとの干渉を気にしないため、常にSTATE == CONTROLとする
-    if (aocs_manager->magnetic_exclusive_control_timer_state != APP_MECT_STATE_CONTROL)
+    if (aocs_manager->magnetic_exclusive_control_timer_state != APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL)
     {
-      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_CONTROL);
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL);
     }
     // 排他制御が無効であっても、state timerはMTQ controllerに必要なのでサイクルさせる
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.control_duration_ms)
@@ -91,21 +91,21 @@ void APP_MECT_update_state_(void)
   // 排他制御が有効である場合は、磁気センサとMTQとが干渉しないようにstateを遷移させる
   switch (aocs_manager->magnetic_exclusive_control_timer_state)
   {
-  case APP_MECT_STATE_OBSERVE:
+  case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE:
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.observe_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
-      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_CONTROL);
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL);
     }
     break;
-  case APP_MECT_STATE_CONTROL:
+  case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL:
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.control_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
-      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_STANDBY);
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_STANDBY);
     }
     break;
-  case APP_MECT_STATE_STANDBY:
+  case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_STANDBY:
     if (magnetic_exclusive_control_timer_.is_config_buffered)
     {
       magnetic_exclusive_control_timer_.config = magnetic_exclusive_control_timer_.buffered_config;
@@ -115,7 +115,7 @@ void APP_MECT_update_state_(void)
     if (magnetic_exclusive_control_timer_.state_timer_ms >= magnetic_exclusive_control_timer_.config.standby_duration_ms)
     {
       magnetic_exclusive_control_timer_.state_timer_ms = 0;
-      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_MECT_STATE_OBSERVE);
+      AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE);
     }
     break;
   default:

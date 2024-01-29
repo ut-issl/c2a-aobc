@@ -94,7 +94,7 @@ static void APP_AOCS_MANAGER_init_(void)
   }
   AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(aocs_manager_.mtq_magnetic_moment_direction_matrix);
   // 磁気センサ <--> MTQ排他制御
-  aocs_manager_.magnetic_exclusive_control_timer_state = APP_MECT_STATE_STANDBY;
+  aocs_manager_.magnetic_exclusive_control_timer_state = APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_STANDBY;
   // RW情報
   float rw_rotation_direction_matrix[AOCS_MANAGER_NUM_OF_RW][PHYSICAL_CONST_THREE_DIM];
   for (int rw_idx = 0; rw_idx < AOCS_MANAGER_NUM_OF_RW; rw_idx++)
@@ -423,7 +423,8 @@ AOCS_MANAGER_ERROR AOCS_MANAGER_set_mtq_magnetic_moment_direction_matrix(
   return AOCS_MANAGER_ERROR_OK;
 }
 
-AOCS_MANAGER_ERROR AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(const APP_MECT_STATE magnetic_exclusive_control_timer_state)
+AOCS_MANAGER_ERROR AOCS_MANAGER_set_magnetic_exclusive_control_timer_state(
+  const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_timer_state)
 {
   aocs_manager_.magnetic_exclusive_control_timer_state = magnetic_exclusive_control_timer_state;
   return AOCS_MANAGER_ERROR_OK;

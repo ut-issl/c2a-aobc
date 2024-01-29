@@ -25,21 +25,6 @@ typedef enum
 } APP_MECT_EXCLUSIVE_CONTROL;
 
 /**
- * @enum  APP_MECT_STATE
- * @brief 排他制御の現在の状態
- * @note  状態は観測 --> 制御 --> スタンバイ --> 観測 --> ... と切り替わる
- *        排他制御が無効であるときは、常に制御状態となる
- *        App間の結合パスを単純化するため、構造体変数はAOCS managerに持たせる
- * @note  uint8_tを想定
-*/
-typedef enum
-{
-  APP_MECT_STATE_OBSERVE = 0, //!< 磁気センサで磁場観測する
-  APP_MECT_STATE_CONTROL,     //!< MTQ出力によって姿勢制御する
-  APP_MECT_STATE_STANDBY      //!< 磁気センサの読みからMTQ出力由来のノイズの影響が抜けるのを待つ
-} APP_MECT_STATE;
-
-/**
  * @struct MagneticExclusiveControlTimerConfig
  * @brief  排他制御の時間設定
 */

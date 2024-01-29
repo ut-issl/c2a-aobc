@@ -12,7 +12,6 @@
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_error.h>
-#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 #include <src_user/Library/vector3.h>
 #include <src_user/Library/matrix33.h>
 #include <src_user/Library/quaternion.h>
@@ -162,7 +161,7 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
                                                const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                                const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                                                const float mag_obs_vev[PHYSICAL_CONST_THREE_DIM],
-                                               const APP_MECT_STATE magnetic_exclusive_control_state,
+                                               const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_state,
                                                const AOCS_MANAGER_SUN_VISIBILITY   sun_visibility);
 
 AppInfo APP_RTAD_create_app(void)
@@ -438,7 +437,7 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
                                                 const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                                 const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                                                 const float mag_obs_vev[PHYSICAL_CONST_THREE_DIM],
-                                                const APP_MECT_STATE magnetic_exclusive_control_state,
+                                                const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_state,
                                                 const AOCS_MANAGER_SUN_VISIBILITY   sun_visibility)
 {
   float ref_outer_product[PHYSICAL_CONST_THREE_DIM]; //!< 基準となる座標系における太陽方向単位ベクトルと磁場単位ベクトルとの外積
@@ -446,7 +445,7 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
   VECTOR3_outer_product(ref_outer_product, sun_ref_vec, mag_ref_vec);
   VECTOR3_outer_product(obs_outer_product, sun_obs_vec, mag_obs_vev);
 
-  if (magnetic_exclusive_control_state != APP_MECT_STATE_OBSERVE)
+  if (magnetic_exclusive_control_state != APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE)
   {
     return AOCS_ERROR_OTHERS;
   }

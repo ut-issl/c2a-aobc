@@ -15,7 +15,6 @@
 #include <src_user/Library/math_constants.h>
 #include <src_user/Library/ControlUtility/cross_product_control.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
-#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
 static MtqSeirenController        mtq_seiren_controller_;
 const  MtqSeirenController* const mtq_seiren_controller = &mtq_seiren_controller_;
@@ -77,14 +76,14 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
 
   switch (aocs_manager->magnetic_exclusive_control_timer_state)
   {
-  case APP_MECT_STATE_OBSERVE:
+  case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE:
     // 次にMTQを出力するとき、何秒間電流を流すかを決める
     APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_();
     // 次回の出力を決めたら、トルク積分値をリセットする
     APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_();
     break;
-  case APP_MECT_STATE_CONTROL:
-    // APP_MECT_STATE_OBSERVEのケースで計算していた出力時間の分だけMTQを出力する
+  case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL:
+    // APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVEのケースで計算していた出力時間の分だけMTQを出力する
     for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
     {
       if (magnetic_exclusive_control_timer->state_timer_ms <= mtq_seiren_controller_.mtq_output_duration_ms[idx])
@@ -97,7 +96,7 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
       }
     }
     break;
-  case APP_MECT_STATE_STANDBY:
+  case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_STANDBY:
     // 制御期間が終了したら、すべてのMTQの出力をOFFにする
     for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
     {
