@@ -31,7 +31,6 @@ typedef enum
   BC_TL_ROUGH_THREE_AXIS = 14,
   BC_TL_ROUGH_THREE_AXIS_RW = 15,
   BC_TL_FINE_THREE_AXIS = 16,
-  BC_TL_GPSR_RANGE_OBSERVE = 17,
 
   // Block Cmds for Composition (App Rotator, Combiner)
   // ./src_user/Settings/Modes/TaskLists/Elements/ で定義

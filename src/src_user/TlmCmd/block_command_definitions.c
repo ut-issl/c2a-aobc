@@ -19,7 +19,6 @@
 #include <src_user/Settings/Modes/TaskLists/tl_rough_three_axis.h>
 #include <src_user/Settings/Modes/TaskLists/tl_rough_three_axis_rw.h>
 #include <src_user/Settings/Modes/TaskLists/tl_fine_three_axis.h>
-#include <src_user/Settings/Modes/TaskLists/tl_gpsr_range_observe.h>
 
 #include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_cdh_update.h>
 #include <src_user/Settings/Modes/TaskLists/Elements/tl_elem_drivers_update.h>
@@ -63,7 +62,6 @@ void BC_load_defaults(void)
   BCL_load_bc(BC_TL_ROUGH_THREE_AXIS,     BCL_load_rough_three_axis_mode);
   BCL_load_bc(BC_TL_ROUGH_THREE_AXIS_RW,  BCL_load_rough_three_axis_rw_mode);
   BCL_load_bc(BC_TL_FINE_THREE_AXIS,      BCL_load_fine_three_axis_mode);
-  BCL_load_bc(BC_TL_GPSR_RANGE_OBSERVE,   BCL_load_gpsr_range_observe_mode);
 
   // Block Cmds for Application Rotation / Combination
   // === CDH ===

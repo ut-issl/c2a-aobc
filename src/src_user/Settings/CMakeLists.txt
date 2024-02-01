@@ -14,7 +14,7 @@ set(C2A_SRCS
   Modes/TaskLists/tl_rough_three_axis.c
   Modes/TaskLists/tl_rough_three_axis_rw.c
   Modes/TaskLists/tl_fine_three_axis.c
-  Modes/TaskLists/tl_gpsr_range_observe.c
+  
   Modes/TaskLists/Elements/tl_elem_debug_display.c
   Modes/TaskLists/Elements/tl_elem_drivers_update.c
   Modes/TaskLists/Elements/tl_elem_gs_related_process.c
