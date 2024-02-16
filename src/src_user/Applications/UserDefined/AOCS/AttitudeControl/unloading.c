@@ -68,12 +68,6 @@ static void APP_UNLOADING_init_(void)
 
 void APP_UNLOADING_exec_(void)
 {
-  // アンローディング処理を実施しないならば，MTQ/磁気センサ排他制御はIDLEにしておく
-  if (unloading_.exec_is_enable == APP_UNLOADING_EXEC_DISABLE)
-  {
-    AOCS_MANAGER_set_mag_exclusive_state(AOCS_MANAGER_MAG_EXCLUSIVE_STATE_IDLE);
-  }
-
   APP_UNLOADING_update_unloading_state_();
   APP_UNLOADING_calc_output_torque();
 
@@ -83,15 +77,6 @@ void APP_UNLOADING_exec_(void)
   {
     AOCS_MANAGER_set_external_torque_target_body_Nm(unloading_.output_torque_body_Nm);
     APP_MTQ_SEIREN_CONTROLLER_set_cross_product_control_output(unloading_.cross_product_cntrl);
-
-    if (unloading_.number_of_unloading_wheels > 0)
-    {
-      AOCS_MANAGER_set_mag_exclusive_state(AOCS_MANAGER_MAG_EXCLUSIVE_STATE_ACTIVE);
-    }
-    else
-    {
-      AOCS_MANAGER_set_mag_exclusive_state(AOCS_MANAGER_MAG_EXCLUSIVE_STATE_IDLE);
-    }
   }
 }
 

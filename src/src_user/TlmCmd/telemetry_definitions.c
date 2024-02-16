@@ -1859,12 +1859,12 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_COMPO_(uint8_t* packet, uint16_t* len, uint16
   TF_copy_double(&packet[179], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[0]));
   TF_copy_double(&packet[187], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[1]));
   TF_copy_double(&packet[195], (double)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.vel_antenna_ecef_m_s[2]));
-  TF_copy_i8(&packet[203], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_X]->info.pwm_signed_duty_percent);
-  TF_copy_i8(&packet[204], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Y]->info.pwm_signed_duty_percent);
-  TF_copy_i8(&packet[205], (int8_t)mtq_seiren_driver[MTQ_SEIREN_IDX_Z]->info.pwm_signed_duty_percent);
-  TF_copy_float(&packet[206], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
-  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
-  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_float(&packet[203], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.speed_rad_s));
+  TF_copy_float(&packet[207], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.speed_rad_s));
+  TF_copy_float(&packet[211], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.speed_rad_s));
+  TF_copy_i8(&packet[215], (int8_t)(mtq_seiren_controller->mtq_output_duty[MTQ_SEIREN_IDX_X]));
+  TF_copy_i8(&packet[216], (int8_t)(mtq_seiren_controller->mtq_output_duty[MTQ_SEIREN_IDX_Y]));
+  TF_copy_i8(&packet[217], (int8_t)(mtq_seiren_controller->mtq_output_duty[MTQ_SEIREN_IDX_Z]));
 #endif
 
   *len = 218;
@@ -1929,7 +1929,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (191 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (199 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.accel_compo_m_s2[0]));
@@ -1978,10 +1978,15 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint
   TF_copy_float(&packet[175], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[1]));
   TF_copy_float(&packet[179], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.vector_part[2]));
   TF_copy_float(&packet[183], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.solution.quaternion_i2c.scalar_part));
-  TF_copy_u32(&packet[187], (uint32_t)(mtq_seiren_controller->mtq_demagnetization_required_time_ms));
+  TF_copy_u16(&packet[187], (uint16_t)(magnetic_exclusive_control_timer->config.observe_duration_ms));
+  TF_copy_u16(&packet[189], (uint16_t)(magnetic_exclusive_control_timer->config.control_duration_ms));
+  TF_copy_u16(&packet[191], (uint16_t)(magnetic_exclusive_control_timer->config.standby_duration_ms));
+  TF_copy_u16(&packet[193], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
+  TF_copy_u16(&packet[195], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
+  TF_copy_u16(&packet[197], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
 #endif
 
-  *len = 191;
+  *len = 199;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -2114,76 +2119,75 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_FRAME_TRANSFORMATION_(uint8_t* packet, uint16_t*
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (237 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (233 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(bdot->control_gain[0]));
   TF_copy_float(&packet[30], (float)(bdot->control_gain[1]));
   TF_copy_float(&packet[34], (float)(bdot->control_gain[2]));
   TF_copy_u32(&packet[38], (uint32_t)(bdot->minimum_time_derivative_step_ms));
-  TF_copy_u32(&packet[42], (uint32_t)(bdot->mtq_output_time_length_ms));
-  TF_copy_u8(&packet[46], (uint8_t)(magnetometer_selector->state));
-  TF_copy_u8(&packet[47], (uint8_t)(magnetometer_selector->auto_flag));
-  TF_copy_u8(&packet[48], (uint8_t)(gyro_selector->state));
-  TF_copy_u8(&packet[49], (uint8_t)(gyro_selector->auto_flag));
-  TF_copy_float(&packet[50], (float)(sun_sensor_selector->sun_intensity_upper_threshold_percent));
-  TF_copy_float(&packet[54], (float)(sun_sensor_selector->sun_intensity_lower_threshold_percent));
-  TF_copy_u8(&packet[58], (uint8_t)(rough_three_axis_determination->method));
-  TF_copy_u8(&packet[59], (uint8_t)(rough_three_axis_determination->sun_invisible_propagation));
-  TF_copy_float(&packet[60], (float)(rough_three_axis_determination->q_method_info.sun_vec_weight));
-  TF_copy_float(&packet[64], (float)(rough_three_axis_determination->q_method_info.mag_vec_weight));
-  TF_copy_u8(&packet[68], (uint8_t)(fine_three_axis_determination->method));
-  TF_copy_float(&packet[69], (float)(aocs_manager->ang_vel_error_body_rad_s[0]));
-  TF_copy_float(&packet[73], (float)(aocs_manager->ang_vel_error_body_rad_s[1]));
-  TF_copy_float(&packet[77], (float)(aocs_manager->ang_vel_error_body_rad_s[2]));
-  TF_copy_float(&packet[81], (float)(aocs_manager->quaternion_error_b2t.vector_part[0]));
-  TF_copy_float(&packet[85], (float)(aocs_manager->quaternion_error_b2t.vector_part[1]));
-  TF_copy_float(&packet[89], (float)(aocs_manager->quaternion_error_b2t.vector_part[2]));
-  TF_copy_float(&packet[93], (float)(aocs_manager->quaternion_error_b2t.scalar_part));
-  TF_copy_float(&packet[97], (float)(aocs_manager->sun_vec_error_rad));
-  TF_copy_float(&packet[101], (float)(unloading->control_gain));
-  TF_copy_u8(&packet[105], (uint8_t)(unloading->exec_is_enable));
-  TF_copy_float(&packet[106], (float)(unloading->angular_velocity_upper_threshold_rad_s[0])	);
-  TF_copy_float(&packet[110], (float)(unloading->angular_velocity_target_rad_s[0]));
-  TF_copy_float(&packet[114], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
-  TF_copy_float(&packet[118], (float)(unloading->angular_velocity_upper_threshold_rad_s[1])	);
-  TF_copy_float(&packet[122], (float)(unloading->angular_velocity_target_rad_s[1]));
-  TF_copy_float(&packet[126], (float)(unloading->angular_velocity_lower_threshold_rad_s[1]));
-  TF_copy_float(&packet[130], (float)(unloading->angular_velocity_upper_threshold_rad_s[2])	);
-  TF_copy_float(&packet[134], (float)(unloading->angular_velocity_target_rad_s[2]));
-  TF_copy_float(&packet[138], (float)(unloading->angular_velocity_lower_threshold_rad_s[2]));
-  TF_copy_u8(&packet[142], (uint8_t)(target_attitude_calculator->mode));
-  TF_copy_u8(&packet[143], (uint8_t)(target_attitude_calculator->is_enabled));
-  TF_copy_float(&packet[144], (float)(target_attitude_calculator->quaternion_target_i2t.vector_part[0]));
-  TF_copy_float(&packet[148], (float)(target_attitude_calculator->quaternion_target_i2t.vector_part[1]));
-  TF_copy_float(&packet[152], (float)(target_attitude_calculator->quaternion_target_i2t.vector_part[2]));
-  TF_copy_float(&packet[156], (float)(target_attitude_calculator->quaternion_target_i2t.scalar_part));
-  TF_copy_float(&packet[160], (float)(target_attitude_calculator->ang_vel_target_body_rad_s[0]));
-  TF_copy_float(&packet[164], (float)(target_attitude_calculator->ang_vel_target_body_rad_s[1]));
-  TF_copy_float(&packet[168], (float)(target_attitude_calculator->ang_vel_target_body_rad_s[2]));
-  TF_copy_u8(&packet[172], (uint8_t)(target_attitude_from_orbit->main_target_direction));
-  TF_copy_u8(&packet[173], (uint8_t)(target_attitude_from_orbit->sub_target_direction));
-  TF_copy_float(&packet[174], (float)(target_attitude_from_orbit->vec_to_main_target_body[0]));
-  TF_copy_float(&packet[178], (float)(target_attitude_from_orbit->vec_to_main_target_body[1]));
-  TF_copy_float(&packet[182], (float)(target_attitude_from_orbit->vec_to_main_target_body[2]));
-  TF_copy_float(&packet[186], (float)(target_attitude_from_orbit->vec_to_sub_target_body[0]));
-  TF_copy_float(&packet[190], (float)(target_attitude_from_orbit->vec_to_sub_target_body[1]));
-  TF_copy_float(&packet[194], (float)(target_attitude_from_orbit->vec_to_sub_target_body[2]));
-  TF_copy_float(&packet[198], (float)(target_attitude_from_orbit->target_lla_rad_m[0]));
-  TF_copy_float(&packet[202], (float)(target_attitude_from_orbit->target_lla_rad_m[1]));
-  TF_copy_float(&packet[206], (float)(target_attitude_from_orbit->target_lla_rad_m[2]));
-  TF_copy_u8(&packet[210], (uint8_t)(target_attitude_from_orbit->offset_angle_axis));
-  TF_copy_float(&packet[211], (float)(target_attitude_from_orbit->offset_angle_rad));
-  TF_copy_u8(&packet[215], (uint8_t)(quaternion_interpolator->current_target_num));
-  TF_copy_u8(&packet[216], (uint8_t)(quaternion_interpolator->index));
-  TF_copy_u32(&packet[217], (uint32_t)(quaternion_interpolator->previous_attitude_changed_ti));
-  TF_copy_float(&packet[221], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[0]));
-  TF_copy_float(&packet[225], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[1]));
-  TF_copy_float(&packet[229], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[2]));
-  TF_copy_float(&packet[233], (float)(quaternion_interpolator->previous_quaternion_target_i2t.scalar_part));
+  TF_copy_u8(&packet[42], (uint8_t)(magnetometer_selector->state));
+  TF_copy_u8(&packet[43], (uint8_t)(magnetometer_selector->auto_flag));
+  TF_copy_u8(&packet[44], (uint8_t)(gyro_selector->state));
+  TF_copy_u8(&packet[45], (uint8_t)(gyro_selector->auto_flag));
+  TF_copy_float(&packet[46], (float)(sun_sensor_selector->sun_intensity_upper_threshold_percent));
+  TF_copy_float(&packet[50], (float)(sun_sensor_selector->sun_intensity_lower_threshold_percent));
+  TF_copy_u8(&packet[54], (uint8_t)(rough_three_axis_determination->method));
+  TF_copy_u8(&packet[55], (uint8_t)(rough_three_axis_determination->sun_invisible_propagation));
+  TF_copy_float(&packet[56], (float)(rough_three_axis_determination->q_method_info.sun_vec_weight));
+  TF_copy_float(&packet[60], (float)(rough_three_axis_determination->q_method_info.mag_vec_weight));
+  TF_copy_u8(&packet[64], (uint8_t)(fine_three_axis_determination->method));
+  TF_copy_float(&packet[65], (float)(aocs_manager->ang_vel_error_body_rad_s[0]));
+  TF_copy_float(&packet[69], (float)(aocs_manager->ang_vel_error_body_rad_s[1]));
+  TF_copy_float(&packet[73], (float)(aocs_manager->ang_vel_error_body_rad_s[2]));
+  TF_copy_float(&packet[77], (float)(aocs_manager->quaternion_error_b2t.vector_part[0]));
+  TF_copy_float(&packet[81], (float)(aocs_manager->quaternion_error_b2t.vector_part[1]));
+  TF_copy_float(&packet[85], (float)(aocs_manager->quaternion_error_b2t.vector_part[2]));
+  TF_copy_float(&packet[89], (float)(aocs_manager->quaternion_error_b2t.scalar_part));
+  TF_copy_float(&packet[93], (float)(aocs_manager->sun_vec_error_rad));
+  TF_copy_float(&packet[97], (float)(unloading->control_gain));
+  TF_copy_u8(&packet[101], (uint8_t)(unloading->exec_is_enable));
+  TF_copy_float(&packet[102], (float)(unloading->angular_velocity_upper_threshold_rad_s[0]));
+  TF_copy_float(&packet[106], (float)(unloading->angular_velocity_target_rad_s[0]));
+  TF_copy_float(&packet[110], (float)(unloading->angular_velocity_lower_threshold_rad_s[0]));
+  TF_copy_float(&packet[114], (float)(unloading->angular_velocity_upper_threshold_rad_s[1]));
+  TF_copy_float(&packet[118], (float)(unloading->angular_velocity_target_rad_s[1]));
+  TF_copy_float(&packet[122], (float)(unloading->angular_velocity_lower_threshold_rad_s[1]));
+  TF_copy_float(&packet[126], (float)(unloading->angular_velocity_upper_threshold_rad_s[2]));
+  TF_copy_float(&packet[130], (float)(unloading->angular_velocity_target_rad_s[2]));
+  TF_copy_float(&packet[134], (float)(unloading->angular_velocity_lower_threshold_rad_s[2]));
+  TF_copy_u8(&packet[138], (uint8_t)(target_attitude_calculator->mode));
+  TF_copy_u8(&packet[139], (uint8_t)(target_attitude_calculator->is_enabled));
+  TF_copy_float(&packet[140], (float)(target_attitude_calculator->quaternion_target_i2t.vector_part[0]));
+  TF_copy_float(&packet[144], (float)(target_attitude_calculator->quaternion_target_i2t.vector_part[1]));
+  TF_copy_float(&packet[148], (float)(target_attitude_calculator->quaternion_target_i2t.vector_part[2]));
+  TF_copy_float(&packet[152], (float)(target_attitude_calculator->quaternion_target_i2t.scalar_part));
+  TF_copy_float(&packet[156], (float)(target_attitude_calculator->ang_vel_target_body_rad_s[0]));
+  TF_copy_float(&packet[160], (float)(target_attitude_calculator->ang_vel_target_body_rad_s[1]));
+  TF_copy_float(&packet[164], (float)(target_attitude_calculator->ang_vel_target_body_rad_s[2]));
+  TF_copy_u8(&packet[168], (uint8_t)(target_attitude_from_orbit->main_target_direction));
+  TF_copy_u8(&packet[169], (uint8_t)(target_attitude_from_orbit->sub_target_direction));
+  TF_copy_float(&packet[170], (float)(target_attitude_from_orbit->vec_to_main_target_body[0]));
+  TF_copy_float(&packet[174], (float)(target_attitude_from_orbit->vec_to_main_target_body[1]));
+  TF_copy_float(&packet[178], (float)(target_attitude_from_orbit->vec_to_main_target_body[2]));
+  TF_copy_float(&packet[182], (float)(target_attitude_from_orbit->vec_to_sub_target_body[0]));
+  TF_copy_float(&packet[186], (float)(target_attitude_from_orbit->vec_to_sub_target_body[1]));
+  TF_copy_float(&packet[190], (float)(target_attitude_from_orbit->vec_to_sub_target_body[2]));
+  TF_copy_float(&packet[194], (float)(target_attitude_from_orbit->target_lla_rad_m[0]));
+  TF_copy_float(&packet[198], (float)(target_attitude_from_orbit->target_lla_rad_m[1]));
+  TF_copy_float(&packet[202], (float)(target_attitude_from_orbit->target_lla_rad_m[2]));
+  TF_copy_u8(&packet[206], (uint8_t)(target_attitude_from_orbit->offset_angle_axis));
+  TF_copy_float(&packet[207], (float)(target_attitude_from_orbit->offset_angle_rad));
+  TF_copy_u8(&packet[211], (uint8_t)(quaternion_interpolator->current_target_num));
+  TF_copy_u8(&packet[212], (uint8_t)(quaternion_interpolator->index));
+  TF_copy_u32(&packet[213], (uint32_t)(quaternion_interpolator->previous_attitude_changed_ti));
+  TF_copy_float(&packet[217], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[0]));
+  TF_copy_float(&packet[221], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[1]));
+  TF_copy_float(&packet[225], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[2]));
+  TF_copy_float(&packet[229], (float)(quaternion_interpolator->previous_quaternion_target_i2t.scalar_part));
 #endif
 
-  *len = 237;
+  *len = 233;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -2426,7 +2430,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_INTERPOLATION_TARGET2_(uint8_t* packet, uint16_t
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_NON_VOLATILE_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (123 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (145 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], (uint8_t)(non_volatile_memory_manager->error_status));
@@ -2496,9 +2500,24 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_NON_VOLATILE_(uint8_t* packet, uint16_t* len, ui
   TF_copy_u32(&packet[117], (uint32_t)(fm25v10_driver[FM25V10_IDX_4]->info.last_start_address));
   TF_copy_u8(&packet[121], (uint8_t)(fm25v10_driver[FM25V10_IDX_4]->info.last_read_data_byte));
   TF_copy_u8(&packet[122], (uint8_t)(fm25v10_driver[FM25V10_IDX_4]->info.last_write_data_byte));
+  TF_copy_u8(&packet[123], nvm_bc->is_active);
+  TF_copy_u16(&packet[124], (uint16_t)nvm_bc->bc_id_to_copy);
+  TF_copy_u8(&packet[126], nvm_bc->bc_num_to_copy);
+  TF_copy_u32(&packet[127], nvm_bc->address_for_ready_flags);
+  TF_copy_u32(&packet[131], nvm_bc->address_for_bc);
+  TF_copy_u8(&packet[135], (uint8_t)((nvm_bc->is_ready_to_restore[0] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[1] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[2] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[3] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[4] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[5] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[6] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[7] & 0x01) ));
+  TF_copy_u8(&packet[136], (uint8_t)((nvm_bc->is_ready_to_restore[8] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[9] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[10] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[11] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[12] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[13] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[14] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[15] & 0x01) ));
+  TF_copy_u8(&packet[137], (uint8_t)((nvm_bc->is_ready_to_restore[16] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[17] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[18] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[19] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[20] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[21] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[22] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[23] & 0x01) ));
+  TF_copy_u8(&packet[138], (uint8_t)((nvm_bc->is_ready_to_restore[24] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[25] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[26] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[27] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[28] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[29] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[30] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[31] & 0x01) ));
+  TF_copy_u8(&packet[139], (uint8_t)((nvm_bc->is_ready_to_restore[32] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[33] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[34] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[35] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[36] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[37] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[38] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[39] & 0x01) ));
+  TF_copy_u8(&packet[140], (uint8_t)((nvm_bc->is_ready_to_restore[40] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[41] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[42] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[43] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[44] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[45] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[46] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[47] & 0x01) ));
+  TF_copy_u8(&packet[141], (uint8_t)((nvm_bc->is_ready_to_restore[48] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[49] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[50] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[51] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[52] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[53] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[54] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[55] & 0x01) ));
+  TF_copy_u8(&packet[142], (uint8_t)((nvm_bc->is_ready_to_restore[56] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[57] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[58] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[59] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[60] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[61] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[62] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[63] & 0x01) ));
+  TF_copy_u8(&packet[143], (uint8_t)((nvm_bc->is_ready_to_restore[64] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[65] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[66] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[67] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[68] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[69] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[70] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[71] & 0x01) ));
+  TF_copy_u8(&packet[144], (uint8_t)((nvm_bc->is_ready_to_restore[72] << 7 & 0x80) | (nvm_bc->is_ready_to_restore[73] << 6 & 0x40) | (nvm_bc->is_ready_to_restore[74] << 5 & 0x20) | (nvm_bc->is_ready_to_restore[75] << 4 & 0x10) | (nvm_bc->is_ready_to_restore[76] << 3 & 0x08) | (nvm_bc->is_ready_to_restore[77] << 2 & 0x04) | (nvm_bc->is_ready_to_restore[78] << 1 & 0x02) | (nvm_bc->is_ready_to_restore[79] & 0x01) ));
 #endif
 
-  *len = 123;
+  *len = 145;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -2546,7 +2565,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_ORBIT_(uint8_t* packet, uint16_t* len, uint16_t 
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_AOCS_MANAGER_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (212 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (211 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(aocs_manager->mass_sc_kg));
@@ -2572,33 +2591,32 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOCS_MANAGER_(uint8_t* packet, uint16_t* len, ui
   TF_copy_float(&packet[110], (float)(aocs_manager->external_torque_max_body_Nm[0]));
   TF_copy_float(&packet[114], (float)(aocs_manager->external_torque_max_body_Nm[1]));
   TF_copy_float(&packet[118], (float)(aocs_manager->external_torque_max_body_Nm[2]));
-  TF_copy_u8(&packet[122], (uint8_t)(aocs_manager->mag_exclusive_state));
-  TF_copy_float(&packet[123], (float)(aocs_manager->rw_rotation_direction_matrix[0][0]));
-  TF_copy_float(&packet[127], (float)(aocs_manager->rw_rotation_direction_matrix[0][1]));
-  TF_copy_float(&packet[131], (float)(aocs_manager->rw_rotation_direction_matrix[0][2]));
-  TF_copy_float(&packet[135], (float)(aocs_manager->rw_rotation_direction_matrix[1][0]));
-  TF_copy_float(&packet[139], (float)(aocs_manager->rw_rotation_direction_matrix[1][1]));
-  TF_copy_float(&packet[143], (float)(aocs_manager->rw_rotation_direction_matrix[1][2]));
-  TF_copy_float(&packet[147], (float)(aocs_manager->rw_rotation_direction_matrix[2][0]));
-  TF_copy_float(&packet[151], (float)(aocs_manager->rw_rotation_direction_matrix[2][1]));
-  TF_copy_float(&packet[155], (float)(aocs_manager->rw_rotation_direction_matrix[2][2]));
-  TF_copy_float(&packet[159], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][0]));
-  TF_copy_float(&packet[163], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][1]));
-  TF_copy_float(&packet[167], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][2]));
-  TF_copy_float(&packet[171], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][0]));
-  TF_copy_float(&packet[175], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][1]));
-  TF_copy_float(&packet[179], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][2]));
-  TF_copy_float(&packet[183], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][0]));
-  TF_copy_float(&packet[187], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][1]));
-  TF_copy_float(&packet[191], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][2]));
-  TF_copy_u8(&packet[195], (uint8_t)(aocs_manager->constant_torque_permission));
-  TF_copy_float(&packet[196], (float)(aocs_manager->constant_torque_body_Nm[0]));
-  TF_copy_float(&packet[200], (float)(aocs_manager->constant_torque_body_Nm[1]));
-  TF_copy_float(&packet[204], (float)(aocs_manager->constant_torque_body_Nm[2]));
-  TF_copy_float(&packet[208], (float)(time_space_calculator->offset_sec));
+  TF_copy_float(&packet[122], (float)(aocs_manager->rw_rotation_direction_matrix[0][0]));
+  TF_copy_float(&packet[126], (float)(aocs_manager->rw_rotation_direction_matrix[0][1]));
+  TF_copy_float(&packet[130], (float)(aocs_manager->rw_rotation_direction_matrix[0][2]));
+  TF_copy_float(&packet[134], (float)(aocs_manager->rw_rotation_direction_matrix[1][0]));
+  TF_copy_float(&packet[138], (float)(aocs_manager->rw_rotation_direction_matrix[1][1]));
+  TF_copy_float(&packet[142], (float)(aocs_manager->rw_rotation_direction_matrix[1][2]));
+  TF_copy_float(&packet[146], (float)(aocs_manager->rw_rotation_direction_matrix[2][0]));
+  TF_copy_float(&packet[150], (float)(aocs_manager->rw_rotation_direction_matrix[2][1]));
+  TF_copy_float(&packet[154], (float)(aocs_manager->rw_rotation_direction_matrix[2][2]));
+  TF_copy_float(&packet[158], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][0]));
+  TF_copy_float(&packet[162], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][1]));
+  TF_copy_float(&packet[166], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[0][2]));
+  TF_copy_float(&packet[170], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][0]));
+  TF_copy_float(&packet[174], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][1]));
+  TF_copy_float(&packet[178], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[1][2]));
+  TF_copy_float(&packet[182], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][0]));
+  TF_copy_float(&packet[186], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][1]));
+  TF_copy_float(&packet[190], (float)(aocs_manager->mtq_magnetic_moment_direction_matrix[2][2]));
+  TF_copy_u8(&packet[194], (uint8_t)(aocs_manager->constant_torque_permission));
+  TF_copy_float(&packet[195], (float)(aocs_manager->constant_torque_body_Nm[0]));
+  TF_copy_float(&packet[199], (float)(aocs_manager->constant_torque_body_Nm[1]));
+  TF_copy_float(&packet[203], (float)(aocs_manager->constant_torque_body_Nm[2]));
+  TF_copy_float(&packet[207], (float)(time_space_calculator->offset_sec));
 #endif
 
-  *len = 212;
+  *len = 211;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -3055,7 +3073,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_APP_TIME_2_(uint8_t* packet, uint16_t* len, uint
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (192 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (208 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.log_level[0]));
@@ -3089,118 +3107,137 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET1_(uint8_t* packet, uint16_t* len, ui
   TF_copy_float(&packet[87], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.mounting.vector_part[1]));
   TF_copy_float(&packet[91], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.mounting.vector_part[2]));
   TF_copy_float(&packet[95], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.mounting.scalar_part));
-  TF_copy_u8(&packet[99], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.mode));
-  TF_copy_float(&packet[100], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.focal_length_mm));
-  TF_copy_float(&packet[104], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.exposure_s));
-  TF_copy_float(&packet[108], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.interval_s));
-  TF_copy_i16(&packet[112], (int16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.offset_pix));
-  TF_copy_u8(&packet[114], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.pga_gain));
-  TF_copy_u8(&packet[115], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.adc_gain));
-  TF_copy_u8(&packet[116], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[0]));
-  TF_copy_u8(&packet[117], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[1]));
-  TF_copy_u8(&packet[118], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[2]));
-  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[3]));
-  TF_copy_u8(&packet[120], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[4]));
-  TF_copy_u8(&packet[121], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[5]));
-  TF_copy_u8(&packet[122], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[6]));
-  TF_copy_u8(&packet[123], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[7]));
-  TF_copy_u8(&packet[124], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[8]));
-  TF_copy_u8(&packet[125], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[9]));
-  TF_copy_u8(&packet[126], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[10]));
-  TF_copy_u8(&packet[127], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[11]));
-  TF_copy_u8(&packet[128], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[12]));
-  TF_copy_u8(&packet[129], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[13]));
-  TF_copy_u8(&packet[130], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[14]));
-  TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[15]));
-  TF_copy_u32(&packet[132], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.freq));
-  TF_copy_u8(&packet[136], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.mode));
-  TF_copy_u8(&packet[137], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.store));
-  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.signal_threshold_pix));
-  TF_copy_u16(&packet[140], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.dark_threshold_pix));
-  TF_copy_u8(&packet[142], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.background_compensation));
-  TF_copy_u8(&packet[143], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.enable_filter));
-  TF_copy_float(&packet[144], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.max_quality));
-  TF_copy_float(&packet[148], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.dark_threshold_pix));
-  TF_copy_float(&packet[152], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.min_quality));
-  TF_copy_float(&packet[156], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.max_intensity));
-  TF_copy_float(&packet[160], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.min_intensity));
-  TF_copy_float(&packet[164], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.max_magnitude));
-  TF_copy_float(&packet[168], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.gaussian_cmax_pix));
-  TF_copy_float(&packet[172], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.gaussian_cmin_pix));
-  TF_copy_float(&packet[176], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_00));
-  TF_copy_float(&packet[180], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_01));
-  TF_copy_float(&packet[184], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_10));
-  TF_copy_float(&packet[188], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_11));
+  TF_copy_u8(&packet[99], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.mode));
+  TF_copy_float(&packet[100], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[0]));
+  TF_copy_float(&packet[104], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[1]));
+  TF_copy_float(&packet[108], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[2]));
+  TF_copy_float(&packet[112], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[3]));
+  TF_copy_float(&packet[116], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[4]));
+  TF_copy_float(&packet[120], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[5]));
+  TF_copy_float(&packet[124], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[6]));
+  TF_copy_float(&packet[128], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.k0_coefficient[7]));
+  TF_copy_float(&packet[132], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[0]));
+  TF_copy_float(&packet[136], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[1]));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[2]));
+  TF_copy_float(&packet[144], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[3]));
+  TF_copy_float(&packet[148], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[4]));
+  TF_copy_float(&packet[152], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[5]));
+  TF_copy_float(&packet[156], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[6]));
+  TF_copy_float(&packet[160], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.distortion.h0_coefficient[7]));
+  TF_copy_u8(&packet[164], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.mode));
+  TF_copy_float(&packet[165], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.focal_length_mm));
+  TF_copy_float(&packet[169], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.exposure_s));
+  TF_copy_float(&packet[173], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.interval_s));
+  TF_copy_i16(&packet[177], (int16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.offset_pix));
+  TF_copy_u8(&packet[179], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.pga_gain));
+  TF_copy_u8(&packet[180], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.adc_gain));
+  TF_copy_u8(&packet[181], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[0]));
+  TF_copy_u8(&packet[182], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[1]));
+  TF_copy_u8(&packet[183], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[2]));
+  TF_copy_u8(&packet[184], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[3]));
+  TF_copy_u8(&packet[185], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[4]));
+  TF_copy_u8(&packet[186], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[5]));
+  TF_copy_u8(&packet[187], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[6]));
+  TF_copy_u8(&packet[188], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[7]));
+  TF_copy_u8(&packet[189], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[8]));
+  TF_copy_u8(&packet[190], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[9]));
+  TF_copy_u8(&packet[191], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[10]));
+  TF_copy_u8(&packet[192], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[11]));
+  TF_copy_u8(&packet[193], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[12]));
+  TF_copy_u8(&packet[194], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[13]));
+  TF_copy_u8(&packet[195], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[14]));
+  TF_copy_u8(&packet[196], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.override_register[15]));
+  TF_copy_u32(&packet[197], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.camera.freq));
+  TF_copy_u8(&packet[201], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.mode));
+  TF_copy_u8(&packet[202], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.store));
+  TF_copy_u16(&packet[203], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.signal_threshold_pix));
+  TF_copy_u16(&packet[205], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.dark_threshold_pix));
+  TF_copy_u8(&packet[207], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.image_processor.background_compensation));
 #endif
 
-  *len = 192;
+  *len = 208;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_SET2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (144 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (201 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.mode));
-  TF_copy_float(&packet[30], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.prefilter_distance_threshold_mm));
-  TF_copy_float(&packet[34], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.prefilter_angle_threshold_rad));
-  TF_copy_float(&packet[38], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.field_of_view_width_rad));
-  TF_copy_float(&packet[42], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.field_of_view_height_rad));
-  TF_copy_float(&packet[46], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.float_star_limit_mm));
-  TF_copy_float(&packet[50], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.close_star_limit_mm));
-  TF_copy_float(&packet[54], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_close_star_count));
-  TF_copy_float(&packet[58], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_fraction_close));
-  TF_copy_float(&packet[62], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_mean_sum));
-  TF_copy_float(&packet[66], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_db_star_count));
-  TF_copy_u8(&packet[70], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.max_combinations));
-  TF_copy_u8(&packet[71], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.nr_stars_stop));
-  TF_copy_float(&packet[72], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.fraction_close_stop));
-  TF_copy_float(&packet[76], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.matching.squared_distance_limit_mm));
-  TF_copy_float(&packet[80], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.matching.squared_shift_limit_mm));
-  TF_copy_float(&packet[84], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.thin_limit_deg));
-  TF_copy_float(&packet[88], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.outlier_threshold_mm));
-  TF_copy_float(&packet[92], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.outlier_threshold_quest_mm));
-  TF_copy_u8(&packet[96], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.tracker_choice));
-  TF_copy_u8(&packet[97], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.stable_count));
-  TF_copy_float(&packet[98], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.max_difference_deg));
-  TF_copy_float(&packet[102], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.min_tracker_confidence));
-  TF_copy_u8(&packet[106], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.min_matched_stars));
-  TF_copy_u8(&packet[107], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.mode));
-  TF_copy_float(&packet[108], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.l2t_min_confidence));
-  TF_copy_u8(&packet[112], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.l2t_min_matched));
-  TF_copy_float(&packet[113], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.t2l_min_confidence));
-  TF_copy_u8(&packet[117], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.t2l_min_matched));
-  TF_copy_u8(&packet[118], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[0]));
-  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[1]));
-  TF_copy_u8(&packet[120], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[2]));
-  TF_copy_u8(&packet[121], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[3]));
-  TF_copy_u8(&packet[122], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[4]));
-  TF_copy_u8(&packet[123], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[5]));
-  TF_copy_u8(&packet[124], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[6]));
-  TF_copy_u8(&packet[125], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[7]));
-  TF_copy_u8(&packet[126], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[8]));
-  TF_copy_u8(&packet[127], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[9]));
-  TF_copy_u8(&packet[128], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[10]));
-  TF_copy_u8(&packet[129], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[11]));
-  TF_copy_u8(&packet[130], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[12]));
-  TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[13]));
-  TF_copy_u8(&packet[132], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[14]));
-  TF_copy_u8(&packet[133], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[15]));
-  TF_copy_u8(&packet[134], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.mode));
-  TF_copy_u8(&packet[135], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.desired_blobs_count));
-  TF_copy_u16(&packet[136], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.min_threshold));
-  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.max_threshold));
-  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.threshold_kp));
+  TF_copy_u8(&packet[26], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.enable_filter));
+  TF_copy_float(&packet[27], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.max_quality));
+  TF_copy_float(&packet[31], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.dark_threshold_pix));
+  TF_copy_float(&packet[35], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.min_quality));
+  TF_copy_float(&packet[39], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.max_intensity));
+  TF_copy_float(&packet[43], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.min_intensity));
+  TF_copy_float(&packet[47], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.max_magnitude));
+  TF_copy_float(&packet[51], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.gaussian_cmax_pix));
+  TF_copy_float(&packet[55], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.gaussian_cmin_pix));
+  TF_copy_float(&packet[59], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_00));
+  TF_copy_float(&packet[63], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_01));
+  TF_copy_float(&packet[67], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_10));
+  TF_copy_float(&packet[71], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.centroiding.transmatrix_11));
+  TF_copy_u32(&packet[75], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.mode));
+  TF_copy_float(&packet[79], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.prefilter_distance_threshold_mm));
+  TF_copy_float(&packet[83], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.prefilter_angle_threshold_rad));
+  TF_copy_float(&packet[87], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.field_of_view_width_rad));
+  TF_copy_float(&packet[91], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.field_of_view_height_rad));
+  TF_copy_float(&packet[95], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.float_star_limit_mm));
+  TF_copy_float(&packet[99], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.close_star_limit_mm));
+  TF_copy_float(&packet[103], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_close_star_count));
+  TF_copy_float(&packet[107], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_fraction_close));
+  TF_copy_float(&packet[111], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_mean_sum));
+  TF_copy_float(&packet[115], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.rating_weight_db_star_count));
+  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.max_combinations));
+  TF_copy_u8(&packet[120], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.nr_stars_stop));
+  TF_copy_float(&packet[121], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.lisa.fraction_close_stop));
+  TF_copy_float(&packet[125], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.matching.squared_distance_limit_mm));
+  TF_copy_float(&packet[129], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.matching.squared_shift_limit_mm));
+  TF_copy_float(&packet[133], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.thin_limit_deg));
+  TF_copy_float(&packet[137], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.outlier_threshold_mm));
+  TF_copy_float(&packet[141], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.outlier_threshold_quest_mm));
+  TF_copy_u8(&packet[145], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.tracking.tracker_choice));
+  TF_copy_u8(&packet[146], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.stable_count));
+  TF_copy_float(&packet[147], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.max_difference_deg));
+  TF_copy_float(&packet[151], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.min_tracker_confidence));
+  TF_copy_u8(&packet[155], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.validation.min_matched_stars));
+  TF_copy_u8(&packet[156], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.mode));
+  TF_copy_float(&packet[157], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.l2t_min_confidence));
+  TF_copy_u8(&packet[161], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.l2t_min_matched));
+  TF_copy_float(&packet[162], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.t2l_min_confidence));
+  TF_copy_u8(&packet[166], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.algo.t2l_min_matched));
+  TF_copy_u8(&packet[167], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[0]));
+  TF_copy_u8(&packet[168], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[1]));
+  TF_copy_u8(&packet[169], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[2]));
+  TF_copy_u8(&packet[170], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[3]));
+  TF_copy_u8(&packet[171], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[4]));
+  TF_copy_u8(&packet[172], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[5]));
+  TF_copy_u8(&packet[173], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[6]));
+  TF_copy_u8(&packet[174], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[7]));
+  TF_copy_u8(&packet[175], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[8]));
+  TF_copy_u8(&packet[176], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[9]));
+  TF_copy_u8(&packet[177], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[10]));
+  TF_copy_u8(&packet[178], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[11]));
+  TF_copy_u8(&packet[179], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[12]));
+  TF_copy_u8(&packet[180], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[13]));
+  TF_copy_u8(&packet[181], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[14]));
+  TF_copy_u8(&packet[182], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.subscription[15]));
+  TF_copy_u8(&packet[183], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.mode));
+  TF_copy_u8(&packet[184], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.desired_blobs_count));
+  TF_copy_u16(&packet[185], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.min_threshold));
+  TF_copy_u16(&packet[187], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.max_threshold));
+  TF_copy_float(&packet[189], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.auto_threshold.threshold_kp));
+  TF_copy_float(&packet[193], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.fast_lisa.limit_angle));
+  TF_copy_float(&packet[197], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.set_parameter.fast_lisa.limit_distance));
 #endif
 
-  *len = 144;
+  *len = 201;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ1_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (192 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (208 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.log_level[0]));
@@ -3234,112 +3271,131 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ1_(uint8_t* packet, uint16_t* len, u
   TF_copy_float(&packet[87], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.mounting.vector_part[1]));
   TF_copy_float(&packet[91], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.mounting.vector_part[2]));
   TF_copy_float(&packet[95], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.mounting.scalar_part));
-  TF_copy_u8(&packet[99], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.mode));
-  TF_copy_float(&packet[100], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.focal_length_mm));
-  TF_copy_float(&packet[104], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.exposure_s));
-  TF_copy_float(&packet[108], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.interval_s));
-  TF_copy_i16(&packet[112], (int16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.offset_pix));
-  TF_copy_u8(&packet[114], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.pga_gain));
-  TF_copy_u8(&packet[115], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.adc_gain));
-  TF_copy_u8(&packet[116], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[0]));
-  TF_copy_u8(&packet[117], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[1]));
-  TF_copy_u8(&packet[118], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[2]));
-  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[3]));
-  TF_copy_u8(&packet[120], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[4]));
-  TF_copy_u8(&packet[121], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[5]));
-  TF_copy_u8(&packet[122], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[6]));
-  TF_copy_u8(&packet[123], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[7]));
-  TF_copy_u8(&packet[124], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[8]));
-  TF_copy_u8(&packet[125], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[9]));
-  TF_copy_u8(&packet[126], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[10]));
-  TF_copy_u8(&packet[127], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[11]));
-  TF_copy_u8(&packet[128], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[12]));
-  TF_copy_u8(&packet[129], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[13]));
-  TF_copy_u8(&packet[130], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[14]));
-  TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[15]));
-  TF_copy_u32(&packet[132], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.freq));
-  TF_copy_u8(&packet[136], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.mode));
-  TF_copy_u8(&packet[137], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.store));
-  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.signal_threshold_pix));
-  TF_copy_u16(&packet[140], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.dark_threshold_pix));
-  TF_copy_u8(&packet[142], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.background_compensation));
-  TF_copy_u8(&packet[143], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.enable_filter));
-  TF_copy_float(&packet[144], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.max_quality));
-  TF_copy_float(&packet[148], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.dark_threshold_pix));
-  TF_copy_float(&packet[152], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.min_quality));
-  TF_copy_float(&packet[156], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.max_intensity));
-  TF_copy_float(&packet[160], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.min_intensity));
-  TF_copy_float(&packet[164], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.max_magnitude));
-  TF_copy_float(&packet[168], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.gaussian_cmax_pix));
-  TF_copy_float(&packet[172], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.gaussian_cmin_pix));
-  TF_copy_float(&packet[176], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_00));
-  TF_copy_float(&packet[180], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_01));
-  TF_copy_float(&packet[184], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_10));
-  TF_copy_float(&packet[188], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_11));
+  TF_copy_u8(&packet[99], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.mode));
+  TF_copy_float(&packet[100], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[0]));
+  TF_copy_float(&packet[104], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[1]));
+  TF_copy_float(&packet[108], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[2]));
+  TF_copy_float(&packet[112], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[3]));
+  TF_copy_float(&packet[116], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[4]));
+  TF_copy_float(&packet[120], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[5]));
+  TF_copy_float(&packet[124], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[6]));
+  TF_copy_float(&packet[128], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.k0_coefficient[7]));
+  TF_copy_float(&packet[132], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[0]));
+  TF_copy_float(&packet[136], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[1]));
+  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[2]));
+  TF_copy_float(&packet[144], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[3]));
+  TF_copy_float(&packet[148], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[4]));
+  TF_copy_float(&packet[152], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[5]));
+  TF_copy_float(&packet[156], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[6]));
+  TF_copy_float(&packet[160], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.distortion.h0_coefficient[7]));
+  TF_copy_u8(&packet[164], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.mode));
+  TF_copy_float(&packet[165], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.focal_length_mm));
+  TF_copy_float(&packet[169], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.exposure_s));
+  TF_copy_float(&packet[173], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.interval_s));
+  TF_copy_i16(&packet[177], (int16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.offset_pix));
+  TF_copy_u8(&packet[179], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.pga_gain));
+  TF_copy_u8(&packet[180], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.adc_gain));
+  TF_copy_u8(&packet[181], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[0]));
+  TF_copy_u8(&packet[182], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[1]));
+  TF_copy_u8(&packet[183], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[2]));
+  TF_copy_u8(&packet[184], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[3]));
+  TF_copy_u8(&packet[185], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[4]));
+  TF_copy_u8(&packet[186], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[5]));
+  TF_copy_u8(&packet[187], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[6]));
+  TF_copy_u8(&packet[188], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[7]));
+  TF_copy_u8(&packet[189], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[8]));
+  TF_copy_u8(&packet[190], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[9]));
+  TF_copy_u8(&packet[191], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[10]));
+  TF_copy_u8(&packet[192], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[11]));
+  TF_copy_u8(&packet[193], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[12]));
+  TF_copy_u8(&packet[194], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[13]));
+  TF_copy_u8(&packet[195], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[14]));
+  TF_copy_u8(&packet[196], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.override_register[15]));
+  TF_copy_u32(&packet[197], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.camera.freq));
+  TF_copy_u8(&packet[201], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.mode));
+  TF_copy_u8(&packet[202], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.store));
+  TF_copy_u16(&packet[203], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.signal_threshold_pix));
+  TF_copy_u16(&packet[205], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.dark_threshold_pix));
+  TF_copy_u8(&packet[207], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.image_processor.background_compensation));
 #endif
 
-  *len = 192;
+  *len = 208;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_SAGITTA_READ2_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (144 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (201 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u32(&packet[26], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.mode));
-  TF_copy_float(&packet[30], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.prefilter_distance_threshold_mm));
-  TF_copy_float(&packet[34], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.prefilter_angle_threshold_rad));
-  TF_copy_float(&packet[38], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.field_of_view_width_rad));
-  TF_copy_float(&packet[42], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.field_of_view_height_rad));
-  TF_copy_float(&packet[46], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.float_star_limit_mm));
-  TF_copy_float(&packet[50], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.close_star_limit_mm));
-  TF_copy_float(&packet[54], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_close_star_count));
-  TF_copy_float(&packet[58], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_fraction_close));
-  TF_copy_float(&packet[62], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_mean_sum));
-  TF_copy_float(&packet[66], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_db_star_count));
-  TF_copy_u8(&packet[70], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.max_combinations));
-  TF_copy_u8(&packet[71], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.nr_stars_stop));
-  TF_copy_float(&packet[72], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.fraction_close_stop));
-  TF_copy_float(&packet[76], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.matching.squared_distance_limit_mm));
-  TF_copy_float(&packet[80], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.matching.squared_shift_limit_mm));
-  TF_copy_float(&packet[84], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.thin_limit_deg));
-  TF_copy_float(&packet[88], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.outlier_threshold_mm));
-  TF_copy_float(&packet[92], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.outlier_threshold_quest_mm));
-  TF_copy_u8(&packet[96], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.tracker_choice));
-  TF_copy_u8(&packet[97], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.stable_count));
-  TF_copy_float(&packet[98], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.max_difference_deg));
-  TF_copy_float(&packet[102], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.min_tracker_confidence));
-  TF_copy_u8(&packet[106], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.min_matched_stars));
-  TF_copy_u8(&packet[107], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.mode));
-  TF_copy_float(&packet[108], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.l2t_min_confidence));
-  TF_copy_u8(&packet[112], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.l2t_min_matched));
-  TF_copy_float(&packet[113], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.t2l_min_confidence));
-  TF_copy_u8(&packet[117], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.t2l_min_matched));
-  TF_copy_u8(&packet[118], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[0]));
-  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[1]));
-  TF_copy_u8(&packet[120], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[2]));
-  TF_copy_u8(&packet[121], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[3]));
-  TF_copy_u8(&packet[122], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[4]));
-  TF_copy_u8(&packet[123], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[5]));
-  TF_copy_u8(&packet[124], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[6]));
-  TF_copy_u8(&packet[125], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[7]));
-  TF_copy_u8(&packet[126], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[8]));
-  TF_copy_u8(&packet[127], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[9]));
-  TF_copy_u8(&packet[128], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[10]));
-  TF_copy_u8(&packet[129], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[11]));
-  TF_copy_u8(&packet[130], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[12]));
-  TF_copy_u8(&packet[131], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[13]));
-  TF_copy_u8(&packet[132], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[14]));
-  TF_copy_u8(&packet[133], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[15]));
-  TF_copy_u8(&packet[134], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.mode));
-  TF_copy_u8(&packet[135], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.desired_blobs_count));
-  TF_copy_u16(&packet[136], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.min_threshold));
-  TF_copy_u16(&packet[138], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.max_threshold));
-  TF_copy_float(&packet[140], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.threshold_kp));
+  TF_copy_u8(&packet[26], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.enable_filter));
+  TF_copy_float(&packet[27], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.max_quality));
+  TF_copy_float(&packet[31], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.dark_threshold_pix));
+  TF_copy_float(&packet[35], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.min_quality));
+  TF_copy_float(&packet[39], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.max_intensity));
+  TF_copy_float(&packet[43], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.min_intensity));
+  TF_copy_float(&packet[47], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.max_magnitude));
+  TF_copy_float(&packet[51], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.gaussian_cmax_pix));
+  TF_copy_float(&packet[55], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.gaussian_cmin_pix));
+  TF_copy_float(&packet[59], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_00));
+  TF_copy_float(&packet[63], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_01));
+  TF_copy_float(&packet[67], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_10));
+  TF_copy_float(&packet[71], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.centroiding.transmatrix_11));
+  TF_copy_u32(&packet[75], (uint32_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.mode));
+  TF_copy_float(&packet[79], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.prefilter_distance_threshold_mm));
+  TF_copy_float(&packet[83], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.prefilter_angle_threshold_rad));
+  TF_copy_float(&packet[87], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.field_of_view_width_rad));
+  TF_copy_float(&packet[91], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.field_of_view_height_rad));
+  TF_copy_float(&packet[95], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.float_star_limit_mm));
+  TF_copy_float(&packet[99], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.close_star_limit_mm));
+  TF_copy_float(&packet[103], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_close_star_count));
+  TF_copy_float(&packet[107], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_fraction_close));
+  TF_copy_float(&packet[111], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_mean_sum));
+  TF_copy_float(&packet[115], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.rating_weight_db_star_count));
+  TF_copy_u8(&packet[119], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.max_combinations));
+  TF_copy_u8(&packet[120], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.nr_stars_stop));
+  TF_copy_float(&packet[121], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.lisa.fraction_close_stop));
+  TF_copy_float(&packet[125], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.matching.squared_distance_limit_mm));
+  TF_copy_float(&packet[129], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.matching.squared_shift_limit_mm));
+  TF_copy_float(&packet[133], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.thin_limit_deg));
+  TF_copy_float(&packet[137], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.outlier_threshold_mm));
+  TF_copy_float(&packet[141], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.outlier_threshold_quest_mm));
+  TF_copy_u8(&packet[145], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.tracking.tracker_choice));
+  TF_copy_u8(&packet[146], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.stable_count));
+  TF_copy_float(&packet[147], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.max_difference_deg));
+  TF_copy_float(&packet[151], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.min_tracker_confidence));
+  TF_copy_u8(&packet[155], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.validation.min_matched_stars));
+  TF_copy_u8(&packet[156], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.mode));
+  TF_copy_float(&packet[157], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.l2t_min_confidence));
+  TF_copy_u8(&packet[161], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.l2t_min_matched));
+  TF_copy_float(&packet[162], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.t2l_min_confidence));
+  TF_copy_u8(&packet[166], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.algo.t2l_min_matched));
+  TF_copy_u8(&packet[167], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[0]));
+  TF_copy_u8(&packet[168], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[1]));
+  TF_copy_u8(&packet[169], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[2]));
+  TF_copy_u8(&packet[170], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[3]));
+  TF_copy_u8(&packet[171], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[4]));
+  TF_copy_u8(&packet[172], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[5]));
+  TF_copy_u8(&packet[173], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[6]));
+  TF_copy_u8(&packet[174], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[7]));
+  TF_copy_u8(&packet[175], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[8]));
+  TF_copy_u8(&packet[176], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[9]));
+  TF_copy_u8(&packet[177], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[10]));
+  TF_copy_u8(&packet[178], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[11]));
+  TF_copy_u8(&packet[179], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[12]));
+  TF_copy_u8(&packet[180], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[13]));
+  TF_copy_u8(&packet[181], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[14]));
+  TF_copy_u8(&packet[182], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.subscription[15]));
+  TF_copy_u8(&packet[183], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.mode));
+  TF_copy_u8(&packet[184], (uint8_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.desired_blobs_count));
+  TF_copy_u16(&packet[185], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.min_threshold));
+  TF_copy_u16(&packet[187], (uint16_t)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.max_threshold));
+  TF_copy_float(&packet[189], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.auto_threshold.threshold_kp));
+  TF_copy_float(&packet[193], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.fast_lisa.limit_angle));
+  TF_copy_float(&packet[197], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.read_parameter.fast_lisa.limit_distance));
 #endif
 
-  *len = 144;
+  *len = 201;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 

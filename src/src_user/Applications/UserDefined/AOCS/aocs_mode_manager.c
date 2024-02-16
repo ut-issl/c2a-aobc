@@ -290,7 +290,7 @@ static void APP_AOCS_MM_fine_three_axis_exec_(void)
   // モード遷移後、制御収束まではdisableにしておく想定
   if (aocs_mode_manager_.is_enabled_auto_mode_transition == 0) return;
   MD_MODEID current_mode = mode_manager->current_id;
-  if ((current_mode != MD_MODEID_FINE_THREE_AXIS) && (current_mode != MD_MODEID_GPSR_RANGE_OBSERVE)) return;
+  if (current_mode != MD_MODEID_FINE_THREE_AXIS) return;
 
   // エラーが大きすぎることを検知してBdotに戻る
   float error_angle_rad = fabsf(2.0f * acosf(aocs_manager->quaternion_error_b2t.scalar_part));

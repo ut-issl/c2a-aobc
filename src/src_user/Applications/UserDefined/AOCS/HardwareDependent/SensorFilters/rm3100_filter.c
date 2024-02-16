@@ -81,7 +81,7 @@ static void APP_RM3100_FILTER_exec_(void)
 {
   float spike_filter_out[RM3100_IDX_MAX];
 
-  if (aocs_manager->mtq_output_state != AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF)
+  if (aocs_manager->magnetic_exclusive_control_timer_state != APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE)
   {
     return;  // 消磁対応
   }

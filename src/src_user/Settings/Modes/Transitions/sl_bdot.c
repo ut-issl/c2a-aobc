@@ -11,6 +11,7 @@
 #include <src_user/Applications/UserDefined/Power/power_switch_control.h>
 #include <src_user/Applications/DriverInstances/di_rm3100.h>
 #include <src_user/Applications/UserDefined/AOCS/HardwareDependent/SensorSelectors/magnetometer_selector.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
 
 #include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>

@@ -59,14 +59,16 @@ static void APP_RTAD_generate_triad_mat_(float triad_mat[PHYSICAL_CONST_THREE_DI
 
 /**
 * @brief        Qmethodによる三軸姿勢決定
+* @param[out]   calc_status      : 三軸姿勢決定計算結果のエラーステータス
 * @param[in]    sun_ref_vec      : 基準の座標系における太陽方向単位ベクトル
 * @param[in]    mag_ref_vec      : 基準の座標系における磁場単位ベクトル
 * @param[in]    sun_obs_vec      : 衛星が観測した太陽方向単位ベクトル
 * @param[in]    mag_obs_vec      : 衛星が観測した磁場単位ベクトル
-* @param[in]    q_method_info     : QMethod関連情報
+* @param[in]    q_method_info    : QMethod関連情報
 * @return       q_eci_to_body    : Qmethodによって計算されたECI->body変換クオータニオン
 */
-static Quaternion APP_RTAD_q_method_(const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
+static Quaternion APP_RTAD_q_method_(AOCS_ERROR*  calc_status,
+                                     const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                      const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                      const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                                      const float mag_obs_vec[PHYSICAL_CONST_THREE_DIM],
@@ -109,6 +111,7 @@ static void APP_RTAD_calculate_q_method_parameters_(float* sigma,
 
 /**
 * @brief        Qmethodにおける固有方程式求解関数
+* @param[out]   calc_status     : 固有方程式の求解メソッドにおけるエラーステータス
 * @param[in]    sigma           : 固有方程式のパラメータ σ
 * @param[in]    kappa           : 3×3行列Sに対するtr(adj(S))
 * @param[in]    delta           : 3×3行列Sに対するdet(S)
@@ -116,12 +119,13 @@ static void APP_RTAD_calculate_q_method_parameters_(float* sigma,
 * @param[in]    s_square_matrix : 3×3行列Sに対するS^2
 * @return       lambda          : 固有方程式の解λ
 */
-static float APP_RTAD_solve_q_method_characteristic_equation_(const float sigma,
-                                                             const float kappa,
-                                                             const float delta,
-                                                             const float z_vector[PHYSICAL_CONST_THREE_DIM],
-                                                             const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
-                                                             const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM]);
+static float APP_RTAD_solve_q_method_characteristic_equation_(AOCS_ERROR* calc_status,
+                                                              const float sigma,
+                                                              const float kappa,
+                                                              const float delta,
+                                                              const float z_vector[PHYSICAL_CONST_THREE_DIM],
+                                                              const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
+                                                              const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM]);
 
 /**
 * @brief        Qmethodにおける，固有方程式の解から姿勢変換クオータニオンを計算する関数
@@ -161,7 +165,7 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
                                                const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                                const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                                                const float mag_obs_vev[PHYSICAL_CONST_THREE_DIM],
-                                               const AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state,
+                                               const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_state,
                                                const AOCS_MANAGER_SUN_VISIBILITY   sun_visibility);
 
 AppInfo APP_RTAD_create_app(void)
@@ -198,7 +202,7 @@ static void APP_RTAD_exec_(void)
   VECTOR3_normalize(mag_obs_vec, aocs_manager->mag_vec_est_body_nT);
 
   AOCS_ERROR sensor_availability = APP_RTAD_judge_availability_(sun_ref_vec, mag_ref_vec, sun_obs_vec, mag_obs_vec,
-                                                                aocs_manager->mtq_output_state, aocs_manager->sun_visibility);
+                                                                aocs_manager->magnetic_exclusive_control_timer_state, aocs_manager->sun_visibility);
 
   Quaternion q_eci_to_body;
 
@@ -226,8 +230,23 @@ static void APP_RTAD_exec_(void)
   }
   else
   {
-    q_eci_to_body = APP_RTAD_q_method_(sun_ref_vec, mag_ref_vec, sun_obs_vec, mag_obs_vec, rough_three_axis_determination_.q_method_info);
-    AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
+    AOCS_ERROR q_method_calc_status;
+    q_eci_to_body = APP_RTAD_q_method_(&q_method_calc_status,
+                                       sun_ref_vec,
+                                       mag_ref_vec,
+                                       sun_obs_vec,
+                                       mag_obs_vec,
+                                       rough_three_axis_determination_.q_method_info);
+    if (q_method_calc_status == AOCS_ERROR_OK)
+    {
+      AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
+    }
+    else
+    {
+      // Q Methodの中の固有方程式計算が収束しなかったら、収束しなかったQuaternionは使わず、前回の姿勢決定結果を伝搬する。
+      q_eci_to_body =  QUATERNION_euler_propagate(aocs_manager->quaternion_est_i2b, aocs_manager->ang_vel_obs_body_rad_s, time_step_s);
+      AOCS_MANAGER_set_quaternion_est_i2b(q_eci_to_body);
+    }
   }
 }
 
@@ -279,7 +298,8 @@ static void APP_RTAD_generate_triad_mat_(float triad_mat[PHYSICAL_CONST_THREE_DI
   }
 }
 
-Quaternion APP_RTAD_q_method_(const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
+Quaternion APP_RTAD_q_method_(AOCS_ERROR* calc_status,
+                              const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
                               const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                               const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                               const float mag_obs_vec[PHYSICAL_CONST_THREE_DIM],
@@ -299,7 +319,7 @@ Quaternion APP_RTAD_q_method_(const float sun_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                          sun_ref_vec, mag_ref_vec, sun_obs_vec, mag_obs_vec, sun_weight, mag_weight);
 
   float lambda; //!< 姿勢変換クオータニオンqに対する固有方程式 Kq = λqの解 λ
-  lambda = APP_RTAD_solve_q_method_characteristic_equation_(sigma, kappa, delta, z_vector, s_matrix, s_square_matrix);
+  lambda = APP_RTAD_solve_q_method_characteristic_equation_(calc_status, sigma, kappa, delta, z_vector, s_matrix, s_square_matrix);
 
   Quaternion q_eci_to_body;
   q_eci_to_body = APP_RTAD_calculate_q_method_quaternion(lambda, sigma, kappa, delta, s_matrix, s_square_matrix, z_vector);
@@ -360,12 +380,13 @@ void APP_RTAD_calculate_q_method_parameters_(float* sigma,
   MATRIX33_multiply_matrix_matrix(s_square_matrix, s_matrix, s_matrix);
 }
 
-float APP_RTAD_solve_q_method_characteristic_equation_(const float sigma,
-                                                      const float kappa,
-                                                      const float delta,
-                                                      const float z_vector[PHYSICAL_CONST_THREE_DIM],
-                                                      const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
-                                                      const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM])
+float APP_RTAD_solve_q_method_characteristic_equation_(AOCS_ERROR* calc_status,
+                                                       const float sigma,
+                                                       const float kappa,
+                                                       const float delta,
+                                                       const float z_vector[PHYSICAL_CONST_THREE_DIM],
+                                                       const float s_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM],
+                                                       const float s_square_matrix[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM])
 {
   float a, b, c, d; //!< 固有方程式の係数
   a = sigma * sigma - kappa;
@@ -385,13 +406,15 @@ float APP_RTAD_solve_q_method_characteristic_equation_(const float sigma,
     float diff = lhs / lhs_derivative; //!< 解の変化量
     lambda -= diff;
 
-    // 計算が収束したら，forループを抜ける TODO_L: 収束せずにイタレーション最大回数を迎えた場合の挙動を検討する
     if (fabs(diff) < APP_RTAD_kConvergenceThreshold_)
     {
-      break;
+      *calc_status = AOCS_ERROR_OK;
+      return lambda;
     }
   }
 
+  // 規定回数以内に解が収束しなければ、求解結果をNGとしてreturnする
+  *calc_status = AOCS_ERROR_NOT_CONVERGED;
   return lambda;
 }
 
@@ -437,7 +460,7 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
                                                 const float mag_ref_vec[PHYSICAL_CONST_THREE_DIM],
                                                 const float sun_obs_vec[PHYSICAL_CONST_THREE_DIM],
                                                 const float mag_obs_vev[PHYSICAL_CONST_THREE_DIM],
-                                                const AOCS_MANAGER_MTQ_OUTPUT_STATE mtq_output_state,
+                                                const APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE magnetic_exclusive_control_state,
                                                 const AOCS_MANAGER_SUN_VISIBILITY   sun_visibility)
 {
   float ref_outer_product[PHYSICAL_CONST_THREE_DIM]; //!< 基準となる座標系における太陽方向単位ベクトルと磁場単位ベクトルとの外積
@@ -445,7 +468,7 @@ static AOCS_ERROR APP_RTAD_judge_availability_(const float sun_ref_vec[PHYSICAL_
   VECTOR3_outer_product(ref_outer_product, sun_ref_vec, mag_ref_vec);
   VECTOR3_outer_product(obs_outer_product, sun_obs_vec, mag_obs_vev);
 
-  if (mtq_output_state != AOCS_MANAGER_MTQ_OUTPUT_STATE_OFF)
+  if (magnetic_exclusive_control_state != APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE)
   {
     return AOCS_ERROR_OTHERS;
   }
