@@ -253,7 +253,7 @@ Comment,,,,,Type,Description,Type,Description,Type,Description,Type,Description,
 * ALGORITHM,Attitude algorithms,,,,,,,,,,,,,,,,,,,
 **,Auto mode transition with MM (Mode Manager),,,,,,,,,,,,,,,,,,,
 ,APP_AOCS_MM_SET_AUTO_MODE_TRANSITION,AOBC,0x00B7,1,uint8_t,0=disable; 1=enable,,,,,,,,,,,,,Enable/Disable auto mode transition,自動モード遷移 Enable/Disable設定
-,APP_AOCS_MM_SET_ANG_VEL_THRESHOLD,AOBC,0x00B8,4,float,angular_rate_limit [rad/s],float,ang_vel_time_limit [sec],float,norm_increase_limit_rad_s,float,anomaly_detection_period_s,,,,,,,Set angular velocity threshold for Bdot anomaly detection,角速度制御終了判定閾値設定（Bdot）
+,APP_AOCS_MM_SET_ANG_VEL_THRESHOLD,AOBC,0x00B8,4,float,angular_rate_limit [rad/s],float,ang_vel_time_limit [sec],float,norm_increase_limit_rad_s,float,anomaly_detection_period_s,,,,,,,Set angular velocity threshold for Bdot control complete detection,角速度制御終了判定閾値設定（Bdot）
 ,APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD,AOBC,0x00B9,2,float,sun_angle_limit [rad],float,sun_angle_time_limit [sec],,,,,,,,,,,Set angle threshold for sun pointing anomaly detection,太陽補足制御失敗判定閾値設定
 ,APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD,AOBC,0x00BA,2,float,3axis_error_limit [rad],float,3axis_error_time_limit [sec],,,,,,,,,,,Set angle threshold for three-axis anomaly detection,三軸制御失敗判定閾値設定
 ,APP_AOCS_MM_SET_INVISIBLE_THRESHOLD,AOBC,0x00BB,2,float,sun_invisible_time_limit[sec],float,stt_invisible_time_limit[sec],,,,,,,,,,,Set threholds for sensor invisible anomaly detection,センサー異常判定時間閾値設定
