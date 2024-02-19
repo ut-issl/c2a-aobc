@@ -193,25 +193,26 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
   case APP_TAFO_TARGET_DIRECTION_SAT_RELATIVE_VELOCITY:
   {
     double dcm_ecef_to_eci[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM];
+    double sat_vel_est_ecef_m_s[PHYSICAL_CONST_THREE_DIM];
     double sat_rel_vel_est_ecef_m_s[PHYSICAL_CONST_THREE_DIM];
-    float float_sat_vel_est_ecef_m_s[PHYSICAL_CONST_THREE_DIM];
     float float_sat_rel_vel_est_ecef_m_s[PHYSICAL_CONST_THREE_DIM];
     float sat_vel_rel_vec_est_ecef_m_s_normalized[PHYSICAL_CONST_THREE_DIM];
 
     for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
     {
-      float_sat_vel_est_ecef_m_s[idx] = (float)aocs_manager->sat_vel_est_ecef_m_s[idx];
+      sat_vel_est_ecef_m_s[idx] = (double)aocs_manager->sat_vel_est_ecef_m_s[idx];
     }
     MATRIX33_transpose_double(dcm_ecef_to_eci, aocs_manager->dcm_eci_to_ecef);
-    MATRIX33_multiply_matrix_matrix(sat_rel_vel_est_ecef_m_s,
-                                    dcm_ecef_to_eci,
-                                    float_sat_vel_est_ecef_m_s);
+    MATRIX33_multiply_matrix_vector_double(sat_rel_vel_est_ecef_m_s,
+                                           dcm_ecef_to_eci,
+                                           sat_vel_est_ecef_m_s);
     for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
     {
       float_sat_rel_vel_est_ecef_m_s[idx] = (float)sat_rel_vel_est_ecef_m_s[idx];
     }
     VECTOR3_normalize(sat_vel_rel_vec_est_ecef_m_s_normalized, float_sat_rel_vel_est_ecef_m_s);
     VECTOR3_copy(target_direction_vec_eci_normalized, sat_vel_rel_vec_est_ecef_m_s_normalized);
+    break;
   }
   case APP_TAFO_TARGET_DIRECITON_EARTH_CENTER:
   {
