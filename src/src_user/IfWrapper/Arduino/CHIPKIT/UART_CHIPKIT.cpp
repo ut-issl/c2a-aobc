@@ -4,7 +4,7 @@
 #include "./UART_CHIPKIT.h"
 #include <src_user/Settings/port_config.h>
 
-#include <arduino.h>
+#include <Arduino.h>
 
 // Private functions
 /**
