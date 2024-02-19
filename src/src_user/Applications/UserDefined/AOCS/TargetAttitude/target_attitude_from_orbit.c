@@ -203,9 +203,9 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
       float_sat_vel_est_ecef_m_s[idx] = (float)aocs_manager->sat_vel_est_ecef_m_s[idx];
     }
     MATRIX33_transpose_double(dcm_ecef_to_eci, aocs_manager->dcm_eci_to_ecef);
-    VECTOR3_multiply_matrix(sat_rel_vel_est_ecef_m_s,
-                            dcm_ecef_to_eci,
-                            float_sat_vel_est_ecef_m_s);
+    MATRIX33_multiply_matrix_matrix(sat_rel_vel_est_ecef_m_s,
+                                    dcm_ecef_to_eci,
+                                    float_sat_vel_est_ecef_m_s);
     for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
     {
       float_sat_rel_vel_est_ecef_m_s[idx] = (float)sat_rel_vel_est_ecef_m_s[idx];
