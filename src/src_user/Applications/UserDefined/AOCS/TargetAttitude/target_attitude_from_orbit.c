@@ -194,7 +194,7 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
       VECTOR3_copy(target_direction_vec_eci_normalized, sat_vel_vec_est_eci_normalized);
       break;
     }
-  case APP_TAFO_TARGET_DIRECTION_SAT_RELATIVE_VELOCITY:
+  case APP_TAFO_TARGET_DIRECITON_SAT_RELATIVE_VELOCITY:
     {
       double dcm_ecef_to_eci[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM];
       double sat_vel_est_ecef_m_s[PHYSICAL_CONST_THREE_DIM];
@@ -217,22 +217,22 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
       VECTOR3_normalize(sat_vel_rel_vec_est_ecef_m_s_normalized, float_sat_rel_vel_est_ecef_m_s);
       VECTOR3_copy(target_direction_vec_eci_normalized, sat_vel_rel_vec_est_ecef_m_s_normalized);
       break;
-  }
-  case APP_TAFO_TARGET_DIRECITON_EARTH_CENTER:
-  {
-    float float_sat_pos_est_eci_m[PHYSICAL_CONST_THREE_DIM];
-    float sat_pos_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
-    float earth_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
-
-    // [TODO_L] Vector libにdouble -> float, float -> doubleキャスト関数を実装する
-    for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
-    {
-      float_sat_pos_est_eci_m[idx] = (float)aocs_manager->sat_pos_est_eci_m[idx];
     }
-    VECTOR3_normalize(sat_pos_vec_est_eci_normalized, float_sat_pos_est_eci_m);
-    VECTOR3_scalar_product(earth_vec_est_eci_normalized, -1.0f, sat_pos_vec_est_eci_normalized);
-    VECTOR3_copy(target_direction_vec_eci_normalized, earth_vec_est_eci_normalized);
-    break;
+  case APP_TAFO_TARGET_DIRECITON_EARTH_CENTER:
+    {
+      float float_sat_pos_est_eci_m[PHYSICAL_CONST_THREE_DIM];
+      float sat_pos_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
+      float earth_vec_est_eci_normalized[PHYSICAL_CONST_THREE_DIM];
+
+      // [TODO_L] Vector libにdouble -> float, float -> doubleキャスト関数を実装する
+      for (int idx = 0; idx < PHYSICAL_CONST_THREE_DIM; idx++)
+      {
+        float_sat_pos_est_eci_m[idx] = (float)aocs_manager->sat_pos_est_eci_m[idx];
+      }
+      VECTOR3_normalize(sat_pos_vec_est_eci_normalized, float_sat_pos_est_eci_m);
+      VECTOR3_scalar_product(earth_vec_est_eci_normalized, -1.0f, sat_pos_vec_est_eci_normalized);
+      VECTOR3_copy(target_direction_vec_eci_normalized, earth_vec_est_eci_normalized);
+      break;
   }
   case APP_TAFO_TARGET_DIRECITON_EARTH_SURFACE:
     {
