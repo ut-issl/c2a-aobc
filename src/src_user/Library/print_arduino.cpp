@@ -1,7 +1,7 @@
 // Arduino用Print関数
 
 #include "./print_arduino.h"
-#include "arduino.h"
+#include <Arduino.h>
 
 void printf_debug_init(void)
 {
