@@ -16,7 +16,7 @@ set(C2A_SRCS_COMMON
 )
 
 if(BUILD_C2A_AS_SILS_FW)
-  set(C2A_SRCS
+  set(C2A_SILS_SRCS
     Sils/uart_sils.cpp
     Sils/i2c_sils.c
     Sils/spi_sils.c
@@ -27,14 +27,13 @@ if(BUILD_C2A_AS_SILS_FW)
 
   if(USE_UART_COM)
     add_definitions(-DUSE_UART_COM)
-    list(APPEND C2A_SRCS
+    list(APPEND C2A_SILS_SRCS
       Sils/com_port.cpp
     )
     message("Use UART COM")
   endif()
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "pic32mx")
   # 実機 向け IfWrapper 実装
-
   set(C2A_PIC_SRCS
     COMMON/WDT_TEMP.c
     Arduino/CHIPKIT/ADC_CHIPKIT.cpp
@@ -52,6 +51,7 @@ endif()
 
 set(C2A_SRCS
   ${C2A_SRCS_COMMON}
+  ${C2A_SILS_SRCS}
   ${C2A_PIC_SRCS}
 )
 
