@@ -5,7 +5,9 @@ else()
   set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC SILS_FW)
+if(BUILD_C2A_AS_SILS_FW)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC SILS_FW)
+endif()
 
 # Compile option
 if(MSVC)
