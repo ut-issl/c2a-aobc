@@ -35,7 +35,7 @@ if(BUILD_C2A_AS_SILS_FW)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "pic32mx")
   # 実機 向け IfWrapper 実装
 
-  set(C2A_IF_IMPL_SRCS
+  set(C2A_PIC_SRCS
     COMMON/WDT_TEMP.c
     Arduino/CHIPKIT/ADC_CHIPKIT.cpp
     Arduino/CHIPKIT/GPIO_CHIPKIT.cpp
@@ -52,7 +52,7 @@ endif()
 
 set(C2A_SRCS
   ${C2A_SRCS_COMMON}
-  ${C2A_IF_IMPL_SRCS}
+  ${C2A_PIC_SRCS}
 )
 
 if(BUILD_C2A_AS_CXX)
