@@ -2,11 +2,9 @@ cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(BUILD_C2A_AS_SILS_FW)
-  set(CMAKE_CXX_STANDARD 17)    # SILSのIfWrapperはC++17
-  set(CMAKE_CXX_EXTENSIONS OFF)
+  set(CMAKE_CXX_STANDARD 17)  # SILSのIfWrapperはC++17
 else()
   set(CMAKE_CXX_STANDARD 11)
-  set(CMAKE_CXX_EXTENSIONS ON)
 endif()
 
 project(C2A_USER_IF_WRAPPER)
