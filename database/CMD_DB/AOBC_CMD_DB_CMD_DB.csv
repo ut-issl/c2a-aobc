@@ -1,1000 +1,344 @@
 Component,Name,Target,Code,Params,,,,,,,,,,,,,Danger Flag,Is Restricted,Description,Note
 AOBC,,,,Num Params,Param1,,Param2,,Param3,,Param4,,Param5,,Param6,,,,,
 Comment,,,,,Type,Description,Type,Description,Type,Description,Type,Description,Type,Description,Type,Description,,,,
-*,EXAMPLE,OBC,,2,uint32_t,address,int32_t,time [ms],,,,,,,,,,,例,引数の説明と単位を書くこと！（例：time [ms]）
-* CORE,基幹機能コマンド,,,,,,,,,,,,,,,,,,,
-,NOP,OBC,0x0000,0,,,,,,,,,,,,,,,ダミーコマンド,
-,TMGR_SET_TIME,OBC,0x0001,1,uint32_t,TI,,,,,,,,,,,,,OBC時刻設定コマンド,
-*,TMGR_UPDATE_UNIXTIME,OBC,,3,double,unixtime,uint32_t,total_cycle,uint32_t,step,,,,,,,,,OBC UNIXTIME修正コマンド,
-*,TMGR_SET_UTL_UNIXTIME_EPOCH,OBC,,1,double,ult_unixtime_epoch,,,,,,,,,,,,,UTL_cmdで用いるunixtimeの紀元を変更する,utl_unixtime_epoch [s]
-*,TMGR_SET_CYCLE_CORRECTION,OBC,,1,double,cycle_correction,,,,,,,,,,,,,CYCLES_PER_SECの補正倍率を変更する; 初期値は1.0,
-*,TMGR_RESET_CYCLE_CORRECTION,OBC,,0,,,,,,,,,,,,,,,CYCLES_PER_SECの補正倍率を1.0に初期化する,
-*,TMGR_CLEAR_UNIXTIME_INFO,OBC,,0,,,,,,,,,,,,,,,unixtime_info_ を初期化する,
-,AM_REGISTER_APP,OBC,0x0002,3,uint32_t,app_id,uint32_t,init_ptr,uint32_t,entry_ptr,,,,,,,,,アプリ登録コマンド,
-,AM_INITIALIZE_APP,OBC,0x0003,1,uint32_t,app_id,,,,,,,,,,,,,アプリ初期化コマンド,
-,AM_EXECUTE_APP,OBC,0x0004,1,uint32_t,app_id,,,,,,,,,,,,,アプリ実行コマンド,
-,AM_SET_PAGE_FOR_TLM,OBC,0x0005,1,uint8_t,,,,,,,,,,,,,,テレメトリ生成用ページ番号設定,
-,AM_CLEAR_APP_INFO,OBC,0x0006,0,,,,,,,,,,,,,danger,,アプリ実行時間計測の初期化,
-,MM_SET_MODE_LIST,OBC,0x0007,2,uint8_t,Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,uint16_t,bc_index,,,,,,,,,,,モード定義リスト設定コマンド,
-,MM_SET_TRANSITION_TABLE,OBC,0x0008,3,uint8_t,From: Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,uint8_t,To: Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,uint16_t,bc_index,,,,,,,,,モード遷移定義テーブル書き換えコマンド,
-,MM_START_TRANSITION,OBC,0x0009,1,uint8_t,Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,,,,,,,,,,,,,モード遷移開始コマンド,
-,MM_FINISH_TRANSITION,OBC,0x000A,0,,,,,,,,,,,,,,,モード遷移終了通知コマンド,
-,TDSP_SET_TASK_LIST,OBC,0x000B,1,uint8_t,bc_index,,,,,,,,,,,danger,,タスクリスト設定コマンド,
-,TLCD_CLEAR_ALL_TIMELINE,OBC,0x000C,1,uint8_t,ID: GS=0; BC=1; TLM=2,,,,,,,,,,,danger,,全TLC登録解除,
-,TLCD_CLEAR_TIMELINE_AT,OBC,0x000D,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint32_t,TI,,,,,,,,,,,TI指定TLC登録解除,
-,TLCD_DEPLOY_BLOCK,OBC,0x000E,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint16_t,bc_index,,,,,,,,,,,BLC展開 ,
-,TLCD_CLEAR_ERR_LOG,OBC,0x000F,1,uint8_t,,,,,,,,,,,,,,最新のコマンド実行異常記録をクリア,
-,TLCD_SET_SOE_FLAG,OBC,0x0010,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint8_t,,,,,,,,,,,,異常時実行停止機能設定(ライン番号@@ フラグ),
-,TLCD_SET_LOUT_FLAG,OBC,0x0011,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint8_t,,,,,,,,,,,,実行停止機能設定(ライン番号@@ フラグ),
-,TLCD_SET_ID_FOR_TLM,OBC,0x0012,1,uint8_t,ID: GS=0; BC=1; TLM=2,,,,,,,,,,,,,テレメで降ろすTL_IDの設定とTLテレメの更新,
-,TLCD_SET_PAGE_FOR_TLM,OBC,0x0013,1,uint8_t,page_no,,,,,,,,,,,,,テレメトリ生成用ページ番号設定,
-*,OBC_CLEAR_STARTUP_CNT,OBC,,0,,,,,,,,,,,,,,,OBCの起動回数累積カウンタを初期化,
-**,Telemetry Generator,,,,,,,,,,,,,,,,,,,
-,GENERATE_TLM,OBC,0x0014,3,uint8_t,category,uint8_t,TLM_ID,uint8_t,送出回数,,,,,,,,,TLMパケット生成 (deprecated),
-,TG_GENERATE_TLM,OBC,0x0015,4,uint8_t,tlm id,uint8_t,dest flags,uint8_t,dest info,uint8_t,送出回数,,,,,,,自身の OBC のテレメを生成,
-,TG_GENERATE_HP_TLM,OBC,0x0016,1,uint8_t,tlm id,,,,,,,,,,,,,High Priority テレメを生成 (事実上，現在使われていない）,
-,TG_GENERATE_RT_TLM,OBC,0x0017,1,uint8_t,tlm id,,,,,,,,,,,,,Real Time テレメを生成,
-,TG_GENERATE_ST_TLM,OBC,0x0018,2,uint8_t,tlm id,uint8_t,dr partition (dest info),,,,,,,,,,,ST テレメを生成,
-*,TG_FORWARD_TLM,OBC,,5,uint16_t,apid,uint8_t,tlm id,uint8_t,dest flags,uint8_t,dest info,uint8_t,送出回数,,,,,2nd OBC のテレメを転送,
-*,TG_FORWARD_AS_HK_TLM,OBC,,2,uint16_t,apid,uint8_t,tlm id,,,,,,,,,,,High Priority テレメとして 2nd OBC のテレメを転送 (事実上，現在使われていない）,
-*,TG_FORWARD_AS_RT_TLM,OBC,,2,uint16_t,apid,uint8_t,tlm id,,,,,,,,,,,Real Time テレメとして 2nd OBC のテレメを転送,
-*,TG_FORWARD_AS_ST_TLM,OBC,,3,uint16_t,apid,uint8_t,tlm id,uint8_t,dr partition (dest info),,,,,,,,,ST テレメとして 2nd OBC のテレメを転送,
-**,BCTコマンド,,,,,,,,,,,,,,,,,,,
-,BCT_CLEAR_BLOCK,OBC,0x0019,1,uint16_t,bc_index,,,,,,,,,,,,,BLC登録解除コマンド,
-,BCT_SET_BLOCK_POSITION,OBC,0x001A,2,uint16_t,bc_index,uint8_t,cmd_index,,,,,,,,,,,BLC操作ポインタ設定コマンド,
-,BCT_COPY_BCT,OBC,0x001B,2,uint16_t,dst_bc_index,uint16_t,src_bc_index,,,,,,,,,,,BCT の内容を別の場所にコピー,
-,BCT_OVERWRITE_CMD,OBC,0x001C,5,uint16_t,CMD_CODE,uint32_t,TI,uint16_t,pos.block,uint8_t,pos.cmd,raw,cmd_param (big endian),,,danger,,BCTの内容を上書き,
-,BCT_FILL_NOP,OBC,0x001D,1,uint8_t,,,,,,,,,,,,,,テレメ運用時の10個BCをNOP埋めする．（NOP個数）,
-**,BCEコマンド,,,,,,,,,,,,,,,,,,,
-,BCE_ACTIVATE_BLOCK,OBC,0x001E,0,,,,,,,,,,,,,,,BLC有効化コマンド,
-,BCE_ACTIVATE_BLOCK_BY_ID,OBC,0x001F,1,uint16_t,bc_index,,,,,,,,,,,,,BCを（無条件に）有効化,
-,BCE_INACTIVATE_BLOCK_BY_ID,OBC,0x0020,1,uint16_t,bc_index,,,,,,,,,,,,,BCを（無条件に）無効化,
-,BCE_ROTATE_BLOCK,OBC,0x0021,1,uint16_t,bc_index,,,,,,,,,,,,,BLC回転コマンド,
-,BCE_COMBINE_BLOCK,OBC,0x0022,1,uint16_t,bc_index,,,,,,,,,,,,,BLC融合コマンド,
-,BCE_TIMELIMIT_COMBINE_BLOCK,OBC,0x0023,2,uint16_t,bc_index,uint8_t,limit_step,,,,,,,,,,,時間制限付きBLC融合コマンド,
-,BCE_RESET_ROTATOR_INFO,OBC,0x0024,0,,,,,,,,,,,,,danger,,カウンタ類リセット,
-,BCE_RESET_COMBINER_INFO,OBC,0x0025,0,,,,,,,,,,,,,danger,,カウンタ類リセット,
-,BCE_SET_ROTATE_INTERVAL,OBC,0x0026,2,uint16_t,,uint16_t,,,,,,,,,,,,BC回転時の回転間隔周期を設定する,
-**,Data Recorder用コマンド,,,,,,,,,,,,,,,,,,,
-*,DR_SET_PARAMS,OBC,,4,uint8_t,partition ID,uint32_t,先頭Addr,uint32_t,終端Addr,uint8_t,書き込みモード,,,,,,,パーティション設定,
-*,DR_SET_WP,OBC,,2,uint8_t,partition ID,uint32_t,pointer,,,,,,,,,,,書き込みポインタ設定,
-*,DR_SET_WRITE_ENABLE_FLAG,OBC,,2,uint8_t,partition ID,uint8_t,flag,,,,,,,,,,,書き込み許可フラグ設定,
-*,DR_SET_RP,OBC,,2,uint8_t,partition ID,uint32_t,pointer,,,,,,,,,,,読み出しポインタ設定,
-*,DR_SET_RP_SKIP_WIDTH,OBC,,2,uint8_t,partition ID,uint32_t,skip width,,,,,,,,,,,読み飛ばし幅設定,
-*,DR_REPLAY_TLM,OBC,,2,uint8_t,category,uint8_t,送出回数,,,,,,,,,,,蓄積パケット再生,
-*,DR_RESET_DR,OBC,,0,,,,,,,,,,,,,danger,,MRAMを含め，DRをリセットする．,
-*,DR_UPDATE_MRAM,OBC,,0,,,,,,,,,,,,,danger,,DRの情報をMRAMに書き込む,
-**,DR用追加コマンド,,,,,,,,,,,,,,,,,,,
-*,DR_SET_RP_ON_TI,OBC,,2,uint8_t,partition ID,uint32_t,TI,,,,,,,,,,,指定したTIにRPを移動する,
-*,DR_SET_RP_CALC_INFO,OBC,,4,uint8_t,partition ID,uint8_t,auto_flg,uint16_t,pkt_len,uint32_t,period,,,,,,,RP自動計算パラメータの設定,
-*,DR_UPDATE_INFO,OBC,,0,,,,,,,,,,,,,,,RunOut Time や自動計算パラメータの更新,
-*,DR_SET_RP_SKIP_WIDTH_BY_TI,OBC,,2,uint8_t,partition ID,uint32_t,period,,,,,,,,,,,指定したTIおきにDLするSKIP WIDTH に設定,
-**,メモリ操作コマンド,,,,,,,,,,,,,,,,,,,
-*,MEM_SET_REGION,OBC,,2,uint32_t,始点アドレス,uint32_t,終点アドレス,,,,,,,,,,,始点アドレスと終点アドレスを指定する,
-*,MEM_DUMP_REGION_SEQ,OBC,,2,uint8_t,category,uint8_t,送出回数,,,,,,,,,,,カテゴリと送信回数を指定する,
-*,MEM_DUMP_REGION_RND,OBC,,3,uint8_t,category,uint8_t,送出回数,uint16_t,ダンプ位置,,,,,,,,,カテゴリと送信回数@@ダンプ位置を指定する,
-*,MEM_DUMP_SINGLE,OBC,,3,uint8_t,category,uint8_t,送出回数,uint32_t,ダンプ位置,,,,,,,,,カテゴリと送信回数@@ダンプ位置を指定する,
-*,MEM_LOAD,OBC,,2,uint32_t,開始アドレス,raw,HEXBINARY,,,,,,,,,,,開始アドレス、データを指定,第2パラメータの指定は仮設定
-*,MEM_SET_DESTINATION,OBC,,1,uint32_t,コピー先アドレス,,,,,,,,,,,,,コピー先設定,
-*,MEM_COPY_REGION_SEQ,OBC,,1,uint32_t,コピー幅,,,,,,,,,,,,,領域コピー,
-**,EventLogger,,,,,,,,,,,,,,,,,,,
-,EL_INIT,OBC,0x0027,0,,,,,,,,,,,,,,,EL初期化,
-,EL_CLEAR_LOG_ALL,OBC,0x0028,0,,,,,,,,,,,,,,,全ログ削除,
-,EL_CLEAR_LOG_BY_ERR_LEVEL,OBC,0x0029,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,エラーレベル指定ログ削除,
-,EL_CLEAR_STATISTICS,OBC,0x002A,0,,,,,,,,,,,,,,,統計情報削除,
-,EL_CLEAR_TLOG,OBC,0x002B,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,TLog削除,
-,EL_CLEAR_CLOG,OBC,0x002C,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,CLog削除,
-,EL_RECORD_EVENT,OBC,0x002D,4,uint32_t,group,uint32_t,local,uint8_t,Level: High=0; Low=1; EL=2; EH=3,uint32_t,note,,,,,,,イベント記録,
-,EL_TLOG_SET_PAGE_FOR_TLM,OBC,0x002E,2,uint8_t,page_no,uint8_t,err_level,,,,,,,,,,,TLogのダウンリンクテレメ設定,
-,EL_CLOG_SET_PAGE_FOR_TLM,OBC,0x002F,2,uint8_t,page_no,uint8_t,err_level,,,,,,,,,,,CLogのダウンリンクテレメ設定,
-,EL_INIT_LOGGING_SETTINGS,OBC,0x0030,0,,,,,,,,,,,,,,,ログ設定を初期化,
-,EL_ENABLE_LOGGING,OBC,0x0031,1,uint32_t,group,,,,,,,,,,,,,ロギングを有効化,
-,EL_DISABLE_LOGGING,OBC,0x0032,1,uint32_t,group,,,,,,,,,,,,,ロギングを無効化,
-*,EL_ENABLE_LOGGING_ALL,OBC,,0,,,,,,,,,,,,,,,すべてのロギングを有効化,
-*,EL_DISABLE_LOGGING_ALL,OBC,,0,,,,,,,,,,,,,,,すべてのロギングを無効化,
-,EL_ENABLE_TLOG_OVERWRITE,OBC,0x0033,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,TLogのログ上書きを有効化,
-,EL_DISABLE_TLOG_OVERWRITE,OBC,0x0034,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,TLogのログ上書きを無効化,
-*,EL_ENABLE_TLOG_OVERWRITE_ALL,OBC,,0,,,,,,,,,,,,,,,すべてのTLogのログ上書きを有効化,
-*,EL_DISABLE_TLOG_OVERWRITE_ALL,OBC,,0,,,,,,,,,,,,,,,すべてのTLogのログ上書きを無効化,
-**,EventHandler,,,,,,,,,,,,,,,,,,,
-,EH_INIT,OBC,0x0035,0,,,,,,,,,,,,,,,EHの初期化,
-,EH_CLEAR_ALL_RULE,OBC,0x0036,0,,,,,,,,,,,,,,,EHのすべてのルールをクリア,
-,EH_LOAD_DEFAULT_RULE,OBC,0x0037,0,,,,,,,,,,,,,,,EHのデフォルトルールを読み込み,
-,EH_SET_REGISTER_RULE_EVENT_PARAM,OBC,0x0038,6,uint16_t,rule id,uint32_t,event group,uint32_t,event local,uint8_t,event err level,uint8_t,should_match_err_level,uint16_t,deploy bc index,,,登録するEHルールのイベントパラメータを設定,
-,EH_SET_REGISTER_RULE_CONDITION_PARAM,OBC,0x0039,4,uint8_t,condition type,uint16_t,count_threshold,uint32_t,time_threshold [ms],uint8_t,is_active,,,,,,,登録するEHルールの対応条件パラメタを設定,
-,EH_REGISTER_RULE,OBC,0x003A,0,,,,,,,,,,,,,,,設定したパラメタでEHルールを登録,
-,EH_DELETE_RULE,OBC,0x003B,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを削除,
-,EH_INIT_RULE,OBC,0x003C,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを初期化（ルールを有効化し，ルールカウンタも初期化）,
-,EH_INIT_RULE_FOR_MULTI_LEVEL,OBC,0x003D,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを初期化（ルールを有効化し，ルールカウンタも初期化）（多段EH対応用）,
-,EH_ACTIVATE_RULE,OBC,0x003E,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを有効化,
-,EH_INACTIVATE_RULE,OBC,0x003F,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを無効化,
-,EH_ACTIVATE_RULE_FOR_MULTI_LEVEL,OBC,0x0040,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを有効化（多段EH対応用）,
-,EH_INACTIVATE_RULE_FOR_MULTI_LEVEL,OBC,0x0041,1,uint16_t,rule id,,,,,,,,,,,,,指定したルールを無効化（多段EH対応用）,
-,EH_SET_RULE_COUNTER,OBC,0x0042,2,uint16_t,rule id,uint16_t,counter,,,,,,,,,,,EH_Rule の counter をセット,
-,EH_CLEAR_RULE_COUNTER,OBC,0x0043,1,uint16_t,rule id,,,,,,,,,,,,,EH_Rule の counter を0 クリア,
-,EH_CLEAR_RULE_COUNTER_BY_EVENT,OBC,0x0044,3,uint32_t,group,uint32_t,local,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,EH_Rule の counter を EL_Event 指定で 0 クリア,
-,EH_CLEAR_LOG,OBC,0x0045,0,,,,,,,,,,,,,,,EHの対応ログをクリア,
-,EH_SET_MAX_RESPONSE_NUM,OBC,0x0046,1,uint8_t,max_response_num,,,,,,,,,,,,,一度のEH実行で対応するイベントの最大数を設定,
-,EH_SET_MAX_CHECK_EVENT_NUM,OBC,0x0047,1,uint16_t,max_check_event_num,,,,,,,,,,,,,一度のEH実行でチェックするイベントの最大数を設定,
-,EH_SET_MAX_MULTI_LEVEL_NUM,OBC,0x0048,1,uint8_t,max_multi_level_num,,,,,,,,,,,,,設定可能な最大段数を設定,
-,EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM,OBC,0x0049,1,uint8_t,page_no,,,,,,,,,,,,,EHルールテーブルのテレメページの設定,
-,EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM,OBC,0x004A,1,uint8_t,page_no,,,,,,,,,,,,,EHルールのソート済みテーブルのテレメページの設定,
-,EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM,OBC,0x004B,1,uint8_t,page_no,,,,,,,,,,,,,EHログテーブルのテレメページの設定,
-,EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,OBC,0x004C,1,uint16_t,rule id,,,,,,,,,,,,,EHテレメに表示するルールのID設定,
-,EH_MATCH_EVENT_COUNTER_TO_EL,OBC,0x004D,0,,,,,,,,,,,,,,,イベント発生を検知するためのEHカウンタをELカウンタに強制定期に合わせる,
-,EH_INIT_RULE_BY_EVENT_GROUP,OBC,0x004E,1,uint32_t,group,,,,,,,,,,,,,EH_INIT_RULE の by_event_group コマンド．想定外のものまで操作されないか注意すること,
-,EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL,OBC,0x004F,1,uint32_t,group,,,,,,,,,,,,,EH_INIT_RULE_FOR_MULTI_LEVEL の by_event_group コマンド．想定外のものまで操作されないか注意すること,
-,EH_ACTIVATE_RULE_BY_EVENT_GROUP,OBC,0x0050,1,uint32_t,group,,,,,,,,,,,,,EH_ACTIVATE_RULE の by_event_group コマンド．想定外のものまで操作されないか注意すること,
-,EH_INACTIVATE_RULE_BY_EVENT_GROUP,OBC,0x0051,1,uint32_t,group,,,,,,,,,,,,,EH_INACTIVATE_RULE の by_event_group コマンド．想定外のものまで操作されないか注意すること,
-,EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL,OBC,0x0052,1,uint32_t,group,,,,,,,,,,,,,EH_ACTIVATE_RULE_FOR_MULTI_LEVEL の by_event_group コマンド．想定外のものまで操作されないか注意すること,
-,EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL,OBC,0x0053,1,uint32_t,group,,,,,,,,,,,,,EH_INACTIVATE_RULE_FOR_MULTI_LEVEL の by_event_group コマンド．想定外のものまで操作されないか注意すること,
-**,EventUtility,,,,,,,,,,,,,,,,,,,
-,EVENT_UTIL_ENABLE_EH_EXEC,OBC,0x0054,0,,,,,,,,,,,,,,,EHの実行を有効に,
-,EVENT_UTIL_DISABLE_EH_EXEC,OBC,0x0055,0,,,,,,,,,,,,,,,EHの実行を無効に,
-,EVENT_UTIL_EXEC_EH,OBC,0x0056,0,,,,,,,,,,,,,,,EHを単発で実行,
-**,Telemetry Frame@@ Command Analyze,,,,,,,,,,,,,,,,,,,
-,TF_INIT,OBC,0x0057,0,,,,,,,,,,,,,,,TFの初期化,
-,CA_INIT,OBC,0x0058,0,,,,,,,,,,,,,,,CAの初期化,
-,TF_REGISTER_TLM,OBC,0x0059,2,uint8_t,index,uint32_t,tlm_func,,,,,,,,,,,テレメトリ登録コマンド,
-,CA_REGISTER_CMD,OBC,0x005A,3,uint16_t,index,uint32_t,cmd_func,raw,param_info,,,,,,,,,コマンド登録コマンド,
-,TF_SET_PAGE_FOR_TLM,OBC,0x005B,1,uint8_t,page_no,,,,,,,,,,,,,テレメトリ定義テーブルページ番号設定,
-,CA_SET_PAGE_FOR_TLM,OBC,0x005C,1,uint8_t,page_no,,,,,,,,,,,,,コマンド定義テーブルページ番号設定,
-**,時刻校正機能用,,,,,,,,,,,,,,,,,,,
-*,CCSDS_MW_SET_TCI_PARAMS,OBC,,2,int32_t,offset,uint8_t,type,,,,,,,,,,,時刻校正情報設定コマンド,
-*,CCSDS_MW_GENERATE_TCAL_TLM,OBC,,2,uint8_t,cat,uint8_t,num,,,,,,,,,,,時刻校正パケット生成コマンド,
-**,GSCD追加コマンド,,,,,,,,,,,,,,,,,,,
-,GSCD_CLEAR_ERR_LOG,OBC,0x005D,0,,,,,,,,,,,,,,,最新のコマンド実行異常記録をクリア,
-**,RTCD追加コマンド,,,,,,,,,,,,,,,,,,,
-,RTCD_CLEAR_ERR_LOG,OBC,0x005E,0,,,,,,,,,,,,,,,最新のコマンド実行異常記録をクリア,
-**,Divided Cmd Utility コマンド,,,,,,,,,,,,,,,,,,,
-,DCU_ABORT_CMD,OBC,0x005F,1,uint16_t,Cmd ID,,,,,,,,,,,,,実行中の分割コマンドを停止する,
-,DCU_DOWN_ABORT_FLAG,OBC,0x0060,1,uint16_t,Cmd ID,,,,,,,,,,,,,エラー，またはコマンドによって中断ステータスとなっているコマンドを，実行可能状態に戻す,
-,DCU_CLEAR_LOG,OBC,0x0061,0,,,,,,,,,,,,,,,ログをクリアする,
+*,EXAMPLE,OBC,,2,uint32_t,address,int32_t,time [ms],,,,,,,,,,,Write details of the command,The c2a-aobc uses this column for Japanese description
+* CORE,core commands,,,,,,,,,,,,,,,,,,,
+,NOP,OBC,0x0000,0,,,,,,,,,,,,,,,Dummy command just incrementing the command counter,コマンドカウンタを一つインクリメントするだけのダミーコマンド
+,TMGR_SET_TIME,OBC,0x0001,1,uint32_t,TI,,,,,,,,,,,,,Set OBC time to TMGR(Time Manager),OBC時刻設定コマンド
+*,TMGR_UPDATE_UNIXTIME,OBC,,3,double,Unixtime,uint32_t,Total cycle,uint32_t,Step,,,,,,,,,Modify OBC unixtime,OBC UNIXTIME修正コマンド
+*,TMGR_SET_UTL_UNIXTIME_EPOCH,OBC,,1,double,UTL unixtime epoch,,,,,,,,,,,,,Set epoch unixtime usied in UTL_cmd,UTL_cmdで用いるunixtimeの紀元を変更する
+*,TMGR_SET_CYCLE_CORRECTION,OBC,,1,double,Cycle Correction,,,,,,,,,,,,,Set calibration ratio of CYCLES_PER_SEC (The initial value is 1.0),CYCLES_PER_SECの補正倍率を変更する; 初期値は1.0
+*,TMGR_RESET_CYCLE_CORRECTION,OBC,,0,,,,,,,,,,,,,,,Reset CYCLES_PER_SEC to 1.0,CYCLES_PER_SECの補正倍率を1.0に初期化する
+*,TMGR_CLEAR_UNIXTIME_INFO,OBC,,0,,,,,,,,,,,,,,,Initialize unixtime_info_,unixtime_info_ を初期化する
+,AM_REGISTER_APP,OBC,0x0002,3,uint32_t,Application ID,uint32_t,Initialize function pointer,uint32_t,Execution function pointer,,,,,,,,,Register application to AM (Application Manager),アプリ登録コマンド
+,AM_INITIALIZE_APP,OBC,0x0003,1,uint32_t,Application ID,,,,,,,,,,,,,Initialize application,アプリ初期化コマンド
+,AM_EXECUTE_APP,OBC,0x0004,1,uint32_t,Application ID,,,,,,,,,,,,,Execute application,アプリ実行コマンド
+,AM_SET_PAGE_FOR_TLM,OBC,0x0005,1,uint8_t,,,,,,,,,,,,,,Set page number for application manager telemetry generation,アプリマネージャテレメトリ生成用ページ番号設定
+,AM_CLEAR_APP_INFO,OBC,0x0006,0,,,,,,,,,,,,,danger,,Initialize application execution time measurements,アプリ実行時間計測の初期化
+,MM_SET_MODE_LIST,OBC,0x0007,2,uint8_t,Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,uint16_t,Block command ID,,,,,,,,,,,Set mode definition list to MM (Mode Manager),モード定義リスト設定コマンド
+,MM_SET_TRANSITION_TABLE,OBC,0x0008,3,uint8_t,From: Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,uint8_t,To: Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,uint16_t,Block command ID,,,,,,,,,Set mode transition definition table,モード遷移定義テーブル書き換えコマンド
+,MM_START_TRANSITION,OBC,0x0009,1,uint8_t,Start=0; Initial=1; Bdot=2; SunPoint=3; R3ax-MTQ=4; R3ax-RW=5; F3ax=6,,,,,,,,,,,,,Start mode transition,モード遷移開始コマンド
+,MM_FINISH_TRANSITION,OBC,0x000A,0,,,,,,,,,,,,,,,Notification of finish of mode transition,モード遷移終了通知コマンド
+,TDSP_SET_TASK_LIST,OBC,0x000B,1,uint8_t,Block command ID,,,,,,,,,,,danger,,Set task list to TDSP (Task Dispatcher),タスクリスト設定コマンド
+,TLCD_CLEAR_ALL_TIMELINE,OBC,0x000C,1,uint8_t,ID: GS=0; BC=1; TLM=2,,,,,,,,,,,danger,,Clear all timeline commands (TLCD),全TLC登録解除
+,TLCD_CLEAR_TIMELINE_AT,OBC,0x000D,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint32_t,TI,,,,,,,,,,,Clear the selected timeline commands with the registred TI,TI指定TLC登録解除
+,TLCD_DEPLOY_BLOCK,OBC,0x000E,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint16_t,Block command ID,,,,,,,,,,,Deploy block command,BLC展開 
+,TLCD_CLEAR_ERR_LOG,OBC,0x000F,1,uint8_t,ID: GS=0; BC=1; TLM=2,,,,,,,,,,,,,Clear the latest command execution error,最新のコマンド実行異常記録をクリア
+,TLCD_SET_SOE_FLAG,OBC,0x0010,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint8_t,Flag: 0 or 1,,,,,,,,,,,Set features for command execution stop with anomaly,異常時実行停止機能設定(ライン番号@@ フラグ)
+,TLCD_SET_LOUT_FLAG,OBC,0x0011,2,uint8_t,ID: GS=0; BC=1; TLM=2,uint8_t,Flag: 0 or 1,,,,,,,,,,,Set command execution stop feature,実行停止機能設定(ライン番号@@ フラグ)
+,TLCD_SET_ID_FOR_TLM,OBC,0x0012,1,uint8_t,ID: GS=0; BC=1; TLM=2,,,,,,,,,,,,,Set TL ID for downlink telemetry and update the telemetry,テレメで降ろすTL_IDの設定とTLテレメの更新
+,TLCD_SET_PAGE_FOR_TLM,OBC,0x0013,1,uint8_t,Page number,,,,,,,,,,,,,Set page number for timeline command telemetry generation,テレメトリ生成用ページ番号設定
+*,OBC_CLEAR_STARTUP_CNT,OBC,,0,,,,,,,,,,,,,,,Clear accumulation counter of OBC power on,OBCの起動回数累積カウンタを初期化
+**,Telemetry Generator (TG),,,,,,,,,,,,,,,,,,,
+,GENERATE_TLM,OBC,0x0014,3,uint8_t,Categoly,uint8_t,Telemetry ID,uint8_t,Number of generation,,,,,,,,,Generate telemetry packet (Not recommended to use),TLMパケット生成 (Not recommended to use)
+,TG_GENERATE_TLM,OBC,0x0015,4,uint8_t,Telemetry ID,uint8_t,Destination flag,uint8_t,Destination information,uint8_t,Number of generation,,,,,,,Generate telemetry of this OBC,自身の OBC のテレメを生成
+,TG_GENERATE_HP_TLM,OBC,0x0016,1,uint8_t,Telemetry ID,,,,,,,,,,,,,Generate high priority telemetry (Not using at this moment) of this OBC,High Priority テレメを生成 (事実上，現在使われていない）
+,TG_GENERATE_RT_TLM,OBC,0x0017,1,uint8_t,Telemetry ID,,,,,,,,,,,,,Generate realtime telemetry of this OBC,Real Time テレメを生成
+,TG_GENERATE_ST_TLM,OBC,0x0018,2,uint8_t,Telemetry ID,uint8_t,DR partition (destination information),,,,,,,,,,,Generate stored telemetry of this OBC,ST テレメを生成
+*,TG_FORWARD_TLM,OBC,,5,uint16_t,APID,uint8_t,Telemetry ID,uint8_t,Destination flag,uint8_t,Destination information,uint8_t,Number of generation,,,,,Generate telemetry of 2nd OBC,2nd OBC のテレメを転送
+*,TG_FORWARD_AS_HK_TLM,OBC,,2,uint16_t,APID,uint8_t,Telemetry ID,,,,,,,,,,,Generate high priority telemetry (Not using at this moment) of 2nd OBC,High Priority テレメとして 2nd OBC のテレメを転送 (事実上，現在使われていない）
+*,TG_FORWARD_AS_RT_TLM,OBC,,2,uint16_t,APID,uint8_t,Telemetry ID,,,,,,,,,,,Generate realtime telemetry of 2nd OBC,Real Time テレメとして 2nd OBC のテレメを転送
+*,TG_FORWARD_AS_ST_TLM,OBC,,3,uint16_t,APID,uint8_t,Telemetry ID,uint8_t,DR partition (destination information),,,,,,,,,Generate stored telemetry of 2nd OBC,ST テレメとして 2nd OBC のテレメを転送
+**,BCT (Block Command Table) commands,,,,,,,,,,,,,,,,,,,
+,BCT_CLEAR_BLOCK,OBC,0x0019,1,uint16_t,Block command ID,,,,,,,,,,,,,Clear a block command,BLC登録解除コマンド
+,BCT_SET_BLOCK_POSITION,OBC,0x001A,2,uint16_t,Block command ID,uint8_t,Command ID,,,,,,,,,,,Set position of control pointer of a block command,BLC操作ポインタ設定コマンド
+,BCT_COPY_BCT,OBC,0x001B,2,uint16_t,Destination block command ID,uint16_t,Source block command ID,,,,,,,,,,,Copy block command table information to other memory,BCT の内容を別の場所にコピー
+,BCT_OVERWRITE_CMD,OBC,0x001C,5,uint16_t,Command ID,uint32_t,TI,uint16_t,Position of block,uint8_t,Position of command,raw,Command parameters (big endian),,,danger,,Overwrite block command table,BCTの内容を上書き
+,BCT_FILL_NOP,OBC,0x001D,1,uint8_t,Number of NOP command,,,,,,,,,,,,,Fill NOP command to block command for telemetry operation,テレメ運用時の10個BCをNOP埋めする．（NOP個数）
+**,BCE (Block Command Executor) commands,,,,,,,,,,,,,,,,,,,
+,BCE_ACTIVATE_BLOCK,OBC,0x001E,0,,,,,,,,,,,,,,,Activate block command,BLC有効化コマンド
+,BCE_ACTIVATE_BLOCK_BY_ID,OBC,0x001F,1,uint16_t,Block command ID,,,,,,,,,,,,,Activate block command with block command ID,BCを（無条件に）有効化
+,BCE_INACTIVATE_BLOCK_BY_ID,OBC,0x0020,1,uint16_t,Block command ID,,,,,,,,,,,,,Inactivate block command with block command ID,BCを（無条件に）無効化
+,BCE_ROTATE_BLOCK,OBC,0x0021,1,uint16_t,Block command ID,,,,,,,,,,,,,Rotate block command,BLC回転コマンド
+,BCE_COMBINE_BLOCK,OBC,0x0022,1,uint16_t,Block command ID,,,,,,,,,,,,,Combine block command,BLC融合コマンド
+,BCE_TIMELIMIT_COMBINE_BLOCK,OBC,0x0023,2,uint16_t,Block command ID,uint8_t,Limit step,,,,,,,,,,,Timelimit combine block command,時間制限付きBLC融合コマンド
+,BCE_RESET_ROTATOR_INFO,OBC,0x0024,0,,,,,,,,,,,,,danger,,Reset counter of rotator block command,カウンタ類リセット
+,BCE_RESET_COMBINER_INFO,OBC,0x0025,0,,,,,,,,,,,,,danger,,Reset counter of combiner block command,カウンタ類リセット
+,BCE_SET_ROTATE_INTERVAL,OBC,0x0026,2,uint16_t,Block command ID,uint16_t,Interval,,,,,,,,,,,Set rorate interval of rotater block command,BC回転時の回転間隔周期を設定する
+**,Data Recorder commands,,,,,,,,,,,,,,,,,,,
+*,DR_SET_PARAMS,OBC,,4,uint8_t,Partition ID,uint32_t,Start address,uint32_t,End address,uint8_t,Write mode,,,,,,,Set partition,パーティション設定
+*,DR_SET_WP,OBC,,2,uint8_t,Partition ID,uint32_t,pointer,,,,,,,,,,,Set write pointer,書き込みポインタ設定
+*,DR_SET_WRITE_ENABLE_FLAG,OBC,,2,uint8_t,Partition ID,uint8_t,flag,,,,,,,,,,,Set write enable flag,書き込み許可フラグ設定
+*,DR_SET_RP,OBC,,2,uint8_t,Partition ID,uint32_t,pointer,,,,,,,,,,,Set read pointer,読み出しポインタ設定
+*,DR_SET_RP_SKIP_WIDTH,OBC,,2,uint8_t,Partition ID,uint32_t,skip width,,,,,,,,,,,Set read pointer skip width,読み飛ばし幅設定
+*,DR_REPLAY_TLM,OBC,,2,uint8_t,Category,uint8_t,Number of generation,,,,,,,,,,,Reply stored telemetry,蓄積パケット再生
+*,DR_RESET_DR,OBC,,0,,,,,,,,,,,,,danger,,Reset data recoder,MRAMを含め，DRをリセットする．
+*,DR_UPDATE_MRAM,OBC,,0,,,,,,,,,,,,,danger,,Update data recoder information to MRAM,DRの情報をMRAMに書き込む
+**,DR commands,,,,,,,,,,,,,,,,,,,
+*,DR_SET_RP_ON_TI,OBC,,2,uint8_t,Partition ID,uint32_t,TI,,,,,,,,,,,Set read pointer with TI,指定したTIにRPを移動する
+*,DR_SET_RP_CALC_INFO,OBC,,4,uint8_t,Partition ID,uint8_t,auto_flg,uint16_t,pkt_len,uint32_t,period,,,,,,,Set read pointer auto calculation parameter,RP自動計算パラメータの設定
+*,DR_UPDATE_INFO,OBC,,0,,,,,,,,,,,,,,,Update auto calculation and runout time parameters,RunOut Time や自動計算パラメータの更新
+*,DR_SET_RP_SKIP_WIDTH_BY_TI,OBC,,2,uint8_t,Partition ID,uint32_t,period,,,,,,,,,,,Set read pointer skip width with TI,指定したTIおきにDLするSKIP WIDTH に設定
+**,Memory commands,,,,,,,,,,,,,,,,,,,
+*,MEM_SET_REGION,OBC,,2,uint32_t,Start address,uint32_t,End address,,,,,,,,,,,Set start address and end address,始点アドレスと終点アドレスを指定する
+*,MEM_DUMP_REGION_SEQ,OBC,,2,uint8_t,category,uint8_t,Number of generation,,,,,,,,,,,Set categoly and send times,カテゴリと送信回数を指定する
+*,MEM_DUMP_REGION_RND,OBC,,3,uint8_t,category,uint8_t,Number of generation,uint16_t,Dump position,,,,,,,,,Set categoly and send times at dump postion,カテゴリと送信回数@@ダンプ位置を指定する
+*,MEM_DUMP_SINGLE,OBC,,3,uint8_t,category,uint8_t,Number of generation,uint32_t,Dump position,,,,,,,,,Set categoly and send times at dump postion,カテゴリと送信回数@@ダンプ位置を指定する
+*,MEM_LOAD,OBC,,2,uint32_t,Start address,raw,HEXBINARY,,,,,,,,,,,Set start address and data,開始アドレス、データを指定
+*,MEM_SET_DESTINATION,OBC,,1,uint32_t,Copy destination address,,,,,,,,,,,,,Set copy destination,コピー先設定
+*,MEM_COPY_REGION_SEQ,OBC,,1,uint32_t,Copy length,,,,,,,,,,,,,Set copy region,領域コピー
+**,EL (Event Logger),,,,,,,,,,,,,,,,,,,
+,EL_INIT,OBC,0x0027,0,,,,,,,,,,,,,,,Initialize the event logger,EL初期化
+,EL_CLEAR_LOG_ALL,OBC,0x0028,0,,,,,,,,,,,,,,,Clear all even logger log,全ログ削除
+,EL_CLEAR_LOG_BY_ERR_LEVEL,OBC,0x0029,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,Clear event logger log with error level,エラーレベル指定ログ削除
+,EL_CLEAR_STATISTICS,OBC,0x002A,0,,,,,,,,,,,,,,,Clear statistics information of the event logger,統計情報削除
+,EL_CLEAR_TLOG,OBC,0x002B,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,Clear time seriese log (TLog) of the event logger,TLog削除
+,EL_CLEAR_CLOG,OBC,0x002C,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,Clear cumulative log (Clog) of the event logger,CLog削除
+,EL_RECORD_EVENT,OBC,0x002D,4,uint32_t,Group ID,uint32_t,Local ID,uint8_t,Level: High=0; Low=1; EL=2; EH=3,uint32_t,note,,,,,,,Recode event with the event logger,イベント記録
+,EL_TLOG_SET_PAGE_FOR_TLM,OBC,0x002E,2,uint8_t,Page number,uint8_t,Error level,,,,,,,,,,,Set telemetry page number of the time seriese log,TLogのダウンリンクテレメ設定
+,EL_CLOG_SET_PAGE_FOR_TLM,OBC,0x002F,2,uint8_t,Page number,uint8_t,Error level,,,,,,,,,,,Set telemetry page number of the cumulative log,CLogのダウンリンクテレメ設定
+,EL_INIT_LOGGING_SETTINGS,OBC,0x0030,0,,,,,,,,,,,,,,,Initialize logging setting of the event logger,ログ設定を初期化
+,EL_ENABLE_LOGGING,OBC,0x0031,1,uint32_t,Group ID,,,,,,,,,,,,,Enable logging,ロギングを有効化
+,EL_DISABLE_LOGGING,OBC,0x0032,1,uint32_t,Group ID,,,,,,,,,,,,,Disable logging,ロギングを無効化
+*,EL_ENABLE_LOGGING_ALL,OBC,,0,,,,,,,,,,,,,,,Enable all logging,すべてのロギングを有効化
+*,EL_DISABLE_LOGGING_ALL,OBC,,0,,,,,,,,,,,,,,,Disagle all logging,すべてのロギングを無効化
+,EL_ENABLE_TLOG_OVERWRITE,OBC,0x0033,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,Enable time seriese log over write,TLogのログ上書きを有効化
+,EL_DISABLE_TLOG_OVERWRITE,OBC,0x0034,1,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,,,,,Disable time seriese log over write,TLogのログ上書きを無効化
+*,EL_ENABLE_TLOG_OVERWRITE_ALL,OBC,,0,,,,,,,,,,,,,,,Enable all time seriese log over write,すべてのTLogのログ上書きを有効化
+*,EL_DISABLE_TLOG_OVERWRITE_ALL,OBC,,0,,,,,,,,,,,,,,,Disable all time seriese log over write,すべてのTLogのログ上書きを無効化
+**,EH (Event Handler),,,,,,,,,,,,,,,,,,,
+,EH_INIT,OBC,0x0035,0,,,,,,,,,,,,,,,Initialize the event handler,EHの初期化
+,EH_CLEAR_ALL_RULE,OBC,0x0036,0,,,,,,,,,,,,,,,Clear all rule of the event handler,EHのすべてのルールをクリア
+,EH_LOAD_DEFAULT_RULE,OBC,0x0037,0,,,,,,,,,,,,,,,Load default rule of the event handler,EHのデフォルトルールを読み込み
+,EH_SET_REGISTER_RULE_EVENT_PARAM,OBC,0x0038,6,uint16_t,Rule ID,uint32_t,Event group ID,uint32_t,Event local ID,uint8_t,Event error level,uint8_t,Should match error level,uint16_t,Deploy Block command ID,,,Set event parameter of the registering rule of the event handler,登録するEHルールのイベントパラメータを設定
+,EH_SET_REGISTER_RULE_CONDITION_PARAM,OBC,0x0039,4,uint8_t,condition type,uint16_t,count threshold,uint32_t,time threshold [ms],uint8_t,Is active,,,,,,,Set condition parameter of the registering rule of the event handler,登録するEHルールの対応条件パラメタを設定
+,EH_REGISTER_RULE,OBC,0x003A,0,,,,,,,,,,,,,,,Register an event handler rule with parameters set by above parameters,設定したパラメタでEHルールを登録
+,EH_DELETE_RULE,OBC,0x003B,1,uint16_t,Rule ID,,,,,,,,,,,,,Delete an event handler rule,指定したルールを削除
+,EH_INIT_RULE,OBC,0x003C,1,uint16_t,Rule ID,,,,,,,,,,,,,Initialize an event handler rule with enabling rule and clearing counter,指定したルールを初期化（ルールを有効化し，ルールカウンタも初期化）
+,EH_INIT_RULE_FOR_MULTI_LEVEL,OBC,0x003D,1,uint16_t,Rule ID,,,,,,,,,,,,,Initialize a multi-level event handler rule with enabling rule and clearing counter,指定したルールを初期化（ルールを有効化し，ルールカウンタも初期化）（多段EH対応用）
+,EH_ACTIVATE_RULE,OBC,0x003E,1,uint16_t,Rule ID,,,,,,,,,,,,,Activate an event handler rule,指定したルールを有効化
+,EH_INACTIVATE_RULE,OBC,0x003F,1,uint16_t,Rule ID,,,,,,,,,,,,,Inactivate an event handler rule,指定したルールを無効化
+,EH_ACTIVATE_RULE_FOR_MULTI_LEVEL,OBC,0x0040,1,uint16_t,Rule ID,,,,,,,,,,,,,Activate a multi-level event handler rule,指定したルールを有効化（多段EH対応用）
+,EH_INACTIVATE_RULE_FOR_MULTI_LEVEL,OBC,0x0041,1,uint16_t,Rule ID,,,,,,,,,,,,,Inactivate a multi-level event handler rule,指定したルールを無効化（多段EH対応用）
+,EH_SET_RULE_COUNTER,OBC,0x0042,2,uint16_t,Rule ID,uint16_t,counter,,,,,,,,,,,Set an event handler rule counter,EH_Rule の counter をセット
+,EH_CLEAR_RULE_COUNTER,OBC,0x0043,1,uint16_t,Rule ID,,,,,,,,,,,,,Clear an event handler rule counter to zero,EH_Rule の counter を0 クリア
+,EH_CLEAR_RULE_COUNTER_BY_EVENT,OBC,0x0044,3,uint32_t,Group ID,uint32_t,Local ID,uint8_t,Level: High=0; Low=1; EL=2; EH=3,,,,,,,,,Clear an event handler rule counter to zero with a event logger,EH_Rule の counter を EL_Event 指定で 0 クリア
+,EH_CLEAR_LOG,OBC,0x0045,0,,,,,,,,,,,,,,,Clear log of the event handler,EHの対応ログをクリア
+,EH_SET_MAX_RESPONSE_NUM,OBC,0x0046,1,uint8_t,Max response number,,,,,,,,,,,,,Set max response number of a single event handling,一度のEH実行で対応するイベントの最大数を設定
+,EH_SET_MAX_CHECK_EVENT_NUM,OBC,0x0047,1,uint16_t,Max check event number,,,,,,,,,,,,,Set max check event number of a single event handling,一度のEH実行でチェックするイベントの最大数を設定
+,EH_SET_MAX_MULTI_LEVEL_NUM,OBC,0x0048,1,uint8_t,Max multi-level number,,,,,,,,,,,,,Set max multi-level number,設定可能な最大段数を設定
+,EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM,OBC,0x0049,1,uint8_t,Page number,,,,,,,,,,,,,Set telemetry page for the event handler rule table,EHルールテーブルのテレメページの設定
+,EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM,OBC,0x004A,1,uint8_t,Page number,,,,,,,,,,,,,Set telemetry page for the event handler stored index,EHルールのソート済みテーブルのテレメページの設定
+,EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM,OBC,0x004B,1,uint8_t,Page number,,,,,,,,,,,,,Set telemetry page for the event handler log table,EHログテーブルのテレメページの設定
+,EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,OBC,0x004C,1,uint16_t,Rule ID,,,,,,,,,,,,,Set anm event handler rule ID for telemetry output,EHテレメに表示するルールのID設定
+,EH_MATCH_EVENT_COUNTER_TO_EL,OBC,0x004D,0,,,,,,,,,,,,,,,Force to match an event counter to detect event to event logger counter,イベント発生を検知するためのEHカウンタをELカウンタに強制定期に合わせる
+,EH_INIT_RULE_BY_EVENT_GROUP,OBC,0x004E,1,uint32_t,Group ID,,,,,,,,,,,,,EH_INIT_RULE command for event group,EH_INIT_RULE の by_event_group コマンド．想定外のものまで操作されないか注意すること
+,EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL,OBC,0x004F,1,uint32_t,Group ID,,,,,,,,,,,,,EH_INIT_RULE_FOR_MULTI_LEVEL command for event group,EH_INIT_RULE_FOR_MULTI_LEVEL の by_event_group コマンド．想定外のものまで操作されないか注意すること
+,EH_ACTIVATE_RULE_BY_EVENT_GROUP,OBC,0x0050,1,uint32_t,Group ID,,,,,,,,,,,,,EH_ACTIVATE_RULE command for event group,EH_ACTIVATE_RULE の by_event_group コマンド．想定外のものまで操作されないか注意すること
+,EH_INACTIVATE_RULE_BY_EVENT_GROUP,OBC,0x0051,1,uint32_t,Group ID,,,,,,,,,,,,,EH_INACTIVATE_RULE command for event group,EH_INACTIVATE_RULE の by_event_group コマンド．想定外のものまで操作されないか注意すること
+,EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL,OBC,0x0052,1,uint32_t,Group ID,,,,,,,,,,,,,EH_ACTIVATE_RULE_FOR_MULTI_LEVEL command for event group,EH_ACTIVATE_RULE_FOR_MULTI_LEVEL の by_event_group コマンド．想定外のものまで操作されないか注意すること
+,EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL,OBC,0x0053,1,uint32_t,Group ID,,,,,,,,,,,,,EH_INACTIVATE_RULE_FOR_MULTI_LEVEL command for event group,EH_INACTIVATE_RULE_FOR_MULTI_LEVEL の by_event_group コマンド．想定外のものまで操作されないか注意すること
+**,Event Utility,,,,,,,,,,,,,,,,,,,
+,EVENT_UTIL_ENABLE_EH_EXEC,OBC,0x0054,0,,,,,,,,,,,,,,,Enable the event handler execution,EHの実行を有効に
+,EVENT_UTIL_DISABLE_EH_EXEC,OBC,0x0055,0,,,,,,,,,,,,,,,Disable the event handler execution,EHの実行を無効に
+,EVENT_UTIL_EXEC_EH,OBC,0x0056,0,,,,,,,,,,,,,,,Execute a single event handler,EHを単発で実行
+**,TF (Telemetry Frame) @@ CA (Command Analyze),,,,,,,,,,,,,,,,,,,
+,TF_INIT,OBC,0x0057,0,,,,,,,,,,,,,,,Initialize telemetry frame,TFの初期化
+,CA_INIT,OBC,0x0058,0,,,,,,,,,,,,,,,Initialize command analyze,CAの初期化
+,TF_REGISTER_TLM,OBC,0x0059,2,uint8_t,Telemetry ID,uint32_t,Telemetry function,,,,,,,,,,,Register telemetry,テレメトリ登録コマンド
+,CA_REGISTER_CMD,OBC,0x005A,3,uint16_t,Command ID,uint32_t,Command function,raw,Parameter information,,,,,,,,,Register command,コマンド登録コマンド
+,TF_SET_PAGE_FOR_TLM,OBC,0x005B,1,uint8_t,Page number,,,,,,,,,,,,,Set telemetry page number for telemetry frame,テレメトリ定義テーブルページ番号設定
+,CA_SET_PAGE_FOR_TLM,OBC,0x005C,1,uint8_t,Page number,,,,,,,,,,,,,Set telemetry page number for command analyze,コマンド定義テーブルページ番号設定
+**,Time calibration,,,,,,,,,,,,,,,,,,,
+*,CCSDS_MW_SET_TCI_PARAMS,OBC,,2,int32_t,offset,uint8_t,type,,,,,,,,,,,Set time calibration information,時刻校正情報設定コマンド
+*,CCSDS_MW_GENERATE_TCAL_TLM,OBC,,2,uint8_t,cat,uint8_t,num,,,,,,,,,,,Generate time calibration packet,時刻校正パケット生成コマンド
+**,GSCD (Ground Station Command) command,,,,,,,,,,,,,,,,,,,
+,GSCD_CLEAR_ERR_LOG,OBC,0x005D,0,,,,,,,,,,,,,,,Clear the latest ground station command error log,最新のコマンド実行異常記録をクリア
+**,RTCD (Realtime command) command,,,,,,,,,,,,,,,,,,,
+,RTCD_CLEAR_ERR_LOG,OBC,0x005E,0,,,,,,,,,,,,,,,Clear the latest realtime command error log,最新のコマンド実行異常記録をクリア
+**,DCU (Divided Command Utility),,,,,,,,,,,,,,,,,,,
+,DCU_ABORT_CMD,OBC,0x005F,1,uint16_t,Command ID,,,,,,,,,,,,,Abort executing divided command,実行中の分割コマンドを停止する
+,DCU_DOWN_ABORT_FLAG,OBC,0x0060,1,uint16_t,Command ID,,,,,,,,,,,,,Down abort flag of divided command,エラー，またはコマンドによって中断ステータスとなっているコマンドを，実行可能状態に戻す
+,DCU_CLEAR_LOG,OBC,0x0061,0,,,,,,,,,,,,,,,Clear log ot dicided command,ログをクリアする
 * CDH,,,,,,,,,,,,,,,,,,,,
-**,FRAMコマンド,,,,,,,,,,,,,,,,,,,
-,DI_FM25V10_WRITE_BYTE,AOBC,0x0064,3,uint8_t,Chip1 = 0; Chip2 = 1; Chip3 = 2; Chip4 = 3,uint32_t,address = 0x000000~0x01FFFF,uint8_t,write_data,,,,,,,danger,,FRAM FM25V10に1Byteを書き込む,
-,DI_FM25V10_READ_BYTE,AOBC,0x0065,2,uint8_t,Chip1 = 0; Chip2 = 1; Chip3 = 2; Chip4 = 3,uint32_t,address = 0x000000~0x01FFFF,,,,,,,,,,,FRAM FM25V10から1Byteを読み出す,
-,DI_FM25V10_MANAGE_STATUS,AOBC,0x0066,3,uint8_t,Chip1 = 0; Chip2 = 1; Chip3 = 2; Chip4 = 3,uint8_t,write = 0; read = others,uint8_t,write_status (ignored when read),,,,,,,,,FRAM FM25V10のステータスレジスタコマンド,
-**,不揮発メモリコマンド,,,,,,,,,,,,,,,,,,,
-,APP_NVM_MANAGER_WRITE_BYTES,AOBC,0x0067,3,uint32_t,start address(0-0x7ffff),uint8_t,data size,raw,write data(consider endian),,,,,,,danger,,不揮発メモリに複数データを書き込む,
-,APP_NVM_MANAGER_READ_BYTES,AOBC,0x0068,2,uint32_t,start address(0-0x7ffff),uint8_t,data size,,,,,,,,,,,不揮発メモリから複数データを読み出す,
-,APP_NVM_PARTITION_WRITE_BYTES,AOBC,0x0069,4,uint8_t,partition ID,uint32_t,start address(0-partitin size),uint8_t,data size,raw,write data(consider endian),,,,,danger,,パーティションアクセスで不揮発メモリに複数データを書き込む,
-,APP_NVM_PARTITION_READ_BYTES,AOBC,0x006A,3,uint8_t,partition ID,uint32_t,start address(0-partitin size),uint8_t,data size,,,,,,,,,パーティションアクセスで不揮発メモリから複数データを読み出す,
-,APP_AOCS_DR_SET_WRITE,AOBC,0x006B,4,uint8_t,permission: 0=DISABLE; 1=ENABLE,uint8_t,overwrite: 0=DISABLE; 1=ENABLE,uint8_t,read_partition=2; 3; 4,uint32_t,write_pointer,,,,,,,DRの書き込み設定,
-,APP_AOCS_DR_READ,AOBC,0x006C,3,uint8_t,read_mode: 0=MANUAL; 1=CONTINUOUS,uint8_t,read_partition=2; 3; 4,uint32_t,read_pointer,,,,,,,,,DRの読み出し,
-,APP_NVM_BC_SET_ENABLE,AOBC,0x006D,1,uint8_t,0=DISABLE@@ 1=ENABLE,,,,,,,,,,,,,不揮発メモリへのBC自動バックアップを有効化/無効化する,
-,APP_NVM_BC_RESTORE_BC_FROM_NVM,AOBC,0x006E,1,uint16_t,BC ID,,,,,,,,,,,,,不揮発メモリに保存されているBCを復元する,
-,APP_NVM_BC_OTHER_SETTINGS,AOBC,0x006F,2,uint8_t,param index,uint32_t,value to set,,,,,,,,,,,不揮発BCアプリのその他の設定をいじる。軌道上での使用は基本想定していない。bc_num_to_copy は 2 以上にすると 3-3 アノマリが出ることに注意。,
+**,FRAM,,,,,,,,,,,,,,,,,,,
+,DI_FM25V10_WRITE_BYTE,AOBC,0x0064,3,uint8_t,Chip1 = 0; Chip2 = 1; Chip3 = 2; Chip4 = 3,uint32_t,address = 0x000000~0x01FFFF,uint8_t,write_data,,,,,,,danger,,Write 1-byte data to FRAM,FRAM FM25V10に1Byteを書き込む
+,DI_FM25V10_READ_BYTE,AOBC,0x0065,2,uint8_t,Chip1 = 0; Chip2 = 1; Chip3 = 2; Chip4 = 3,uint32_t,address = 0x000000~0x01FFFF,,,,,,,,,,,Read 1-byte data from FRAM,FRAM FM25V10から1Byteを読み出す
+,DI_FM25V10_MANAGE_STATUS,AOBC,0x0066,3,uint8_t,Chip1 = 0; Chip2 = 1; Chip3 = 2; Chip4 = 3,uint8_t,write = 0; read = others,uint8_t,write_status (ignored when read),,,,,,,,,Read/Write status for FRAM,FRAM FM25V10のステータスレジスタコマンド
+**,NVM (Non Volatile Memory),,,,,,,,,,,,,,,,,,,
+,APP_NVM_MANAGER_WRITE_BYTES,AOBC,0x0067,3,uint32_t,start address(0-0x7ffff),uint8_t,data size,raw,write data(consider endian),,,,,,,danger,,Write data to NVM with global access,不揮発メモリに複数データを書き込む
+,APP_NVM_MANAGER_READ_BYTES,AOBC,0x0068,2,uint32_t,start address(0-0x7ffff),uint8_t,data size,,,,,,,,,,,Read data from NVM with global access,不揮発メモリから複数データを読み出す
+,APP_NVM_PARTITION_WRITE_BYTES,AOBC,0x0069,4,uint8_t,partition ID,uint32_t,start address(0-partitin size),uint8_t,data size,raw,write data(consider endian),,,,,danger,,Write data to NVM with partition access,パーティションアクセスで不揮発メモリに複数データを書き込む
+,APP_NVM_PARTITION_READ_BYTES,AOBC,0x006A,3,uint8_t,partition ID,uint32_t,start address(0-partitin size),uint8_t,data size,,,,,,,,,Read data from NVM with partition access,パーティションアクセスで不揮発メモリから複数データを読み出す
+,APP_AOCS_DR_SET_WRITE,AOBC,0x006B,4,uint8_t,permission: 0=DISABLE; 1=ENABLE,uint8_t,overwrite: 0=DISABLE; 1=ENABLE,uint8_t,read_partition=2; 3; 4,uint32_t,write_pointer,,,,,,,Set writing setting for AOCS data recoder,DRの書き込み設定
+,APP_AOCS_DR_READ,AOBC,0x006C,3,uint8_t,read_mode: 0=MANUAL; 1=CONTINUOUS,uint8_t,read_partition=2; 3; 4,uint32_t,read_pointer,,,,,,,,,Read from AOCS data recoder,DRの読み出し
+,APP_NVM_BC_SET_ENABLE,AOBC,0x006D,1,uint8_t,0=DISABLE@@ 1=ENABLE,,,,,,,,,,,,,Enable or disable block command auto backup to NVM,不揮発メモリへのBC自動バックアップを有効化/無効化する
+,APP_NVM_BC_RESTORE_BC_FROM_NVM,AOBC,0x006E,1,uint16_t,Block command ID,,,,,,,,,,,,,Restore a block command from NVM,不揮発メモリに保存されているBCを復元する
+,APP_NVM_BC_OTHER_SETTINGS,AOBC,0x006F,2,uint8_t,param index,uint32_t,value to set,,,,,,,,,,,Set block command NVM application (Not recommended to use),不揮発BCアプリのその他の設定をいじる。軌道上での使用は基本想定していない。bc_num_to_copy は 2 以上にすると 3-3 アノマリが出ることに注意。
 **,,,,,,,,,,,,,,,,,,,,
-* POWER,電源系コマンド,,,,,,,,,,,,,,,,,,,
-,APP_PSC_CONTROL_5V_PORT,AOBC,0x0073,2,uint8_t,INA=0; MPU; RM; SS; MTQ,uint8_t,off=0; on=1,,,,,,,,,,,5V配下の電源スイッチ操作,
-,APP_PSC_CONTROL_UNREG_PORT,AOBC,0x0074,2,uint8_t,STIM=0; STT; OEM; RWX; RWY; RWZ,uint8_t,off=0; on=1,,,,,,,,,,,非安定バス配下の電源スイッチ操作,
-,DI_INA260_INIT,AOBC,0x0075,4,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,uint8_t,averaging_mode=0-7,uint8_t,voltage_conversion_time=0-7,uint8_t,current_conversion_time=0-7,,,,,,,INA260初期化モード設定,
-,DI_INA260_SET_OVER_CURRENT_PROTECTION,AOBC,0x0076,2,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,float,OC_threshold [mA],,,,,,,,,,,INA260過電流閾値設定,
-,APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD,AOBC,0x0077,2,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,uint16_t,HW_OC_EL_threshold [V],,,,,,,,,,,H/W過電流EL登録用電圧閾値設定,
-,APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION,AOBC,0x0078,2,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,uint16_t,SW_OC_threshold [mA],,,,,,,,,,,S/W過電流閾値設定,
+* POWER,Power sub system,,,,,,,,,,,,,,,,,,,
+,APP_PSC_CONTROL_5V_PORT,AOBC,0x0073,2,uint8_t,INA=0; MPU; RM; SS; MTQ,uint8_t,off=0; on=1,,,,,,,,,,,Control power switch of 5V power line,5V配下の電源スイッチ操作
+,APP_PSC_CONTROL_UNREG_PORT,AOBC,0x0074,2,uint8_t,STIM=0; STT; OEM; RWX; RWY; RWZ,uint8_t,off=0; on=1,,,,,,,,,,,Control power switch of unregurated power line,非安定バス配下の電源スイッチ操作
+,DI_INA260_INIT,AOBC,0x0075,4,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,uint8_t,averaging_mode=0-7,uint8_t,voltage_conversion_time=0-7,uint8_t,current_conversion_time=0-7,,,,,,,Initialize INA260 current sensor setting,INA260初期化モード設定
+,DI_INA260_SET_OVER_CURRENT_PROTECTION,AOBC,0x0076,2,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,float,OC_threshold [mA],,,,,,,,,,,Set hardware over current protection setting for INA260,INA260過電流閾値設定
+,APP_CURRENT_ANOMALY_SET_HW_OC_EL_THRESHOLD,AOBC,0x0077,2,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,uint16_t,HW_OC_EL_threshold [V],,,,,,,,,,,Set hardware over current detection voltage threshold,H/W過電流EL登録用電圧閾値設定
+,APP_CURRENT_ANOMALY_SET_SW_OVER_CURRENT_PROTECTION,AOBC,0x0078,2,uint8_t,PIC=0; STIM; STT; OEM; RM; SS; MTQ; RWX; RWY; RWZ,uint16_t,SW_OC_threshold [mA],,,,,,,,,,,Set software over current protection current threshold,S/W過電流閾値設定
 **,,,,,,,,,,,,,,,,,,,,
 **,,,,,,,,,,,,,,,,,,,,
-**,姿勢系コマンド,,,,,,,,,,,,,,,,,,,
-* COMPO,コンポ関連,,,,,,,,,,,,,,,,,,,
-,DI_RM3100_INIT,AOBC,0x007B,1,uint8_t,0=AOBC@@1=EXT,,,,,,,,,,,,,RM3100の初期化を行う,
-,DI_MPU9250_INIT,AOBC,0x007C,0,,,,,,,,,,,,,,,MPU9250の初期化を行う,
-,DI_MTQ_SEIREN_OUTPUT,AOBC,0x007D,2,uint8_t,idx,int8_t,polarity (1 = positive@@ -1 = negative@@ 0 = off),,,,,,,,,,,MTQに電流を流し、磁気モーメントを発生させる,
-,DI_STIM210_INIT,AOBC,0x007E,0,,,,,,,,,,,,,,,STIM210の初期化を行う (デフォルトの設定で出力),
-,DI_STIM210_SET_MODE,AOBC,0x007F,1,uint8_t,1=NORMAL@@2=SERVICE,,,,,,,,,,,,,STIM210の運用モードをノーマル/サービスモードに変更,
-,DI_STIM210_SET_NORMAL_MODE_FORMAT,AOBC,0x0080,1,uint8_t,0=RATE@@2=RATE_TEMP,,,,,,,,,,,,,STIM210の出力を変更（温度出力などを追加）,
-,DI_STIM210_SET_GYRO_OUTPUT,AOBC,0x0081,1,uint8_t,0=ANG_VEL@@1=INCREMENTAL_ANG@@2=AVERAGE_ANG_VEL@@3=INTEGRATED_ANG,,,,,,,,,,,,,STIM210のジャイロ出力を角速度・角度から選択,
-,DI_STIM210_SET_SAMPLE_RATE,AOBC,0x0082,1,uint8_t,0=TRIGGER@@1=125Hz,,,,,,,,,,,,,STIM210のサンプルレートを設定,
-,DI_STIM210_SET_TERMINATION_MODE,AOBC,0x0083,1,uint8_t,0=OFF; 1=CRLF,,,,,,,,,,,,,STIM210の終端設定,
-,DI_STIM210_SET_LOW_PASS_FILTER,AOBC,0x0084,1,uint8_t,0=16Hz; 1=33Hz; 2=66Hz@@3=131Hz@@4=262Hz,,,,,,,,,,,,,STIM210のLPFカットオフ周波数設定,
-,DI_OEM7600_ONOFF_ANTENNA_POWER,AOBC,0x0085,2,uint8_t,oem_id,uint8_t,off=0; on=1,,,,,,,,,,,OEM7600のアンテナ電源操作,
-,DI_OEM7600_SOFTWARE_RESET,AOBC,0x0086,2,uint8_t,oem_id,uint8_t,time[sec],,,,,,,,,,,OEM7600のソフトウェアリセット,
-*,DI_OEM7600_SAVE_TLM_SETTING,AOBC,,1,uint8_t,oem_id,,,,,,,,,,,,,OEM7600の出力テレメ設定保存,
-,DI_OEM7600_SET_TLM_CONTENTS,AOBC,0x0087,3,uint8_t,oem_id,uint8_t,out_interval,uint32_t,oem7600_tlm_id,,,,,,,,,OEM7600の出力テレメ設定変更,
-,DI_OEM7600_SET_RESET_GPIO_HIGHLOW,AOBC,0x0088,2,uint8_t,oem_id,uint8_t,low=0; high=1,,,,,,,,,,,OEM7600のハードウェアリセット,
-,DI_RW0003_INIT,AOBC,0x0089,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,RW0003の初期化を行う,
-,DI_RW0003_SET_IDLE,AOBC,0x008A,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,RW0003をIdleモードに入れる,
-,DI_RW0003_DRIVE_TORQUE,AOBC,0x008B,2,uint8_t,RWX=0; RWY; RWZ,float,torque [Nm],,,,,,,,,,,RW0003にトルク指令を与える,
-,DI_RW0003_DRIVE_SPEED,AOBC,0x008C,2,uint8_t,RWX=0; RWY; RWZ,float,speed [rad/s],,,,,,,,,,,RW0003に回転数指令を与える,
-*,DI_RW0003_READ_VDD,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,RW0003のVDDを読み取る,
-*,DI_RW0003_READ_SEU_COUNT,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,RW0003のSEU COUNTを読み取る,
-*,DI_RW0003_READ_FAULT_STATE,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,RW0003のFault Stateを読み取る,
-*,DI_RW0003_DIAGNOSTIC,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,RW0003にDiagnosticコマンドを送る,
-,DI_SAGITTA_BOOT,AOBC,0x008D,0,,,,,,,,,,,,,,,SAGITTAをブートしてノミナルモードに移行する,
-,DI_SAGITTA_SET_UNIX_TIME_US,AOBC,0x008E,2,uint32_t,upper 32bit,uint32_t,lower 32bit,,,,,,,,,,,SAGITTAのUnixTime[us]の設定,
-*,DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY,AOBC,,1,uint8_t,tlm_id,,,,,,,,,,,,,SAGITTAの同期式テレメトリを要求,
-,DI_SAGITTA_SET_PARAMETER,AOBC,0x008F,1,uint8_t,PARAMETER_ID,,,,,,,,,,,,,SAGITTAにパラメータ設定コマンドを送る,
-,DI_SAGITTA_CHANGE_PARAMETER,AOBC,0x0090,3,uint8_t,PARAMETER_ID,uint8_t,PARAMETER_IDX,float,value,,,,,,,,,SAGITTAドライバ内のパラメータを変更する,
-,DI_SAGITTA_READ_PARAMETER,AOBC,0x0091,1,uint8_t,PARAMETER_ID,,,,,,,,,,,,,SAGITTAのパラメータを読み取る,
-**,座標変換,,,,,,,,,,,,,,,,,,,
-,DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0092,5,uint8_t,0=AOBC; 1=EXT,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,RM3100の座標変換Quaternion_c2bを設定する,
-,DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0093,5,uint8_t,0=AOBC,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,MPU9250の座標変換Quaternion_c2bを設定する,
-,DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0094,5,uint8_t,IDX = 0 to max 5,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,NanoSSOC-D60の座標変換Quaternion_c2bを設定する,
-,DI_STIM210_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0095,5,uint8_t,0=IN UNIT,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,STIM210の座標変換Quaternion_c2bを設定する,
-,DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0096,5,uint8_t,0=IN UNIT,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,SAGITTAの座標変換Quaternion_c2bを設定する,
-,DI_RW0003_SET_ROTATION_DIRECTION_VECTOR,AOBC,0x0097,4,uint8_t,RWX=0; RWY; RWZ,float,body_x,float,body_y,float,body_z,,,,,,,RW回転方向ベクトルを設定する,
-,DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR,AOBC,0x0098,4,uint8_t,MTQ_X=0; MTQ_Y; MTQ_Z,float,body_x,float,body_y,float,body_z,,,,,,,MTQ磁気モーメント方向を設定する,
-**,バイアス補正,,,,,,,,,,,,,,,,,,,
-,DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S,AOBC,0x0099,4,uint8_t,0=AOBC,float,compo_x_rad_s,float,compo_y_rad_s,float,compo_z_rad_s,,,,,,,MPU9250角速度バイアス誤差を設定する,
-,DI_MPU9250_SET_MAG_BIAS_COMPO_NT,AOBC,0x009A,5,uint8_t,0=AOBC,float,compo_x_nT,float,compo_y_nT,float,compo_z_nT,uint8_t,0=set; 1=add,,,,,MPU9250磁場バイアス誤差を設定する,
-,DI_RM3100_SET_MAG_BIAS_COMPO_NT,AOBC,0x009B,5,uint8_t,0=AOBC; 1=EXT,float,compo_x_nT,float,compo_y_nT,float,compo_z_nT,uint8_t,0=set; 1=add; 2=default,,,,,RM3100磁場バイアス誤差を設定する,
-,DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S,AOBC,0x009C,4,uint8_t,0=IN UNIT,float,compo_x_rad_s,float,compo_y_rad_s,float,compo_z_rad_s,,,,,,,STIM210角速度バイアス誤差を設定する,
-**,温度補正,,,,,,,,,,,,,,,,,,,
-,DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB,AOBC,0x009D,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,MPU角速度バイアス温度補正値の設定,
-,DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB,AOBC,0x009E,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,MPU角速度SF温度補正値の設定,
-,DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB,AOBC,0x009F,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,STIM角速度バイアス温度補正値の設定,
-,DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB,AOBC,0x00A0,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,STIM角速度SF温度補正値の設定,
-**,セレクター,,,,,,,,,,,,,,,,,,,
-,APP_MAG_SELECTOR_SET_STATE,AOBC,0x00A1,1,uint8_t,RM_AOBC=0; RM_EXT; MPU; FUSION,,,,,,,,,,,,,使う磁気センサを選択する,
-,APP_GYRO_SELECTOR_SET_STATE,AOBC,0x00A2,1,uint8_t,MPU=0; STIM; FUSION,,,,,,,,,,,,,使うジャイロセンサを選択する,
-,SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD,AOBC,0x00A3,2,float,lower_threshold_percent,float,upper_threshold_percent,,,,,,,,,,,サンセンサが使用可能であると判定する太陽強度閾値設定,
-**,アノマリー,,,,,,,,,,,,,,,,,,,
-,APP_TEMPERATURE_ANOMALY_SET_THRESHOLD,AOBC,0x00A4,3,uint8_t,0=PIC; RW_DCDC; ROUGH_GYRO; FINE_GYRO_X; Y; Z; STT_MCU; STT_CMOS; RW_X; Y; Z; GPSR,float,upper_degC,float,lower_degC,,,,,,,,,温度アノマリ閾値設定,
-**,磁気排他制御,,,,,,,,,,,,,,,,,,,
-,APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE,AOBC,0x00A5,1,uint8_t,is_enable,,,,,,,,,,,,,磁気排他制御の有効・無効設定（0=無効・1＝有効）,
-,APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION,AOBC,0x00A6,3,uint16_t,observe_duration[ms],uint16_t,control_duration[ms],uint16_t,standby_duration[ms],,,,,,,,,磁気排他制御に関する時間コンフィグ設定,
-,APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO,AOBC,0x00A7,2,uint8_t,X=0; Y; Z,int8_t,output ratio,,,,,,,,,,,MTQの出力時間比を[-100@@ +100]（単位：％）の範囲で手動で設定する,
-* FILTER,センサフィルター関連,,,,,,,,,,,,,,,,,,,
-,APP_MPU9250_FILTER_SET_ZFILTER_PARAM,AOBC,0x00A8,4,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,float,sampling_freq_Hz,float,cut_off_feq_Hz,,,,,,,MPU9250のSW-LPF設定,
-*,APP_MPU9250_FILTER_RESET_ZFILTER,AOBC,,2,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,,,,,,,,,,,MPU9250のSW-LPFリセット,
-,APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00A9,6,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,MPU9250のSpike除去フィルタ設定,
-*,APP_MPU9250_FILTER_RESET_SPIKE_FILTER,AOBC,,2,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,,,,,,,,,,,MPU9250のSpike除去フィルタリセット,
-,APP_STIM210_FILTER_SET_ZFILTER_PARAM,AOBC,0x00AA,4,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,float,sampling_freq_Hz,float,cut_off_feq_Hz,,,,,,,STIM210のSW-LPF設定,
-*,APP_STIM210_FILTER_RESET_ZFILTER,AOBC,,2,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,,,,,,,,,,,STIM210のSW-LPFリセット,
-,APP_STIM210_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AB,6,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,STIM210のSpike除去フィルタ設定,
-*,APP_STIM210_FILTER_RESET_SPIKE_FILTER,AOBC,,2,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,,,,,,,,,,,STIM210のSpike除去フィルタリセット,
-,APP_RM3100_FILTER_SET_ZFILTER_PARAM,AOBC,0x00AC,4,uint8_t,ON AOBC=0; EXTERNAL=1,uint8_t,X=0; Y; Z,float,sampling_freq_Hz,float,cut_off_feq_Hz,,,,,,,RM3100のSW-LPF設定,
-,APP_RM3100_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AD,6,uint8_t,ON AOBC=0; EXTERNAL=1,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,RM3100のSpike除去フィルタ設定,
-,APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AE,5,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,,,RW0003のSpike除去フィルタ設定,
-*,APP_RW0003_FILTER_RESET_SPIKE_FILTER,AOBC,,1,uint8_t,uint8_t,,,,,,,,,,,,,RW0003のSpike除去フィルタリセット,
-,APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AF,6,uint8_t,oem_id,uint8_t,Xp=0; Yp; Zp; Xv; Yv; Zv,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,OEM7600のSpike除去フィルタ設定,第2引数の値は位置XYZ~速度XYZが0~5に対応
-,APP_SAGITTA_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00B0,5,uint8_t,sagitta_id,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,,,SagittaのSpike除去フィルタ設定,
-,APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00B1,4,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,,,,,太陽センサのSpike除去フィルタ設定,
-* ALGORITHM,姿勢制御アルゴリズム関連,,,,,,,,,,,,,,,,,,,
-**,自動モード遷移,,,,,,,,,,,,,,,,,,,
-,APP_AOCS_MM_SET_AUTO_MODE_TRANSITION,AOBC,0x00B7,1,uint8_t,0=disable; 1=enable,,,,,,,,,,,,,自動モード遷移 Enable/Disable設定,
-,APP_AOCS_MM_SET_ANG_VEL_THRESHOLD,AOBC,0x00B8,4,float,angular_rate_limit [rad/s],float,ang_vel_time_limit [sec],float,norm_increase_limit_rad_s,float,anomaly_detection_period_s,,,,,,,角速度制御終了判定閾値設定（Bdot）,
-,APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD,AOBC,0x00B9,2,float,sun_angle_limit [rad],float,sun_angle_time_limit [sec],,,,,,,,,,,太陽補足制御失敗判定閾値設定,
-,APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD,AOBC,0x00BA,2,float,3axis_error_limit [rad],float,3axis_error_time_limit [sec],,,,,,,,,,,三軸制御失敗判定閾値設定,
-,APP_AOCS_MM_SET_INVISIBLE_THRESHOLD,AOBC,0x00BB,2,float,sun_invisible_time_limit[sec],float,stt_invisible_time_limit[sec],,,,,,,,,,,センサー異常判定時間閾値設定,
-**,姿勢決定,,,,,,,,,,,,,,,,,,,
-,APP_RTAD_SET_METHOD,AOBC,0x00BC,2,uint8_t,0=TRIAD; 1=Qmethod,uint8_t,0=Sun vector; 1=Quaternion,,,,,,,,,,,粗三軸姿勢決定手法を設定する,
-,APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT,AOBC,0x00BD,1,float,sun_vec_weight,,,,,,,,,,,,,Qmethodで使用する太陽方向ベクトルの重みを[0.0; 1.0]の範囲で設定する,磁場ベクトルの重みは1.0からこの値を引いた値になる
-,APP_FTAD_SET_METHOD,AOBC,0x00BE,1,uint8_t,0=STT; 1=EKF,,,,,,,,,,,,,精三軸姿勢決定手法を設定する,
-,STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION,AOBC,0x00BF,3,float,gyro_random_noise_covariance X [rad/s],float,gyro_random_noise_covariance Y [rad/s],float,gyro_random_noise_covariance Z [rad/s],,,,,,,,,STT Gyro EKFにおけるジャイロのランダムノイズ設定（コンポ座標系）,
-,STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION,AOBC,0x00C0,4,float,gyro_random_walk_covariance X [rad/s2],float,gyro_random_walk_covariance Y [rad/s2],float,gyro_random_walk_covariance Z [rad/s2],float,gyro_random_walk_time_constant [s],,,,,,,STT Gyro EKFにおけるジャイロのランダムウォーク設定（コンポ座標系）,
-,STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION,AOBC,0x00C1,3,float,stt_error X [rad],float,stt_error Y [rad],float,stt_error Z [rad],,,,,,,,,STT Gyro EKFにおけるSTTの観測誤差設定（コンポ座標系）,
-,STT_GYRO_EKF_RESET_ESTIMATION,AOBC,0x00C2,5,uint8_t,mode（0=単位quaternionで初期化，1=aocs managerのquaternion_est_i2bで初期化，2=残りの引数で初期化）,float,quaternion_i2b_x,float,quaternion_i2b_y,float,quaternion_i2b_z,float,quaternion_i2b_w,,,,,STT Gyro EKFの推定値全リセット,
-,STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE,AOBC,0x00C3,1,uint8_t,0=enable; 1=disable,,,,,,,,,,,,,STT Gyro EKFの推定値を衛星の姿勢推定値に反映するかどうか,
-,STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX,AOBC,0x00C4,4,float,diagonal_stt_component_x,float,diagonal_stt_component_y,float,diagonal_stt_component_z,float,diagonal_gyro_component,,,,,,,STT Gyro EKFの共分散行列の初期値設定,
-,STT_GYRO_EKF_SET_PROCESS_NOISE_MATRIX,AOBC,0x00C5,2,float,attitude_element,float,attitude_rate_element,,,,,,,,,,,STT Gyro EKFのプロセスノイズ設定,
-**,姿勢制御,,,,,,,,,,,,,,,,,,,
-,APP_BDOT_SET_CONTROL_GAIN,AOBC,0x00C6,3,float,gain x (negative value only),float,gain y (negative value only),float,gain z (negative value only),,,,,,,,,Bdot則のゲイン設定,
-,APP_BDOT_SET_TIMING,AOBC,0x00C7,1,uint32_t,minimum_time_derivative_step_time[ms],,,,,,,,,,,,,Bdot則の時間パラメータ（微分計算の最小インターバル）の設定をする,
-,APP_SUN_POINTING_SET_GAIN,AOBC,0x00C8,5,uint8_t,0=omega@@ 1=att,uint8_t,0=X@@ 1=Y@@ 2=Z,float,P_gain,float,I_gain,float,D_gain,,,,,太陽補足制御のゲイン設定,
-,APP_SUN_POINTING_SAVE_GAIN,AOBC,0x00C9,0,,,,,,,,,,,,,,,太陽補足制御ゲインを制御に使い始める,
-,APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS,AOBC,0x00CA,5,float,angle_limit_rad,float,rate_limit_rad_s,float,integ_angle_limit_rad,float,angle_to_run_integ_rad,float,integ_permission_angle_rad,,,,,,
-,APP_SUN_POINTING_SET_LPF_PARAMS,AOBC,0x00CB,5,float,sample_freq_hz,float,cutoff_freq_hz,float,damping_factor,float,cutoff_freq_axis_hz,float,cutoff_freq_spin_rate_hz,,,,,,
-,APP_SUN_POINTING_SET_ANTI_INTOXICATION_PARAMS,AOBC,0x00CC,5,float,error_ratio_transient,float,gain_transient,float,error_ratio_stable,float,gain_stable,float,threshold_angle_stable_rad,,,,,,
-,APP_TAC_MTQ_SET_GAIN,AOBC,0x00CD,5,uint8_t,0=omega@@ 1=att,uint8_t,0=X@@ 1=Y@@ 2=Z,float,P_gain,float,I_gain,float,D_gain,,,,,MTQ三軸制御のゲイン設定,
-,APP_TAC_MTQ_SAVE_GAIN,AOBC,0x00CE,0,,,,,,,,,,,,,,,MTQ三軸制御ゲインを制御に使い始める,
-,APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS,AOBC,0x00CF,4,float,angle_limit_rad,float,rate_limit_rad_s,float,integ_angle_limit_rad,float,angle_to_run_integ_rad,,,,,,,,
-,APP_TAC_MTQ_SET_LPF_PARAMS,AOBC,0x00D0,3,float,sample_freq_hz,float,cutoff_freq_hz,float,damping_factor,,,,,,,,,,
-,APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS,AOBC,0x00D1,5,float,error_ratio_transient,float,gain_transient,float,error_ratio_stable,float,gain_stable,float,threshold_angle_stable_rad,,,,,,
-,APP_TAC_RW_SET_GAIN,AOBC,0x00D2,5,uint8_t,0=omega@@ 1=att,uint8_t,0=X@@ 1=Y@@ 2=Z,float,P_gain,float,I_gain,float,D_gain,,,,,RW三軸制御のゲイン設定,
-,APP_TAC_RW_SAVE_GAIN,AOBC,0x00D3,0,,,,,,,,,,,,,,,RW三軸制御ゲインを制御に使い始める,
-,APP_UNLOADING_SET_ENABLE,AOBC,0x00D4,1,uint8_t,0 = enable@@ 1 = disable,,,,,,,,,,,,,アンローディング制御を有効にするかどうかを設定する,
-,APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD,AOBC,0x00D5,4,uint8_t,0=X@@ 1=Y@@ 2=Z,int16_t,angular_velocity_upper_threshold_rpm,int16_t,angular_velocity_target_rpm,int16_t,angular_velocity_lower_threshold_rpm,,,,,,,アンローディングの角速度閾値設定,
-,APP_UNLOADING_SET_CONTROL_GAIN,AOBC,0x00D6,1,float,control_gain  (negative value only),,,,,,,,,,,,,アンローディングのゲイン設定,
-**,オンボード目標値計算,,,,,,,,,,,,,,,,,,,
-,APP_TARGET_ATT_CALC_SET_MODE,AOBC,0x00D7,1,uint8_t,MANUAL=0@@ CALCULATION_FROM_ORBIT=1@@ INTERPOLATION=2,,,,,,,,,,,,,目標姿勢計算方法を設定する,
-,APP_TARGET_ATT_CALC_ENABLE,AOBC,0x00D8,1,uint8_t,DISABLE=0@@ ENABLE=1,,,,,,,,,,,,,計算した目標Quaternionをaocs_managerに反映するか設定する,
-,APP_TAFO_SET_MAIN_TARGET_DIRECTION,AOBC,0x00D9,4,uint8_t,SUN=0@@ SAT_VELOCITY=1@@ EARTH_CENTER=2@@ EARTH_SURFACE=3@@ ORBIT_NORMAL=4,float,vec_to_main_tareget_x,float,vec_to_main_tareget_y,float,vec_to_main_tareget_z,,,,,,,目標方向（main）を設定する,
-,APP_TAFO_SET_SUB_TARGET_DIRECTION,AOBC,0x00DA,4,uint8_t,SUN=0@@ SAT_VELOCITY=1@@ EARTH_CENTER=2@@ EARTH_SURFACE=3@@ ORBIT_NORMAL=4,float,vec_to_sub_tareget_x,float,vec_to_sub_tareget_y,float,vec_to_sub_tareget_z,,,,,,,目標方向（sub）を設定する,
-,APP_TAFO_SET_OFFSET_ANGLE_AND_AXIS,AOBC,0x00DB,2,uint8_t,+X=0@@ +Y=1@@ +Z=2,float,offset_angle_deg,,,,,,,,,,,目標姿勢に対するオフセット角（-180deg ~ +180deg）を設定する,
-,APP_TAFO_SET_TARGET_LLA,AOBC,0x00DC,3,float,latitude_deg,float,longitude_deg,float,altitude_m,,,,,,,,,目標地表点の緯度経度高度(-90deg ~ +90deg@@ -180deg ~ +180deg@@ 0m ~)を設定する,
-*,APP_TAFO_ENABLE,AOBC,,1,uint8_t,DISABLE=0@@ ENABLE=1,,,,,,,,,,,,,推定軌道から計算した目標Quaternionをaocs_managerに反映するか設定する,
-,APP_QI_SET_NEXT_TARGET_QUATERNION,AOBC,0x00DD,5,uint32_t,attitude_changed_ti,float,q_i2t_vec_0,float,q_i2t_vec_1,float,q_i2t_vec_2,float,q_i2t_scalar,,,,,目標Quaternionを設定する,
-,APP_QI_SET_PREV_TARGET_QUATERNION,AOBC,0x00DE,6,uint8_t,CURRENT_ATTITUDE=0@@ ARBITRARY_ATTITUDE=1,uint32_t,attitude_changed_ti,float,q_i2t_vec_0,float,q_i2t_vec_1,float,q_i2t_vec_2,float,q_i2t_scalar,,,内挿計算の始点となるQuaternionを設定する,
-,APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY,AOBC,0x00DF,5,double,attitude_changed_jday,float,q_i2t_vec_0,float,q_i2t_vec_1,float,q_i2t_vec_2,float,q_i2t_scalar,,,,,目標Quaternionをユリウス日で設定する,
-,APP_QI_RESET_TARGET_QUATERNION,AOBC,0x00E0,0,,,,,,,,,,,,,,,目標Quaternionをリセットする,
-*,APP_QI_ENABLE,AOBC,,1,uint8_t,DISABLE=0; ENABLE=1,,,,,,,,,,,,,内挿計算した目標Quaternionをaocs_managerに反映するか設定する,
-**,環境演算,,,,,,,,,,,,,,,,,,,
-,APP_TIME_SPACE_CALC_SET_OFFSET_TIME,AOBC,0x00E1,1,float,offset_time [sec],,,,,,,,,,,,,計算結果を使用する時刻と実行時刻の間のオフセット設定,
-* MANAGER,AOCS MANAGER関連,,,,,,,,,,,,,,,,,,,
-**,衛星構造,,,,,,,,,,,,,,,,,,,
-,APP_AOCS_MANAGER_SET_MASS,AOBC,0x00E3,1,float,mass_kg,,,,,,,,,,,,,衛星質量を設定する,
-,APP_AOCS_MANAGER_SET_INERTIA_TENSOR,AOBC,0x00E4,6,float,Ixx_kgm2,float,Iyy_kgm2,float,Izz_kgm2,float,Ixy_kgm2,float,Ixz_kgm2,float,Iyz_kgm2,,,衛星慣性テンソルを設定する,
-,APP_AOCS_MANAGER_SET_RMM,AOBC,0x00E5,3,float,RMM_X_Am2,float,RMM_Y_Am2,float,RMM_Z_Am2,,,,,,,,,衛星残留磁気モーメントを設定する,
-**,目標値マニュアル設定,,,,,,,,,,,,,,,,,,,
-,APP_AOCS_MANAGER_SET_TARGET_QUATERNION,AOBC,0x00E6,4,float,q_i2t_x,float,q_i2t_y,float,q_i2t_z,float,q_i2t_w,,,,,,,目標Quaternionを設定する,
-,APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE,AOBC,0x00E7,2,uint8_t,Axis 0=X@@ 1=Y@@ 2=Z,float,angle_deg(-180~180),,,,,,,,,,,現在の推定Quaternionをもとに目標Quaternionを設定する,
-,APP_AOCS_MANAGER_SET_LIMIT_MANEUVER_ANGLE,AOBC,0x00E8,1,float,angle_deg(0~180),,,,,,,,,,,,,目標Quaternion設定時の姿勢変更角度制限を設定する,
-,APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY,AOBC,0x00E9,1,float,angular_velocity_deg_s(0~),,,,,,,,,,,,,目標角速度制限を設定する,
-**,その他,,,,,,,,,,,,,,,,,,,
-,APP_AOCS_MANAGER_SET_REFERENCE_TIME,AOBC,0x00EA,1,double,reference_time_jday,,,,,,,,,,,,,参照絶対時刻を設定する（TLCで設定すること推奨）,
-,APP_AOCS_MANAGER_SET_CONSTANT_TORQUE,AOBC,0x00EB,3,float,torque_body_x,float,torque_body_y,float,torque_body_z,,,,,,,,,一定出力トルクを設定する,
-,APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION,AOBC,0x00EC,1,uint8_t,0=DISABLE@@ 1=ENABLE,,,,,,,,,,,,,一定出力トルクの出力許可フラグを設定する,
-*,APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE,AOBC,,1,uint8_t,0=IDLE@@ 1=ACTIVE,,,,,,,,,,,,,磁気センサ磁気トルカ干渉状態を設定する,
-,APP_AOCS_MANAGER_SET_MAX_IN_TORQUE,AOBC,0x00ED,3,float,max_torque_x (>0),float,max_torque_y (>0),float,max_torque_z (>0),,,,,,,,,内部トルク最大出力制限の設定,
-,APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE,AOBC,0x00EE,3,float,max_torque_x (>0),float,max_torque_y (>0),float,max_torque_z (>0),,,,,,,,,外部トルク最大出力制限の設定,
-* ORBIT,軌道関連,,,,,,,,,,,,,,,,,,,
-,APP_ORBIT_CALC_SET_METHOD,AOBC,0x00F6,1,uint8_t,0=Kepler; 1=SGP4; 2=Kepler+GPSR; 3=EKF,,,,,,,,,,,,,軌道伝搬則の選択,
-,APP_ORBIT_CALC_SET_GPSR_UPDATE,AOBC,0x00F7,1,uint8_t,0=disable; 1=enable,,,,,,,,,,,,,GPSRテレメを用いたKepler軌道伝播を有効にする,
-,APP_KOP_SET_ORBIT_ELEMENTS,AOBC,0x00F8,6,float,semi_major [km],float,eccentricity,float,inclination [rad],float,raan [rad],float,arg_perigee [rad],double,epoch [jday],,,Kepler軌道伝搬の軌道要素設定,
-,APP_KOP_SAVE_ORBIT_ELEMENTS,AOBC,0x00F9,0,,,,,,,,,,,,,,,上で設定した軌道要素を使って伝搬計算を始める,
-,APP_SGP4_SET_TLE_LINE1,AOBC,0x00FA,3,uint8_t,epoch_year,double,epoch_day,float,b_star,,,,,,,,,SGP4軌道伝搬のTLE１行目設定,
-,APP_SGP4_SET_TLE_LINE2,AOBC,0x00FB,6,float,inclination [deg],float,raan [deg],float,eccentricity,float,arg_peri [deg],float,mean_ano [deg],float,mean_motion [rpd],,,SGP4軌道伝搬のTLE2行目設定,
-,APP_SGP4_SAVE_TLE,AOBC,0x00FC,0,,,,,,,,,,,,,,,上で設定したTLEを使って伝搬計算を始める,
-,APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD,AOBC,0x00FD,2,uint8_t,oe_id 0=a[km]@@ 1=e@@ 2=i[rad]@@ 3=raan[rad]@@ 4=arg_perigee[rad]@@ 5=epoch[jday],double,value,,,,,,,,,,,GPSRテレメを用いた軌道要素更新の更新幅閾値を設定する,
-**,太陽捕捉時目標値変更,,,,,,,,,,,,,,,,,,,
-,APP_SUN_POINTING_SET_TARGET,AOBC,0x00FE,4,float,directional_vector_Xb[-],float,directional_vector_Yb[-],float,directional_vector_Zb[-],float,spin_rate [rad/s],,,,,,,太陽指向時させたい機体軸方向とその軸周りの回転レートを変更,
-**,GPSR BaudRate変更,,,,,,,,,,,,,,,,,,,
-,DI_OEM7600_SET_UART_BAUDRATE,AOBC,0x00FF,3,uint8_t,oem_id,uint32_t,baudrate,uint8_t,0=AOBC@@ 1=GPSR,,,,,,,,,OEM7600のBaudRate変更,
-* Other,汎用コマンド用コマンド,,,,,,,,,,,,,,,,,,,
-*,UTIL_CMD_ADD,OBC,,6,uint8_t,,uint32_t,,uint32_t,,uint32_t,,uint32_t,,uint32_t,,,,汎用コマンドのバッファに指定サイズのデータを入れる,
-*,UTIL_CMD_SEND,OBC,,1,uint8_t,,,,,,,,,,,,,,引数のCHに汎用コマンドのバッファにあるデータを送信する,
-*,UTIL_CMD_RESET,OBC,,0,,,,,,,,,,,,,,,汎用コマンドのバッファをクリアする,
-**,汎用カウンタ用コマンド,,,,,,,,,,,,,,,,,,,
-*,UTIL_COUNTER_INCREMENT,OBC,,1,uint8_t,,,,,,,,,,,,,,引数の汎用カウンタをインクリメントする,
-*,UTIL_COUNTER_RESET,OBC,,1,uint8_t,,,,,,,,,,,,,,引数の汎用カウンタをリセットする．0xffでALL_CLR,
-*,UTIL_COUNTER_SET_PARAM,OBC,,3,uint8_t,,uint32_t,,uint8_t,,,,,,,,,,引数の汎用カウンタの閾値・アノマリ発行有無を設定する,
+**,AOCS commands,,,,,,,,,,,,,,,,,,,
+* COMPO,Components,,,,,,,,,,,,,,,,,,,
+,DI_RM3100_INIT,AOBC,0x007B,1,uint8_t,0=AOBC@@1=EXT,,,,,,,,,,,,,Initialize RM3100 fine magnetometer setting,RM3100の初期化を行う
+,DI_MPU9250_INIT,AOBC,0x007C,0,,,,,,,,,,,,,,,Initialize MPU9250 9-axis sensor setting,MPU9250の初期化を行う
+,DI_MTQ_SEIREN_OUTPUT,AOBC,0x007D,2,uint8_t,MTQ_X=0; MTQ_Y; MTQ_Z,int8_t,polarity (1 = positive@@ -1 = negative@@ 0 = off),,,,,,,,,,,Drive MTQ to generate magnetic moment,MTQに電流を流し、磁気モーメントを発生させる
+,DI_STIM210_INIT,AOBC,0x007E,0,,,,,,,,,,,,,,,Initialize STIM210 fine gyro sensor as default setting,STIM210の初期化を行う (デフォルトの設定で出力)
+,DI_STIM210_SET_MODE,AOBC,0x007F,1,uint8_t,1=NORMAL@@2=SERVICE,,,,,,,,,,,,,Set operation mode of STIM210,STIM210の運用モードをノーマル/サービスモードに変更
+,DI_STIM210_SET_NORMAL_MODE_FORMAT,AOBC,0x0080,1,uint8_t,0=RATE@@2=RATE_TEMP,,,,,,,,,,,,,Set telemetry output format mode of STIM210,STIM210の出力を変更（温度出力などを追加）
+,DI_STIM210_SET_GYRO_OUTPUT,AOBC,0x0081,1,uint8_t,0=ANG_VEL@@1=INCREMENTAL_ANG@@2=AVERAGE_ANG_VEL@@3=INTEGRATED_ANG,,,,,,,,,,,,,Set gyro sensor output mode of STIM210,STIM210のジャイロ出力を角速度・角度から選択
+,DI_STIM210_SET_SAMPLE_RATE,AOBC,0x0082,1,uint8_t,0=TRIGGER@@1=125Hz,,,,,,,,,,,,,Set sampling rate of STIM210,STIM210のサンプルレートを設定
+,DI_STIM210_SET_TERMINATION_MODE,AOBC,0x0083,1,uint8_t,0=OFF; 1=CRLF,,,,,,,,,,,,,Set termination mode of STIM210,STIM210の終端設定
+,DI_STIM210_SET_LOW_PASS_FILTER,AOBC,0x0084,1,uint8_t,0=16Hz; 1=33Hz; 2=66Hz@@3=131Hz@@4=262Hz,,,,,,,,,,,,,Set low pass filter cut-off frequency of STIM210,STIM210のLPFカットオフ周波数設定
+,DI_OEM7600_ONOFF_ANTENNA_POWER,AOBC,0x0085,2,uint8_t,OEM ID,uint8_t,off=0; on=1,,,,,,,,,,,Power switch control of GPS antenna in OEM7600 GNSS receiver,OEM7600のアンテナ電源操作
+,DI_OEM7600_SOFTWARE_RESET,AOBC,0x0086,2,uint8_t,OEM ID,uint8_t,time[sec],,,,,,,,,,,Reset software of OEM7600,OEM7600のソフトウェアリセット
+*,DI_OEM7600_SAVE_TLM_SETTING,AOBC,,1,uint8_t,OEM ID,,,,,,,,,,,,,Save telemetry setting of OEM7600,OEM7600の出力テレメ設定保存
+,DI_OEM7600_SET_TLM_CONTENTS,AOBC,0x0087,3,uint8_t,OEM ID,uint8_t,out_interval,uint32_t,oem7600_tlm_id,,,,,,,,,Set telemetry contents of OEM7600,OEM7600の出力テレメ設定変更
+,DI_OEM7600_SET_RESET_GPIO_HIGHLOW,AOBC,0x0088,2,uint8_t,OEM ID,uint8_t,low=0; high=1,,,,,,,,,,,Hardware reset of OEM7600,OEM7600のハードウェアリセット
+,DI_RW0003_INIT,AOBC,0x0089,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,Initialize RW0003 reaction wheel setting,RW0003の初期化を行う
+,DI_RW0003_SET_IDLE,AOBC,0x008A,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,Set RW0003 to idle mode ,RW0003をIdleモードに入れる
+,DI_RW0003_DRIVE_TORQUE,AOBC,0x008B,2,uint8_t,RWX=0; RWY; RWZ,float,torque [Nm],,,,,,,,,,,Set drive torque to RW0003,RW0003にトルク指令を与える
+,DI_RW0003_DRIVE_SPEED,AOBC,0x008C,2,uint8_t,RWX=0; RWY; RWZ,float,speed [rad/s],,,,,,,,,,,Set drive rotation speed to RW0003,RW0003に回転数指令を与える
+*,DI_RW0003_READ_VDD,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,Read VDD voltage value of RW0003,RW0003のVDDを読み取る
+*,DI_RW0003_READ_SEU_COUNT,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,Read SEU count of RW0003,RW0003のSEU COUNTを読み取る
+*,DI_RW0003_READ_FAULT_STATE,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,Read fault state information of RW0003,RW0003のFault Stateを読み取る
+*,DI_RW0003_DIAGNOSTIC,AOBC,,1,uint8_t,RWX=0; RWY; RWZ,,,,,,,,,,,,,Send diagnostic command to RW0003,RW0003にDiagnosticコマンドを送る
+,DI_SAGITTA_BOOT,AOBC,0x008D,0,,,,,,,,,,,,,,,Boot Sagitta star sensor and move to nominal mode,SAGITTAをブートしてノミナルモードに移行する
+,DI_SAGITTA_SET_UNIX_TIME_US,AOBC,0x008E,2,uint32_t,upper 32bit,uint32_t,lower 32bit,,,,,,,,,,,Set unixtime of Sagitta,SAGITTAのUnixTime[us]の設定
+*,DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY,AOBC,,1,uint8_t,tlm_id,,,,,,,,,,,,,Request synchronous telemetry of Sagitta,SAGITTAの同期式テレメトリを要求
+,DI_SAGITTA_SET_PARAMETER,AOBC,0x008F,1,uint8_t,PARAMETER_ID,,,,,,,,,,,,,Set parameters of Sagitta,SAGITTAにパラメータ設定コマンドを送る
+,DI_SAGITTA_CHANGE_PARAMETER,AOBC,0x0090,3,uint8_t,PARAMETER_ID,uint8_t,PARAMETER_IDX,float,value,,,,,,,,,Change parameters of Sagitta,SAGITTAドライバ内のパラメータを変更する
+,DI_SAGITTA_READ_PARAMETER,AOBC,0x0091,1,uint8_t,PARAMETER_ID,,,,,,,,,,,,,Read parameters of Sagitta,SAGITTAのパラメータを読み取る
+**,Frame transformation,,,,,,,,,,,,,,,,,,,
+,DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0092,5,uint8_t,0=AOBC; 1=EXT,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,Set frame transformation quaternion of RM3100 fine magnetometer,RM3100の座標変換Quaternion_c2bを設定する
+,DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0093,5,uint8_t,0=AOBC,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,Set frame transformation quaternion of MPU9250 9-axis sensor,MPU9250の座標変換Quaternion_c2bを設定する
+,DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0094,5,uint8_t,IDX = 0 to max 5,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,Set frame transformation quaternion of NanoSSOC-D60 sunsensor,NanoSSOC-D60の座標変換Quaternion_c2bを設定する
+,DI_STIM210_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0095,5,uint8_t,0=IN UNIT,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,Set frame transformation quaternion of STIM210 fine gyro sensor,STIM210の座標変換Quaternion_c2bを設定する
+,DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B,AOBC,0x0096,5,uint8_t,0=IN UNIT,float,q_c2b_vec_0,float,q_c2b_vec_1,float,q_c2b_vec_2,float,q_c2b_scalar,,,,,Set frame transformation quaternion of Sagitta star sensor,SAGITTAの座標変換Quaternion_c2bを設定する
+,DI_RW0003_SET_ROTATION_DIRECTION_VECTOR,AOBC,0x0097,4,uint8_t,RWX=0; RWY; RWZ,float,body_x,float,body_y,float,body_z,,,,,,,Set rotation direction of RW0003 reaction wheel,RW回転方向ベクトルを設定する
+,DI_MTQ_SEIREN_SET_MAGNETIC_MOMENT_DIRECTION_VECTOR,AOBC,0x0098,4,uint8_t,MTQ_X=0; MTQ_Y; MTQ_Z,float,body_x,float,body_y,float,body_z,,,,,,,Set magnetic moment direction of MTQs,MTQ磁気モーメント方向を設定する
+**,Sensor bias calibration,,,,,,,,,,,,,,,,,,,
+,DI_MPU9250_SET_ANG_VEL_BIAS_COMPO_RAD_S,AOBC,0x0099,4,uint8_t,0=AOBC,float,compo_x_rad_s,float,compo_y_rad_s,float,compo_z_rad_s,,,,,,,Set angular velocity bias for calibration of MPU9250,MPU9250角速度バイアス誤差を設定する
+,DI_MPU9250_SET_MAG_BIAS_COMPO_NT,AOBC,0x009A,5,uint8_t,0=AOBC,float,compo_x_nT,float,compo_y_nT,float,compo_z_nT,uint8_t,0=set; 1=add,,,,,Set magnetometer bias for calibration of MPU9250,MPU9250磁場バイアス誤差を設定する
+,DI_RM3100_SET_MAG_BIAS_COMPO_NT,AOBC,0x009B,5,uint8_t,0=AOBC; 1=EXT,float,compo_x_nT,float,compo_y_nT,float,compo_z_nT,uint8_t,0=set; 1=add; 2=default,,,,,Set magnetometer bias for calibration of RM3100,RM3100磁場バイアス誤差を設定する
+,DI_STIM210_SET_ANG_VEL_BIAS_COMPO_RAD_S,AOBC,0x009C,4,uint8_t,0=IN UNIT,float,compo_x_rad_s,float,compo_y_rad_s,float,compo_z_rad_s,,,,,,,Set angular velocity bias for calibration of STIM210,STIM210角速度バイアス誤差を設定する
+**,Sensor temperature calibration,,,,,,,,,,,,,,,,,,,
+,DI_MPU9250_SET_ANG_VEL_BIAS_TEMP_CALIB,AOBC,0x009D,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,Set coefficients of temperature bias calibration for the gyro sensor in MPU9250,MPU角速度バイアス温度補正値の設定
+,DI_MPU9250_SET_ANG_VEL_SF_TEMP_CALIB,AOBC,0x009E,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,Set coefficients of temperature scale factor calibration for the gyro sensor in MPU9250,MPU角速度SF温度補正値の設定
+,DI_STIM210_SET_ANG_VEL_BIAS_TEMP_CALIB,AOBC,0x009F,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,Set coefficients of temperature bias calibration for STIM210 fine gyro sensor,STIM角速度バイアス温度補正値の設定
+,DI_STIM210_SET_ANG_VEL_SF_TEMP_CALIB,AOBC,0x00A0,5,uint8_t,X=0; Y; Z,float,range_low_degC,float,range_high_degC,float,coeff_0,float,coeff_1,,,,,Set coefficients of temperature scale factor calibration for STIM210 fine gyro sensor,STIM角速度SF温度補正値の設定
+**,Sensor selector,,,,,,,,,,,,,,,,,,,
+,APP_MAG_SELECTOR_SET_STATE,AOBC,0x00A1,1,uint8_t,RM_AOBC=0; RM_EXT; MPU; FUSION,,,,,,,,,,,,,Select using magnetometer,使う磁気センサを選択する
+,APP_GYRO_SELECTOR_SET_STATE,AOBC,0x00A2,1,uint8_t,MPU=0; STIM; FUSION,,,,,,,,,,,,,Select using gyro sensor,使うジャイロセンサを選択する
+,SUN_SENSOR_SELECTOR_SET_INTENSITY_THRESHOLD,AOBC,0x00A3,2,float,lower_threshold_percent,float,upper_threshold_percent,,,,,,,,,,,Set intensity threshold to detect sun by sun sensors,サンセンサが使用可能であると判定する太陽強度閾値設定
+**,Anomaly detection,,,,,,,,,,,,,,,,,,,
+,APP_TEMPERATURE_ANOMALY_SET_THRESHOLD,AOBC,0x00A4,3,uint8_t,0=PIC; RW_DCDC; ROUGH_GYRO; FINE_GYRO_X; Y; Z; STT_MCU; STT_CMOS; RW_X; Y; Z; GPSR,float,upper_degC,float,lower_degC,,,,,,,,,Set threshold of temperature anomaly detection,温度アノマリ閾値設定
+**,Magnetic exclusive control,,,,,,,,,,,,,,,,,,,
+,APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_ENABLE,AOBC,0x00A5,1,uint8_t,is_enable,,,,,,,,,,,,,Enable/Disable magnetic exclusive control,磁気排他制御の有効・無効設定（0=無効・1＝有効）
+,APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER_SET_DURATION,AOBC,0x00A6,3,uint16_t,observe_duration[ms],uint16_t,control_duration[ms],uint16_t,standby_duration[ms],,,,,,,,,Set duration of magnetic exclusive control,磁気排他制御に関する時間コンフィグ設定
+,APP_MTQ_SEIREN_CONTROLLER_SET_OUTPUT_RATIO,AOBC,0x00A7,2,uint8_t,X=0; Y; Z,int8_t,output ratio,,,,,,,,,,,"Set output ration of MTQ controller [-100, 100] %",MTQの出力時間比を[-100@@ +100]（単位：％）の範囲で手動で設定する
+* FILTER,Sensor Filters,,,,,,,,,,,,,,,,,,,
+,APP_MPU9250_FILTER_SET_ZFILTER_PARAM,AOBC,0x00A8,4,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,float,sampling_freq_Hz,float,cut_off_feq_Hz,,,,,,,Set software low pass filter parameters for MPU9250,MPU9250のSW-LPF設定
+*,APP_MPU9250_FILTER_RESET_ZFILTER,AOBC,,2,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,,,,,,,,,,,Reset software low pass filter parameters for MPU9250,MPU9250のSW-LPFリセット
+,APP_MPU9250_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00A9,6,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,Set software spike filter parameters for MPU9250,MPU9250のSpike除去フィルタ設定
+*,APP_MPU9250_FILTER_RESET_SPIKE_FILTER,AOBC,,2,uint8_t,MAG=0; GYRO=1,uint8_t,X=0; Y; Z,,,,,,,,,,,Reset software spike filter parameters for MPU9250,MPU9250のSpike除去フィルタリセット
+,APP_STIM210_FILTER_SET_ZFILTER_PARAM,AOBC,0x00AA,4,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,float,sampling_freq_Hz,float,cut_off_feq_Hz,,,,,,,Set software low pass filter parameters for STIM210,STIM210のSW-LPF設定
+*,APP_STIM210_FILTER_RESET_ZFILTER,AOBC,,2,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,,,,,,,,,,,Reset software low pass filter parameters for STIM210,STIM210のSW-LPFリセット
+,APP_STIM210_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AB,6,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,Set software spike filter parameters for STIM210,STIM210のSpike除去フィルタ設定
+*,APP_STIM210_FILTER_RESET_SPIKE_FILTER,AOBC,,2,uint8_t,0=IN UNIT,uint8_t,X=0; Y; Z,,,,,,,,,,,Reset software spike filter parameters for STIM210,STIM210のSpike除去フィルタリセット
+,APP_RM3100_FILTER_SET_ZFILTER_PARAM,AOBC,0x00AC,4,uint8_t,ON AOBC=0; EXTERNAL=1,uint8_t,X=0; Y; Z,float,sampling_freq_Hz,float,cut_off_feq_Hz,,,,,,,Set software low pass filter parameters for RM3100,RM3100のSW-LPF設定
+,APP_RM3100_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AD,6,uint8_t,ON AOBC=0; EXTERNAL=1,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,Set software spike filter parameters for RM3100,RM3100のSpike除去フィルタ設定
+,APP_RW0003_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AE,5,uint8_t,X=0; Y; Z,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,,,Set software spike filter parameters for RW0003 rotation speed observation,RW0003のSpike除去フィルタ設定
+*,APP_RW0003_FILTER_RESET_SPIKE_FILTER,AOBC,,1,uint8_t,uint8_t,,,,,,,,,,,,,Reset software spike filter parameters for RW0003 rotation speed observation,RW0003のSpike除去フィルタリセット
+,APP_OEM7600_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00AF,6,uint8_t,oem_id,uint8_t,Xp=0; Yp; Zp; Xv; Yv; Zv,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,Set software spike filter parameters for OEM7600,OEM7600のSpike除去フィルタ設定
+,APP_SAGITTA_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00B0,5,uint8_t,sagitta_id,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,,,Set software spike filter parameters for Sagitta,SagittaのSpike除去フィルタ設定
+,APP_NANOSSOC_D60_FILTER_SET_SPIKE_FILTER_PARAM,AOBC,0x00B1,4,uint8_t,count_limit_to_accept,uint8_t,count_limit_to_reject_continued_warning,float,reject_threshold,float,amplitude_limit_to_accept_as_step,,,,,,,Set software spike filter parameters for NanoSSOC D60 sun sensors,太陽センサのSpike除去フィルタ設定
+* ALGORITHM,Attitude algorithms,,,,,,,,,,,,,,,,,,,
+**,Auto mode transition with MM (Mode Manager),,,,,,,,,,,,,,,,,,,
+,APP_AOCS_MM_SET_AUTO_MODE_TRANSITION,AOBC,0x00B7,1,uint8_t,0=disable; 1=enable,,,,,,,,,,,,,Enable/Disable auto mode transition,自動モード遷移 Enable/Disable設定
+,APP_AOCS_MM_SET_ANG_VEL_THRESHOLD,AOBC,0x00B8,4,float,angular_rate_limit [rad/s],float,ang_vel_time_limit [sec],float,norm_increase_limit_rad_s,float,anomaly_detection_period_s,,,,,,,Set angular velocity threshold for Bdot control complete detection,角速度制御終了判定閾値設定（Bdot）
+,APP_AOCS_MM_SET_SUN_ANGLE_THRESHOLD,AOBC,0x00B9,2,float,sun_angle_limit [rad],float,sun_angle_time_limit [sec],,,,,,,,,,,Set angle threshold for sun pointing anomaly detection,太陽補足制御失敗判定閾値設定
+,APP_AOCS_MM_SET_THREE_AXIS_THRESHOLD,AOBC,0x00BA,2,float,3axis_error_limit [rad],float,3axis_error_time_limit [sec],,,,,,,,,,,Set angle threshold for three-axis anomaly detection,三軸制御失敗判定閾値設定
+,APP_AOCS_MM_SET_INVISIBLE_THRESHOLD,AOBC,0x00BB,2,float,sun_invisible_time_limit[sec],float,stt_invisible_time_limit[sec],,,,,,,,,,,Set threholds for sensor invisible anomaly detection,センサー異常判定時間閾値設定
+**,Attitude determination,,,,,,,,,,,,,,,,,,,
+,APP_RTAD_SET_METHOD,AOBC,0x00BC,2,uint8_t,0=TRIAD; 1=Qmethod,uint8_t,0=Sun vector; 1=Quaternion,,,,,,,,,,,Select method for coarse three-axis determination,粗三軸姿勢決定手法を設定する
+,APP_RTAD_SET_QMETHOD_SUN_VEC_WEIGHT,AOBC,0x00BD,1,float,sun_vec_weight,,,,,,,,,,,,,Set Qmethod sun vector weight,Qmethodで使用する太陽方向ベクトルの重みを[0.0; 1.0]の範囲で設定する
+,APP_FTAD_SET_METHOD,AOBC,0x00BE,1,uint8_t,0=STT; 1=EKF,,,,,,,,,,,,,Select method for fine three-axis determination,精三軸姿勢決定手法を設定する
+,STT_GYRO_EKF_SET_GYRO_RANDOM_NOISE_STANDARD_DEVIATION,AOBC,0x00BF,3,float,gyro_random_noise_covariance X [rad/s],float,gyro_random_noise_covariance Y [rad/s],float,gyro_random_noise_covariance Z [rad/s],,,,,,,,,Set gyro sensor random noise for STT-Gyro EKF at component frame,STT Gyro EKFにおけるジャイロのランダムノイズ設定（コンポ座標系）
+,STT_GYRO_EKF_SET_GYRO_RANDOM_WALK_STANDARD_DEVIATION,AOBC,0x00C0,4,float,gyro_random_walk_covariance X [rad/s2],float,gyro_random_walk_covariance Y [rad/s2],float,gyro_random_walk_covariance Z [rad/s2],float,gyro_random_walk_time_constant [s],,,,,,,Set gyro sensor random walk noise for STT-Gyro EKF at component frame,STT Gyro EKFにおけるジャイロのランダムウォーク設定（コンポ座標系）
+,STT_GYRO_EKF_SET_STT_ERROR_STANDARD_DEVIATION,AOBC,0x00C1,3,float,stt_error X [rad],float,stt_error Y [rad],float,stt_error Z [rad],,,,,,,,,Set star sensor random noise for STT-Gyro EKF at component frame,STT Gyro EKFにおけるSTTの観測誤差設定（コンポ座標系）
+,STT_GYRO_EKF_RESET_ESTIMATION,AOBC,0x00C2,5,uint8_t,mode（0=単位quaternionで初期化，1=aocs managerのquaternion_est_i2bで初期化，2=残りの引数で初期化）,float,quaternion_i2b_x,float,quaternion_i2b_y,float,quaternion_i2b_z,float,quaternion_i2b_w,,,,,Reset all estimated value in STT-Gyro EKF,STT Gyro EKFの推定値全リセット
+,STT_GYRO_EKF_ENABLE_ESTIMATED_ATTITUDE,AOBC,0x00C3,1,uint8_t,0=enable; 1=disable,,,,,,,,,,,,,Enable/Disable to use estimated value of STT-Gyro EKF for control,STT Gyro EKFの推定値を衛星の姿勢推定値に反映するかどうか
+,STT_GYRO_EKF_SET_INITIAL_COVARIANCE_MATRIX,AOBC,0x00C4,4,float,diagonal_stt_component_x,float,diagonal_stt_component_y,float,diagonal_stt_component_z,float,diagonal_gyro_component,,,,,,,Set initial guess of covariance matrix for STT-Gyro EKF,STT Gyro EKFの共分散行列の初期値設定
+,STT_GYRO_EKF_SET_PROCESS_NOISE_MATRIX,AOBC,0x00C5,2,float,attitude_element,float,attitude_rate_element,,,,,,,,,,,Set process noise matrix for STT-Gyro EKF,STT Gyro EKFのプロセスノイズ設定
+**,Attitude control,,,,,,,,,,,,,,,,,,,
+,APP_BDOT_SET_CONTROL_GAIN,AOBC,0x00C6,3,float,gain x (negative value only),float,gain y (negative value only),float,gain z (negative value only),,,,,,,,,Set control gain for B-dot method,Bdot則のゲイン設定
+,APP_BDOT_SET_TIMING,AOBC,0x00C7,1,uint32_t,minimum_time_derivative_step_time[ms],,,,,,,,,,,,,Set timing parameter for B-dot method,Bdot則の時間パラメータ（微分計算の最小インターバル）の設定をする
+,APP_SUN_POINTING_SET_GAIN,AOBC,0x00C8,5,uint8_t,0=omega@@ 1=att,uint8_t,0=X@@ 1=Y@@ 2=Z,float,P_gain,float,I_gain,float,D_gain,,,,,Set control gain for sun pointing control,太陽補足制御のゲイン設定
+,APP_SUN_POINTING_SAVE_GAIN,AOBC,0x00C9,0,,,,,,,,,,,,,,,Start to use the control gain set by the above command,太陽補足制御ゲインを制御に使い始める
+,APP_SUN_POINTING_SET_FEEDBACK_LIMIT_PARAMS,AOBC,0x00CA,5,float,angle_limit_rad,float,rate_limit_rad_s,float,integ_angle_limit_rad,float,angle_to_run_integ_rad,float,integ_permission_angle_rad,,,,,Set feedback limit parameters for sun pointing control,
+,APP_SUN_POINTING_SET_LPF_PARAMS,AOBC,0x00CB,5,float,sample_freq_hz,float,cutoff_freq_hz,float,damping_factor,float,cutoff_freq_axis_hz,float,cutoff_freq_spin_rate_hz,,,,,Set low pass filter parameters for sun pointing control,
+,APP_SUN_POINTING_SET_ANTI_INTOXICATION_PARAMS,AOBC,0x00CC,5,float,error_ratio_transient,float,gain_transient,float,error_ratio_stable,float,gain_stable,float,threshold_angle_stable_rad,,,,,Set anti-intoxication parameters for sun pointing control,
+,APP_TAC_MTQ_SET_GAIN,AOBC,0x00CD,5,uint8_t,0=omega@@ 1=att,uint8_t,0=X@@ 1=Y@@ 2=Z,float,P_gain,float,I_gain,float,D_gain,,,,,Set control gain for three-axis stabilization with MTQ,MTQ三軸制御のゲイン設定
+,APP_TAC_MTQ_SAVE_GAIN,AOBC,0x00CE,0,,,,,,,,,,,,,,,Start to use the control gain set by the above command,MTQ三軸制御ゲインを制御に使い始める
+,APP_TAC_MTQ_SET_FEEDBACK_LIMIT_PARAMS,AOBC,0x00CF,4,float,angle_limit_rad,float,rate_limit_rad_s,float,integ_angle_limit_rad,float,angle_to_run_integ_rad,,,,,,,Set feedback limit parameters for three-axis stabilization with MTQ,
+,APP_TAC_MTQ_SET_LPF_PARAMS,AOBC,0x00D0,3,float,sample_freq_hz,float,cutoff_freq_hz,float,damping_factor,,,,,,,,,Set low pass filter parameters for three-axis stabilization with MTQ,
+,APP_TAC_MTQ_SET_ANTI_INTOXICATION_PARAMS,AOBC,0x00D1,5,float,error_ratio_transient,float,gain_transient,float,error_ratio_stable,float,gain_stable,float,threshold_angle_stable_rad,,,,,Set anti-intoxication parameters for three-axis stabilization with MTQ,
+,APP_TAC_RW_SET_GAIN,AOBC,0x00D2,5,uint8_t,0=omega@@ 1=att,uint8_t,0=X@@ 1=Y@@ 2=Z,float,P_gain,float,I_gain,float,D_gain,,,,,Set control gain for three-axis stabilization with RW,RW三軸制御のゲイン設定
+,APP_TAC_RW_SAVE_GAIN,AOBC,0x00D3,0,,,,,,,,,,,,,,,Start to use the control gain set by the above command,RW三軸制御ゲインを制御に使い始める
+,APP_UNLOADING_SET_ENABLE,AOBC,0x00D4,1,uint8_t,0 = enable@@ 1 = disable,,,,,,,,,,,,,Enable/Disable reaction wheel unloading (desaturation) control,アンローディング制御を有効にするかどうかを設定する
+,APP_UNLOADING_SET_ANGULAR_VELOCITY_THRESHOLD,AOBC,0x00D5,4,uint8_t,0=X@@ 1=Y@@ 2=Z,int16_t,angular_velocity_upper_threshold_rpm,int16_t,angular_velocity_target_rpm,int16_t,angular_velocity_lower_threshold_rpm,,,,,,,Set angular velocity threshold for unloading control,アンローディングの角速度閾値設定
+,APP_UNLOADING_SET_CONTROL_GAIN,AOBC,0x00D6,1,float,control_gain  (negative value only),,,,,,,,,,,,,Set control gain for unloading control,アンローディングのゲイン設定
+**,Target calculation,,,,,,,,,,,,,,,,,,,
+,APP_TARGET_ATT_CALC_SET_MODE,AOBC,0x00D7,1,uint8_t,MANUAL=0@@ CALCULATION_FROM_ORBIT=1@@ INTERPOLATION=2,,,,,,,,,,,,,Select attitude target control method,目標姿勢計算方法を設定する
+,APP_TARGET_ATT_CALC_ENABLE,AOBC,0x00D8,1,uint8_t,DISABLE=0@@ ENABLE=1,,,,,,,,,,,,,Start to use calculated attitude target for three-axis control,計算した目標Quaternionをaocs_managerに反映するか設定する
+,APP_TAFO_SET_MAIN_TARGET_DIRECTION,AOBC,0x00D9,4,uint8_t,SUN=0@@ SAT_VELOCITY=1@@ EARTH_CENTER=2@@ EARTH_SURFACE=3@@ ORBIT_NORMAL=4,float,vec_to_main_tareget_x,float,vec_to_main_tareget_y,float,vec_to_main_tareget_z,,,,,,,Set main target direction for TAFO (Target Attitude From Orbit) method,目標方向（main）を設定する
+,APP_TAFO_SET_SUB_TARGET_DIRECTION,AOBC,0x00DA,4,uint8_t,SUN=0@@ SAT_VELOCITY=1@@ EARTH_CENTER=2@@ EARTH_SURFACE=3@@ ORBIT_NORMAL=4,float,vec_to_sub_tareget_x,float,vec_to_sub_tareget_y,float,vec_to_sub_tareget_z,,,,,,,Set sub target direction for TAFO method,目標方向（sub）を設定する
+,APP_TAFO_SET_OFFSET_ANGLE_AND_AXIS,AOBC,0x00DB,2,uint8_t,+X=0@@ +Y=1@@ +Z=2,float,offset_angle_deg,,,,,,,,,,,Set offset angle and axis for TAFO method,目標姿勢に対するオフセット角（-180deg ~ +180deg）を設定する
+,APP_TAFO_SET_TARGET_LLA,AOBC,0x00DC,3,float,latitude_deg,float,longitude_deg,float,altitude_m,,,,,,,,,Set target point with latitude/longitude/altitude for TAFO method,目標地表点の緯度経度高度(-90deg ~ +90deg@@ -180deg ~ +180deg@@ 0m ~)を設定する
+*,APP_TAFO_ENABLE,AOBC,,1,uint8_t,DISABLE=0@@ ENABLE=1,,,,,,,,,,,,,Enable/Disable TAFO method,推定軌道から計算した目標Quaternionをaocs_managerに反映するか設定する
+,APP_QI_SET_NEXT_TARGET_QUATERNION,AOBC,0x00DD,5,uint32_t,attitude_changed_ti,float,q_i2t_vec_0,float,q_i2t_vec_1,float,q_i2t_vec_2,float,q_i2t_scalar,,,,,Set next target quaternion for QI (Quaternion Interpolation) method,目標Quaternionを設定する
+,APP_QI_SET_PREV_TARGET_QUATERNION,AOBC,0x00DE,6,uint8_t,CURRENT_ATTITUDE=0@@ ARBITRARY_ATTITUDE=1,uint32_t,attitude_changed_ti,float,q_i2t_vec_0,float,q_i2t_vec_1,float,q_i2t_vec_2,float,q_i2t_scalar,,,Set previous target quaternion for QI method,内挿計算の始点となるQuaternionを設定する
+,APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY,AOBC,0x00DF,5,double,attitude_changed_jday,float,q_i2t_vec_0,float,q_i2t_vec_1,float,q_i2t_vec_2,float,q_i2t_scalar,,,,,Set next target quaternion for QI method with Jualian day,目標Quaternionをユリウス日で設定する
+,APP_QI_RESET_TARGET_QUATERNION,AOBC,0x00E0,0,,,,,,,,,,,,,,,Reset target quaternion list for QI,目標Quaternionをリセットする
+*,APP_QI_ENABLE,AOBC,,1,uint8_t,DISABLE=0; ENABLE=1,,,,,,,,,,,,,Enable/Disable QI method,内挿計算した目標Quaternionをaocs_managerに反映するか設定する
+**,Environment calculation,,,,,,,,,,,,,,,,,,,
+,APP_TIME_SPACE_CALC_SET_OFFSET_TIME,AOBC,0x00E1,1,float,offset_time [sec],,,,,,,,,,,,,Set offset time between control execution and control calculation,計算結果を使用する時刻と実行時刻の間のオフセット設定
+* MANAGER,AOCS manager,,,,,,,,,,,,,,,,,,,
+**,Spacecraft structure,,,,,,,,,,,,,,,,,,,
+,APP_AOCS_MANAGER_SET_MASS,AOBC,0x00E3,1,float,mass_kg,,,,,,,,,,,,,Set spacecraft mass,衛星質量を設定する
+,APP_AOCS_MANAGER_SET_INERTIA_TENSOR,AOBC,0x00E4,6,float,Ixx_kgm2,float,Iyy_kgm2,float,Izz_kgm2,float,Ixy_kgm2,float,Ixz_kgm2,float,Iyz_kgm2,,,Set spacecraft inertia tensor,衛星慣性テンソルを設定する
+,APP_AOCS_MANAGER_SET_RMM,AOBC,0x00E5,3,float,RMM_X_Am2,float,RMM_Y_Am2,float,RMM_Z_Am2,,,,,,,,,Set spacecraft RMM (Residual Magnetic Moment),衛星残留磁気モーメントを設定する
+**,Attitude target manual setting,,,,,,,,,,,,,,,,,,,
+,APP_AOCS_MANAGER_SET_TARGET_QUATERNION,AOBC,0x00E6,4,float,q_i2t_x,float,q_i2t_y,float,q_i2t_z,float,q_i2t_w,,,,,,,Set target quaternion for manual mode,目標Quaternionを設定する
+,APP_AOCS_MANAGER_SET_TARGET_QUATERNION_FROM_CURRENT_ATTITUDE,AOBC,0x00E7,2,uint8_t,Axis 0=X@@ 1=Y@@ 2=Z,float,angle_deg(-180~180),,,,,,,,,,,Set target quaternion based on current spacecraft attitude for manual mode,現在の推定Quaternionをもとに目標Quaternionを設定する
+,APP_AOCS_MANAGER_SET_LIMIT_MANEUVER_ANGLE,AOBC,0x00E8,1,float,angle_deg(0~180),,,,,,,,,,,,,Set maneuver angle limit,目標Quaternion設定時の姿勢変更角度制限を設定する
+,APP_AOCS_MANAGER_SET_LIMIT_ANGULAR_VELOCITY,AOBC,0x00E9,1,float,angular_velocity_deg_s(0~),,,,,,,,,,,,,Set maneuver angular velocity limit,目標角速度制限を設定する
+**,Others,,,,,,,,,,,,,,,,,,,
+,APP_AOCS_MANAGER_SET_REFERENCE_TIME,AOBC,0x00EA,1,double,reference_time_jday,,,,,,,,,,,,,Set reference time (Recommend to set by timeline command),参照絶対時刻を設定する（TLCで設定すること推奨）
+,APP_AOCS_MANAGER_SET_CONSTANT_TORQUE,AOBC,0x00EB,3,float,torque_body_x,float,torque_body_y,float,torque_body_z,,,,,,,,,Set constant torque,一定出力トルクを設定する
+,APP_AOCS_MANAGER_SET_CONSTANT_TORQUE_PERMISSION,AOBC,0x00EC,1,uint8_t,0=DISABLE@@ 1=ENABLE,,,,,,,,,,,,,Start/Stop to generate the constant torque,一定出力トルクの出力許可フラグを設定する
+*,APP_AOCS_MANAGER_SET_MAG_EXCLUSIVE_STATE,AOBC,,1,uint8_t,0=IDLE@@ 1=ACTIVE,,,,,,,,,,,,,Set magnetic exclusion state,磁気センサ磁気トルカ干渉状態を設定する
+,APP_AOCS_MANAGER_SET_MAX_IN_TORQUE,AOBC,0x00ED,3,float,max_torque_x (>0),float,max_torque_y (>0),float,max_torque_z (>0),,,,,,,,,Set max internal torque (by reaction wheels),内部トルク最大出力制限の設定
+,APP_AOCS_MANAGER_SET_MAX_EXT_TORQUE,AOBC,0x00EE,3,float,max_torque_x (>0),float,max_torque_y (>0),float,max_torque_z (>0),,,,,,,,,Set max external torque (by MTQs),外部トルク最大出力制限の設定
+* ORBIT,Orbit,,,,,,,,,,,,,,,,,,,
+,APP_ORBIT_CALC_SET_METHOD,AOBC,0x00F6,1,uint8_t,0=Kepler; 1=SGP4; 2=Kepler+GPSR; 3=EKF,,,,,,,,,,,,,Select orbit calculation method,軌道伝搬則の選択
+,APP_ORBIT_CALC_SET_GPSR_UPDATE,AOBC,0x00F7,1,uint8_t,0=disable; 1=enable,,,,,,,,,,,,,Enable/Disable Kepler orbit propagation with GPS-R telemetry,GPSRテレメを用いたKepler軌道伝播を有効にする
+,APP_KOP_SET_ORBIT_ELEMENTS,AOBC,0x00F8,6,float,semi_major [km],float,eccentricity,float,inclination [rad],float,raan [rad],float,arg_perigee [rad],double,epoch [jday],,,Set orbital elements for Kepler method,Kepler軌道伝搬の軌道要素設定
+,APP_KOP_SAVE_ORBIT_ELEMENTS,AOBC,0x00F9,0,,,,,,,,,,,,,,,Start to use the orbit calculation with the above orbital elements,上で設定した軌道要素を使って伝搬計算を始める
+,APP_SGP4_SET_TLE_LINE1,AOBC,0x00FA,3,uint8_t,epoch_year,double,epoch_day,float,b_star,,,,,,,,,Set 1st line information of TLE for SGP4 method,SGP4軌道伝搬のTLE１行目設定
+,APP_SGP4_SET_TLE_LINE2,AOBC,0x00FB,6,float,inclination [deg],float,raan [deg],float,eccentricity,float,arg_peri [deg],float,mean_ano [deg],float,mean_motion [rpd],,,Set 2nd line information of TLE for SGP4 method,SGP4軌道伝搬のTLE2行目設定
+,APP_SGP4_SAVE_TLE,AOBC,0x00FC,0,,,,,,,,,,,,,,,Start to use the orbit calculation with the above TLE,上で設定したTLEを使って伝搬計算を始める
+,APP_GPSROP_SET_ORBIT_ELEMENTS_THRESHOLD,AOBC,0x00FD,2,uint8_t,oe_id 0=a[km]@@ 1=e@@ 2=i[rad]@@ 3=raan[rad]@@ 4=arg_perigee[rad]@@ 5=epoch[jday],double,value,,,,,,,,,,,Set orbital elements threshold for GPS-R method,GPSRテレメを用いた軌道要素更新の更新幅閾値を設定する
+**,Sun pointing target,,,,,,,,,,,,,,,,,,,
+,APP_SUN_POINTING_SET_TARGET,AOBC,0x00FE,4,float,directional_vector_Xb[-],float,directional_vector_Yb[-],float,directional_vector_Zb[-],float,spin_rate [rad/s],,,,,,,Set target direction and angular velocity for sun pointing control,太陽指向時させたい機体軸方向とその軸周りの回転レートを変更
+**,GPSR BaudRate,,,,,,,,,,,,,,,,,,,
+,DI_OEM7600_SET_UART_BAUDRATE,AOBC,0x00FF,3,uint8_t,oem_id,uint32_t,baudrate,uint8_t,0=AOBC@@ 1=GPSR,,,,,,,,,Set UART baudrate for OEM7600 communication,OEM7600のBaudRate変更
+* Other,General purpose command,,,,,,,,,,,,,,,,,,,
+*,UTIL_CMD_ADD,OBC,,6,uint8_t,,uint32_t,,uint32_t,,uint32_t,,uint32_t,,uint32_t,,,,Add a command to general purpose command,汎用コマンドのバッファに指定サイズのデータを入れる
+*,UTIL_CMD_SEND,OBC,,1,uint8_t,,,,,,,,,,,,,,Send a command in the channel of general purpose command,引数のCHに汎用コマンドのバッファにあるデータを送信する
+*,UTIL_CMD_RESET,OBC,,0,,,,,,,,,,,,,,,Clear the general purpose command buffer,汎用コマンドのバッファをクリアする
+**,General command counter,,,,,,,,,,,,,,,,,,,
+*,UTIL_COUNTER_INCREMENT,OBC,,1,uint8_t,,,,,,,,,,,,,,Increment general purpose counter,引数の汎用カウンタをインクリメントする
+*,UTIL_COUNTER_RESET,OBC,,1,uint8_t,,,,,,,,,,,,,,Reset general purpose counter,引数の汎用カウンタをリセットする．0xffでALL_CLR
+*,UTIL_COUNTER_SET_PARAM,OBC,,3,uint8_t,,uint32_t,,uint8_t,,,,,,,,,,Set parameters for general purpose counter,引数の汎用カウンタの閾値・アノマリ発行有無を設定する
 **,,,,,,,,,,,,,,,,,,,,
-* NonOrder,これ以下はコマンドIDが自動で割り振られない！,,,,,,,,,,,,,,,,,,,
-**,CmdCodeSibGeneratorによって，RTのみ生成,,,,,,,,,,,,,,,,,,,
-**,CDH特殊コマンド,,,,,,,,,,,,,,,,,,,
-*,OBC_CHECK_SIB_VERSION,OBC,0x05ff,0,,,,,,,,,,,,,,,SIBとC2Aのバージョン整合性確認,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,
+* NonOrder,Command IDs are not assigned below this line.,,,,,,,,,,,,,,,,,,,
+*,,,,,,,,,,,,,,,,,,,,
