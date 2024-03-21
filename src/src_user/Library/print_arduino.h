@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+  void printf_debug_init(void);
+
   void printf_debug(char* s);
 
 #ifdef __cplusplus
