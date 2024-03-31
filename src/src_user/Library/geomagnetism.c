@@ -264,8 +264,6 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
   double legendre_p_n_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1];  //!< P[n-2][m]
   double legendre_p_n_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1];  //!< P[n-1][m]
   double legendre_dp_n_1_n_1  = 0.0;                       //!< dP[n-1][n-1]
-  //float sin_colat = sinf(colat_rad);
-  //float cos_colat = cosf(colat_rad);
   double sin_colat = sin((double)(colat_rad));
   double cos_colat = cos((double)(colat_rad));
 
