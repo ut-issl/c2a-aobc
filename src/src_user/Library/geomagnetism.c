@@ -205,12 +205,12 @@ static void GEOMAGNETISM_calc_trigonometric_(float sinn[GEOMAGNETISM_IGRF_ORDER_
                                               const uint8_t order);
 
 //!< ルジャンドル陪関数の各係数の計算
-static void GEOMAGNETISM_calc_legendre_coeffs_(float pn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float dpn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float pn_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float pn_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float* dpn_1n_1,
-                                               const float sinl, const float cosl,
+static void GEOMAGNETISM_calc_legendre_coeffs_(double pn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double dpn[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double pn_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double pn_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double* dpn_1n_1,
+                                               const double sinl, const double cosl,
                                                const uint8_t order);
 
 
@@ -259,13 +259,15 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
   GEOMAGNETISM_calc_trigonometric_(sin_m, cos_m, lon_rad, order);
 
   //!< buffer to solve the recurrence equation
-  float legendre_p_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1];    //!< P[n][m]
-  float legendre_dp_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1];   //!< dP[n][m]
-  float legendre_p_n_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1];  //!< P[n-2][m]
-  float legendre_p_n_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1];  //!< P[n-1][m]
-  float legendre_dp_n_1_n_1  = 0.0f;                      //!< dP[n-1][n-1]
-  float sin_colat = sinf(colat_rad);
-  float cos_colat = cosf(colat_rad);
+  double legendre_p_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1];    //!< P[n][m]
+  double legendre_dp_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1];   //!< dP[n][m]
+  double legendre_p_n_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1];  //!< P[n-2][m]
+  double legendre_p_n_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1];  //!< P[n-1][m]
+  double legendre_dp_n_1_n_1  = 0.0;                       //!< dP[n-1][n-1]
+  //float sin_colat = sinf(colat_rad);
+  //float cos_colat = cosf(colat_rad);
+  double sin_colat = sin((double)(colat_rad));
+  double cos_colat = cos((double)(colat_rad));
 
   //!< geomagnetic coefficients
   float gnm[GEOMAGNETISM_IGRF_ORDER_MAX + 1];
@@ -290,9 +292,9 @@ C2A_MATH_ERROR GEOMAGNETISM_calc_igrf(float* mag_i_nT, const uint8_t clac_order,
     float mag_ned_temp[PHYSICAL_CONST_THREE_DIM] = { 0.0f, 0.0f, 0.0f };
     for (uint8_t m = 0; m <= n; m++)
     {
-      mag_ned_temp[0] += (gnm[m] * cos_m[m] + hnm[m] * sin_m[m]) * legendre_dp_n[m];
-      mag_ned_temp[1] += (float)(m) * (gnm[m] * sin_m[m] - hnm[m] * cos_m[m]) * legendre_p_n[m];
-      mag_ned_temp[2] += - (gnm[m] * cos_m[m] + hnm[m] * sin_m[m]) * legendre_p_n[m];
+      mag_ned_temp[0] += (gnm[m] * cos_m[m] + hnm[m] * sin_m[m]) * (float)(legendre_dp_n[m]);
+      mag_ned_temp[1] += (float)(m) * (gnm[m] * sin_m[m] - hnm[m] * cos_m[m]) * (float)(legendre_p_n[m]);
+      mag_ned_temp[2] += - (gnm[m] * cos_m[m] + hnm[m] * sin_m[m]) * (float)(legendre_p_n[m]);
     }
 
     mag_ned_nT[0] += pow_k_geo_aspect * mag_ned_temp[0];
@@ -347,15 +349,15 @@ static void GEOMAGNETISM_calc_trigonometric_(float sinn[GEOMAGNETISM_IGRF_ORDER_
 }
 
 
-static void GEOMAGNETISM_calc_legendre_coeffs_(float p_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float dp_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float p_n_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float p_n_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
-                                               float* dp_n_1_n_1,
-                                               const float sinl, const float cosl,
+static void GEOMAGNETISM_calc_legendre_coeffs_(double p_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double dp_n[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double p_n_1[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double p_n_2[GEOMAGNETISM_IGRF_ORDER_MAX + 1],
+                                               double* dp_n_1_n_1,
+                                               const double sinl, const double cosl,
                                                const uint8_t order)
 {
-  uint8_t n = order;
+  uint64_t n = (uint64_t)(order); // 桁的にはuint8で十分だが，doubleにキャストする際のwarningを避けるためにuint64にする
 
   if (n == 1)
   {
@@ -374,22 +376,22 @@ static void GEOMAGNETISM_calc_legendre_coeffs_(float p_n[GEOMAGNETISM_IGRF_ORDER
   }
 
   // P(n,n) = (2n-1)*(sin_l)*P(n-1,n-1)
-  p_n[n]  = (float)(2 * n - 1) * sinl * p_n_1[n - 1];
+  p_n[n]  = (double)(2 * n - 1) * sinl * p_n_1[n - 1];
 
   // P(n,0) = (1/n)*[(2n-1)*(cos_l)*P(n-1,0) - (n-1)*P(n-2,0)]
-  p_n[0]  = (1.0f / (float)(n)) * ((float)(2 * n - 1) * cosl * p_n_1[0] - (float)(n - 1) * p_n_2[0]);
+  p_n[0]  = (1.0f / (double)(n)) * ((double)(2 * n - 1) * cosl * p_n_1[0] - (double)(n - 1) * p_n_2[0]);
 
-  for (uint8_t m = 1; m < n; m++)
+  for (uint64_t m = 1; m < n; m++)
   {
     if (fabsf(sinl) > GEOMAGNETISM_POLAR_REGION_SIN_COLAT_LIMIT)
     {
       // P(n,m) = [(n+m-1)*P(n-1,m-1) - (n-m+1)*cos_l*P(n,m-1)]/sin_l
-      p_n[m] = ((float)(n + m - 1) * p_n_1[m - 1] - (float)(n - m + 1) * cosl * p_n[m - 1]) / sinl;
+      p_n[m] = ((double)(n + m - 1) * p_n_1[m - 1] - (double)(n - m + 1) * cosl * p_n[m - 1]) / sinl;
     }
     else
     {
       // P(n,m) = [P(n-1,m) + (n-m+1)*sin_l*P(n,m-1)]/cos_l
-      p_n[m] = (p_n_1[m] + (float)(n - m + 1) * sinl * p_n[m - 1]) / cosl;
+      p_n[m] = (p_n_1[m] + (double)(n - m + 1) * sinl * p_n[m - 1]) / cosl;
     }
   }
 
@@ -398,17 +400,17 @@ static void GEOMAGNETISM_calc_legendre_coeffs_(float p_n[GEOMAGNETISM_IGRF_ORDER
 
   // dP(n,n) = (2n-1)*[(cos_l)*P(n-1,n-1) + (sin_l)*dP(n-1,n-1)]
   // (equation in the reference document is incorrect...)
-  dp_n[n] = (float)(2 * n - 1) * (cosl * p_n_1[n - 1] + sinl * (*dp_n_1_n_1));
+  dp_n[n] = (double)(2 * n - 1) * (cosl * p_n_1[n - 1] + sinl * (*dp_n_1_n_1));
 
-  for (uint8_t m = 1; m < n; m++)
+  for (uint64_t m = 1; m < n; m++)
   {
     // dP(n,m) = [(n+m)*(n-m+1)*P(n,m-1) - P(n,m+1)]/2
-    dp_n[m] = 0.5f * ((float)((n + m) * (n - m + 1)) * p_n[m - 1] - p_n[m + 1]);
+    dp_n[m] = 0.5 * ((double)((n + m) * (n - m + 1)) * p_n[m - 1] - p_n[m + 1]);
   }
 
   // swap buffer for the next recurrence equation
-  memcpy(p_n_2, p_n_1, (size_t)(sizeof(float) * (GEOMAGNETISM_IGRF_ORDER_MAX + 1)));
-  memcpy(p_n_1, p_n, (size_t)(sizeof(float) * (GEOMAGNETISM_IGRF_ORDER_MAX + 1)));
+  memcpy(p_n_2, p_n_1, (size_t)(sizeof(double) * (GEOMAGNETISM_IGRF_ORDER_MAX + 1)));
+  memcpy(p_n_1, p_n, (size_t)(sizeof(double) * (GEOMAGNETISM_IGRF_ORDER_MAX + 1)));
   *dp_n_1_n_1 = dp_n[n];
 }
 
