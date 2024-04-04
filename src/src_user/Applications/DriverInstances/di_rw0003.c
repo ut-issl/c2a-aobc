@@ -40,6 +40,11 @@ static RW0003_SUB_TLM_IDX DI_RW0003_sub_tlm_idx_counter_ = (RW0003_SUB_TLM_IDX)(
 static void DI_RW0003_increment_idx_counter_(void);
 
 /**
+ * @brief サブテレメ IDをインクリメントする
+ */
+static void DI_RW0003_increment_sub_tlm_idx_counter_(void);
+
+/**
  * @brief  AOCS MANAGERに方向行列をセットする
  * @return AOCS_MANAGER_ERRORに準拠
  */
@@ -142,7 +147,7 @@ static void DI_RW0003_update_(void)
       }
       else if (rw0003_driver_[DI_RW0003_idx_counter_].info.fault_state == 1)
       {
-        EL_record_event(el_group_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)RW0003_EL_NOTE_FAULT_STATUS);
+        EL_record_event(el_group_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)RW0003_EL_NOTE_FAULT_STATE);
       }
       break;
     default:
@@ -199,7 +204,7 @@ static void DI_RW0003_increment_sub_tlm_idx_counter_(void)
 {
   DI_RW0003_sub_tlm_idx_counter_ = (RW0003_SUB_TLM_IDX)(DI_RW0003_sub_tlm_idx_counter_ + 1);
 
-  if (DI_RW0003_sub_tlm_idx_counter_ >= RW0003_SUB_TELM_IDX_MAX)
+  if (DI_RW0003_sub_tlm_idx_counter_ >= RW0003_SUB_TLM_IDX_MAX)
   {
     DI_RW0003_sub_tlm_idx_counter_ = (RW0003_SUB_TLM_IDX)(0);
   }
