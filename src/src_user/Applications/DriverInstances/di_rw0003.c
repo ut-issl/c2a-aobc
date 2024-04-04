@@ -31,6 +31,7 @@ static uint8_t DI_RW0003_rx_buffer_allocation_[RW0003_IDX_MAX][DS_STREAM_REC_BUF
 static float DI_RW0003_rw_speed_rad_s_[RW0003_IDX_MAX] = {0.0f, 0.0f, 0.0f};
 static uint8_t DI_RW0003_is_initialized_[RW0003_IDX_MAX];  //!< 0 = not initialized, 1 = initialized
 static RW0003_IDX DI_RW0003_idx_counter_ = (RW0003_IDX)(0);  //!< DI_RW0003_update_が呼ばれたときに観測するRWを指定するカウンタ．
+static RW0003_SUB_TLM_IDX DI_RW0003_sub_tlm_idx_counter_ = (RW0003_SUB_TLM_IDX)(0);  //!< DI_RW0003_update_が呼ばれたときに観測するテレメを指定するカウンタ．
 
 
 /**
@@ -124,10 +125,28 @@ static void DI_RW0003_update_(void)
       DI_RW0003_rw_speed_rad_s_[DI_RW0003_idx_counter_] = rw0003_driver_[DI_RW0003_idx_counter_].info.speed_rad_s;
     }
 
-    ret = RW0003_observe_temperature(&rw0003_driver_[DI_RW0003_idx_counter_]);
-    if (ret != DS_CMD_OK)
+    switch (DI_RW0003_sub_tlm_idx_counter_)
     {
-      EL_record_event(el_group_tlm_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
+    case RW0003_SUB_TLM_IDX_TEMPERATURE:
+      ret = RW0003_observe_temperature(&rw0003_driver_[DI_RW0003_idx_counter_]);
+      if (ret != DS_CMD_OK)
+      {
+        EL_record_event(el_group_tlm_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
+      }
+      break;
+    case RW0003_SUB_TLM_IDX_FAULT_STATE:
+      ret = RW0003_read_fault_state(&rw0003_driver_[DI_RW0003_idx_counter_]);
+      if (ret != DS_CMD_OK)
+      {
+        EL_record_event(el_group_tlm_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)ret);
+      }
+      else if (rw0003_driver_[DI_RW0003_idx_counter_].info.fault_state == 1)
+      {
+        EL_record_event(el_group_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)RW0003_EL_NOTE_FAULT_STATUS);
+      }
+      break;
+    default:
+      break;
     }
 
     RW0003_REC_CRC_STATE state = rw0003_driver_[DI_RW0003_idx_counter_].info.crc_state;
@@ -139,6 +158,7 @@ static void DI_RW0003_update_(void)
 
   AOCS_MANAGER_set_rw_angular_velocity_rad_s(DI_RW0003_rw_speed_rad_s_); // RW電源がOFFならそのRWの角速度は0とみなす
   DI_RW0003_increment_idx_counter_();
+  DI_RW0003_increment_sub_tlm_idx_counter_();
 }
 
 AOCS_ERROR DI_RW0003_set_torque_Nm(const RW0003_IDX idx, const float torque_Nm)
@@ -172,6 +192,16 @@ static void DI_RW0003_increment_idx_counter_(void)
   if (DI_RW0003_idx_counter_ >= RW0003_IDX_MAX)
   {
     DI_RW0003_idx_counter_ = (RW0003_IDX)(0);
+  }
+}
+
+static void DI_RW0003_increment_sub_tlm_idx_counter_(void)
+{
+  DI_RW0003_sub_tlm_idx_counter_ = (RW0003_SUB_TLM_IDX)(DI_RW0003_sub_tlm_idx_counter_ + 1);
+
+  if (DI_RW0003_sub_tlm_idx_counter_ >= RW0003_SUB_TELM_IDX_MAX)
+  {
+    DI_RW0003_sub_tlm_idx_counter_ = (RW0003_SUB_TLM_IDX)(0);
   }
 }
 
