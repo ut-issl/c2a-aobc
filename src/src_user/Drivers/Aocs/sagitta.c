@@ -16,7 +16,7 @@
 
 #define SAGITTA_STREAM_TLM_CMD        (0)
 #define SAGITTA_TX_MAX_FRAME_SIZE     (80)  //!< TXフレームの最大バイト数。
-#define SAGITTA_RX_MAX_FRAME_SIZE     (350) //!< RXフレームの最大バイト数。
+#define SAGITTA_RX_MAX_FRAME_SIZE     (368) //!< RXフレームの最大バイト数。
 
 #define SAGITTA_TX_HEADER_SIZE        (1)  //!< TXのヘッダーのサイズ。
 #define SAGITTA_RX_HEADER_SIZE        (2)  //!< RXのヘッダーのサイズ。
