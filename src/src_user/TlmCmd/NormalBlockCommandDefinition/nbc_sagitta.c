@@ -15,6 +15,9 @@
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 #include <src_user/Settings/System/event_logger_group.h>
 
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/sagitta_parameters.h>
+
 void BCL_load_power_on_sagitta(void)
 {
   cycle_t bc_cycle = OBCT_sec2cycle(1);
@@ -54,9 +57,9 @@ void BCL_load_power_on_sagitta(void)
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(55.22f);
-  BCL_tool_prepare_param_float(-36.99f);
-  BCL_tool_prepare_param_float(66.81f);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_compo[0]);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_compo[1]);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_compo[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -109,9 +112,9 @@ void BCL_load_power_off_sagitta(void)
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(-55.22f);
-  BCL_tool_prepare_param_float(36.99f);
-  BCL_tool_prepare_param_float(-66.81f);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_compo[0]);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_compo[1]);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_compo[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);

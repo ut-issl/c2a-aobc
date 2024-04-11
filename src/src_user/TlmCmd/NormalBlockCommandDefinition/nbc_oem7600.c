@@ -15,6 +15,9 @@
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 #include <src_user/Settings/System/event_logger_group.h>
 
+// Satellite parameters
+#include <src_user/Settings/SatelliteParameters/oem7600_parameters.h>
+
 void BCL_load_power_on_oem7600(void)
 {
   cycle_t bc_cycle = 1;
@@ -66,9 +69,9 @@ void BCL_load_power_on_oem7600(void)
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(223.03f);
-  BCL_tool_prepare_param_float(-126.81f);
-  BCL_tool_prepare_param_float(202.58f);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_compo[0]);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_compo[1]);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_compo[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -107,9 +110,9 @@ void BCL_load_power_off_oem7600(void)
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(-223.03f);
-  BCL_tool_prepare_param_float(126.81f);
-  BCL_tool_prepare_param_float(-202.58f);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_compo[0]);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_compo[1]);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_compo[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
