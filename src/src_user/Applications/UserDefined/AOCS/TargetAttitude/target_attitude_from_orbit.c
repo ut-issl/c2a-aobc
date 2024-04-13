@@ -257,7 +257,7 @@ static void APP_TAFO_calc_target_direction_vec_eci_(float target_direction_vec_e
       VECTOR3_copy(target_direction_vec_eci_normalized, orbit_normal_vec_est_eci_normalized);
       break;
     }
-  case APP_TAFO_TARGET_DIRECITON_GROUND_SPEED_VELOCITY:
+  case APP_TAFO_TARGET_DIRECITON_GROUND_SPEED:
     {
       double dcm_ecef_to_eci[PHYSICAL_CONST_THREE_DIM][PHYSICAL_CONST_THREE_DIM];
       double ground_speed_est_eci_m_s[PHYSICAL_CONST_THREE_DIM];
