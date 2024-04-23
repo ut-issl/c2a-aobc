@@ -1025,15 +1025,6 @@ DS_CMD_ERR_CODE OEM7600_end_rec_range_tlm(OEM7600_Driver* oem7600_driver)
 
   oem7600_driver->info.range_tlm_status.is_receiving = 0;
 
-  // FIXME: rx_buffer が引数に必要だが, 意外と影響範囲が大きくて面倒くさい
-  // そもそもここで DS_init しているのはなぜ？必要ないなら消したい
-  // もしくは, rx_buffer を必要としないそれ以外の初期化を行う関数が欲しい
-#if 0
-  DS_init(&(oem7600_driver->driver.super),
-          &(oem7600_driver->driver.uart_config),
-          OEM7600_load_driver_super_init_settings_);
-#endif
-
   return DS_CMD_OK;
 }
 

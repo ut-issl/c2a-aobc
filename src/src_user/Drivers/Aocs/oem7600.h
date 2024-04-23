@@ -40,7 +40,7 @@ typedef enum
   OEM7600_TLM_ID_ANTENNA_VOLTAGE = 0x00000007,
   OEM7600_TLM_ID_SUPPLY_VOLTAGE  = 0x0000000F,
   // binary format系列
-  OEM7600_TLM_ID_RANGE            = 0x0000002B, // cmd/log manual 3.144項
+  OEM7600_TLM_ID_RANGE            = 0x0000002B, // cmd/log manual 3.144項 これはRangeのID
   OEM7600_TLM_ID_BEST_XYZ         = 0x000000F1, // cmd/log manual 3.21項
   OEM7600_TLM_ID_HARDWARE_MONITOR = 0x000003C3, // cmd/log manual 3.76項
   // 仕様書上はbinary/asciiで同一IDだが、CMD引数にIDを使うために、binary系列ID + 0x1000をascii系列として定義する
@@ -80,7 +80,9 @@ typedef struct
 
 /**
  * @struct OEM7600_RangeData
- * @brief OEM7600が提供するRANGEテレメデータ構造体
+ * @brief  OEM7600が提供するRANGEテレメデータ構造体
+ * @note   RANGEテレメとRANGEGPSL1テレメでデータ構造は同一
+ * @note   QZSSのPRMは193-202
  */
 typedef struct
 {
