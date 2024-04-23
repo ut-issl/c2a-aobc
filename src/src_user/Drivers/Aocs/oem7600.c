@@ -15,12 +15,12 @@
 // #define DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
 
 #define OEM7600_RX_CRC_SIZE          (4)    //!< CRC size
-#define OEM7600_RX_MAX_FRAME_SIZE    (144)  //!< 1回の受信テレメサイズ最大値 (暫定値)
+#define OEM7600_RX_MAX_FRAME_SIZE    DS_IF_RX_BUFFER_SIZE_OEM7600  //!< 1回の受信テレメサイズ最大値 (レンジテレメの最大長に合わせる)
 #define OEM7600_TX_MAX_FLAME_SIZE    (36)   //!< 1回の送信コマンドサイズ最大値
 #define OEM7600_STREAM_TLM_CMD       (0)    //!< テレコマで使うストリーム
 #define OEM7600_FRAME_LENGTH_POS     (8)    //!< 可変長テレメデータのうち、フレームサイズデータの出現位置 (先頭からのbyte数)
 #define OEM7600_COMMON_HEADER_SIZE   (28)   //!< 上記フレームサイズデータに含まれない、固定長部分のテレメサイズ
-#define OEM7600_RANGE_TLM_FULL_SIZE  (564)  //!< max length of range tlm data
+#define OEM7600_RANGE_TLM_FULL_SIZE  DS_IF_RX_BUFFER_SIZE_OEM7600  //!< max length of range tlm data
 
 // TODO_L : NMEAを使うかどうかも含め要検討．(NMEA形式のTLMを受信したい場合，2種類のヘッダが混在することになる．)
 static const uint8_t OEM7600_rx_header_[] = { 0xAA, 0x44, 0x12 };    //!< 受信ヘッダ, フッタはなし．
@@ -28,14 +28,9 @@ static const uint8_t OEM7600_tx_footer_[] = { 0x0A };                //!< 送信
 
 static uint8_t OEM7600_tx_frame_[OEM7600_TX_MAX_FLAME_SIZE]; //!< 送信フレーム
 
-// range tl,
-#define OEM7600_RANGE_TLM_IF_RX_BUFFER_SIZE  (512)    //!< 一度に IF_RX するサイズ．これが大きいほど，ボーレートをあげられるがメモリを消費する
-static uint8_t OEM7600_range_tlm_if_rx_buffer_[OEM7600_RANGE_TLM_IF_RX_BUFFER_SIZE];
-static uint8_t OEM7600_range_tlm_buff_[OEM7600_RANGE_TLM_FULL_SIZE]; //!< buffer for storing range tlm data
-
 static DS_ERR_CODE OEM7600_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE OEM7600_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
-static DS_ERR_CODE OEM7600_analyze_rec_data_for_range_tlm_(DS_StreamConfig* p_stream_config, void* p_driver);
+// static DS_ERR_CODE OEM7600_analyze_rec_data_for_range_tlm_(DS_StreamConfig* p_stream_config, void* p_driver);
 static DS_CMD_ERR_CODE   OEM7600_send_cmd_(OEM7600_Driver* oem7600_driver, const size_t cmd_length, const char* cmd_payload);
 // TODO_L : CRC計算はいずれsrc_core/Library/CRC.h/.cに移動した方が良いのかも(今はCRC32は非対応っぽいので一旦ここで実装)．要相談？
 static uint32_t OEM7600_calculate_crc32_(const uint8_t* tlm_data_for_crc, const size_t data_length);  //!< CRC計算処理
@@ -87,10 +82,6 @@ DS_INIT_ERR_CODE OEM7600_init(OEM7600_Driver* oem7600_driver,
   oem7600_driver->info.tlm_receive_counter = 0;
   oem7600_driver->info.crc_state = OEM7600_CRC_STATE_OK;
   oem7600_driver->info.times.obct_gps_time_obs = OBCT_create(0, 0, 0);
-  oem7600_driver->info.range_tlm_status.is_receiving = 0;
-  oem7600_driver->info.range_tlm_status.received_tlm_len = 0;
-  oem7600_driver->info.range_tlm_status.expected_data_length = 0;
-  oem7600_driver->info.range_tlm_status.range_tlm_wait_counter = 0;
 
   for (uint8_t sat_id = 0; sat_id < OEM7600_MAX_SAT_NUM_RANGE_STORE; sat_id++)
   {
@@ -153,14 +144,6 @@ DS_REC_ERR_CODE OEM7600_rec(OEM7600_Driver* oem7600_driver)
 {
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
-
-  if (oem7600_driver->info.range_tlm_status.is_receiving)
-  {
-    ret = OEM7600_store_range_tlm_chunk_(oem7600_driver);
-    if (ret != DS_ERR_CODE_OK) return DS_REC_OTHER_ERR;
-
-    return DS_REC_OK;
-  }
 
   ret = DS_receive(&(oem7600_driver->driver.super));
   if (ret != DS_ERR_CODE_OK) return DS_REC_DS_RECEIVE_ERR;
@@ -504,6 +487,9 @@ static DS_ERR_CODE OEM7600_analyze_rec_data_(DS_StreamConfig* p_stream_config, v
   case OEM7600_TLM_ID_HARDWARE_MONITOR:
     ret = OEM7600_analyze_hardware_status_tlm_(oem7600_driver, oem7600_rx_data, received_tlm_size);
     break;
+  case OEM7600_TLM_ID_RANGE:
+    ret = OEM7600_analyze_range_tlm_(oem7600_driver, oem7600_rx_data, received_tlm_size);
+    break;
   default:
     ret = DS_ERR_CODE_ERR;
     break;
@@ -710,19 +696,6 @@ static DS_ERR_CODE OEM7600_analyze_range_tlm_(OEM7600_Driver* oem7600_driver, co
   uint32_t max_number_of_chunks = 0;   //!< 今回のテレメで出力される塊の個数=観測衛星数
   uint32_t offset_for_read_out  = 0;   //!< TLMデータの現在読み出し位置を指定するオフセット
 
-  // range tlmは分割受信処理の都合により，この中でCRCチェックとヘッダ解釈もするしかない
-  if (OEM7600_calculate_crc32_(tlm_payload, tlm_length) != 0)
-  {
-    oem7600_driver->info.crc_state = OEM7600_CRC_STATE_NG;
-  }
-  else
-  {
-    oem7600_driver->info.crc_state = OEM7600_CRC_STATE_OK;
-  }
-
-  oem7600_driver->info.tlm_receive_counter++;
-  OEM7600_analyze_common_header_tlm_(oem7600_driver, tlm_payload);
-
   memcpy(&max_number_of_chunks, &(tlm_payload[kNumOfContensPosition]), sizeof(max_number_of_chunks));
   offset_for_read_out = kNumOfContensPosition + 4;
 
@@ -773,259 +746,6 @@ static DS_ERR_CODE OEM7600_analyze_range_tlm_(OEM7600_Driver* oem7600_driver, co
   }
 
   return DS_ERR_CODE_OK;
-}
-
-
-static DS_ERR_CODE OEM7600_store_range_tlm_chunk_(OEM7600_Driver* oem7600_driver)
-{
-  DS_StreamConfig* p_stream_config = &(oem7600_driver->driver.super.stream_config[OEM7600_STREAM_TLM_CMD]);
-  DriverSuper* p_super = &oem7600_driver->driver.super;
-  OEM7600_Info* info = &oem7600_driver->info;
-  uint16_t rx_buffer_read_pos = 0;
-  int ret_if_rx;
-  uint16_t if_rec_len;
-  uint16_t unread_buffer_len;
-
-  const uint16_t kMaxWaitCountToReset = 60000; // 返答テレメ待ちカウンタ最大値（この値を超えて受信待ちになっている場合、既にテレメを採りこぼしている）
-
-  // 採りこぼし判定
-  info->range_tlm_status.range_tlm_wait_counter++;
-  if (info->range_tlm_status.range_tlm_wait_counter > kMaxWaitCountToReset)
-  {
-    OEM7600_end_rec_range_tlm(oem7600_driver);
-    return DS_ERR_CODE_ERR;
-  }
-
-  // バッファに受信
-  ret_if_rx = (*IF_RX[p_super->interface])(p_super->if_config,
-                                           OEM7600_range_tlm_if_rx_buffer_,
-                                           OEM7600_RANGE_TLM_IF_RX_BUFFER_SIZE);
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-  Printf("ret_if_rx %d \n", ret_if_rx);
-#endif
-
-  if (ret_if_rx <= 0) return DS_ERR_CODE_ERR;
-  if (ret_if_rx == 0) return DS_ERR_CODE_OK;    // 受信なし
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-  Printf("rec data\n");
-  for (int i = 0; i < ret_if_rx; ++i)
-  {
-    Printf("%02x ", OEM7600_range_tlm_if_rx_buffer_[i]);
-  }
-  Printf("\n");
-#endif
-
-  // 受信あり
-  if_rec_len = (uint16_t)ret_if_rx;
-  unread_buffer_len = if_rec_len - rx_buffer_read_pos;
-  while (unread_buffer_len)
-  {
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-    Printf("unread_buffer_len %d \n", unread_buffer_len);
-#endif
-
-    DS_ERR_CODE ret_pickup = OEM7600_store_range_tlm_chunk_pickup_(oem7600_driver, if_rec_len, &rx_buffer_read_pos);
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-    Printf("ret_pickup %d \n", ret_pickup);
-#endif
-
-    if (ret_pickup != DS_ERR_CODE_OK)
-    {
-      // 不整合 → リセット
-      info->range_tlm_status.received_tlm_len = 0;
-    }
-
-    unread_buffer_len = if_rec_len - rx_buffer_read_pos;
-  }
-
-  return DS_ERR_CODE_OK;
-}
-
-
-static DS_ERR_CODE OEM7600_store_range_tlm_chunk_pickup_(OEM7600_Driver* oem7600_driver, uint16_t if_rec_len, uint16_t* p_rx_buffer_read_pos)
-{
-  DS_StreamConfig* p_stream_config = &(oem7600_driver->driver.super.stream_config[OEM7600_STREAM_TLM_CMD]);
-  OEM7600_Info* info = &oem7600_driver->info;
-  uint16_t unread_buffer_len = if_rec_len - (*p_rx_buffer_read_pos);
-  uint16_t received_tlm_id;
-  uint32_t received_tlm_size;
-
-  if (info->range_tlm_status.received_tlm_len == 0)
-  {
-    // ヘッダ未受信
-    uint8_t* p_header = NULL;
-    p_header = (uint8_t*)memchr(&OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)],
-                                (int)(OEM7600_rx_header_[0]),
-                                (size_t)unread_buffer_len);
-
-    if (p_header == NULL)
-    {
-      // ヘッダ候補なし
-      unread_buffer_len = 0;
-      (*p_rx_buffer_read_pos) = if_rec_len;
-      return DS_ERR_CODE_OK;
-    }
-
-    (*p_rx_buffer_read_pos) = (uint16_t)(p_header - &OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)]) + (*p_rx_buffer_read_pos);
-
-    // ヘッダ 1 byte 確定
-    OEM7600_range_tlm_buff_[info->range_tlm_status.received_tlm_len] = OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)];
-    info->range_tlm_status.received_tlm_len++;
-    (*p_rx_buffer_read_pos)++;
-    // unread_buffer_len--;
-    unread_buffer_len = if_rec_len - (*p_rx_buffer_read_pos);
-
-    if (unread_buffer_len == 0) return DS_ERR_CODE_OK;
-  }
-
-
-  if (info->range_tlm_status.received_tlm_len < sizeof(OEM7600_rx_header_))
-  {
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-    Printf("receiving rx header: %d, %d, \n", info->range_tlm_status.received_tlm_len, *p_rx_buffer_read_pos);
-#endif
-    // ヘッダ受信中
-    uint16_t unread_header = sizeof(OEM7600_rx_header_) - info->range_tlm_status.received_tlm_len;
-    uint16_t i;
-    for (i = info->range_tlm_status.received_tlm_len; i < sizeof(OEM7600_rx_header_); ++i)
-    {
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-      Printf("receiving rx  header for: %d, %d, \n", info->range_tlm_status.received_tlm_len, *p_rx_buffer_read_pos);
-#endif
-
-      if (OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)] != OEM7600_rx_header_[info->range_tlm_status.received_tlm_len])
-      {
-        // 不整合
-        return DS_ERR_CODE_ERR;
-      }
-
-      OEM7600_range_tlm_buff_[info->range_tlm_status.received_tlm_len] = OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)];
-      info->range_tlm_status.received_tlm_len++;
-      (*p_rx_buffer_read_pos)++;
-      unread_buffer_len--;
-
-      if (unread_buffer_len == 0) return DS_ERR_CODE_OK;
-    }
-  }
-
-  if (info->range_tlm_status.received_tlm_len < OEM7600_COMMON_HEADER_SIZE)
-  {
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-    Printf("receiving header: %d, %d, \n", info->range_tlm_status.received_tlm_len, *p_rx_buffer_read_pos);
-#endif
-
-    // フレーム長p_rx_buffer_read_posまで受信中
-    uint16_t unread_header_len = OEM7600_COMMON_HEADER_SIZE - info->range_tlm_status.received_tlm_len;
-    uint16_t copy_len = unread_header_len;
-    if (copy_len > unread_buffer_len)
-    {
-      copy_len = unread_buffer_len;
-    }
-
-    memcpy(&OEM7600_range_tlm_buff_[info->range_tlm_status.received_tlm_len],
-           &OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)],
-           copy_len);
-
-    info->range_tlm_status.received_tlm_len += copy_len;
-    (*p_rx_buffer_read_pos) += copy_len;
-    unread_buffer_len -= copy_len;
-
-    if (unread_buffer_len == 0) return DS_ERR_CODE_OK;
-  }
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-  Printf("receiving body: %d, %d, \n", info->range_tlm_status.received_tlm_len, *p_rx_buffer_read_pos);
-#endif
-
-  // ここまできたらフレーム長などは受信できてる
-  received_tlm_size = OEM7600_range_tlm_buff_[OEM7600_FRAME_LENGTH_POS] +
-                      ((uint16_t)(OEM7600_range_tlm_buff_[OEM7600_FRAME_LENGTH_POS + 1]) << 8);
-  info->range_tlm_status.expected_data_length = received_tlm_size + OEM7600_COMMON_HEADER_SIZE + OEM7600_RX_CRC_SIZE;
-  received_tlm_id = OEM7600_analyze_common_header_tlm_(oem7600_driver, OEM7600_range_tlm_buff_);
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-  Printf("received_tlm_size %d \n", received_tlm_size);
-  Printf("expected_data_length %d \n", info->range_tlm_status.expected_data_length);
-#endif
-
-  if (received_tlm_id != OEM7600_TLM_ID_RANGE)
-  {
-    // 不整合
-    return DS_ERR_CODE_ERR;
-  }
-  if (info->range_tlm_status.expected_data_length > OEM7600_RANGE_TLM_FULL_SIZE)
-  {
-    // 不整合
-    return DS_ERR_CODE_ERR;
-  }
-
-  // ここまで来たら，あとはデータをツモっていくだけ
-  {
-    uint16_t unreceived_len = info->range_tlm_status.expected_data_length - info->range_tlm_status.received_tlm_len;
-    uint16_t copy_len = unreceived_len;
-    if (copy_len > unread_buffer_len)
-    {
-      copy_len = unread_buffer_len;
-    }
-
-    memcpy(&OEM7600_range_tlm_buff_[info->range_tlm_status.received_tlm_len],
-           &OEM7600_range_tlm_if_rx_buffer_[(*p_rx_buffer_read_pos)],
-           copy_len);
-
-    info->range_tlm_status.received_tlm_len += copy_len;
-    (*p_rx_buffer_read_pos) += copy_len;
-    unread_buffer_len -= copy_len;
-
-    unreceived_len = info->range_tlm_status.expected_data_length - info->range_tlm_status.received_tlm_len;
-    if (unreceived_len == 0)
-    {
-      // 受信完了
-      OEM7600_end_rec_range_tlm(oem7600_driver);
-      return OEM7600_analyze_range_tlm_(oem7600_driver, OEM7600_range_tlm_buff_, info->range_tlm_status.expected_data_length);
-    }
-
-    if (unread_buffer_len == 0) return DS_ERR_CODE_OK;
-  }
-
-  return DS_ERR_CODE_OK;
-}
-
-
-DS_CMD_ERR_CODE OEM7600_start_rec_range_tlm(OEM7600_Driver* oem7600_driver)
-{
-  DS_StreamConfig* p_stream_config = &(oem7600_driver->driver.super.stream_config[OEM7600_STREAM_TLM_CMD]);
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-  Printf("OEM7600_start_rec_range_tlm\n");
-#endif
-
-  oem7600_driver->info.range_tlm_status.is_receiving = 1;
-  oem7600_driver->info.range_tlm_status.received_tlm_len = 0;
-  oem7600_driver->info.range_tlm_status.expected_data_length = 0;
-  oem7600_driver->info.range_tlm_status.range_tlm_wait_counter = 0;
-
-  // AOBC宛てにrange tlm 1 shot 要求コマンドが来た際には，上の設定を行ったのち
-  // ここで初めてコンポ側にrange tlm 1 shot 要求コマンドを送る
-  DS_CMD_ERR_CODE cmd_return = OEM7600_set_tlm_contents(oem7600_driver, OEM7600_TLM_ID_RANGE, 0);
-
-  return cmd_return;
-}
-
-DS_CMD_ERR_CODE OEM7600_end_rec_range_tlm(OEM7600_Driver* oem7600_driver)
-{
-  DS_StreamConfig* p_stream_config = &(oem7600_driver->driver.super.stream_config[OEM7600_STREAM_TLM_CMD]);
-
-#ifdef DRIVER_OEM7600_DEBUG_SHOW_RANGE_DATA_BUFF
-  Printf("OEM7600_end_rec_range_tlm\n");
-#endif
-
-  oem7600_driver->info.range_tlm_status.is_receiving = 0;
-
-  return DS_CMD_OK;
 }
 
 #pragma section

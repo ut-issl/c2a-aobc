@@ -13,7 +13,7 @@
 
 #define OEM7600_MAX_SAT_NUM_RANGE_STORE (12) //!< rangeテレメの格納対象とする同時可視最大衛星数
 
-#define DS_IF_RX_BUFFER_SIZE_OEM7600 (144)  //!< IF_RXのバッファサイズ
+#define DS_IF_RX_BUFFER_SIZE_OEM7600 (564)  //!< IF_RXのバッファサイズ
 
 /**
 * @enum  OEM7600_DATA_UPDATE_STATUS
@@ -140,14 +140,6 @@ typedef struct
   OEM7600_HardwareStatus hardware_status;
   OEM7600_RangeData range_tlm[OEM7600_MAX_SAT_NUM_RANGE_STORE];
   OEM7600_CRC_STATE crc_state;       //!< 受信したCRCが正しいか
-  // range_tlm受信用特殊パラメータ
-  struct oem7600
-  {
-    uint8_t is_receiving;             //!< flag to check whether the driver is under range tlm receiving or not
-    uint16_t received_tlm_len;        //!< length of the range data stored to the range tlm buffer
-    uint16_t expected_data_length;    //!< expected data length of range tlm sentence under receiving
-    uint16_t range_tlm_wait_counter;  //!< range tlmの受信処理call回数（閾値以上になった場合、range tlmの受信処理をリセット）
-  } range_tlm_status;
 } OEM7600_Info;
 
 /**
@@ -243,21 +235,5 @@ DS_CMD_ERR_CODE OEM7600_save_tlm_setting(OEM7600_Driver* oem7600_driver);
 DS_CMD_ERR_CODE OEM7600_set_uart_baudrate(OEM7600_Driver* oem7600_driver, const uint32_t baudrate,
                                           const OEM7600_UART_BAUDRATE_SET_DEVICE_ID device_id,
                                           DS_StreamRecBuffer* rx_buffer);
-
-
-/**
- * @brief  OEM7600のレンジテレメ取得開始コマンド送信処理
- * @param  oem7600: OEM7600_Driver構造体へのポインタ
- * @return DS_CMD_ERR_CODE
- */
-DS_CMD_ERR_CODE OEM7600_start_rec_range_tlm(OEM7600_Driver* oem7600_driver);
-
-
-/**
- * @brief  OEM7600のレンジテレメ取得終了コマンド送信処理
- * @param  oem7600: OEM7600_Driver構造体へのポインタ
- * @return DS_CMD_ERR_CODE
- */
-DS_CMD_ERR_CODE OEM7600_end_rec_range_tlm(OEM7600_Driver* oem7600_driver);
 
 #endif

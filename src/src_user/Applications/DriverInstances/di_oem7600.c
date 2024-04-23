@@ -191,15 +191,7 @@ CCP_CmdRet Cmd_DI_OEM7600_SET_TLM_CONTENTS(const CommonCmdPacket* packet)
 
   ENDIAN_memcpy(&oem7600_tlm_id, &(param[2]), sizeof(oem7600_tlm_id));
 
-  // range tlmの要求が来た時には、先にDSの設定が必要なので、ここで実施する
-  if (oem7600_tlm_id == OEM7600_TLM_ID_RANGE)
-  {
-    ret = OEM7600_start_rec_range_tlm(&oem7600_driver_[oem7600_id]);
-  }
-  else
-  {
-    ret = OEM7600_set_tlm_contents(&oem7600_driver_[oem7600_id], oem7600_tlm_id, tlm_out_interval_seconds);
-  }
+  ret = OEM7600_set_tlm_contents(&oem7600_driver_[oem7600_id], oem7600_tlm_id, tlm_out_interval_seconds);
 
   return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
