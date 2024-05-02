@@ -35,6 +35,9 @@ void BCL_load_rough_sun_pointing_mode(void)
   BCL_tool_register_app    (85, AR_APP_SUN_POINTING); // 1step以上
 
   BCL_tool_register_combine(90, BC_AC_MTQ_UPDATE); // 1step以上
+
+  // 基本使わないがユーザーが使いたい時に使えるように入れておく
+  BCL_tool_register_combine(92, BC_AC_OEM7600_UPDATE); // 1step以上
 }
 
 #pragma section
