@@ -161,8 +161,12 @@ extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rm3100_m
 extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_rm3100;   //!< TLM error detection event handler switch sensor count threshold for RM3100 AOBC
 extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_rm3100_ms; //!< TLM error detection event handler switch sensor time threshold for RM3100 AOBC [ms]
 // nanoSSOC D60
+// Prevents EHs from firing at the same time due to an anomaly on the common I2C bus
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_0;    //!< TLM error detection event handler reset count threshold for nanoSSOC D60
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_1;    //!< TLM error detection event handler reset count threshold for nanoSSOC D60
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_2;    //!< TLM error detection event handler reset count threshold for nanoSSOC D60
+extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_3;    //!< TLM error detection event handler reset count threshold for nanoSSOC D60
 // Use same value for all sun sensors (Users can also change the value with command for each sun sensors)
-extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;    //!< TLM error detection event handler reset count threshold for nanoSSOC D60
 extern const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;  //!< TLM error detection event handler reset time threshold for nanoSSOC D60 [ms]
 // STIM210
 extern const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_stim210;           //!< TLM error detection event handler reset count threshold for STIM210

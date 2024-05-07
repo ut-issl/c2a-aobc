@@ -89,7 +89,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_0;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
@@ -101,7 +101,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_1;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
@@ -113,7 +113,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_2;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
@@ -125,7 +125,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_3;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
@@ -334,7 +334,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_0;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
@@ -358,7 +358,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_2;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
@@ -370,7 +370,7 @@ void EH_load_rule_tlmcmd(void)
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
-  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
+  settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_3;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;

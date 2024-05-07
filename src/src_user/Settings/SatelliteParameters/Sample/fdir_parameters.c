@@ -159,8 +159,12 @@ const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_rm3100_ms = 200
 const uint16_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_count_threshold_rm3100 = 10;
 const uint32_t FDIR_PARAMETERS_tlm_error_eh_switch_sensor_time_threshold_rm3100_ms = 0;
 // nanoSSOC D60
+// Prevents EHs from firing at the same time due to an anomaly on the common I2C bus
+const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_0 = 250;
+const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_1 = 260;
+const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_2 = 270;
+const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60_3 = 280;
 // Use same value for all sun sensors (Users can also change the value with command for each sun sensors)
-const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60 = 250;
 const uint32_t FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms = 2000;
 // STIM210
 const uint16_t FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_stim210 = 100;
