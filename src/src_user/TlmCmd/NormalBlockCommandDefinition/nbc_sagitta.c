@@ -36,7 +36,7 @@ void BCL_load_power_on_sagitta(void)
   BCL_tool_prepare_param_uint8(APP_PSC_UNREG_IDX_SAGITTA);
   BCL_tool_prepare_param_uint8(APP_PSC_STATE_ON);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_PSC_CONTROL_UNREG_PORT);
-  bc_cycle += OBCT_sec2cycle(1);
+  bc_cycle += OBCT_sec2cycle(2);
 
   // Boot
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_BOOT);
@@ -80,7 +80,7 @@ void BCL_load_power_on_sagitta(void)
   BCL_tool_register_deploy(bc_cycle, BC_ACTIVATE_SAGITTA_EL_EH, TLCD_ID_DEPLOY_BC); // 1sec
   bc_cycle += OBCT_sec2cycle(1);
 
-  // Total: 34~35sec程度
+  // Total: 35~36sec程度
 }
 
 void BCL_load_power_off_sagitta(void)
