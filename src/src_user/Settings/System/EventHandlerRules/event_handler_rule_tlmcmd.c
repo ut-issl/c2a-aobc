@@ -379,7 +379,7 @@ void EH_load_rule_tlmcmd(void)
   // TODO Add other sun sensors
 
   // STIM210 CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_STIM210;
+  settings.event.group = EL_GROUP_CRC_ERROR_STIM210;
   settings.event.local = STIM210_IDX_IN_UNIT;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;

@@ -93,7 +93,7 @@ void BCL_load_power_on_stim210(void)
   bc_cycle += OBCT_sec2cycle(1);
 
   // EL EH Activte
-  BCL_tool_register_deploy(bc_cycle, BC_ACTIVATE_STIM210_EL_EH, TLCD_ID_DEPLOY_BC); // 1.1sec
+  BCL_tool_register_deploy(bc_cycle, BC_ACTIVATE_STIM210_EL_EH, TLCD_ID_DEPLOY_BC); // 1.2sec
   bc_cycle++;
 
   // total: 14sec程度
@@ -104,7 +104,7 @@ void BCL_load_power_off_stim210(void)
   cycle_t bc_cycle = 1;
 
   // Inactivate EH/EL
-  BCL_tool_register_deploy(bc_cycle, BC_INACTIVATE_STIM210_EL_EH, TLCD_ID_DEPLOY_BC); // 1.1sec
+  BCL_tool_register_deploy(bc_cycle, BC_INACTIVATE_STIM210_EL_EH, TLCD_ID_DEPLOY_BC); // 1.2sec
   bc_cycle += OBCT_sec2cycle(2);
 
   // Change selector
@@ -157,6 +157,10 @@ void BCL_load_activate_stim210_el_eh(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_STIM210);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_STIM210);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -198,6 +202,8 @@ void BCL_load_activate_stim210_el_eh(void)
 
   BCL_tool_prepare_param_uint16(EH_RULE_SW_OC_STIM210_BROKEN);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL);
+
+  // 1.2sec
 }
 
 void BCL_load_inactivate_stim210_el_eh(void)
@@ -242,11 +248,15 @@ void BCL_load_inactivate_stim210_el_eh(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_STIM210);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_STIM210);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
-  // 1.1sec
+  // 1.2sec
 }
 
 #pragma section
