@@ -329,7 +329,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_RW0003_Z, &settings);
 
   // NANOSSOC D60 0 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_0;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -341,7 +341,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_0, &settings);
 
   // NANOSSOC D60 1 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_1;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -353,7 +353,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_1, &settings);
 
   // NANOSSOC D60 2 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_2;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -365,7 +365,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_2, &settings);
 
   // NANOSSOC D60 3 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_3;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;

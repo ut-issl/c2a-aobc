@@ -101,7 +101,7 @@ static void DI_NANOSSOC_D60_update_(void)
   NANOSSOC_D60_CHECKSUM_STATE state = nanossoc_d60_driver_[NANOSSOC_D60_idx_counter_].info.checksum_state;
   if (state != NANOSSOC_D60_CHECKSUM_STATE_OK)
   {
-    EL_record_event(EL_GROUP_ERROR_NANOSSOC, (uint32_t)NANOSSOC_D60_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)NANOSSOC_D60_EL_NOTE_CHECKSUM_ERROR);
+    EL_record_event(EL_GROUP_CHECKSUM_ERROR_NANOSSOC, (uint32_t)NANOSSOC_D60_idx_counter_, EL_ERROR_LEVEL_HIGH, 0);
   }
 
   DI_NANOSSOC_D60_update_idx_counter_();
