@@ -118,6 +118,7 @@ static void DI_RW0003_update_(void)
   {
     DS_CMD_ERR_CODE ret;
     EL_GROUP el_group_tlm_error = (EL_GROUP)(EL_GROUP_TLM_ERROR_RW0003X + DI_RW0003_idx_counter_);
+    EL_GROUP el_group_crc_error = (EL_GROUP)(EL_GROUP_CRC_ERROR_RW0003X + DI_RW0003_idx_counter_);
     EL_GROUP el_group_error = (EL_GROUP)(EL_GROUP_ERROR_RW0003X + DI_RW0003_idx_counter_);
 
     ret = RW0003_observe_speed(&rw0003_driver_[DI_RW0003_idx_counter_]);
@@ -157,7 +158,7 @@ static void DI_RW0003_update_(void)
     RW0003_REC_CRC_STATE state = rw0003_driver_[DI_RW0003_idx_counter_].info.crc_state;
     if (state != RW0003_REC_CRC_STATE_OK)
     {
-      EL_record_event(el_group_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)RW0003_EL_NOTE_CRC_ERROR);
+      EL_record_event(el_group_crc_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, 0);
     }
   }
 

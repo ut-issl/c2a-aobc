@@ -427,7 +427,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_OEM7600, &settings);
 
   // RWX CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_RW0003X;
+  settings.event.group = EL_GROUP_CRC_ERROR_RW0003X;
   settings.event.local = RW0003_IDX_ON_X;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -439,7 +439,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_RWX, &settings);
 
   // RWY CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_RW0003Y;
+  settings.event.group = EL_GROUP_CRC_ERROR_RW0003Y;
   settings.event.local = RW0003_IDX_ON_Y;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -451,7 +451,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_RWY, &settings);
 
   // RWZ CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_RW0003Z;
+  settings.event.group = EL_GROUP_CRC_ERROR_RW0003Z;
   settings.event.local = RW0003_IDX_ON_Z;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
