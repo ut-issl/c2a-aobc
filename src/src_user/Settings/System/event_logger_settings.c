@@ -20,6 +20,13 @@ void EL_load_default_settings(void)
   EL_disable_logging(EL_GROUP_TLM_ERROR_RW0003X);
   EL_disable_logging(EL_GROUP_TLM_ERROR_RW0003Y);
   EL_disable_logging(EL_GROUP_TLM_ERROR_RW0003Z);
+  EL_disable_logging(EL_GROUP_CHECKSUM_ERROR_NANOSSOC);
+  EL_disable_logging(EL_GROUP_CRC_ERROR_STIM210);
+  EL_disable_logging(EL_GROUP_XXHASH_ERROR_SAGITTA);
+  EL_disable_logging(EL_GROUP_CRC_ERROR_OEM7600);
+  EL_disable_logging(EL_GROUP_CRC_ERROR_RW0003X);
+  EL_disable_logging(EL_GROUP_CRC_ERROR_RW0003Y);
+  EL_disable_logging(EL_GROUP_CRC_ERROR_RW0003Z);
   EL_disable_logging(EL_GROUP_ERROR_MPU9250);
   EL_disable_logging(EL_GROUP_ERROR_RM3100);
   EL_disable_logging(EL_GROUP_ERROR_NANOSSOC);
@@ -31,12 +38,6 @@ void EL_load_default_settings(void)
   EL_disable_logging(EL_GROUP_ERROR_RW0003Z);
   EL_disable_logging(EL_GROUP_SW_OC);
   EL_disable_logging(EL_GROUP_HW_OC);
-
-  // 電源OFFなので
-  // EL_disable_logging(EL_GROUP_IMU);
-  // EL_disable_logging(EL_GROUP_STT);
-  // EL_disable_logging(EL_GROUP_RW);
-  // EL_disable_logging(EL_GROUP_XACT);
 }
 
 #pragma section
