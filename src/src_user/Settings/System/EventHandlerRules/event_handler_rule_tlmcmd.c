@@ -403,7 +403,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_STIM210_BROKEN, &settings);
 
   // SAGITTA XXHASH ERROR
-  settings.event.group = EL_GROUP_ERROR_SAGITTA;
+  settings.event.group = EL_GROUP_XXHASH_ERROR_SAGITTA;
   settings.event.local = SAGITTA_IDX_IN_UNIT;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
