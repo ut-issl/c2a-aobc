@@ -129,6 +129,10 @@ void BCL_load_activate_oem7600_el_eh(void)
   cycle_t bc_cycle = 1;
 
   // Enable EL
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_OEM7600);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_OEM7600);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -188,6 +192,10 @@ void BCL_load_inactivate_oem7600_el_eh(void)
   bc_cycle++;
 
   // Disable EL
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_OEM7600);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_OEM7600);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
 

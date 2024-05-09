@@ -87,7 +87,7 @@ static void DI_OEM7600_update_(void)
     OEM7600_CRC_STATE state = oem7600_driver_->info.crc_state;
     if (state != OEM7600_CRC_STATE_OK)
     {
-      EL_record_event(EL_GROUP_ERROR_OEM7600, (uint32_t)oem_id, EL_ERROR_LEVEL_HIGH, (uint32_t)OEM7600_EL_NOTE_CRC_ERROR);
+      EL_record_event(EL_GROUP_CRC_ERROR_OEM7600, (uint32_t)oem_id, EL_ERROR_LEVEL_HIGH, 0);
     }
 
   }

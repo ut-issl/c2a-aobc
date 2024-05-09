@@ -415,7 +415,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_XXHASH_ERROR_SAGITTA, &settings);
 
   // OEM7600 CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_OEM7600;
+  settings.event.group = EL_GROUP_CRC_ERROR_OEM7600;
   settings.event.local = OEM7600_IDX_IN_UNIT;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
