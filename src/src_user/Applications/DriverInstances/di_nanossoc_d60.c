@@ -163,4 +163,17 @@ CCP_CmdRet Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const Com
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+CCP_CmdRet Cmd_DI_NANOSSOC_CLEAR_BUFFER(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  int i;
+
+  for (int i = 0; i < NANOSSOC_D60_IDX_MAX; i++)
+  {
+    DS_clear_rx_buffer(&(nanossoc_d60_driver_[i].driver.super));
+  }
+  
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
 #pragma section

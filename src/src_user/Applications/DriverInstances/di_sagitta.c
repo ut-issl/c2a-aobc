@@ -302,4 +302,17 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCm
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+CCP_CmdRet Cmd_DI_SAGITTA_CLEAR_BUFFER(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  int i;
+
+  for (int i = 0; i < SAGITTA_IDX_MAX; i++)
+  {
+    DS_clear_rx_buffer(&(sagitta_driver_[i].driver.super));
+  }
+  
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
 #pragma section

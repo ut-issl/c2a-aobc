@@ -50,4 +50,6 @@ AppInfo DI_NANOSSOC_D60_update(void);
 
 CCP_CmdRet Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
 
+CCP_CmdRet Cmd_DI_NANOSSOC_CLEAR_BUFFER(const CommonCmdPacket* packet);
+
 #endif
