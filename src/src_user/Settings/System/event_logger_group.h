@@ -51,21 +51,21 @@ typedef enum
 
   // POWER: 80-89  過電流など
   EL_GROUP_SW_OC = 80,
-  EL_GROUP_HW_OC,
+  EL_GROUP_HW_OC = 81,
 
   // THERMAL: 90-99  温度異常など
-  EL_GROUP_TEMPERATURE_HIGH = 90, // 高温異常
-  EL_GROUP_TEMPERATURE_LOW,       // 低温異常
+  EL_GROUP_TEMPERATURE_HIGH = 90,  // 高温異常
+  EL_GROUP_TEMPERATURE_LOW  = 91,  // 低温異常
 
   // AOCS: 100-119 制御異常など
-  EL_GROUP_AUTO_MODE_TRANSITION = 100, //!< 自動モード遷移
-  EL_GROUP_CALCULATION_ERROR,          //!< アルゴリズム計算内での計算異常
+  EL_GROUP_AUTO_MODE_TRANSITION = 100,  //!< 自動モード遷移
+  EL_GROUP_CALCULATION_ERROR    = 101,  //!< アルゴリズム計算内での計算異常
 
   // その他: 120-127
-  EL_GROUP_DR_WRITE = 120,       //!< DR書き込みエラー
-  EL_GROUP_DR_READ,              //!< DR読み出しエラー
-  EL_GROUP_NVM_TRIPLE_REDUNDANT, //!< 不揮発メモリ三重冗長エラー
-  EL_GROUP_NVM_BC,               //!< 不揮発BC操作時のエラー
+  EL_GROUP_DR_WRITE             = 120,  //!< DR書き込みエラー
+  EL_GROUP_DR_READ              = 121,  //!< DR読み出しエラー
+  EL_GROUP_NVM_TRIPLE_REDUNDANT = 122,  //!< 不揮発メモリ三重冗長エラー
+  EL_GROUP_NVM_BC               = 123,  //!< 不揮発BC操作時のエラー
 
   // とりあえず最大値は0x7f(127)に！
   EL_GROUP_MAX = 0x80       // これはいじらない！
