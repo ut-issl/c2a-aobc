@@ -15,4 +15,7 @@ extern uint8_t SAGITTA_PARAMETERS_q_i2b_spike_filter_config_count_limit_to_rejec
 extern double SAGITTA_PARAMETERS_q_i2b_spike_filter_config_reject_threshold_rad;                     //!< Reject threshold [rad]
 extern double SAGITTA_PARAMETERS_q_i2b_spike_filter_config_amplitude_limit_to_accept_as_step_rad;    //!< Amplitude limit to accept as step input [rad]
 
+// Magnetic sensor bias calibration
+extern const float SAGITTA_PARAMETERS_mag_bias_compo[PHYSICAL_CONST_THREE_DIM]; //!< Magnetic sensor bias calibration
+
 #endif // SAGITTA_PARAMETERS_H_

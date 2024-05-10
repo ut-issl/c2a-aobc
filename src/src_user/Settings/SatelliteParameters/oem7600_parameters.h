@@ -24,4 +24,7 @@ extern uint8_t OEM7600_PARAMETERS_total_gps_time_spike_filter_config_count_limit
 extern double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_reject_threshold_s;                      //!< Reject threshold about gps_time [ms]
 extern double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_amplitude_limit_to_accept_as_step_s;     //!< Amplitude limit to accept as step input about gps_time [ms]
 
+// Magnetic sensor bias calibration
+extern const float OEM7600_PARAMETERS_mag_bias_compo[PHYSICAL_CONST_THREE_DIM]; //!< Magnetic sensor bias calibration
+
 #endif // OEM7600_PARAMETERS_H_
