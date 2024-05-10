@@ -91,7 +91,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
   settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
-  settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
+  settings.deploy_bct_id = BC_RESET_AND_INIT_DI_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_0, &settings);
 
@@ -103,7 +103,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
   settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
-  settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
+  settings.deploy_bct_id = BC_RESET_AND_INIT_DI_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_1, &settings);
 
@@ -115,7 +115,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
   settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
-  settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
+  settings.deploy_bct_id = BC_RESET_AND_INIT_DI_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_2, &settings);
 
@@ -127,7 +127,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.type = EH_RESPONSE_CONDITION_CONTINUOUS;
   settings.condition.count_threshold = FDIR_PARAMETERS_tlm_error_eh_reset_count_threshold_nanossoc_d60;
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
-  settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
+  settings.deploy_bct_id = BC_RESET_AND_INIT_DI_NANOSSOC_D60;
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_3, &settings);
 

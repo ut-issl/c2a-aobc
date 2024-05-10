@@ -113,6 +113,7 @@ void BC_load_defaults(void)
   BCL_load_bc(BC_RESET_MPU9250,          BCL_load_reset_mpu9250);
   BCL_load_bc(BC_RESET_RM3100,           BCL_load_reset_rm3100);
   BCL_load_bc(BC_RESET_NANOSSOC_D60,     BCL_load_reset_nanossoc_d60);
+  BCL_load_bc(BC_RESET_AND_INIT_DI_NANOSSOC_D60,     BCL_load_reset_and_init_di_nanossoc_d60);
   BCL_load_bc(BC_RESET_STIM210,          BCL_load_reset_stim210);
   BCL_load_bc(BC_RESET_SAGITTA,          BCL_load_reset_sagitta);
   BCL_load_bc(BC_RESET_OEM7600,          BCL_load_reset_oem7600);
