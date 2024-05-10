@@ -1929,7 +1929,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_ALGO_(uint8_t* packet, uint16_t* len, uint16_
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (199 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (200 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.accel_compo_m_s2[0]));
@@ -1984,9 +1984,10 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_COMPONENTS_(uint8_t* packet, uint16_t* len, uint
   TF_copy_u16(&packet[193], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.observe_duration_ms));
   TF_copy_u16(&packet[195], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.control_duration_ms));
   TF_copy_u16(&packet[197], (uint16_t)(magnetic_exclusive_control_timer->buffered_config.standby_duration_ms));
+  TF_copy_u8(&packet[199], (uint8_t)(magnetic_exclusive_control_timer->is_enable));
 #endif
 
-  *len = 199;
+  *len = 200;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
