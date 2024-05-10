@@ -63,6 +63,10 @@ void BCL_load_power_on_nanossoc_d60(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CHECKSUM_ERROR_NANOSSOC);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_NANOSSOC);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -84,11 +88,15 @@ void BCL_load_power_off_nanossoc_d60(void)
   cycle_t bc_cycle = 10;
 
   // Inactivate EH
-  BCL_tool_register_deploy(bc_cycle, BC_INACTIVATE_NANOSSOC_D60_EH, TLCD_ID_DEPLOY_BC); // 0.6sec
+  BCL_tool_register_deploy(bc_cycle, BC_INACTIVATE_NANOSSOC_D60_EH, TLCD_ID_DEPLOY_BC); // 1.2sec
   bc_cycle += OBCT_sec2cycle(2);
 
   // Disable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_NANOSSOC);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_CHECKSUM_ERROR_NANOSSOC);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
@@ -140,11 +148,13 @@ void BCL_load_activate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60);
+  // I2Cバス全体に異常が出ると全てのSSでEL登録されるため，ID0を代表としてEH発火させる
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60);
+  // I2Cバス全体に異常が出ると全てのSSでEL登録されるため，ID0を代表としてEH発火させる
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
@@ -170,11 +180,35 @@ void BCL_load_inactivate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_1);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_2);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_3);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_0);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_1);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_2);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_3);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
@@ -194,7 +228,7 @@ void BCL_load_inactivate_nanossoc_d60_eh(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL);
   bc_cycle++;
 
-  // 0.6sec
+  // Total: 1.2sec程度
 }
 
 #pragma section

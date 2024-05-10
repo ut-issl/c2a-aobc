@@ -47,6 +47,10 @@ void BCL_load_power_on_rwx(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_RW0003X);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_RW0003X);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -115,6 +119,10 @@ void BCL_load_power_on_rwy(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_RW0003Y);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_RW0003Y);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -180,6 +188,10 @@ void BCL_load_power_on_rwz(void)
 
   // Enable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_RW0003Z);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_RW0003Z);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
@@ -252,6 +264,10 @@ void BCL_load_power_off_rwx(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_RW0003X);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_RW0003X);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
@@ -297,6 +313,10 @@ void BCL_load_power_off_rwy(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_RW0003Y);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_RW0003Y);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
@@ -339,6 +359,10 @@ void BCL_load_power_off_rwz(void)
 
   // Disable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_RW0003Z);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_RW0003Z);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 

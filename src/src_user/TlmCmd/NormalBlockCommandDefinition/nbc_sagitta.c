@@ -250,6 +250,10 @@ void BCL_load_activate_sagitta_el_eh(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
+  BCL_tool_prepare_param_uint32(EL_GROUP_XXHASH_ERROR_SAGITTA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_SAGITTA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -319,6 +323,10 @@ void BCL_load_inactivate_sagitta_el_eh(void)
 
   // Disable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_SAGITTA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_XXHASH_ERROR_SAGITTA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
