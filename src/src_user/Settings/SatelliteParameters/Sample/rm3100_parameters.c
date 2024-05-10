@@ -8,7 +8,7 @@
 // AOBC RM3100
 // Magnetometer bias
 // The following parameter should be tuned with magnetic experiment
-const float RM3100_PARAMETERS_mag_aobc_bias_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 32808.59f, -79748.68f, 22059.96f };
+const float RM3100_PARAMETERS_mag_aobc_bias_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 2692.75f, -77195.48f, 25628.46f };
 
 // Magnetometer filter
 // 1st order Low Pass Filter
@@ -26,7 +26,7 @@ const Quaternion RM3100_PARAMETERS_mag_ext_quaternion_c2b = {-0.707106471, 0.707
 
 // Magnetometer bias
 // The following parameter should be tuned with magnetic experiment
-const float RM3100_PARAMETERS_mag_ext_bias_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 36824.97f, -4596.48f,  -1133.40f };
+const float RM3100_PARAMETERS_mag_ext_bias_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 36739.17f, -1727.35f,  3670.1f };
 
 // Magnetometer filter
 // 1st order Low Pass Filter
