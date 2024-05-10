@@ -147,6 +147,16 @@ void BCL_load_reset_nanossoc_d60(void)
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
 }
 
+void BCL_load_reset_and_init_di_nanossoc_d60(void)
+{
+  cycle_t bc_cycle = 1;
+  BCL_tool_prepare_param_uint32(AR_DI_NANOSSOC_D60);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_AM_INITIALIZE_APP);
+  bc_cycle++;
+
+  BCL_tool_register_deploy(bc_cycle, BC_RESET_NANOSSOC_D60,TLCD_ID_DEPLOY_BC);
+}
+
 void BCL_load_activate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
