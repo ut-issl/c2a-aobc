@@ -311,7 +311,7 @@ CCP_CmdRet Cmd_DI_SAGITTA_CLEAR_BUFFER(const CommonCmdPacket* packet)
   {
     DS_clear_rx_buffer(&(sagitta_driver_[i].driver.super));
   }
-  
+
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
