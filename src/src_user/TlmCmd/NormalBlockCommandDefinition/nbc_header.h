@@ -37,6 +37,7 @@ void BCL_load_power_off_ina260(void);
 void BCL_load_reset_mpu9250(void);
 void BCL_load_reset_rm3100(void);
 void BCL_load_reset_nanossoc_d60(void);
+void BCL_load_reset_and_init_di_nanossoc_d60(void);
 void BCL_load_reset_stim210(void);
 void BCL_load_reset_sagitta(void);
 void BCL_load_reset_oem7600(void);
