@@ -142,12 +142,24 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
     }
     else
     {
+      // 出力時間を計算
       mtq_seiren_controller_.mtq_output_duration_ms[idx] =
         (uint16_t)(fabsf((mag_moment_mtq_Am2[idx] / mtq_seiren_driver[idx]->driver.max_mag_moment) *
                           magnetic_exclusive_control_timer->config.control_duration_ms));
 
-      mtq_seiren_controller_.mtq_output_polarity[idx] =
-        (mag_moment_mtq_Am2[idx] > 0.0f) ? MTQ_SEIREN_POLARITY_POSITIVE : MTQ_SEIREN_POLARITY_NEGATIVE;
+      // 出力方向を計算
+      if (fabsf(mag_moment_mtq_Am2[idx]) < MATH_CONST_MACHINE_EPSILON)
+      {
+        mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;
+      }
+      else if (mag_moment_mtq_Am2[idx] > 0.0f)
+      {
+        mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_POSITIVE;
+      }
+      else
+      { // mag_moment_mtq_Am2[idx] < 0.0f
+        mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_POLARITY_NEGATIVE;
+      }
 
       // テレメ出力用の計算
       mtq_seiren_controller_.mtq_output_duty[idx] =
