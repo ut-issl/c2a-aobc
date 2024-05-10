@@ -29,6 +29,7 @@ typedef enum
   EL_GROUP_TLM_ERROR_RW0003Y  = 58,  // TLMエラー:RW0003 y axis
   EL_GROUP_TLM_ERROR_RW0003Z  = 59,  // TLMエラー:RW0003 z axis
 
+  // 一の位をコンポごとに統一するため，以下のように数字を割り当てる
   EL_GROUP_CHECKSUM_ERROR_NANOSSOC = 63,  // CHECKSUMエラー:NANOSSOC-D60
   EL_GROUP_CRC_ERROR_STIM210       = 64,  // CRCエラー:STIM210
   EL_GROUP_XXHASH_ERROR_SAGITTA    = 65,  // XXHASHエラー:SAGITTA
