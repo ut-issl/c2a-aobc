@@ -124,18 +124,18 @@ void BCL_load_power_off_stim210(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(370.26f);
-  BCL_tool_prepare_param_float(224.98f);
-  BCL_tool_prepare_param_float(34.26f);
+  BCL_tool_prepare_param_float(-370.26f);
+  BCL_tool_prepare_param_float(-224.98f);
+  BCL_tool_prepare_param_float(-34.26f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(STIM210_PARAMETERS_mag_bias_compo[0]);
-  BCL_tool_prepare_param_float(STIM210_PARAMETERS_mag_bias_compo[1]);
-  BCL_tool_prepare_param_float(STIM210_PARAMETERS_mag_bias_compo[2]);
+  BCL_tool_prepare_param_float(-STIM210_PARAMETERS_mag_bias_compo[0]);
+  BCL_tool_prepare_param_float(-STIM210_PARAMETERS_mag_bias_compo[1]);
+  BCL_tool_prepare_param_float(-STIM210_PARAMETERS_mag_bias_compo[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
