@@ -158,7 +158,7 @@ static void DI_RW0003_update_(void)
     RW0003_REC_CRC_STATE state = rw0003_driver_[DI_RW0003_idx_counter_].info.crc_state;
     if (state != RW0003_REC_CRC_STATE_OK)
     {
-      EL_record_event(el_group_crc_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, 0);
+      EL_record_event(el_group_crc_error, (uint32_t)DI_RW0003_idx_counter_, EL_ERROR_LEVEL_HIGH, (uint32_t)state);
     }
   }
 

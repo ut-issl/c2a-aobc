@@ -101,7 +101,7 @@ static void DI_SAGITTA_update_(void)
     SAGITTA_XXHASH_STATE state = sagitta_driver_->info.xxhash_state;
     if (state != SAGITTA_XXHASH_STATE_OK)
     {
-      EL_record_event(EL_GROUP_XXHASH_ERROR_SAGITTA, (uint32_t)SAGITTA_IDX_IN_UNIT, EL_ERROR_LEVEL_HIGH, 0);
+      EL_record_event(EL_GROUP_XXHASH_ERROR_SAGITTA, (uint32_t)SAGITTA_IDX_IN_UNIT, EL_ERROR_LEVEL_HIGH, (uint32_t)state);
     }
   }
   return;
