@@ -487,7 +487,7 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
  * @param  rx_buffer: 受信バッファ
  * @return DS_INIT_ERR_CODE
  */
-DS_INIT_ERR_CODE SAGITTA_DS_init(SAGITTA_Driver* sagitta_driver, DS_StreamRecBuffer* rx_buffer);
+DS_ERR_CODE SAGITTA_DS_init(SAGITTA_Driver* sagitta_driver, DS_StreamRecBuffer* rx_buffer);
 /**
  * @brief  SAGITTA受信
  * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ

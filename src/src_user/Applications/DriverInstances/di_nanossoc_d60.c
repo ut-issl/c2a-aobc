@@ -168,7 +168,7 @@ CCP_CmdRet Cmd_DI_NANOSSOC_D60_DS_INIT(const CommonCmdPacket* packet)
   (void)packet;
   uint8_t i;
   uint8_t is_ok;
-  DS_INIT_ERR_CODE ret;
+  DS_ERR_CODE ret;
 
   for (i = 0; i < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; ++i)
   {

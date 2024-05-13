@@ -100,7 +100,7 @@ DS_INIT_ERR_CODE NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uin
  * @param  rx_buffer: 受信バッファ
  * @return DS_INIT_ERR_CODE
  */
-DS_INIT_ERR_CODE NANOSSOC_D60_DS_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, DS_StreamRecBuffer* rx_buffer);
+DS_ERR_CODE NANOSSOC_D60_DS_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  NANOSSOC_D60観測

@@ -305,7 +305,7 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCm
 CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
-  DS_INIT_ERR_CODE ret;
+  DS_ERR_CODE ret;
   ret = SAGITTA_DS_init(&sagitta_driver_[SAGITTA_IDX_IN_UNIT], &DI_SAGITTA_rx_buffer_);
 
   if (ret != DS_INIT_OK)
