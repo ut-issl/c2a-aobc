@@ -203,7 +203,6 @@ CCP_CmdRet Cmd_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* 
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
-
 }
 
 #pragma section

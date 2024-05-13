@@ -223,7 +223,7 @@ DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_Str
 
 DS_INIT_ERR_CODE SAGITTA_DS_init(SAGITTA_Driver* sagitta_driver, DS_StreamRecBuffer* rx_buffer)
 {
-  DS_ERR_CODE ret;
+  DS_INIT_ERR_CODE ret;
   ret = DS_init(&(sagitta_driver->driver.super),
                 &(sagitta_driver->driver.uart_config),
                 rx_buffer,
