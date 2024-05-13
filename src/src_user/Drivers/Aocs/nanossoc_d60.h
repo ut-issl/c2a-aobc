@@ -95,6 +95,14 @@ typedef struct
 DS_INIT_ERR_CODE NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uint8_t ch, uint8_t i2c_address, DS_StreamRecBuffer* rx_buffer);
 
 /**
+ * @brief  NANOSSOC_D60のDriver_Super初期化
+ * @param  nanossoc_d60_driver : 初期化するNANOSSOC_D60_Driver構造体へのポインタ
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
+ */
+DS_INIT_ERR_CODE NANOSSOC_D60_DS_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, DS_StreamRecBuffer* rx_buffer);
+
+/**
  * @brief  NANOSSOC_D60観測
  *
  *         太陽方向，太陽検出率，エラーコードを読み出す
