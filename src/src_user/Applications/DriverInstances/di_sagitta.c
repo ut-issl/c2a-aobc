@@ -308,7 +308,7 @@ CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT(const CommonCmdPacket* packet)
   DS_INIT_ERR_CODE ret;
   ret = SAGITTA_DS_init(&sagitta_driver_[SAGITTA_IDX_IN_UNIT], &DI_SAGITTA_rx_buffer_);
 
-  if (ret != DS_ERR_CODE_OK)
+  if (ret != DS_INIT_OK)
   {
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
