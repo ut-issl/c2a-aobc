@@ -128,13 +128,13 @@ void BCL_load_reset_sagitta(void)
   BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_SAGITTA, TLCD_ID_DEPLOY_BC);
   bc_cycle += OBCT_sec2cycle(5);
 
-  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_SAGITTA, TLCD_ID_DEPLOY_BC);
-  bc_cycle += OBCT_sec2cycle(5);
-
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_DS_INIT);
   bc_cycle++;
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER);
+  bc_cycle++;
+
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_SAGITTA, TLCD_ID_DEPLOY_BC);
 }
 
 void BCL_set_sagitta_parameter(void)
