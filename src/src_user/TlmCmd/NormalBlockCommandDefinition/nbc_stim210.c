@@ -27,7 +27,7 @@ void BCL_load_power_on_stim210(void)
 
   // HW OC EH発動後にラッチ解除を行う。メモリの制約からHW OC EH専用のBCが作れないためここで対処。
   BCL_tool_prepare_param_uint8(INA260_IDX_STIM210);
-  BCL_tool_prepare_param_float(1000.0f);  // mA
+  BCL_tool_prepare_param_float(1200.0f);  // mA
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
@@ -97,6 +97,12 @@ void BCL_load_power_on_stim210(void)
 
   // EL EH Activte
   BCL_tool_register_deploy(bc_cycle, BC_ACTIVATE_STIM210_EL_EH, TLCD_ID_DEPLOY_BC); // 1.2sec
+  bc_cycle++;
+
+  // 一時的に上げたINA260の過電流閾値を元に戻す
+  BCL_tool_prepare_param_uint8(INA260_IDX_STIM210);
+  BCL_tool_prepare_param_float(1000.0f);  // mA
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
   bc_cycle++;
 
   // total: 14sec程度
