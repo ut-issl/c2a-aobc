@@ -167,13 +167,13 @@ CCP_CmdRet Cmd_DI_NANOSSOC_D60_DS_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   uint8_t i;
-  uint8_t is_ok;
   DS_ERR_CODE ret;
+  uint8_t is_ok = 1;
 
   for (i = 0; i < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; ++i)
   {
     ret = NANOSSOC_D60_DS_init(&nanossoc_d60_driver_[i], &DI_NANOSSOC_D60_rx_buffer_[i]);
-    is_ok |= (ret == DS_INIT_OK);
+    is_ok &= (ret == DS_INIT_OK);
   }
 
   if (!is_ok)
@@ -187,15 +187,15 @@ CCP_CmdRet Cmd_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* 
 {
   (void)packet;
   uint8_t i;
-  uint8_t is_ok;
   DS_ERR_CODE ret;
+  uint8_t is_ok = 1;
 
   for (i = 0; i < NANOSSOC_D60_PARAMETERS_NUMBER_OF_MOUNTED_SENSOR; ++i)
   {
     ret = DS_init_stream_rec_buffer(&DI_NANOSSOC_D60_rx_buffer_[i],
                                      DI_NANOSSOC_D60_rx_buffer_allocation_[i],
                                      sizeof(DI_NANOSSOC_D60_rx_buffer_allocation_[i]));
-    is_ok |= (ret == DS_ERR_CODE_OK);
+    is_ok &= (ret == DS_ERR_CODE_OK);
   }
 
   if (!is_ok)
