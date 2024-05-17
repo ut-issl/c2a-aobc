@@ -22,6 +22,8 @@ const  MtqSeirenController* const mtq_seiren_controller = &mtq_seiren_controller
 static void APP_MTQ_SEIREN_CONTROLLER_init_(void);
 static void APP_MTQ_SEIREN_CONTROLLER_exec_(void);
 
+static const float APP_MTQ_SEIREN_CONTROLLER_kOutputRatioToZero_ = 1.0f / 200.0f; //!< 最大出力と比べてこの比より小さな出力はゼロとして扱う
+
 /**
  * @brief  MTQ出力時間計算関数
  * @param  void
@@ -148,7 +150,7 @@ static void APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_(voi
                           magnetic_exclusive_control_timer->config.control_duration_ms));
 
       // 出力方向を計算
-      if (fabsf(mag_moment_mtq_Am2[idx]) < MATH_CONST_MACHINE_EPSILON)
+      if (fabsf(mag_moment_mtq_Am2[idx]) < mtq_seiren_driver[idx]->driver.max_mag_moment * APP_MTQ_SEIREN_CONTROLLER_kOutputRatioToZero_)
       {
         mtq_seiren_controller_.mtq_output_polarity[idx] = MTQ_SEIREN_NO_OUTPUT;
       }
