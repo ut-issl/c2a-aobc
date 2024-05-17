@@ -20,7 +20,7 @@ void BCL_load_drivers_update_initial()
   BCL_tool_register_app(4, AR_NOP);
   BCL_tool_register_app(5, AR_NOP);
   BCL_tool_register_app(6, AR_DI_MPU9250);
-  BCL_tool_register_app(7, AR_DI_MTQ_SEIREN);
+  BCL_tool_register_app(7, AR_NOP);
   BCL_tool_register_app(8, AR_NOP);
   BCL_tool_register_app(9, AR_NOP);
 }
