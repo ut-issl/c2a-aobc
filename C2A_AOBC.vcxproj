@@ -304,7 +304,6 @@
     <ClCompile Include="src\src_user\Settings\Modes\TaskLists\tl_rough_sun_pointing.c" />
     <ClCompile Include="src\src_user\Settings\Modes\TaskLists\tl_rough_three_axis.c" />
     <ClCompile Include="src\src_user\Settings\Modes\TaskLists\tl_rough_three_axis_rw.c" />
-    <ClCompile Include="src\src_user\Settings\Modes\TaskLists\tl_gpsr_range_observe.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_bdot.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_fine_three_axis.c" />
     <ClCompile Include="src\src_user\Settings\Modes\Transitions\sl_initial.c" />
