@@ -22,3 +22,7 @@ float NANOSSOC_D60_PARAMETERS_spike_filter_config_amplitude_limit_to_accept_as_s
 // Sun intensity threshold
 float NANOSSOC_D60_PARAMETERS_sun_intensity_lower_threshold_percent = 80.0f;
 float NANOSSOC_D60_PARAMETERS_sun_intensity_upper_threshold_percent = 120.0f;
+
+// Magnetic sensor bias calibration
+const float NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 186.15f, 110.34f, 91.00f };
+const float NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = { -19.59f, -69.73f, -39.56f };
