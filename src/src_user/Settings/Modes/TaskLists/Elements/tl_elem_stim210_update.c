@@ -13,9 +13,9 @@
 
 void BCL_load_stim210_update(void)
 {
-  BCL_tool_register_app(0, AR_DI_STIM210); //1step以上
-  BCL_tool_register_app(1, AR_APP_STIM210_FILTER); //1step以上
-  BCL_tool_register_app(2, AR_APP_GYRO_SELECTOR); //1step以上
+  BCL_tool_register_app(0, AR_DI_STIM210); // 1step以上
+  BCL_tool_register_app(1, AR_APP_STIM210_FILTER); // 1step以上
+  BCL_tool_register_app(2, AR_APP_GYRO_SELECTOR); // 1step以上
 }
 
 #pragma section

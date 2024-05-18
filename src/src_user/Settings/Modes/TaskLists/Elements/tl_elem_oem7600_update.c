@@ -13,9 +13,9 @@
 
 void BCL_load_oem7600_update(void)
 {
-  BCL_tool_register_app(0, AR_DI_OEM7600); //1step以上
-  BCL_tool_register_app(1, AR_APP_GPSR_SELECTOR); //1step以上
-  BCL_tool_register_app(2, AR_APP_OEM7600_FILTER); //1step以上
+  BCL_tool_register_app(0, AR_DI_OEM7600); // 1step以上
+  BCL_tool_register_app(1, AR_APP_GPSR_SELECTOR); // 1step以上
+  BCL_tool_register_app(2, AR_APP_OEM7600_FILTER); // 1step以上
 }
 
 #pragma section

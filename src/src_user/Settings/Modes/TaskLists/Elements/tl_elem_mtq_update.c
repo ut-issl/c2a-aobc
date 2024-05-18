@@ -13,8 +13,8 @@
 
 void BCL_load_mtq_update(void)
 {
-  BCL_tool_register_app(0, AR_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER); //1step以上
-  BCL_tool_register_app(1, AR_APP_AOCS_MTQ_SEIREN_CONTROLLER); //1step以上
+  BCL_tool_register_app(0, AR_APP_MAGNETIC_EXCLUSIVE_CONTROL_TIMER); // 1step以上
+  BCL_tool_register_app(1, AR_APP_AOCS_MTQ_SEIREN_CONTROLLER); // 1step以上
 }
 
 #pragma section

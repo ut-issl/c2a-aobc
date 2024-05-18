@@ -12,10 +12,10 @@
 
 void BCL_load_sun_vector_update(void)
 {
-  BCL_tool_register_app(0, AR_DI_NANOSSOC_D60); //3step以上
-  BCL_tool_register_app(1, AR_APP_SUN_SENSOR_SELECTOR); //1step以上
-  BCL_tool_register_app(2, AR_APP_NANOSSOC_D60_FILTER); //1step以上
-  BCL_tool_register_app(3, AR_APP_SUN_VEC_PROPAGATOR); //1step以上
+  BCL_tool_register_app(0, AR_DI_NANOSSOC_D60); // 3step以上
+  BCL_tool_register_app(1, AR_APP_SUN_SENSOR_SELECTOR); // 1step以上
+  BCL_tool_register_app(2, AR_APP_NANOSSOC_D60_FILTER); // 1step以上
+  BCL_tool_register_app(3, AR_APP_SUN_VEC_PROPAGATOR); // 1step以上
 }
 
 #pragma section
