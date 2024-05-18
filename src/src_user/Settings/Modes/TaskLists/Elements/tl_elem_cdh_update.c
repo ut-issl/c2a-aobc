@@ -12,16 +12,16 @@
 
 void BCL_load_cdh_update()
 {
-  BCL_tool_register_app(0, AR_DI_MOBC);
-  BCL_tool_register_app(1, AR_GSC_DISPATCHER);
-  BCL_tool_register_app(2, AR_TLC_DISPATCHER_GS);
-  BCL_tool_register_app(3, AR_RTC_DISPATCHER);
-  BCL_tool_register_app(4, AR_TLC_DISPATCHER_BC);
-  BCL_tool_register_app(5, AR_TLC_DISPATCHER_TLM);
-  BCL_tool_register_app(6, AR_DI_MOBC_RT_TLM_PH);
-  BCL_tool_register_app(7, AR_EVENT_UTILITY);
-  BCL_tool_register_app(8, AR_APP_AOCS_DATA_RECORDER);
-  BCL_tool_register_app(9, AR_APP_NVM_BC);
+  BCL_tool_register_app(0, AR_DI_MOBC); //1step以上
+  BCL_tool_register_app(1, AR_GSC_DISPATCHER); //1step以上
+  BCL_tool_register_app(2, AR_TLC_DISPATCHER_GS); //1step以上
+  BCL_tool_register_app(3, AR_RTC_DISPATCHER); //1step以上
+  BCL_tool_register_app(4, AR_TLC_DISPATCHER_BC); //2step以上
+  BCL_tool_register_app(5, AR_TLC_DISPATCHER_TLM); //1step以上
+  BCL_tool_register_app(6, AR_DI_MOBC_RT_TLM_PH); //19step以上
+  BCL_tool_register_app(7, AR_EVENT_UTILITY); //2step以上
+  BCL_tool_register_app(8, AR_APP_AOCS_DATA_RECORDER); //1step以上
+  BCL_tool_register_app(9, AR_APP_NVM_BC); //1step以上
 }
 
 #pragma section

@@ -13,9 +13,9 @@
 
 void BCL_load_rm3100_update(void)
 {
-  BCL_tool_register_app(0, AR_DI_RM3100);
-  BCL_tool_register_app(1, AR_APP_RM3100_FILTER);
-  BCL_tool_register_app(2, AR_APP_MAG_SELECTOR);
+  BCL_tool_register_app(0, AR_DI_RM3100); //3step以上
+  BCL_tool_register_app(1, AR_APP_RM3100_FILTER); //1step以上
+  BCL_tool_register_app(2, AR_APP_MAG_SELECTOR); //2step以上
 }
 
 #pragma section

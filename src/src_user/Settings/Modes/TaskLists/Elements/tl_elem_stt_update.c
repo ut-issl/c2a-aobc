@@ -13,9 +13,9 @@
 
 void BCL_load_stt_update(void)
 {
-  BCL_tool_register_app(0, AR_DI_SAGITTA);
-  BCL_tool_register_app(1, AR_APP_STT_SELECTOR);
-  BCL_tool_register_app(2, AR_APP_SAGITTA_FILTER);
+  BCL_tool_register_app(0, AR_DI_SAGITTA); //11step以上
+  BCL_tool_register_app(1, AR_APP_STT_SELECTOR); //1step以上
+  BCL_tool_register_app(2, AR_APP_SAGITTA_FILTER); //1step以上
 }
 
 #pragma section
