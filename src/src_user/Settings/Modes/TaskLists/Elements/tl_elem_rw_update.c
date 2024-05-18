@@ -13,9 +13,9 @@
 
 void BCL_load_rw_update(void)
 {
-  BCL_tool_register_app(0, AR_APP_AOCS_RW_CONTROLLER); // max 3msec
-  BCL_tool_register_app(1, AR_DI_RW0003); // max 6msec
-  BCL_tool_register_app(3, AR_APP_RW0003_FILTER); // 0msec
+  BCL_tool_register_app(0, AR_APP_AOCS_RW_CONTROLLER); // max 3msec, 3step以上
+  BCL_tool_register_app(1, AR_DI_RW0003); // max 6msec, 6step以上
+  BCL_tool_register_app(3, AR_APP_RW0003_FILTER); // 0msec, 1step以上
 }
 
 #pragma section
