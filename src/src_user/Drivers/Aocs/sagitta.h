@@ -14,6 +14,7 @@
 #define SAGITTA_TELEMETRY_BLOBS_LENGTH                    (8)
 #define SAGITTA_TELEMETRY_CENTROIDS_LENGTH                (16)
 #define SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH        (16)
+#define SAGITTA_TELEMETRY_BLOB_STATS_LENGTH               (16)
 #define SAGITTA_PARAMETER_LOG_LEVEL_LENGTH                (16)
 #define SAGITTA_PARAMETER_LIMITS_LENGTH                   (10)
 #define SAGITTA_PARAMETER_DISTORTION_LENGTH               (8)
@@ -72,7 +73,8 @@ typedef enum
   SAGITTA_TLM_ID_BLOBS = 36,
   SAGITTA_TLM_ID_CENTROIDS = 37,
   SAGITTA_TLM_ID_AUTO_BLOB = 39,
-  SAGITTA_TLM_ID_MATCHED_CENTROIDS = 40
+  SAGITTA_TLM_ID_MATCHED_CENTROIDS = 40,
+  SAGITTA_TLM_ID_BLOB_STATS = 49
 } SAGITTA_TLM_ID;
 
 /**
@@ -226,6 +228,19 @@ typedef struct
 } SAGITTA_TELEMETRY_MATCHED_CENTROIDS;
 
 /**
+ * @struct SAGITTA_TELEMETRY_BLOB_STATS
+ * @brief  SagittaのBlobStatsテレメトリを格納する
+ * @note   region: 4x4 grid of the image (00, 01, 02, 03, 10, 11, 12, 13, 20, 21, 22, 23, 30, 31, 32, 33)
+ */
+typedef struct
+{
+  uint8_t noise_limit[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH];          //!< Noise limit in region [0-3][0-3]
+  uint8_t brightness_threshold[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH]; //!< Brightness threshold in region [0-3][0-3]
+  uint8_t num_valid_blobs[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH];      //!< Number of of valid blobs in region [0-3][0-3]
+  uint8_t num_overflows[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH];        //!< Number of overflows in region [0-3][0-3]
+} SAGITTA_TELEMETRY_BLOB_STATS;
+
+/**
  * @struct SAGITTA_TELEMETRY
  * @brief  Sagittaのテレメトリを格納する
  */
@@ -242,6 +257,7 @@ typedef struct
   SAGITTA_TELEMETRY_CENTROIDS centroids;
   float auto_blob_threshold; //!< Automatically determined signal threshold value used in the blob algorithm
   SAGITTA_TELEMETRY_MATCHED_CENTROIDS matched_centroids;
+  SAGITTA_TELEMETRY_BLOB_STATS blob_stats;
 } SAGITTA_TELEMETRY;
 
 /**
