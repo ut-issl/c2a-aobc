@@ -56,7 +56,9 @@ typedef enum
   SAGITTA_PARAMETER_ID_ALGO = 16,
   SAGITTA_PARAMETER_ID_SUBSCRIPTION = 18,
   SAGITTA_PARAMETER_ID_AUTO_THRESHOLD = 23,
-  SAGITTA_PARAMETER_ID_FAST_LISA = 25
+  SAGITTA_PARAMETER_ID_FAST_LISA = 25,
+  SAGITTA_PARAMETER_ID_NOISE_LIMITS = 30,
+  SAGITTA_PARAMETER_ID_BLOB_FILTER = 31
 } SAGITTA_PARAMETER_ID;
 
 /**
@@ -415,7 +417,6 @@ typedef struct
   float threshold_kp;
 } SAGITTA_PARAMETER_AUTO_THRESHOLD;
 
-
 /**
  * @struct SAGITTA_PARAMETER_FAST_LISA
  * @brief  SagittaのFAST_LISAパラメータを格納する
@@ -425,6 +426,34 @@ typedef struct
   float limit_angle;    //!< Limit on angle of the triplets for fastLISA
   float limit_distance; //!< Limit on angle of the triplets for fastLISA
 } SAGITTA_PARAMETER_FAST_LISA;
+
+/**
+ * @struct SAGITTA_PARAMETER_NOISE_LIMITS
+ * @brief  SagittaのNoiseLimitsパラメータを格納する
+ */
+typedef struct
+{
+  uint16_t limit1; //!< Noise threshold 1 for blob detection
+  uint16_t limit2; //!< Noise threshold 2 for blob detection
+  uint16_t min;    //!< Minimum value
+  uint16_t max;    //!< Maximum value
+} SAGITTA_PARAMETER_NOISE_LIMITS;
+
+/**
+ * @struct SAGITTA_PARAMETER_BLOB_FILTER
+ * @brief  SagittaのBlobFilterパラメータを格納する
+ */
+typedef struct
+  {
+  uint64_t max_oflow;   //!< Maximum number of blobs for all regions combined in one value
+  uint64_t max_open;    //!< Maximum number of open blobs for all regions combined in one value
+  uint64_t max_simopen; //!< Maximum number of simultaneous open blobs for all regions combined in one value
+  uint64_t max_valid;   //!< Maximum number of valid blobs for all regions combined in one value
+  uint64_t desired;     //!< Desired number of blobs for all regions combined in one value
+  uint8_t max_width;    //!< Maximum width of a blob
+  uint8_t max_height;   //!< Maximum height of a blob
+  uint8_t max_count;    //!< Maximum pixel counter value of a blob
+} SAGITTA_PARAMETER_BLOB_FILTER;
 
 /**
  * @struct SAGITTA_Parameter
@@ -447,6 +476,8 @@ typedef struct
   uint8_t subscription[SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH];
   SAGITTA_PARAMETER_AUTO_THRESHOLD auto_threshold;
   SAGITTA_PARAMETER_FAST_LISA fast_lisa;
+  SAGITTA_PARAMETER_NOISE_LIMITS noise_limits;
+  SAGITTA_PARAMETER_BLOB_FILTER blob_filter;
 } SAGITTA_PARAMETER;
 
 /**
