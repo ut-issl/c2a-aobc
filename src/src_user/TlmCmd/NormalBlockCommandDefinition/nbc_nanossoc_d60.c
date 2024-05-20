@@ -144,6 +144,12 @@ void BCL_load_reset_nanossoc_d60(void)
   BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);  // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
 
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_NANOSSOC_D60_DS_INIT);
+  bc_cycle++;
+
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER);
+  bc_cycle++;
+
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
 }
 

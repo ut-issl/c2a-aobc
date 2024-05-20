@@ -56,4 +56,8 @@ CCP_CmdRet Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY(const CommonCmdPacket* p
 
 CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
 
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT(const CommonCmdPacket* packet);
+
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* packet);
+
 #endif
