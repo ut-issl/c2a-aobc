@@ -782,6 +782,72 @@ DS_CMD_ERR_CODE SAGITTA_set_fast_lisa(SAGITTA_Driver* sagitta_driver)
   return SAGITTA_send_cmd_(sagitta_driver, offset);
 }
 
+DS_CMD_ERR_CODE SAGITTA_set_noise_limits(SAGITTA_Driver* sagitta_driver)
+{
+  const uint16_t limit1 = sagitta_driver->info.set_parameter.noise_limits.limit1;
+  const uint16_t limit2 = sagitta_driver->info.set_parameter.noise_limits.limit2;
+  const uint16_t min = sagitta_driver->info.set_parameter.noise_limits.min;
+  const uint16_t max = sagitta_driver->info.set_parameter.noise_limits.max;
+
+  uint8_t offset = 0;
+
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kAddress_;
+  offset += (uint8_t)sizeof(SAGITTA_kAddress_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kCmdSetParameter_;
+  offset += (uint8_t)sizeof(SAGITTA_kCmdSetParameter_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_PARAMETER_ID_NOISE_LIMITS;
+  offset += (uint8_t)sizeof(uint8_t);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(limit1), sizeof(limit1));
+  offset += (uint8_t)sizeof(limit1);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(limit2), sizeof(limit2));
+  offset += (uint8_t)sizeof(limit2);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(min), sizeof(min));
+  offset += (uint8_t)sizeof(min);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max), sizeof(max));
+  offset += (uint8_t)sizeof(max);
+
+  return SAGITTA_send_cmd_(sagitta_driver, offset);
+}
+
+DS_CMD_ERR_CODE SAGITTA_set_blob_filter(SAGITTA_Driver* sagitta_driver)
+{
+  const uint64_t max_oflow = sagitta_driver->info.set_parameter.blob_filter.max_oflow;
+  const uint64_t max_open = sagitta_driver->info.set_parameter.blob_filter.max_open;
+  const uint64_t max_simopen = sagitta_driver->info.set_parameter.blob_filter.max_simopen;
+  const uint64_t max_valid = sagitta_driver->info.set_parameter.blob_filter.max_valid;
+  const uint64_t desired = sagitta_driver->info.set_parameter.blob_filter.desired;
+  const uint8_t max_width = sagitta_driver->info.set_parameter.blob_filter.max_width;
+  const uint8_t max_height = sagitta_driver->info.set_parameter.blob_filter.max_height;
+  const uint8_t max_count = sagitta_driver->info.set_parameter.blob_filter.max_count;
+
+  uint8_t offset = 0;
+
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kAddress_;
+  offset += (uint8_t)sizeof(SAGITTA_kAddress_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_kCmdSetParameter_;
+  offset += (uint8_t)sizeof(SAGITTA_kCmdSetParameter_);
+  SAGITTA_tx_data_frame_[offset] = SAGITTA_PARAMETER_ID_BLOB_FILTER;
+  offset += (uint8_t)sizeof(uint8_t);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_oflow), sizeof(max_oflow));
+  offset += (uint8_t)sizeof(max_oflow);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_open), sizeof(max_open));
+  offset += (uint8_t)sizeof(max_open);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_simopen), sizeof(max_simopen));
+  offset += (uint8_t)sizeof(max_simopen);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_valid), sizeof(max_valid));
+  offset += (uint8_t)sizeof(max_valid);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(desired), sizeof(desired));
+  offset += (uint8_t)sizeof(desired);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_width), sizeof(max_width));
+  offset += (uint8_t)sizeof(max_width);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_height), sizeof(max_height));
+  offset += (uint8_t)sizeof(max_height);
+  memcpy(&(SAGITTA_tx_data_frame_[offset]), &(max_count), sizeof(max_count));
+  offset += (uint8_t)sizeof(max_count);
+
+  return SAGITTA_send_cmd_(sagitta_driver, offset);
+}
+
 DS_CMD_ERR_CODE SAGITTA_change_log_level(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
 {
   if (param_idx >= SAGITTA_PARAMETER_LOG_LEVEL_LENGTH) return DS_CMD_ILLEGAL_PARAMETER;
@@ -1179,6 +1245,70 @@ DS_CMD_ERR_CODE SAGITTA_change_fast_lisa(SAGITTA_Driver* sagitta_driver, uint8_t
     break;
   case 1:
     sagitta_driver->info.set_parameter.fast_lisa.limit_distance = value;
+    break;
+  default:
+    // NOT REACHED
+    break;
+  }
+
+  return DS_CMD_OK;
+}
+
+DS_CMD_ERR_CODE SAGITTA_change_noise_limits(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
+{
+  if (param_idx >= 4) return DS_CMD_ILLEGAL_PARAMETER;
+
+  switch (param_idx)
+  {
+  case 0:
+    sagitta_driver->info.set_parameter.noise_limits.limit1 = (uint16_t)value;
+    break;
+  case 1:
+    sagitta_driver->info.set_parameter.noise_limits.limit2 = (uint16_t)value;
+    break;
+  case 2:
+    sagitta_driver->info.set_parameter.noise_limits.min = (uint16_t)value;
+    break;
+  case 3:
+    sagitta_driver->info.set_parameter.noise_limits.max = (uint16_t)value;
+    break;
+  default:
+    // NOT REACHED
+    break;
+  }
+
+  return DS_CMD_OK;
+}
+
+DS_CMD_ERR_CODE SAGITTA_change_blob_filter(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
+{
+  if (param_idx >= 8) return DS_CMD_ILLEGAL_PARAMETER;
+
+  switch (param_idx)
+  {
+  case 0:
+    sagitta_driver->info.set_parameter.blob_filter.max_oflow = (uint64_t)value;
+    break;
+  case 1:
+    sagitta_driver->info.set_parameter.blob_filter.max_open = (uint64_t)value;
+    break;
+  case 2:
+    sagitta_driver->info.set_parameter.blob_filter.max_simopen = (uint64_t)value;
+    break;
+  case 3:
+    sagitta_driver->info.set_parameter.blob_filter.max_valid = (uint64_t)value;
+    break;
+  case 4:
+    sagitta_driver->info.set_parameter.blob_filter.desired = (uint64_t)value;
+    break;
+  case 5:
+    sagitta_driver->info.set_parameter.blob_filter.max_width = (uint8_t)value;
+    break;
+  case 6:
+    sagitta_driver->info.set_parameter.blob_filter.max_height = (uint8_t)value;
+    break;
+  case 7:
+    sagitta_driver->info.set_parameter.blob_filter.max_count = (uint8_t)value;
     break;
   default:
     // NOT REACHED

@@ -190,6 +190,12 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_FAST_LISA:
     ret = SAGITTA_set_fast_lisa(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
+  case SAGITTA_PARAMETER_ID_NOISE_LIMITS:
+    ret = SAGITTA_set_noise_limits(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
+  case SAGITTA_PARAMETER_ID_BLOB_FILTER:
+    ret = SAGITTA_set_blob_filter(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -250,6 +256,12 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
     break;
   case SAGITTA_PARAMETER_ID_FAST_LISA:
     ret = SAGITTA_change_fast_lisa(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
+  case SAGITTA_PARAMETER_ID_NOISE_LIMITS:
+    ret = SAGITTA_change_noise_limits(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
+  case SAGITTA_PARAMETER_ID_BLOB_FILTER:
+    ret = SAGITTA_change_blob_filter(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);

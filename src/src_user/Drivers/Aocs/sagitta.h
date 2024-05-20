@@ -665,6 +665,20 @@ DS_CMD_ERR_CODE SAGITTA_set_auto_threshold(SAGITTA_Driver* sagitta_driver);
 DS_CMD_ERR_CODE SAGITTA_set_fast_lisa(SAGITTA_Driver* sagitta_driver);
 
 /**
+ * @brief  SAGITTAのNoiseLimitsパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_noise_limits(SAGITTA_Driver* sagitta_driver);
+
+/**
+ * @brief  SAGITTAのBlobFilterパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_blob_filter(SAGITTA_Driver* sagitta_driver);
+
+/**
  * @brief  SAGITTAのLog Levelパラメータを変更する
  * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
  * @param  param_idx          : 同一パラメータID内のidx(0起算)
@@ -799,6 +813,24 @@ DS_CMD_ERR_CODE SAGITTA_change_auto_threshold(SAGITTA_Driver* sagitta_driver, ui
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_change_fast_lisa(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのNoiseLimitsパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_noise_limits(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのBlobFilterパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_blob_filter(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
 
 /**
  * @brief  SAGITTAのパラメータを読み取る
