@@ -224,6 +224,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_QI_SET_PREV_TARGET_QUATERNION].cmd_func = Cmd_APP_QI_SET_PREV_TARGET_QUATERNION;
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].cmd_func = Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY;
   cmd_table[Cmd_CODE_APP_QI_RESET_TARGET_QUATERNION].cmd_func = Cmd_APP_QI_RESET_TARGET_QUATERNION;
+  cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY].cmd_func = Cmd_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY;
   cmd_table[Cmd_CODE_APP_TIME_SPACE_CALC_SET_OFFSET_TIME].cmd_func = Cmd_APP_TIME_SPACE_CALC_SET_OFFSET_TIME;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MASS].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MASS;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_INERTIA_TENSOR].cmd_func = Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR;
@@ -695,6 +696,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].param_size_infos[2].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_TIME_SPACE_CALC_SET_OFFSET_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MASS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_INERTIA_TENSOR].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;

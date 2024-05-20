@@ -180,4 +180,23 @@ CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+CCP_CmdRet Cmd_APP_TARGET_ATT_SET_LPF_ANGULAR_VELOCITY(const CommonCmdPacket* packet)
+{
+  float sampling_Hz = CCP_get_param_from_packet(packet, 0, float);
+  if (sampling_Hz <= 0.0f)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+  float cutoff_Hz = CCP_get_param_from_packet(packet, 1, float);
+  if (cutoff_Hz <= 0.0f)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  target_attitude_calculator_.sampling_freq_Hz = sampling_Hz;
+  target_attitude_calculator_.cut_off_freq_lpf_1st_Hz = cutoff_Hz;
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
 #pragma section
