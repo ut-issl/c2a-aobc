@@ -34,6 +34,8 @@ typedef struct
   float ang_vel_target_body_rad_s[PHYSICAL_CONST_THREE_DIM]; //!< 目標角速度
   ObcTime obctime;                                           //!< 目標角速度計算用ObcTime
   uint8_t is_enabled;                                        //!< 目標Quaternionをaocs_managerにセットするか否か
+  float sampling_freq_Hz;                                    //!< 角速度LPFサンプリング周期 [Hz]
+  float cut_off_freq_lpf_1st_Hz;                             //!< 角速度LPFカットオフ周波数 [Hz]
 } TargetAttitudeCalculator;
 
 extern const TargetAttitudeCalculator* const target_attitude_calculator;
@@ -47,5 +49,6 @@ AppInfo APP_TARGET_ATT_CALC_create_app(void);
 
 CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_SET_MODE(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY(const CommonCmdPacket* packet);
 
 #endif

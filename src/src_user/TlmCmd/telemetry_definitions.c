@@ -2120,7 +2120,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_FRAME_TRANSFORMATION_(uint8_t* packet, uint16_t*
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_CONTROL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (233 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (241 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_float(&packet[26], (float)(bdot->control_gain[0]));
@@ -2186,9 +2186,11 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_CONTROL_(uint8_t* packet, uint16_t* len, uint16_
   TF_copy_float(&packet[221], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[1]));
   TF_copy_float(&packet[225], (float)(quaternion_interpolator->previous_quaternion_target_i2t.vector_part[2]));
   TF_copy_float(&packet[229], (float)(quaternion_interpolator->previous_quaternion_target_i2t.scalar_part));
+  TF_copy_float(&packet[233], (float)(target_attitude_calculator->sampling_freq_Hz));
+  TF_copy_float(&packet[237], (float)(target_attitude_calculator->cut_off_freq_lpf_1st_Hz));
 #endif
 
-  *len = 233;
+  *len = 241;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
