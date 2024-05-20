@@ -302,4 +302,31 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCm
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  DS_ERR_CODE ret;
+  ret = SAGITTA_DS_init(&sagitta_driver_[SAGITTA_IDX_IN_UNIT], &DI_SAGITTA_rx_buffer_);
+
+  if (ret != DS_INIT_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  DS_ERR_CODE ret;
+  ret = DS_init_stream_rec_buffer(&DI_SAGITTA_rx_buffer_,
+                                   DI_SAGITTA_rx_buffer_allocation_,
+                                   sizeof(DI_SAGITTA_rx_buffer_allocation_));
+  if (ret != DS_ERR_CODE_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
 #pragma section

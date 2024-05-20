@@ -43,18 +43,18 @@ void BCL_load_power_on_nanossoc_d60(void)
 #ifndef SILS_FW // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_compo_AOBC[0]);
-  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_compo_AOBC[1]);
-  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_compo_AOBC[2]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[0]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[1]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_compo_EXT[0]);
-  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_compo_EXT[1]);
-  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_compo_EXT[2]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -116,18 +116,18 @@ void BCL_load_power_off_nanossoc_d60(void)
 #ifndef SILS_FW // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_compo_AOBC[0]);
-  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_compo_AOBC[1]);
-  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_compo_AOBC[2]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[0]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[1]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_compo_EXT[0]);
-  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_compo_EXT[1]);
-  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_compo_EXT[2]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -143,6 +143,12 @@ void BCL_load_reset_nanossoc_d60(void)
 
   BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);  // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
+
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_NANOSSOC_D60_DS_INIT);
+  bc_cycle++;
+
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER);
+  bc_cycle++;
 
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
 }
