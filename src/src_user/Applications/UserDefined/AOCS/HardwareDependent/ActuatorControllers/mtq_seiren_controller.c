@@ -111,6 +111,8 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
     {
       MTQ_SEIREN_output(mtq_seiren_driver[idx], MTQ_SEIREN_NO_OUTPUT);
     }
+    // 消磁中も積分を続ける
+    mtq_seiren_controller_.integrator_status = MTQ_SEIREN_CONTROLLER_TORQUE_IS_INTEGRATING;
     break;
   default:
     // NOT REACHED
