@@ -2021,26 +2021,25 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_blob_filter_(SAGITTA_Drive
 {
   uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetTlmID_ + (uint16_t)(sizeof(sagitta_driver->info.tlm_id));
 
-  uint32_t max_oflow_upper = 0;
-  uint32_t max_oflow_lower = 0;
-  uint32_t max_open_upper = 0;
-  uint32_t max_open_lower = 0;
-  uint32_t max_simopen_upper = 0;
-  uint32_t max_simopen_lower = 0;
-  uint32_t max_valid_upper = 0;
-  uint32_t max_valid_lower = 0;
-  uint32_t desired_upper = 0;
-  uint32_t desired_lower = 0;
-
-  SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(max_oflow_upper), offset);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_oflow_upper), offset);
   offset += (uint16_t)sizeof(uint32_t);
-  SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(max_open_upper), offset);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_oflow_lower), offset);
   offset += (uint16_t)sizeof(uint32_t);
-  SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(max_simopen_upper), offset);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_open_upper), offset);
   offset += (uint16_t)sizeof(uint32_t);
-  SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(max_valid_upper), offset);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_open_lower), offset);
   offset += (uint16_t)sizeof(uint32_t);
-  SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(desired_upper), offset);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_simopen_upper), offset);
+  offset += (uint16_t)sizeof(uint32_t);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_simopen_lower), offset);
+  offset += (uint16_t)sizeof(uint32_t);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_valid_upper), offset);
+  offset += (uint16_t)sizeof(uint32_t);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_valid_lower), offset);
+  offset += (uint16_t)sizeof(uint32_t);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.desired_upper), offset);
+  offset += (uint16_t)sizeof(uint32_t);
+  SAGITTA_memcpy_u32_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.desired_lower), offset);
   offset += (uint16_t)sizeof(uint32_t);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_width), offset);
   offset += (uint16_t)sizeof(uint8_t);
