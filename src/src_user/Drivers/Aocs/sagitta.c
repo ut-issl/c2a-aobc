@@ -1323,7 +1323,7 @@ DS_CMD_ERR_CODE SAGITTA_change_noise_limits(SAGITTA_Driver* sagitta_driver, uint
 
 DS_CMD_ERR_CODE SAGITTA_change_blob_filter(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value)
 {
-  if (param_idx >= 8) return DS_CMD_ILLEGAL_PARAMETER;
+  if (param_idx >= 13) return DS_CMD_ILLEGAL_PARAMETER;
 
   switch (param_idx)
   {
