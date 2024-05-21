@@ -1964,13 +1964,13 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_noise_limits_(SAGITTA_Driv
   uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetTlmID_ + (uint16_t)(sizeof(sagitta_driver->info.tlm_id));
 
   SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.noise_limits.limit1), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint16_t);
   SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.noise_limits.limit2), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint16_t);
   SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.noise_limits.min), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint16_t);
   SAGITTA_memcpy_u16_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.noise_limits.max), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint16_t);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
@@ -1982,21 +1982,21 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_parameter_blob_filter_(SAGITTA_Drive
   uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetTlmID_ + (uint16_t)(sizeof(sagitta_driver->info.tlm_id));
 
   SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_oflow), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint64_t);
   SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_open), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint64_t);
   SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_simopen), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint64_t);
   SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_valid), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint64_t);
   SAGITTA_memcpy_u64_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.desired), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint64_t);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_width), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint8_t);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_height), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint8_t);
   SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.read_parameter.blob_filter.max_count), offset);
-  offset += (uint16_t)sizeof(float);
+  offset += (uint16_t)sizeof(uint8_t);
 
   SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
 
