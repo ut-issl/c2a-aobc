@@ -445,14 +445,19 @@ typedef struct
  */
 typedef struct
   {
-  uint64_t max_oflow;   //!< Maximum number of blobs for all regions combined in one value
-  uint64_t max_open;    //!< Maximum number of open blobs for all regions combined in one value
-  uint64_t max_simopen; //!< Maximum number of simultaneous open blobs for all regions combined in one value
-  uint64_t max_valid;   //!< Maximum number of valid blobs for all regions combined in one value
-  uint64_t desired;     //!< Desired number of blobs for all regions combined in one value
-  uint8_t max_width;    //!< Maximum width of a blob
-  uint8_t max_height;   //!< Maximum height of a blob
-  uint8_t max_count;    //!< Maximum pixel counter value of a blob
+  uint32_t max_oflow_upper;   //!< Maximum number of blobs for all regions combined in one value (upper)
+  uint32_t max_oflow_lower;   //!< Maximum number of blobs for all regions combined in one value (lower)
+  uint32_t max_open_upper;    //!< Maximum number of open blobs for all regions combined in one value (upper)
+  uint32_t max_open_lower;    //!< Maximum number of open blobs for all regions combined in one value (lower)
+  uint32_t max_simopen_upper; //!< Maximum number of simultaneous open blobs for all regions combined in one value (upper)
+  uint32_t max_simopen_lower; //!< Maximum number of simultaneous open blobs for all regions combined in one value (lower)
+  uint32_t max_valid_upper;   //!< Maximum number of valid blobs for all regions combined in one value (upper)
+  uint32_t max_valid_lower;   //!< Maximum number of valid blobs for all regions combined in one value (lower)
+  uint32_t desired_upper;     //!< Desired number of blobs for all regions combined in one value (upper)
+  uint32_t desired_lower;     //!< Desired number of blobs for all regions combined in one value (lower)
+  uint8_t max_width;          //!< Maximum width of a blob
+  uint8_t max_height;         //!< Maximum height of a blob
+  uint8_t max_count;          //!< Maximum pixel counter value of a blob
 } SAGITTA_PARAMETER_BLOB_FILTER;
 
 /**
