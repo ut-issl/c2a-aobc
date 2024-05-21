@@ -442,6 +442,7 @@ typedef struct
 /**
  * @struct SAGITTA_PARAMETER_BLOB_FILTER
  * @brief  SagittaのBlobFilterパラメータを格納する
+ * @note   uint64_tのパラメータは上位32bitと下位32bitに分けてuint32_tとして格納する
  */
 typedef struct
   {
