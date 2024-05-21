@@ -70,6 +70,7 @@ void APP_MTQ_SEIREN_CONTROLLER_init_(void)
   mtq_seiren_controller_.previous_torque_integration_obc_time = TMGR_get_master_clock();
   mtq_seiren_controller_.cross_product_error = CROSS_PRODUCT_CONTROL_ERROR_OK;
   mtq_seiren_controller_.cross_product_error_ratio = 0.0f;
+  mtq_seiren_controller_.integrator_status = MTQ_SEIREN_CONTROLLER_TORQUE_IS_INTEGRATING;
 }
 
 void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
@@ -81,10 +82,16 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
   case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE:
     // 次にMTQを出力するとき、何秒間電流を流すかを決める
     APP_MTQ_SEIREN_CONTROLLER_convert_mag_moment_to_output_duration_();
-    // 次回の出力を決めたら、トルク積分値をリセットする
-    APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_();
+    // 指令トルクの積分は完了
+    mtq_seiren_controller_.integrator_status = MTQ_SEIREN_CONTROLLER_TORQUE_INTEGRATION_COMPLETED;
     break;
   case APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL:
+    if (mtq_seiren_controller_.integrator_status == MTQ_SEIREN_CONTROLLER_TORQUE_INTEGRATION_COMPLETED)
+    {
+      // 指令トルク積分値をリセットし、次のトルク指令に備えて積分をリスタートする
+      APP_MTQ_SEIREN_CONTROLLER_reset_integrated_torque_();
+      mtq_seiren_controller_.integrator_status = MTQ_SEIREN_CONTROLLER_TORQUE_IS_INTEGRATING;
+    }
     // APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVEのケースで計算していた出力時間の分だけMTQを出力する
     for (size_t idx = 0; idx < MTQ_SEIREN_IDX_MAX; idx++)
     {
@@ -104,6 +111,8 @@ void APP_MTQ_SEIREN_CONTROLLER_exec_(void)
     {
       MTQ_SEIREN_output(mtq_seiren_driver[idx], MTQ_SEIREN_NO_OUTPUT);
     }
+    // 消磁中も積分を続ける
+    mtq_seiren_controller_.integrator_status = MTQ_SEIREN_CONTROLLER_TORQUE_IS_INTEGRATING;
     break;
   default:
     // NOT REACHED

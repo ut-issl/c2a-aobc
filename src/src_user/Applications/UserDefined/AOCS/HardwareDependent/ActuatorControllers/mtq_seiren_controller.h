@@ -13,6 +13,17 @@
 #include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
 
 /**
+ * @struct MTQ_SEIREN_CONTROLLER_TORQUE_INTEGRATOR_STATUS
+ * @brief  指令トルクの積分状態
+ * @note   int8_tを想定
+ */
+typedef enum
+{
+  MTQ_SEIREN_CONTROLLER_TORQUE_IS_INTEGRATING = 0,   //!< 積分中
+  MTQ_SEIREN_CONTROLLER_TORQUE_INTEGRATION_COMPLETED //!< 積分完了
+} MTQ_SEIREN_CONTROLLER_TORQUE_INTEGRATOR_STATUS;
+
+/**
  * @struct MtqSeirenController
  * @brief  MTQ_SEIRENの制御に必要な情報を管理する構造体
  */
@@ -23,8 +34,9 @@ typedef struct
   int8_t mtq_output_duty[MTQ_SEIREN_IDX_MAX];                  //!< 極性と出力時間から計算され、テレメに出力するためのMTQ出力duty比 [-100, +100] （単位：％）
 
   // 消磁中に更新された指令トルクに関する積分関連パラメータ
-  float integrated_torque_Nms[PHYSICAL_CONST_THREE_DIM]; //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
-  ObcTime  previous_torque_integration_obc_time;         //!< 前回積分した時間
+  float integrated_torque_Nms[PHYSICAL_CONST_THREE_DIM];             //!< 消磁中に更新された指令トルクを積分して角運動量指令に換算するためのバッファ [Nms]
+  MTQ_SEIREN_CONTROLLER_TORQUE_INTEGRATOR_STATUS integrator_status;  //!< 指令トルクの積分状態
+  ObcTime  previous_torque_integration_obc_time;                     //!< 前回積分した時間
 
   CROSS_PRODUCT_CONTROL_ERROR cross_product_error;    //!< CrossProductの実行エラー記録 (TODO_L: 残すか要検討，デバッグ用)
   float cross_product_error_ratio;
