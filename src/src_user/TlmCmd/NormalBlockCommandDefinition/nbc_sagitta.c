@@ -68,22 +68,27 @@ void BCL_load_power_on_sagitta(void)
 
   // Set TLM
   BCL_tool_register_deploy(bc_cycle, BC_SET_SAGITTA_PARAMETER, TLCD_ID_DEPLOY_BC);
-  bc_cycle += OBCT_sec2cycle(12);
+  bc_cycle += OBCT_sec2cycle(16);
 
   // Read TLM
   BCL_tool_register_deploy(bc_cycle, BC_READ_SAGITTA_PARAMETER, TLCD_ID_DEPLOY_BC);
-  bc_cycle += OBCT_sec2cycle(13);
+  bc_cycle += OBCT_sec2cycle(16);
 
   // Set Subscription
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_SUBSCRIPTION);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
   bc_cycle += OBCT_sec2cycle(3);
 
+  // INA260の過電流閾値をもとに戻す
+  BCL_tool_prepare_param_uint8(INA260_IDX_SAGITTA);
+  BCL_tool_prepare_param_float(500);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
+
   // Activate EL/EH
   BCL_tool_register_deploy(bc_cycle, BC_ACTIVATE_SAGITTA_EL_EH, TLCD_ID_DEPLOY_BC); // 1sec
   bc_cycle += OBCT_sec2cycle(1);
 
-  // Total: 35~36sec程度
+  // Total: 42~43sec程度
 }
 
 void BCL_load_power_off_sagitta(void)
@@ -153,6 +158,10 @@ void BCL_set_sagitta_parameter(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_DISTORTION);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_CAMERA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
@@ -187,6 +196,20 @@ void BCL_set_sagitta_parameter(void)
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_AUTO_THRESHOLD);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_FAST_LISA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_NOISE_LIMITS);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_BLOB_FILTER);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+
+  // 16sec
 }
 
 void BCL_read_sagitta_parameter(void)
@@ -202,6 +225,10 @@ void BCL_read_sagitta_parameter(void)
   bc_cycle += OBCT_sec2cycle(1);
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_MOUNTING);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_DISTORTION);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 
@@ -245,10 +272,18 @@ void BCL_read_sagitta_parameter(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 
-  // INA260の過電流閾値をもとに戻す。電源ONのBCはすでに16個のコマンドで埋まっているので、ここで対処。
-  BCL_tool_prepare_param_uint8(INA260_IDX_SAGITTA);
-  BCL_tool_prepare_param_float(500);
-  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_FAST_LISA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_NOISE_LIMITS);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_BLOB_FILTER);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+
+  // 16sec
 }
 
 
