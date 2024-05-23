@@ -48,9 +48,9 @@ void BCL_load_power_on_sagitta(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(0.0f);
-  BCL_tool_prepare_param_float(0.0f);
-  BCL_tool_prepare_param_float(0.0f);
+  BCL_tool_prepare_param_float(443.30f);
+  BCL_tool_prepare_param_float(640.9f);
+  BCL_tool_prepare_param_float(-1457.30f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -108,9 +108,9 @@ void BCL_load_power_off_sagitta(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(0.0f);
-  BCL_tool_prepare_param_float(0.0f);
-  BCL_tool_prepare_param_float(0.0f);
+  BCL_tool_prepare_param_float(-443.30f);
+  BCL_tool_prepare_param_float(-640.9f);
+  BCL_tool_prepare_param_float(1457.30f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);

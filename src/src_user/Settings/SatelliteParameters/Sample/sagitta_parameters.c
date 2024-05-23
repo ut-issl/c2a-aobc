@@ -13,6 +13,6 @@ double SAGITTA_PARAMETERS_q_i2b_spike_filter_config_reject_threshold_rad = PARAM
 double SAGITTA_PARAMETERS_q_i2b_spike_filter_config_amplitude_limit_to_accept_as_step_rad = PARAMETER_SETTING_MACRO_DEGREE_TO_RADIAN(0.6f);
 
 // Magnetic sensor bias calibration
-const float SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 0f, 0f, 0f }; //!< Magnetic sensor bias calibration
+const float SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = {71.50f, 70.20f, -14.3f}; //!< Magnetic sensor bias calibration
 
 // Sun intensity threshold

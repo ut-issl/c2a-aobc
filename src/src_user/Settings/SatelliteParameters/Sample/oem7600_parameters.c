@@ -22,4 +22,4 @@ double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_reject_threshold_s 
 double OEM7600_PARAMETERS_total_gps_time_spike_filter_config_amplitude_limit_to_accept_as_step_s = 3000.0;
 
 // Magnetic sensor bias calibration
-const float OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = {0f, 0f, 0f};
+const float OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 172.9f, 132.60f, -16.9f};
