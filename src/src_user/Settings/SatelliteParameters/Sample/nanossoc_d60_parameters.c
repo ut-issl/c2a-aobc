@@ -24,5 +24,5 @@ float NANOSSOC_D60_PARAMETERS_sun_intensity_lower_threshold_percent = 80.0f;
 float NANOSSOC_D60_PARAMETERS_sun_intensity_upper_threshold_percent = 120.0f;
 
 // Magnetic sensor bias calibration
-const float NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 186.15f, 110.34f, 91.00f };
-const float NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = { -19.59f, -69.73f, -39.56f };
+const float NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 215.09f, 92.66f, 169.0f };
+const float NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 78.02f, 21.57f, 5.01f };
