@@ -22,12 +22,16 @@ void BCL_load_bdot_mode(void)
   // Bdotアプリ
   BCL_tool_register_combine(40, BC_AC_MTQ_UPDATE);  // 1step以上, MTQ駆動時間カウンタを20 [Hz]周期にするため入れている
 
-  BCL_tool_register_combine(45, BC_AC_RM3100_UPDATE); // 4step以上
+  BCL_tool_register_app    (45, AR_DI_MPU9250);         // 3step以上
+  BCL_tool_register_app    (50, AR_APP_MPU9250_FILTER); // 1step以上
+
+  BCL_tool_register_combine(55, BC_AC_RM3100_UPDATE); // 4step以上
 
   BCL_tool_register_app    (60, AR_APP_GYRO_SELECTOR); // 1step以上
 
-
   BCL_tool_register_app    (80, AR_APP_BDOT); // 1step以上
+
+  BCL_tool_register_app    (85, AR_APP_AOCS_MTQ_SEIREN_CONTROLLER); // 排他制御モードがOBSERVEのうちに目標出力計算するために入れている
 
   BCL_tool_register_combine(90, BC_AC_MTQ_UPDATE); // 1step以上
 

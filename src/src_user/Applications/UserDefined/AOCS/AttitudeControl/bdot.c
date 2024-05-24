@@ -12,6 +12,8 @@
 #include <src_user/Library/math_constants.h>
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 #include <src_user/Applications/DriverInstances/di_mtq_seiren.h>
+#include <src_user/Applications/UserDefined/AOCS/ExclusiveControl/magnetic_exclusive_control_timer.h>
+
 
 // Satellite parameters
 #include <src_user/Settings/SatelliteParameters/attitude_control_parameters.h>
@@ -68,6 +70,8 @@ static void APP_BDOT_init_(void)
 
 void APP_BDOT_exec_(void)
 {
+  // 排他制御モードが OBSERVE でなければ、磁気センサの読みはMTQの出力に汚されているのでBdotも使えない
+  if (aocs_manager->magnetic_exclusive_control_timer_state != APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_OBSERVE) return;
   // 磁気モーメント目標値を計算し、AOCS MANAGERにセットする
   APP_BDOT_calculate_target_mtq_output_();
   // 実際にMTQの出力を行うのは、MTQ_SEIREN_CONTROLLERの中になる
