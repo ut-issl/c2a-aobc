@@ -5,6 +5,7 @@
  */
 
 #include <src_core/IfWrapper/i2c.h>
+#include <src_user/Settings/port_config.h>
 
 int OBC_C2A_I2cWriteCommand (int port_id, const unsigned char i2c_addr, const unsigned char* data, const unsigned char len);
 int OBC_C2A_I2cWriteRegister(int port_id, const unsigned char i2c_addr, const unsigned char* data, const unsigned char len);
@@ -43,7 +44,9 @@ int I2C_tx(void* my_i2c_v, void* data_v, int data_size)
   // RW0003専用特殊処理 FIXME: 別の場所に置き換える->S2E側の大きな改修が必要なので少し後回し
   if (my_i2c->ch == 1)
   {
-    if (my_i2c->device_address == 0x11 || my_i2c->device_address == 0x12 || my_i2c->device_address == 0x13)
+    if (my_i2c->device_address == I2C_DEVICE_ADDR_RW_X ||
+        my_i2c->device_address == I2C_DEVICE_ADDR_RW_Y ||
+        my_i2c->device_address == I2C_DEVICE_ADDR_RW_Z)
     {
       if (my_i2c->stop_flag == 0)
       {
