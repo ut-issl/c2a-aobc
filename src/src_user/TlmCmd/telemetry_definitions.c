@@ -1718,7 +1718,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_GIT_REV_(uint8_t* packet, uint16_t* len, uint16_
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (222 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (226 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(TMGR_get_master_clock().mode_cycle));
@@ -1760,52 +1760,53 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_GEN_(uint8_t* packet, uint16_t* len, uint16_t
   TF_copy_u32(&packet[95], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->local);
   TF_copy_u32(&packet[99], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->time.total_cycle);
   TF_copy_u8(&packet[103], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->time.step);
-  TF_copy_u8(&packet[104], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->group);
-  TF_copy_u32(&packet[105], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->local);
-  TF_copy_u32(&packet[109], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.total_cycle);
-  TF_copy_u8(&packet[113], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.step);
-  TF_copy_u32(&packet[114], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->note);
-  TF_copy_u32(&packet[118], event_handler->log_table.respond_counter);
-  TF_copy_u16(&packet[122], (uint16_t)EH_get_the_nth_log_from_the_latest(0)->rule_id);
-  TF_copy_u32(&packet[124], (uint32_t)EH_get_the_nth_log_from_the_latest(0)->respond_time_in_master_cycle);
-  TF_copy_u8(&packet[128], (uint8_t)(power_switch_control->switch_state_5v_tlm.byte));
-  TF_copy_u8(&packet[129], (uint8_t)(power_switch_control->switch_state_unreg_tlm.byte));
-  TF_copy_i16(&packet[130], (int16_t)(ina260_driver[INA260_IDX_PIC]->info.current_raw));
-  TF_copy_u16(&packet[132], (uint16_t)(ina260_driver[INA260_IDX_PIC]->info.voltage_raw));
-  TF_copy_i16(&packet[134], (int16_t)(ina260_driver[INA260_IDX_STIM210]->info.current_raw));
-  TF_copy_u16(&packet[136], (uint16_t)(ina260_driver[INA260_IDX_STIM210]->info.voltage_raw));
-  TF_copy_i16(&packet[138], (int16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.current_raw));
-  TF_copy_u16(&packet[140], (uint16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.voltage_raw));
-  TF_copy_i16(&packet[142], (int16_t)(ina260_driver[INA260_IDX_OEM7600]->info.current_raw));
-  TF_copy_u16(&packet[144], (uint16_t)(ina260_driver[INA260_IDX_OEM7600]->info.voltage_raw));
-  TF_copy_i16(&packet[146], (int16_t)(ina260_driver[INA260_IDX_RM3100]->info.current_raw));
-  TF_copy_u16(&packet[148], (uint16_t)(ina260_driver[INA260_IDX_RM3100]->info.voltage_raw));
-  TF_copy_i16(&packet[150], (int16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.current_raw));
-  TF_copy_u16(&packet[152], (uint16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.voltage_raw));
-  TF_copy_i16(&packet[154], (int16_t)(ina260_driver[INA260_IDX_MTQ]->info.current_raw));
-  TF_copy_u16(&packet[156], (uint16_t)(ina260_driver[INA260_IDX_MTQ]->info.voltage_raw));
-  TF_copy_i16(&packet[158], (int16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.current_raw));
-  TF_copy_u16(&packet[160], (uint16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.voltage_raw));
-  TF_copy_i16(&packet[162], (int16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.current_raw));
-  TF_copy_u16(&packet[164], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.voltage_raw));
-  TF_copy_i16(&packet[166], (int16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.current_raw));
-  TF_copy_u16(&packet[168], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.voltage_raw));
-  TF_copy_float(&packet[170], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_PIC]));
-  TF_copy_float(&packet[174], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_RW_DCDC]));
-  TF_copy_float(&packet[178], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.temperature_degC));
-  TF_copy_float(&packet[182], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[0]));
-  TF_copy_float(&packet[186], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[1]));
-  TF_copy_float(&packet[190], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[2]));
-  TF_copy_float(&packet[194], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
-  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
-  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.cmos_degC));
-  TF_copy_float(&packet[206], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
-  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
-  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
-  TF_copy_float(&packet[218], (float)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.hardware_status.temperature_degC));
+  TF_copy_u32(&packet[104], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->note);
+  TF_copy_u8(&packet[108], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->group);
+  TF_copy_u32(&packet[109], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->local);
+  TF_copy_u32(&packet[113], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.total_cycle);
+  TF_copy_u8(&packet[117], (uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.step);
+  TF_copy_u32(&packet[118], EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->note);
+  TF_copy_u32(&packet[122], event_handler->log_table.respond_counter);
+  TF_copy_u16(&packet[126], (uint16_t)EH_get_the_nth_log_from_the_latest(0)->rule_id);
+  TF_copy_u32(&packet[128], (uint32_t)EH_get_the_nth_log_from_the_latest(0)->respond_time_in_master_cycle);
+  TF_copy_u8(&packet[132], (uint8_t)(power_switch_control->switch_state_5v_tlm.byte));
+  TF_copy_u8(&packet[133], (uint8_t)(power_switch_control->switch_state_unreg_tlm.byte));
+  TF_copy_i16(&packet[134], (int16_t)(ina260_driver[INA260_IDX_PIC]->info.current_raw));
+  TF_copy_u16(&packet[136], (uint16_t)(ina260_driver[INA260_IDX_PIC]->info.voltage_raw));
+  TF_copy_i16(&packet[138], (int16_t)(ina260_driver[INA260_IDX_STIM210]->info.current_raw));
+  TF_copy_u16(&packet[140], (uint16_t)(ina260_driver[INA260_IDX_STIM210]->info.voltage_raw));
+  TF_copy_i16(&packet[142], (int16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.current_raw));
+  TF_copy_u16(&packet[144], (uint16_t)(ina260_driver[INA260_IDX_SAGITTA]->info.voltage_raw));
+  TF_copy_i16(&packet[146], (int16_t)(ina260_driver[INA260_IDX_OEM7600]->info.current_raw));
+  TF_copy_u16(&packet[148], (uint16_t)(ina260_driver[INA260_IDX_OEM7600]->info.voltage_raw));
+  TF_copy_i16(&packet[150], (int16_t)(ina260_driver[INA260_IDX_RM3100]->info.current_raw));
+  TF_copy_u16(&packet[152], (uint16_t)(ina260_driver[INA260_IDX_RM3100]->info.voltage_raw));
+  TF_copy_i16(&packet[154], (int16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.current_raw));
+  TF_copy_u16(&packet[156], (uint16_t)(ina260_driver[INA260_IDX_NANOSSOC_D60]->info.voltage_raw));
+  TF_copy_i16(&packet[158], (int16_t)(ina260_driver[INA260_IDX_MTQ]->info.current_raw));
+  TF_copy_u16(&packet[160], (uint16_t)(ina260_driver[INA260_IDX_MTQ]->info.voltage_raw));
+  TF_copy_i16(&packet[162], (int16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.current_raw));
+  TF_copy_u16(&packet[164], (uint16_t)(ina260_driver[INA260_IDX_RW0003_X]->info.voltage_raw));
+  TF_copy_i16(&packet[166], (int16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.current_raw));
+  TF_copy_u16(&packet[168], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Y]->info.voltage_raw));
+  TF_copy_i16(&packet[170], (int16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.current_raw));
+  TF_copy_u16(&packet[172], (uint16_t)(ina260_driver[INA260_IDX_RW0003_Z]->info.voltage_raw));
+  TF_copy_float(&packet[174], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_PIC]));
+  TF_copy_float(&packet[178], (float)(thermo_sensor->temperature_degC[APP_TSNS_IDX_RW_DCDC]));
+  TF_copy_float(&packet[182], (float)(mpu9250_driver[MPU9250_IDX_ON_AOBC]->info.temperature_degC));
+  TF_copy_float(&packet[186], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[0]));
+  TF_copy_float(&packet[190], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[1]));
+  TF_copy_float(&packet[194], (float)(stim210_driver[STIM210_IDX_IN_UNIT]->info.temperature_compo_degC[2]));
+  TF_copy_float(&packet[198], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.mcu_degC));
+  TF_copy_float(&packet[202], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.fpga_degC));
+  TF_copy_float(&packet[206], (float)(sagitta_driver[SAGITTA_IDX_IN_UNIT]->info.telemetry.temperature.cmos_degC));
+  TF_copy_float(&packet[210], (float)(rw0003_driver[RW0003_IDX_ON_X]->info.temperature_degC));
+  TF_copy_float(&packet[214], (float)(rw0003_driver[RW0003_IDX_ON_Y]->info.temperature_degC));
+  TF_copy_float(&packet[218], (float)(rw0003_driver[RW0003_IDX_ON_Z]->info.temperature_degC));
+  TF_copy_float(&packet[222], (float)(oem7600_driver[OEM7600_IDX_IN_UNIT]->info.hardware_status.temperature_degC));
 #endif
 
-  *len = 222;
+  *len = 226;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
