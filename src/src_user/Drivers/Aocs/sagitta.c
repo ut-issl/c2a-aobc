@@ -78,6 +78,7 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_action_reply_(SAGITTA_Driver* sagitt
 // telemetry
 static DS_ERR_CODE SAGITTA_analyze_rec_data_telemetry_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_unix_time_(SAGITTA_Driver* sagitta_driver);
+static DS_ERR_CODE SAGITTA_analyze_rec_data_version_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_power_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_quaternion_(SAGITTA_Driver* sagitta_driver);
 static DS_ERR_CODE SAGITTA_analyze_rec_data_temperature_(SAGITTA_Driver* sagitta_driver);
@@ -2074,6 +2075,8 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_telemetry_(SAGITTA_Driver* sagitta_d
 
   switch ((SAGITTA_TLM_ID)sagitta_driver->info.tlm_id)
   {
+  case SAGITTA_TLM_ID_VERSION:
+    return SAGITTA_analyze_rec_data_version_(sagitta_driver);
   case SAGITTA_TLM_ID_POWER:
     return SAGITTA_analyze_rec_data_power_(sagitta_driver);
   case SAGITTA_TLM_ID_SOLUTION:
@@ -2095,6 +2098,22 @@ static DS_ERR_CODE SAGITTA_analyze_rec_data_telemetry_(SAGITTA_Driver* sagitta_d
   default:
     return DS_ERR_CODE_ERR;
   }
+}
+
+static DS_ERR_CODE SAGITTA_analyze_rec_data_version_(SAGITTA_Driver* sagitta_driver)
+{
+  uint16_t offset = (uint16_t)SAGITTA_kTlmOffsetData_;
+
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.version.program), offset);
+  offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.version.program);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.version.major), offset);
+  offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.version.major);
+  SAGITTA_memcpy_u8_from_rx_frame_decoded_(&(sagitta_driver->info.telemetry.version.minor), offset);
+  offset += (uint16_t)sizeof(sagitta_driver->info.telemetry.version.minor);
+
+  SAGITTA_analyze_rec_data_xxhash_(sagitta_driver, offset + SAGITTA_XXHASH_SIZE - 1);
+
+  return DS_ERR_CODE_OK;
 }
 
 static DS_ERR_CODE SAGITTA_analyze_rec_data_power_(SAGITTA_Driver* sagitta_driver)

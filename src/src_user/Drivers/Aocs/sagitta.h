@@ -68,6 +68,7 @@ typedef enum
  */
 typedef enum
 {
+  SAGITTA_TLM_ID_VERSION = 2,
   SAGITTA_TLM_ID_POWER = 11,
   SAGITTA_TLM_ID_SOLUTION = 24,
   SAGITTA_TLM_ID_TEMPERATURE = 27,
@@ -132,6 +133,17 @@ typedef enum
   SAGITTA_SOLUTION_STRATEGY_AUTONOMOUS_TRACKING_DEMOTO_TO_LISA = 7,
   SAGITTA_SOLUTION_STRATEGY_AUTONOMOUS_LISA_LOW_CONFIDENCE = 8
 } SAGITTA_SOLUTION_STRATEGY;
+
+/**
+ * @struct SAGITTA_TELEMETRY_VERSION
+ * @brief  SagittaのVersionテレメトリを格納する
+ */
+typedef struct
+{
+  uint8_t program; //!< The current running program (1: bootloader, 2: main firmware, 3: backup firmware)
+  uint8_t major;   //!< Major version of the running bootloader or firmware
+  uint8_t minor;   //!< Minor version of the running bootloader or firmware
+} SAGITTA_TELEMETRY_VERSION;
 
 /**
  * @struct SAGITTA_TELEMETRY_POWER
@@ -248,6 +260,7 @@ typedef struct
  */
 typedef struct
 {
+  SAGITTA_TELEMETRY_VERSION version;
   SAGITTA_TELEMETRY_POWER power;
   SAGITTA_TELEMETRY_SOLUTION solution;
   SAGITTA_TELEMETRY_TEMPERATURE temperature;
