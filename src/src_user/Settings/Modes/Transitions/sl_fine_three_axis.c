@@ -42,8 +42,8 @@ void BCL_load_rough_three_axis_rw_to_fine_three_axis(void)
   // STT ON
   BCL_tool_prepare_param_uint8(TLCD_ID_DEPLOY_BC);
   BCL_tool_prepare_param_uint16(BC_POWER_ON_SAGITTA);
-  BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_TLCD_DEPLOY_BLOCK); // 34.5sec
-  timing_sec += 35;
+  BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_TLCD_DEPLOY_BLOCK); // 42.5sec
+  timing_sec += 43;
 
   // モード遷移完了
   BCL_tool_register_cmd(OBCT_sec2cycle(timing_sec), Cmd_CODE_MM_FINISH_TRANSITION);

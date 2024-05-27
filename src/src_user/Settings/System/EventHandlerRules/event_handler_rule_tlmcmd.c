@@ -93,7 +93,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_0, &settings);
 
   // NANOSSOC D60 1 TLM ERROR
   settings.event.group = EL_GROUP_TLM_ERROR_NANOSSOC;
@@ -105,7 +105,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_1, &settings);
 
   // NANOSSOC D60 2 TLM ERROR
   settings.event.group = EL_GROUP_TLM_ERROR_NANOSSOC;
@@ -117,7 +117,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_2, &settings);
 
   // NANOSSOC D60 3 TLM ERROR
   settings.event.group = EL_GROUP_TLM_ERROR_NANOSSOC;
@@ -129,7 +129,7 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_TLM_ERROR_NANOSSOC_D60_3, &settings);
 
   // TODO Add TLM error for other sun sensors
 
@@ -329,7 +329,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_TLM_ERROR_INA260_RW0003_Z, &settings);
 
   // NANOSSOC D60 0 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_0;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -338,10 +338,10 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_0, &settings);
 
   // NANOSSOC D60 1 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_1;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -350,10 +350,10 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_1, &settings);
 
   // NANOSSOC D60 2 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_2;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -362,10 +362,10 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_2, &settings);
 
   // NANOSSOC D60 3 CHECKSUM ERROR
-  settings.event.group = EL_GROUP_ERROR_NANOSSOC;
+  settings.event.group = EL_GROUP_CHECKSUM_ERROR_NANOSSOC;
   settings.event.local = NANOSSOC_D60_IDX_3;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -374,12 +374,12 @@ void EH_load_rule_tlmcmd(void)
   settings.condition.time_threshold_ms = FDIR_PARAMETERS_tlm_error_eh_reset_time_threshold_nanossoc_d60_ms;
   settings.deploy_bct_id = BC_RESET_NANOSSOC_D60;
   settings.is_active = 0;
-  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60, &settings);
+  EH_register_rule(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_3, &settings);
 
   // TODO Add other sun sensors
 
   // STIM210 CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_STIM210;
+  settings.event.group = EL_GROUP_CRC_ERROR_STIM210;
   settings.event.local = STIM210_IDX_IN_UNIT;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -403,7 +403,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_STIM210_BROKEN, &settings);
 
   // SAGITTA XXHASH ERROR
-  settings.event.group = EL_GROUP_ERROR_SAGITTA;
+  settings.event.group = EL_GROUP_XXHASH_ERROR_SAGITTA;
   settings.event.local = SAGITTA_IDX_IN_UNIT;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -415,7 +415,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_XXHASH_ERROR_SAGITTA, &settings);
 
   // OEM7600 CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_OEM7600;
+  settings.event.group = EL_GROUP_CRC_ERROR_OEM7600;
   settings.event.local = OEM7600_IDX_IN_UNIT;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -427,7 +427,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_OEM7600, &settings);
 
   // RWX CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_RW0003X;
+  settings.event.group = EL_GROUP_CRC_ERROR_RW0003X;
   settings.event.local = RW0003_IDX_ON_X;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -439,7 +439,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_RWX, &settings);
 
   // RWY CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_RW0003Y;
+  settings.event.group = EL_GROUP_CRC_ERROR_RW0003Y;
   settings.event.local = RW0003_IDX_ON_Y;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;
@@ -451,7 +451,7 @@ void EH_load_rule_tlmcmd(void)
   EH_register_rule(EH_RULE_CRC_ERROR_RWY, &settings);
 
   // RWZ CRC ERROR
-  settings.event.group = EL_GROUP_ERROR_RW0003Z;
+  settings.event.group = EL_GROUP_CRC_ERROR_RW0003Z;
   settings.event.local = RW0003_IDX_ON_Z;
   settings.event.err_level = EL_ERROR_LEVEL_HIGH;
   settings.should_match_err_level = 1;

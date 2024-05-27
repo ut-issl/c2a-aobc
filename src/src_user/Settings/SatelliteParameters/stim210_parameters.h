@@ -31,4 +31,7 @@ extern const uint8_t STIM210_PARAMETERS_gyro_spike_count_limit_to_reject_continu
 extern const float STIM210_PARAMETERS_gyro_spike_reject_threshold_rad_s[PHYSICAL_CONST_THREE_DIM];                    //!< Reject threshold [rad/s]
 extern const float STIM210_PARAMETERS_gyro_spike_amplitude_limit_to_accept_as_step_rad_s[PHYSICAL_CONST_THREE_DIM];   //!< Amplitude limit to accept as step input [rad/s]
 
+// Magnetic sensor bias calibration
+extern const float STIM210_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM]; //!< Bias @ component frame X axis
+
 #endif // STIM210_PARAMETERS_H_

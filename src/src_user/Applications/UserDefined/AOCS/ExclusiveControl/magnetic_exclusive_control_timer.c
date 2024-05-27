@@ -75,6 +75,12 @@ void APP_MECT_update_state_(void)
 {
   if (magnetic_exclusive_control_timer_.is_enable == APP_MECT_EXCLUSIVE_CONTROL_DISABLE)
   {
+    // 排他制御タイマーのコンフィグ変更を検知した場合、読み出す
+    if (magnetic_exclusive_control_timer_.is_config_buffered)
+    {
+      magnetic_exclusive_control_timer_.config = magnetic_exclusive_control_timer_.buffered_config;
+      magnetic_exclusive_control_timer_.is_config_buffered = false;
+    }
     // 排他制御が無効であるときは、磁気センサとMTQとの干渉を気にしないため、常にSTATE == CONTROLとする
     if (aocs_manager->magnetic_exclusive_control_timer_state != APP_AOCS_MANAGER_MAGNETIC_EXCLUSIVE_CONTROL_STATE_CONTROL)
     {

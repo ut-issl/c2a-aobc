@@ -137,7 +137,7 @@ static void DI_STIM210_update_(void)
 
     if (state != STIM210_CRC_STATE_OK)
     {
-      EL_record_event(EL_GROUP_ERROR_STIM210, (uint32_t)STIM210_IDX_IN_UNIT, EL_ERROR_LEVEL_HIGH, (uint32_t)STIM210_EL_NOTE_CRC_ERROR);
+      EL_record_event(EL_GROUP_CRC_ERROR_STIM210, (uint32_t)STIM210_IDX_IN_UNIT, EL_ERROR_LEVEL_HIGH, (uint32_t)state);
     }
     else if (status != 0)
     {

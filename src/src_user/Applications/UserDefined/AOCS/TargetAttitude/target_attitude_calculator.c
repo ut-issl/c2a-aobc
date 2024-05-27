@@ -15,12 +15,14 @@
 #include <src_user/Applications/UserDefined/AOCS/aocs_manager.h>
 #include <src_user/Applications/app_registry.h>
 #include <src_user/Library/vector3.h>
+#include <src_user/Library/SignalProcess/z_filter.h>
 
 // SatelliteParameters
 #include <src_user/Settings/SatelliteParameters/attitude_target_parameters.h>
 
 static TargetAttitudeCalculator        target_attitude_calculator_;
 const  TargetAttitudeCalculator* const target_attitude_calculator = &target_attitude_calculator_;
+static ZFilter APP_TARGET_ATT_CALC_lpf_1st_ang_vel_[PHYSICAL_CONST_THREE_DIM];     //!< 角速度LPF
 
 static void APP_TARGET_ATT_CALC_init_(void);
 static void APP_TARGET_ATT_CALC_exec_(void);
@@ -52,6 +54,16 @@ static void APP_TARGET_ATT_CALC_init_(void)
   target_attitude_calculator_.mode = ATTITUDE_TARGET_PARAMETERS_mode;
   target_attitude_calculator_.quaternion_target_i2t = ATTITUDE_TARGET_PARAMETERS_quaternion_target_i2t;
   target_attitude_calculator_.is_enabled = 0;
+
+  // 角速度計算LPF
+  target_attitude_calculator_.sampling_freq_Hz = 10.0f;
+  target_attitude_calculator_.cut_off_freq_lpf_1st_Hz = 0.05f;
+  for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
+  {
+    Z_FILTER_init_as_lpf_1st(&APP_TARGET_ATT_CALC_lpf_1st_ang_vel_[axis_id],
+                             target_attitude_calculator_.sampling_freq_Hz,
+                             target_attitude_calculator_.cut_off_freq_lpf_1st_Hz);
+  }
 }
 
 static void APP_TARGET_ATT_CALC_exec_(void)
@@ -112,7 +124,8 @@ static C2A_MATH_ERROR APP_TARGET_ATT_CALC_calc_target_angular_velocity_(void)
   // Quaternion差より角速度計算
   float time_diff_sec = (float)OBCT_diff_in_sec(&target_attitude_calculator_.obctime, &obctime_current);
   // TODO: 時間アサーションを入れるかどうか検討する
-  C2A_MATH_ERROR ret = QUATERNION_calc_angular_velocity(target_attitude_calculator_.ang_vel_target_body_rad_s,
+  float ang_vel_target_body_rad_s[PHYSICAL_CONST_THREE_DIM];
+  C2A_MATH_ERROR ret = QUATERNION_calc_angular_velocity(ang_vel_target_body_rad_s,
                                                         q_target_previous,
                                                         q_target_current,
                                                         time_diff_sec);
@@ -121,7 +134,12 @@ static C2A_MATH_ERROR APP_TARGET_ATT_CALC_calc_target_angular_velocity_(void)
     EL_record_event(EL_GROUP_CALCULATION_ERROR, (uint32_t)AR_APP_TARGET_ATTITUDE_CALCULATOR, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
     return ret;
   }
-
+  // LPF
+  for (uint8_t axis_id = 0; axis_id < PHYSICAL_CONST_THREE_DIM; axis_id++)
+  {
+    target_attitude_calculator_.ang_vel_target_body_rad_s[axis_id] =
+      Z_FILTER_calc_output(&APP_TARGET_ATT_CALC_lpf_1st_ang_vel_[axis_id], ang_vel_target_body_rad_s[axis_id]);
+  }
   // 次回計算のために現在の値を代入
   target_attitude_calculator_.quaternion_target_i2t_previous = target_attitude_calculator_.quaternion_target_i2t;
   target_attitude_calculator_.obctime = obctime_current;
@@ -158,6 +176,25 @@ CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_ENABLE(const CommonCmdPacket* packet)
   }
 
   target_attitude_calculator_.is_enabled = is_enabled;
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+CCP_CmdRet Cmd_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY(const CommonCmdPacket* packet)
+{
+  float sampling_Hz = CCP_get_param_from_packet(packet, 0, float);
+  if (sampling_Hz <= 0.0f)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+  float cutoff_Hz = CCP_get_param_from_packet(packet, 1, float);
+  if (cutoff_Hz <= 0.0f)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  }
+
+  target_attitude_calculator_.sampling_freq_Hz = sampling_Hz;
+  target_attitude_calculator_.cut_off_freq_lpf_1st_Hz = cutoff_Hz;
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

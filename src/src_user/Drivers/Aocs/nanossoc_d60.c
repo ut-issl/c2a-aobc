@@ -54,6 +54,18 @@ DS_INIT_ERR_CODE NANOSSOC_D60_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, uin
   return DS_INIT_OK;
 }
 
+DS_ERR_CODE NANOSSOC_D60_DS_init(NANOSSOC_D60_Driver* nanossoc_d60_driver, DS_StreamRecBuffer* rx_buffer)
+{
+  DS_ERR_CODE ret;
+
+  ret = DS_init(&(nanossoc_d60_driver->driver.super),
+                &(nanossoc_d60_driver->driver.i2c_config),
+                rx_buffer,
+                NANOSSOC_D60_load_driver_super_init_settings_);
+
+  return ret;
+}
+
 static DS_ERR_CODE NANOSSOC_D60_load_driver_super_init_settings_(DriverSuper* super)
 {
   DS_StreamConfig* stream_config;

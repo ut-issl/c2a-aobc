@@ -14,6 +14,9 @@
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 #include <src_user/Settings/System/event_logger_group.h>
 
+// Satellite parameters
+#include <src_user/Settings/SatelliteParameters/nanossoc_d60_parameters.h>
+
 void BCL_load_power_on_nanossoc_d60(void)
 {
   cycle_t bc_cycle = OBCT_sec2cycle(1);
@@ -40,18 +43,18 @@ void BCL_load_power_on_nanossoc_d60(void)
 #ifndef SILS_FW // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(28.94f);
-  BCL_tool_prepare_param_float(-17.68f);
-  BCL_tool_prepare_param_float(77.99f);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[0]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[1]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(97.61f);
-  BCL_tool_prepare_param_float(-48.16f);
-  BCL_tool_prepare_param_float(44.57f);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -60,6 +63,10 @@ void BCL_load_power_on_nanossoc_d60(void)
 
   // Enable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_NANOSSOC);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_CHECKSUM_ERROR_NANOSSOC);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
@@ -84,11 +91,15 @@ void BCL_load_power_off_nanossoc_d60(void)
   cycle_t bc_cycle = 10;
 
   // Inactivate EH
-  BCL_tool_register_deploy(bc_cycle, BC_INACTIVATE_NANOSSOC_D60_EH, TLCD_ID_DEPLOY_BC); // 0.6sec
+  BCL_tool_register_deploy(bc_cycle, BC_INACTIVATE_NANOSSOC_D60_EH, TLCD_ID_DEPLOY_BC); // 1.2sec
   bc_cycle += OBCT_sec2cycle(2);
 
   // Disable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_NANOSSOC);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_CHECKSUM_ERROR_NANOSSOC);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 
@@ -105,18 +116,18 @@ void BCL_load_power_off_nanossoc_d60(void)
 #ifndef SILS_FW // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(-28.94f);
-  BCL_tool_prepare_param_float(17.68f);
-  BCL_tool_prepare_param_float(-77.99f);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[0]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[1]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_aobc_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(-97.61f);
-  BCL_tool_prepare_param_float(48.16f);
-  BCL_tool_prepare_param_float(-44.57f);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(-NANOSSOC_D60_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -133,6 +144,12 @@ void BCL_load_reset_nanossoc_d60(void)
   BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);  // 4.5sec
   bc_cycle += OBCT_sec2cycle(5);
 
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_NANOSSOC_D60_DS_INIT);
+  bc_cycle++;
+
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER);
+  bc_cycle++;
+
   BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_NANOSSOC_D60, TLCD_ID_DEPLOY_BC);
 }
 
@@ -140,11 +157,13 @@ void BCL_load_activate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60);
+  // I2Cバス全体に異常が出ると全てのSSでEL登録されるため，ID0を代表としてEH発火させる
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60);
+  // I2Cバス全体に異常が出ると全てのSSでEL登録されるため，ID0を代表としてEH発火させる
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_ACTIVATE_RULE);
   bc_cycle++;
 
@@ -170,11 +189,35 @@ void BCL_load_inactivate_nanossoc_d60_eh(void)
 {
   cycle_t bc_cycle = 1;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_0);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
-  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60);
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_1);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_2);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_TLM_ERROR_NANOSSOC_D60_3);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_0);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_1);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_2);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint16(EH_RULE_CHECKSUM_ERROR_NANOSSOC_D60_3);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE);
   bc_cycle++;
 
@@ -194,7 +237,7 @@ void BCL_load_inactivate_nanossoc_d60_eh(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL);
   bc_cycle++;
 
-  // 0.6sec
+  // Total: 1.2sec程度
 }
 
 #pragma section

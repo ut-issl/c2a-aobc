@@ -27,8 +27,7 @@ typedef enum
  */
 typedef enum
 {
-  SAGITTA_EL_NOTE_XXHASH_ERROR = 0,
-  SAGITTA_EL_NOTE_NOISE_REMOVED,
+  SAGITTA_EL_NOTE_NOISE_REMOVED = 0,
   SAGITTA_EL_NOTE_MAX,
 } SAGITTA_EL_NOTE;
 
@@ -56,5 +55,9 @@ CCP_CmdRet Cmd_DI_SAGITTA_READ_PARAMETER(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_SAGITTA_REQUEST_SYNCHRONOUS_TELEMETRY(const CommonCmdPacket* packet);
 
 CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
+
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT(const CommonCmdPacket* packet);
+
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* packet);
 
 #endif

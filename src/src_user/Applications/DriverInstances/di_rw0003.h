@@ -24,15 +24,27 @@ typedef enum
 } RW0003_IDX;
 
 /**
+ * @enum  RW0003_SUB_TLM_IDX
+ * @brief 回転数テレメ以外のサブテレメのローテーション管理
+ * @note  型はint8_tを想定
+ */
+typedef enum
+{
+  RW0003_SUB_TLM_IDX_TEMPERATURE = 0,
+  RW0003_SUB_TLM_IDX_FAULT_STATE,
+  RW0003_SUB_TLM_IDX_MAX,
+} RW0003_SUB_TLM_IDX;
+
+/**
  * @enum  RW0003_EL_NOTE
  * @brief RW0003に関連するELの詳細
  * @note  型はuint8_tを想定
  */
 typedef enum
 {
-  RW0003_EL_NOTE_CRC_ERROR = 0,
-  RW0003_EL_NOTE_NOISE_REMOVED,
+  RW0003_EL_NOTE_NOISE_REMOVED = 0,
   RW0003_EL_NOTE_TORQUE_CMD,
+  RW0003_EL_NOTE_FAULT_STATE,
   RW0003_EL_NOTE_MAX,
 } RW0003_EL_NOTE;
 

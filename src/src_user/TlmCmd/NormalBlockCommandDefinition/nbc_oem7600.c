@@ -15,6 +15,9 @@
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 #include <src_user/Settings/System/event_logger_group.h>
 
+// Satellite parameters
+#include <src_user/Settings/SatelliteParameters/oem7600_parameters.h>
+
 void BCL_load_power_on_oem7600(void)
 {
   cycle_t bc_cycle = 1;
@@ -57,18 +60,18 @@ void BCL_load_power_on_oem7600(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(119.31f);
-  BCL_tool_prepare_param_float(-81.50f);
-  BCL_tool_prepare_param_float(173.16f);
+  BCL_tool_prepare_param_float(773.50f);
+  BCL_tool_prepare_param_float(292.5f);
+  BCL_tool_prepare_param_float(521.30f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(223.03f);
-  BCL_tool_prepare_param_float(-126.81f);
-  BCL_tool_prepare_param_float(202.58f);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -98,18 +101,18 @@ void BCL_load_power_off_oem7600(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(-119.31f);
-  BCL_tool_prepare_param_float(81.50f);
-  BCL_tool_prepare_param_float(-173.16f);
+  BCL_tool_prepare_param_float(-773.50f);
+  BCL_tool_prepare_param_float(-292.5f);
+  BCL_tool_prepare_param_float(-521.30f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(-223.03f);
-  BCL_tool_prepare_param_float(126.81f);
-  BCL_tool_prepare_param_float(-202.58f);
+  BCL_tool_prepare_param_float(-OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(-OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(-OEM7600_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -129,6 +132,10 @@ void BCL_load_activate_oem7600_el_eh(void)
   cycle_t bc_cycle = 1;
 
   // Enable EL
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_OEM7600);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_OEM7600);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
@@ -188,6 +195,10 @@ void BCL_load_inactivate_oem7600_el_eh(void)
   bc_cycle++;
 
   // Disable EL
+  BCL_tool_prepare_param_uint32(EL_GROUP_CRC_ERROR_OEM7600);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
   BCL_tool_prepare_param_uint32(EL_GROUP_ERROR_OEM7600);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
 

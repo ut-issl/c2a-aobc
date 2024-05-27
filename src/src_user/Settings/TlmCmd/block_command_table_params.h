@@ -14,7 +14,7 @@
 
 #define BCT_CMD_MAX_LENGTH (32)
 #define BCT_MAX_CMD_NUM (16)
-#define BCT_MAX_BLOCKS (80)
+#define BCT_MAX_BLOCKS (90)
 
 #define SIZE_OF_BCT_ID_T (2)
 

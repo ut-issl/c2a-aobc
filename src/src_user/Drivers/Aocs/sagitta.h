@@ -14,6 +14,7 @@
 #define SAGITTA_TELEMETRY_BLOBS_LENGTH                    (8)
 #define SAGITTA_TELEMETRY_CENTROIDS_LENGTH                (16)
 #define SAGITTA_TELEMETRY_MATCHED_CENTROIDS_LENGTH        (16)
+#define SAGITTA_TELEMETRY_BLOB_STATS_LENGTH               (16)
 #define SAGITTA_PARAMETER_LOG_LEVEL_LENGTH                (16)
 #define SAGITTA_PARAMETER_LIMITS_LENGTH                   (10)
 #define SAGITTA_PARAMETER_DISTORTION_LENGTH               (8)
@@ -55,7 +56,9 @@ typedef enum
   SAGITTA_PARAMETER_ID_ALGO = 16,
   SAGITTA_PARAMETER_ID_SUBSCRIPTION = 18,
   SAGITTA_PARAMETER_ID_AUTO_THRESHOLD = 23,
-  SAGITTA_PARAMETER_ID_FAST_LISA = 25
+  SAGITTA_PARAMETER_ID_FAST_LISA = 25,
+  SAGITTA_PARAMETER_ID_NOISE_LIMITS = 30,
+  SAGITTA_PARAMETER_ID_BLOB_FILTER = 31
 } SAGITTA_PARAMETER_ID;
 
 /**
@@ -72,7 +75,8 @@ typedef enum
   SAGITTA_TLM_ID_BLOBS = 36,
   SAGITTA_TLM_ID_CENTROIDS = 37,
   SAGITTA_TLM_ID_AUTO_BLOB = 39,
-  SAGITTA_TLM_ID_MATCHED_CENTROIDS = 40
+  SAGITTA_TLM_ID_MATCHED_CENTROIDS = 40,
+  SAGITTA_TLM_ID_BLOB_STATS = 49
 } SAGITTA_TLM_ID;
 
 /**
@@ -226,6 +230,19 @@ typedef struct
 } SAGITTA_TELEMETRY_MATCHED_CENTROIDS;
 
 /**
+ * @struct SAGITTA_TELEMETRY_BLOB_STATS
+ * @brief  SagittaのBlobStatsテレメトリを格納する
+ * @note   region: 4x4 grid of the image (00, 01, 02, 03, 10, 11, 12, 13, 20, 21, 22, 23, 30, 31, 32, 33)
+ */
+typedef struct
+{
+  uint8_t noise_limit[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH];          //!< Noise limit in region [0-3][0-3]
+  uint8_t brightness_threshold[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH]; //!< Brightness threshold in region [0-3][0-3]
+  uint8_t num_valid_blobs[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH];      //!< Number of of valid blobs in region [0-3][0-3]
+  uint8_t num_overflows[SAGITTA_TELEMETRY_BLOB_STATS_LENGTH];        //!< Number of overflows in region [0-3][0-3]
+} SAGITTA_TELEMETRY_BLOB_STATS;
+
+/**
  * @struct SAGITTA_TELEMETRY
  * @brief  Sagittaのテレメトリを格納する
  */
@@ -242,6 +259,7 @@ typedef struct
   SAGITTA_TELEMETRY_CENTROIDS centroids;
   float auto_blob_threshold; //!< Automatically determined signal threshold value used in the blob algorithm
   SAGITTA_TELEMETRY_MATCHED_CENTROIDS matched_centroids;
+  SAGITTA_TELEMETRY_BLOB_STATS blob_stats;
 } SAGITTA_TELEMETRY;
 
 /**
@@ -399,7 +417,6 @@ typedef struct
   float threshold_kp;
 } SAGITTA_PARAMETER_AUTO_THRESHOLD;
 
-
 /**
  * @struct SAGITTA_PARAMETER_FAST_LISA
  * @brief  SagittaのFAST_LISAパラメータを格納する
@@ -409,6 +426,40 @@ typedef struct
   float limit_angle;    //!< Limit on angle of the triplets for fastLISA
   float limit_distance; //!< Limit on angle of the triplets for fastLISA
 } SAGITTA_PARAMETER_FAST_LISA;
+
+/**
+ * @struct SAGITTA_PARAMETER_NOISE_LIMITS
+ * @brief  SagittaのNoiseLimitsパラメータを格納する
+ */
+typedef struct
+{
+  uint16_t limit1; //!< Noise threshold 1 for blob detection
+  uint16_t limit2; //!< Noise threshold 2 for blob detection
+  uint16_t min;    //!< Minimum value
+  uint16_t max;    //!< Maximum value
+} SAGITTA_PARAMETER_NOISE_LIMITS;
+
+/**
+ * @struct SAGITTA_PARAMETER_BLOB_FILTER
+ * @brief  SagittaのBlobFilterパラメータを格納する
+ * @note   uint64_tのパラメータは上位32bitと下位32bitに分けてuint32_tとして格納する
+ */
+typedef struct
+  {
+  uint32_t max_oflow_upper;   //!< Maximum number of blobs for all regions combined in one value (upper)
+  uint32_t max_oflow_lower;   //!< Maximum number of blobs for all regions combined in one value (lower)
+  uint32_t max_open_upper;    //!< Maximum number of open blobs for all regions combined in one value (upper)
+  uint32_t max_open_lower;    //!< Maximum number of open blobs for all regions combined in one value (lower)
+  uint32_t max_simopen_upper; //!< Maximum number of simultaneous open blobs for all regions combined in one value (upper)
+  uint32_t max_simopen_lower; //!< Maximum number of simultaneous open blobs for all regions combined in one value (lower)
+  uint32_t max_valid_upper;   //!< Maximum number of valid blobs for all regions combined in one value (upper)
+  uint32_t max_valid_lower;   //!< Maximum number of valid blobs for all regions combined in one value (lower)
+  uint32_t desired_upper;     //!< Desired number of blobs for all regions combined in one value (upper)
+  uint32_t desired_lower;     //!< Desired number of blobs for all regions combined in one value (lower)
+  uint8_t max_width;          //!< Maximum width of a blob
+  uint8_t max_height;         //!< Maximum height of a blob
+  uint8_t max_count;          //!< Maximum pixel counter value of a blob
+} SAGITTA_PARAMETER_BLOB_FILTER;
 
 /**
  * @struct SAGITTA_Parameter
@@ -431,6 +482,8 @@ typedef struct
   uint8_t subscription[SAGITTA_PARAMETER_SUBSCRIPTION_LENGTH];
   SAGITTA_PARAMETER_AUTO_THRESHOLD auto_threshold;
   SAGITTA_PARAMETER_FAST_LISA fast_lisa;
+  SAGITTA_PARAMETER_NOISE_LIMITS noise_limits;
+  SAGITTA_PARAMETER_BLOB_FILTER blob_filter;
 } SAGITTA_PARAMETER;
 
 /**
@@ -481,6 +534,13 @@ typedef struct
  */
 DS_INIT_ERR_CODE SAGITTA_init(SAGITTA_Driver* sagitta_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer);
 
+/**
+ * @brief  SAGITTAのDriver_Super初期化
+ * @param  sagitta_driver    : 初期化するSAGITTA_Driver構造体へのポインタ
+ * @param  rx_buffer: 受信バッファ
+ * @return DS_INIT_ERR_CODE
+ */
+DS_ERR_CODE SAGITTA_DS_init(SAGITTA_Driver* sagitta_driver, DS_StreamRecBuffer* rx_buffer);
 /**
  * @brief  SAGITTA受信
  * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
@@ -609,6 +669,20 @@ DS_CMD_ERR_CODE SAGITTA_set_auto_threshold(SAGITTA_Driver* sagitta_driver);
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_set_fast_lisa(SAGITTA_Driver* sagitta_driver);
+
+/**
+ * @brief  SAGITTAのNoiseLimitsパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_noise_limits(SAGITTA_Driver* sagitta_driver);
+
+/**
+ * @brief  SAGITTAのBlobFilterパラメータを設定する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_set_blob_filter(SAGITTA_Driver* sagitta_driver);
 
 /**
  * @brief  SAGITTAのLog Levelパラメータを変更する
@@ -745,6 +819,24 @@ DS_CMD_ERR_CODE SAGITTA_change_auto_threshold(SAGITTA_Driver* sagitta_driver, ui
  * @return DS_CMD_ERR_CODEを参照
  */
 DS_CMD_ERR_CODE SAGITTA_change_fast_lisa(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのNoiseLimitsパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_noise_limits(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
+
+/**
+ * @brief  SAGITTAのBlobFilterパラメータを変更する
+ * @param  sagitta_driver    : SAGITTA_Driver構造体へのポインタ
+ * @param  param_idx          : 同一パラメータID内のidx(0起算)
+ * @param  value              : 変更後の値
+ * @return DS_CMD_ERR_CODEを参照
+ */
+DS_CMD_ERR_CODE SAGITTA_change_blob_filter(SAGITTA_Driver* sagitta_driver, uint8_t param_idx, float value);
 
 /**
  * @brief  SAGITTAのパラメータを読み取る

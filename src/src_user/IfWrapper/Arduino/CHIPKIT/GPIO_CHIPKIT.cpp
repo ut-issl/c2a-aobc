@@ -1,7 +1,7 @@
 
 #include "./GPIO_CHIPKIT.h"
 #include <src_user/Settings/port_config.h>
-#include <arduino.h>
+#include <Arduino.h>
 
 
 int GPIO_CHIPKIT_set_direction(const uint8_t port, const GPIO_DIRECTION direction)

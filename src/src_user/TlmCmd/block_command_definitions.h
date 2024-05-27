@@ -113,7 +113,7 @@ typedef enum
   // others 全体のテレメとかを登録
   // システム試験TLM:
 
-  // BCT MAX : 80
+  // BCT MAX : 90
 
   BC_ID_MAX    // BCT 自体のサイズは BCT_MAX_BLOCKS で規定
 } BC_DEFAULT_ID;

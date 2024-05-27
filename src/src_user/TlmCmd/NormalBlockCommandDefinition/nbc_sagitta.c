@@ -15,6 +15,9 @@
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 #include <src_user/Settings/System/event_logger_group.h>
 
+// Satellite Parameters
+#include <src_user/Settings/SatelliteParameters/sagitta_parameters.h>
+
 void BCL_load_power_on_sagitta(void)
 {
   cycle_t bc_cycle = OBCT_sec2cycle(1);
@@ -36,7 +39,7 @@ void BCL_load_power_on_sagitta(void)
   BCL_tool_prepare_param_uint8(APP_PSC_UNREG_IDX_SAGITTA);
   BCL_tool_prepare_param_uint8(APP_PSC_STATE_ON);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_APP_PSC_CONTROL_UNREG_PORT);
-  bc_cycle += OBCT_sec2cycle(1);
+  bc_cycle += OBCT_sec2cycle(2);
 
   // Boot
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_BOOT);
@@ -45,18 +48,18 @@ void BCL_load_power_on_sagitta(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(-2.34f);
-  BCL_tool_prepare_param_float(162.42f);
-  BCL_tool_prepare_param_float(-571.90f);
+  BCL_tool_prepare_param_float(443.30f);
+  BCL_tool_prepare_param_float(640.9f);
+  BCL_tool_prepare_param_float(-1457.30f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(55.22f);
-  BCL_tool_prepare_param_float(-36.99f);
-  BCL_tool_prepare_param_float(66.81f);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -65,22 +68,27 @@ void BCL_load_power_on_sagitta(void)
 
   // Set TLM
   BCL_tool_register_deploy(bc_cycle, BC_SET_SAGITTA_PARAMETER, TLCD_ID_DEPLOY_BC);
-  bc_cycle += OBCT_sec2cycle(12);
+  bc_cycle += OBCT_sec2cycle(16);
 
   // Read TLM
   BCL_tool_register_deploy(bc_cycle, BC_READ_SAGITTA_PARAMETER, TLCD_ID_DEPLOY_BC);
-  bc_cycle += OBCT_sec2cycle(13);
+  bc_cycle += OBCT_sec2cycle(16);
 
   // Set Subscription
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_SUBSCRIPTION);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
   bc_cycle += OBCT_sec2cycle(3);
 
+  // INA260の過電流閾値をもとに戻す
+  BCL_tool_prepare_param_uint8(INA260_IDX_SAGITTA);
+  BCL_tool_prepare_param_float(500);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
+
   // Activate EL/EH
   BCL_tool_register_deploy(bc_cycle, BC_ACTIVATE_SAGITTA_EL_EH, TLCD_ID_DEPLOY_BC); // 1sec
   bc_cycle += OBCT_sec2cycle(1);
 
-  // Total: 34~35sec程度
+  // Total: 42~43sec程度
 }
 
 void BCL_load_power_off_sagitta(void)
@@ -100,18 +108,18 @@ void BCL_load_power_off_sagitta(void)
 #ifndef SILS_FW  // TODO_L S2Eに電源ON/OFFでのバイアス変更機能を追加する
   // 磁気バイアス補正
   BCL_tool_prepare_param_uint8(RM3100_IDX_ON_AOBC);
-  BCL_tool_prepare_param_float(2.34f);
-  BCL_tool_prepare_param_float(-162.42f);
-  BCL_tool_prepare_param_float(571.90f);
+  BCL_tool_prepare_param_float(-443.30f);
+  BCL_tool_prepare_param_float(-640.9f);
+  BCL_tool_prepare_param_float(1457.30f);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
   bc_cycle++;
 
   BCL_tool_prepare_param_uint8(RM3100_IDX_EXTERNAL);
-  BCL_tool_prepare_param_float(-55.22f);
-  BCL_tool_prepare_param_float(36.99f);
-  BCL_tool_prepare_param_float(-66.81f);
+  BCL_tool_prepare_param_float(-SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[0]);
+  BCL_tool_prepare_param_float(-SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[1]);
+  BCL_tool_prepare_param_float(-SAGITTA_PARAMETERS_mag_bias_rm3100_ext_compo_nT[2]);
   BCL_tool_prepare_param_uint8(1); // Add
 
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_RM3100_SET_MAG_BIAS_COMPO_NT);
@@ -121,9 +129,17 @@ void BCL_load_power_off_sagitta(void)
 
 void BCL_load_reset_sagitta(void)
 {
-  BCL_tool_register_deploy(OBCT_sec2cycle(1), BC_POWER_OFF_SAGITTA, TLCD_ID_DEPLOY_BC);
+  cycle_t bc_cycle = 1;
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_OFF_SAGITTA, TLCD_ID_DEPLOY_BC);
+  bc_cycle += OBCT_sec2cycle(5);
 
-  BCL_tool_register_deploy(OBCT_sec2cycle(6), BC_POWER_ON_SAGITTA, TLCD_ID_DEPLOY_BC);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_DS_INIT);
+  bc_cycle++;
+
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER);
+  bc_cycle++;
+
+  BCL_tool_register_deploy(bc_cycle, BC_POWER_ON_SAGITTA, TLCD_ID_DEPLOY_BC);
 }
 
 void BCL_set_sagitta_parameter(void)
@@ -139,6 +155,10 @@ void BCL_set_sagitta_parameter(void)
   bc_cycle += OBCT_sec2cycle(1);
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_MOUNTING);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_DISTORTION);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 
@@ -176,6 +196,20 @@ void BCL_set_sagitta_parameter(void)
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_AUTO_THRESHOLD);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_FAST_LISA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_NOISE_LIMITS);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_BLOB_FILTER);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_SET_PARAMETER);
+
+  // 16sec
 }
 
 void BCL_read_sagitta_parameter(void)
@@ -191,6 +225,10 @@ void BCL_read_sagitta_parameter(void)
   bc_cycle += OBCT_sec2cycle(1);
 
   BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_MOUNTING);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_DISTORTION);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 
@@ -234,10 +272,18 @@ void BCL_read_sagitta_parameter(void)
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
   bc_cycle += OBCT_sec2cycle(1);
 
-  // INA260の過電流閾値をもとに戻す。電源ONのBCはすでに16個のコマンドで埋まっているので、ここで対処。
-  BCL_tool_prepare_param_uint8(INA260_IDX_SAGITTA);
-  BCL_tool_prepare_param_float(500);
-  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_INA260_SET_OVER_CURRENT_PROTECTION);
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_FAST_LISA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_NOISE_LIMITS);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+  bc_cycle += OBCT_sec2cycle(1);
+
+  BCL_tool_prepare_param_uint8(SAGITTA_PARAMETER_ID_BLOB_FILTER);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_DI_SAGITTA_READ_PARAMETER);
+
+  // 16sec
 }
 
 
@@ -247,6 +293,10 @@ void BCL_load_activate_sagitta_el_eh(void)
 
   // Enable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_SAGITTA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_XXHASH_ERROR_SAGITTA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_ENABLE_LOGGING);
   bc_cycle++;
 
@@ -319,6 +369,10 @@ void BCL_load_inactivate_sagitta_el_eh(void)
 
   // Disable EL
   BCL_tool_prepare_param_uint32(EL_GROUP_TLM_ERROR_SAGITTA);
+  BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
+  bc_cycle++;
+
+  BCL_tool_prepare_param_uint32(EL_GROUP_XXHASH_ERROR_SAGITTA);
   BCL_tool_register_cmd(bc_cycle, Cmd_CODE_EL_DISABLE_LOGGING);
   bc_cycle++;
 

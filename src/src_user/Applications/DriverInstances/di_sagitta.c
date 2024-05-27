@@ -101,7 +101,7 @@ static void DI_SAGITTA_update_(void)
     SAGITTA_XXHASH_STATE state = sagitta_driver_->info.xxhash_state;
     if (state != SAGITTA_XXHASH_STATE_OK)
     {
-      EL_record_event(EL_GROUP_ERROR_SAGITTA, (uint32_t)SAGITTA_IDX_IN_UNIT, EL_ERROR_LEVEL_HIGH, (uint32_t)SAGITTA_EL_NOTE_XXHASH_ERROR);
+      EL_record_event(EL_GROUP_XXHASH_ERROR_SAGITTA, (uint32_t)SAGITTA_IDX_IN_UNIT, EL_ERROR_LEVEL_HIGH, (uint32_t)state);
     }
   }
   return;
@@ -190,6 +190,12 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_FAST_LISA:
     ret = SAGITTA_set_fast_lisa(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
     break;
+  case SAGITTA_PARAMETER_ID_NOISE_LIMITS:
+    ret = SAGITTA_set_noise_limits(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
+  case SAGITTA_PARAMETER_ID_BLOB_FILTER:
+    ret = SAGITTA_set_blob_filter(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]));
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -251,6 +257,12 @@ CCP_CmdRet Cmd_DI_SAGITTA_CHANGE_PARAMETER(const CommonCmdPacket* packet)
   case SAGITTA_PARAMETER_ID_FAST_LISA:
     ret = SAGITTA_change_fast_lisa(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
     break;
+  case SAGITTA_PARAMETER_ID_NOISE_LIMITS:
+    ret = SAGITTA_change_noise_limits(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
+  case SAGITTA_PARAMETER_ID_BLOB_FILTER:
+    ret = SAGITTA_change_blob_filter(&(sagitta_driver_[SAGITTA_IDX_IN_UNIT]), param_idx, value);
+    break;
   default:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
@@ -299,6 +311,33 @@ CCP_CmdRet Cmd_DI_SAGITTA_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCm
 
   SAGITTA_set_frame_transform_c2b(&sagitta_driver_[idx], quaternion_c2b);
 
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  DS_ERR_CODE ret;
+  ret = SAGITTA_DS_init(&sagitta_driver_[SAGITTA_IDX_IN_UNIT], &DI_SAGITTA_rx_buffer_);
+
+  if (ret != DS_INIT_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+CCP_CmdRet Cmd_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  DS_ERR_CODE ret;
+  ret = DS_init_stream_rec_buffer(&DI_SAGITTA_rx_buffer_,
+                                   DI_SAGITTA_rx_buffer_allocation_,
+                                   sizeof(DI_SAGITTA_rx_buffer_allocation_));
+  if (ret != DS_ERR_CODE_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 

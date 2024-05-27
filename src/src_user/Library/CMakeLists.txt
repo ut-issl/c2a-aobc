@@ -27,6 +27,12 @@ set(C2A_SRCS
   SignalProcess/polynomial_approximation.c
 )
 
-add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "pic32mx")
+  set(C2A_PIC_SRCS
+    print_arduino.cpp
+  )
+endif()
+
+add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS} ${C2A_PIC_SRCS})
 
 include(${C2A_USER_DIR}/common.cmake)

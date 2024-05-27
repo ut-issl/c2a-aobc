@@ -144,11 +144,16 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_RW0003_SET_IDLE].cmd_func = Cmd_DI_RW0003_SET_IDLE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_TORQUE].cmd_func = Cmd_DI_RW0003_DRIVE_TORQUE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_SPEED].cmd_func = Cmd_DI_RW0003_DRIVE_SPEED;
+  cmd_table[Cmd_CODE_DI_RW0003_READ_FAULT_STATE].cmd_func = Cmd_DI_RW0003_READ_FAULT_STATE;
   cmd_table[Cmd_CODE_DI_SAGITTA_BOOT].cmd_func = Cmd_DI_SAGITTA_BOOT;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_UNIX_TIME_US].cmd_func = Cmd_DI_SAGITTA_SET_UNIX_TIME_US;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_PARAMETER].cmd_func = Cmd_DI_SAGITTA_SET_PARAMETER;
   cmd_table[Cmd_CODE_DI_SAGITTA_CHANGE_PARAMETER].cmd_func = Cmd_DI_SAGITTA_CHANGE_PARAMETER;
   cmd_table[Cmd_CODE_DI_SAGITTA_READ_PARAMETER].cmd_func = Cmd_DI_SAGITTA_READ_PARAMETER;
+  cmd_table[Cmd_CODE_DI_SAGITTA_DS_INIT].cmd_func = Cmd_DI_SAGITTA_DS_INIT;
+  cmd_table[Cmd_CODE_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER].cmd_func = Cmd_DI_SAGITTA_DS_INIT_STREAM_REC_BUFFER;
+  cmd_table[Cmd_CODE_DI_NANOSSOC_D60_DS_INIT].cmd_func = Cmd_DI_NANOSSOC_D60_DS_INIT;
+  cmd_table[Cmd_CODE_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER].cmd_func = Cmd_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER;
   cmd_table[Cmd_CODE_DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B].cmd_func = Cmd_DI_RM3100_SET_FRAME_TRANSFORMATION_QUATERNION_C2B;
   cmd_table[Cmd_CODE_DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B].cmd_func = Cmd_DI_MPU9250_SET_FRAME_TRANSFORMATION_QUATERNION_C2B;
   cmd_table[Cmd_CODE_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B].cmd_func = Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B;
@@ -223,6 +228,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_QI_SET_PREV_TARGET_QUATERNION].cmd_func = Cmd_APP_QI_SET_PREV_TARGET_QUATERNION;
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].cmd_func = Cmd_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY;
   cmd_table[Cmd_CODE_APP_QI_RESET_TARGET_QUATERNION].cmd_func = Cmd_APP_QI_RESET_TARGET_QUATERNION;
+  cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY].cmd_func = Cmd_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY;
   cmd_table[Cmd_CODE_APP_TIME_SPACE_CALC_SET_OFFSET_TIME].cmd_func = Cmd_APP_TIME_SPACE_CALC_SET_OFFSET_TIME;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MASS].cmd_func = Cmd_APP_AOCS_MANAGER_SET_MASS;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_INERTIA_TENSOR].cmd_func = Cmd_APP_AOCS_MANAGER_SET_INERTIA_TENSOR;
@@ -432,6 +438,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_TORQUE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_SPEED].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_RW0003_DRIVE_SPEED].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_DI_RW0003_READ_FAULT_STATE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_UNIX_TIME_US].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_UNIX_TIME_US].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_SAGITTA_SET_PARAMETER].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
@@ -693,6 +700,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_QI_SET_NEXT_TARGET_QUATERNION_JDAY].param_size_infos[2].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_APP_TARGET_ATT_CALC_SET_LPF_ANGULAR_VELOCITY].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_TIME_SPACE_CALC_SET_OFFSET_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_MASS].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_APP_AOCS_MANAGER_SET_INERTIA_TENSOR].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;

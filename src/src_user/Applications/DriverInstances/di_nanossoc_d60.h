@@ -32,8 +32,7 @@ typedef enum
  */
 typedef enum
 {
-  NANOSSOC_D60_EL_NOTE_CHECKSUM_ERROR = 0,
-  NANOSSOC_D60_EL_NOTE_NOISE_REMOVED,
+  NANOSSOC_D60_EL_NOTE_NOISE_REMOVED = 0,
   NANOSSOC_D60_EL_NOTE_MAX,
 } NANOSSOC_D60_EL_NOTE;
 
@@ -49,5 +48,9 @@ extern const NANOSSOC_D60_Driver* const nanossoc_d60_driver[NANOSSOC_D60_IDX_MAX
 AppInfo DI_NANOSSOC_D60_update(void);
 
 CCP_CmdRet Cmd_DI_NANOSSOC_D60_SET_FRAME_TRANSFORMATION_QUATERNION_C2B(const CommonCmdPacket* packet);
+
+CCP_CmdRet Cmd_DI_NANOSSOC_D60_DS_INIT(const CommonCmdPacket* packet);
+
+CCP_CmdRet Cmd_DI_NANOSSOC_D60_DS_INIT_STREAM_REC_BUFFER(const CommonCmdPacket* packet);
 
 #endif

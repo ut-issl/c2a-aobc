@@ -28,3 +28,6 @@ const uint8_t STIM210_PARAMETERS_gyro_spike_count_limit_to_accept[PHYSICAL_CONST
 const uint8_t STIM210_PARAMETERS_gyro_spike_count_limit_to_reject_continued_warning[PHYSICAL_CONST_THREE_DIM] = { 60, 60, 60 };
 const float STIM210_PARAMETERS_gyro_spike_reject_threshold_rad_s[PHYSICAL_CONST_THREE_DIM] = { 0.01f, 0.01f, 0.01f };
 const float STIM210_PARAMETERS_gyro_spike_amplitude_limit_to_accept_as_step_rad_s[PHYSICAL_CONST_THREE_DIM] = { 0.002f, 0.002f, 0.002f };
+
+// Magnetic sensor bias calibration
+const float STIM210_mag_bias_rm3100_ext_compo_nT[PHYSICAL_CONST_THREE_DIM] = { 86.94f, 43.95f, 30.08f};
