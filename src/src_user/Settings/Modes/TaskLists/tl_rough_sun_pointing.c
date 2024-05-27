@@ -24,6 +24,9 @@ void BCL_load_rough_sun_pointing_mode(void)
 
   BCL_tool_register_combine(45, BC_AC_RM3100_UPDATE); // 4step以上
 
+  // 基本使わないがユーザーが使いたい時に使えるように入れておく
+  BCL_tool_register_combine(55, BC_AC_STIM210_UPDATE); // 1step以上
+
   BCL_tool_register_app    (60, AR_APP_GYRO_SELECTOR); // 1step以上
   BCL_tool_register_combine(65, BC_AC_SUN_VECTOR_UPDATE); // 合計4step以上
 
