@@ -76,6 +76,15 @@ void PID_CONTROL_calc_output(PidControl* pid_control, const float error)
                                  pid_control->gains.d_gain * pid_control->d_error;
   pid_control->pre_error = pid_control->error;
 
+  // NAN確認
+  C2A_MATH_ERROR ret = C2A_MATH_check_nan_inf(pid_control->control_output);
+  if (ret != C2A_MATH_ERROR_OK)
+  {
+    pid_control->control_output = 0.0f;
+    PID_CONTROL_reset_integral_error(pid_control);
+    pid_control->pre_error = 0.0f;
+  }
+
   return;
 }
 
