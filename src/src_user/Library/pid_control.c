@@ -83,6 +83,7 @@ void PID_CONTROL_calc_output(PidControl* pid_control, const float error)
     pid_control->control_output = 0.0f;
     PID_CONTROL_reset_integral_error(pid_control);
     pid_control->pre_error = 0.0f;
+    // TODO: Add Event Logger
   }
 
   return;
