@@ -66,6 +66,14 @@ C2A_MATH_ERROR SPIKE_FILTER_calc_output_uint32(SpikeFilter* filter, uint32_t* ou
 
 C2A_MATH_ERROR SPIKE_FILTER_calc_output_double(SpikeFilter* filter, double* output, const double input)
 {
+  // NAN確認
+  C2A_MATH_ERROR ret = C2A_MATH_check_nan_inf_double(input);
+  if (ret != C2A_MATH_ERROR_OK)
+  {
+    *output = filter->last_accept_val_;
+    return C2A_MATH_ERROR_NAN;
+  }
+
   C2A_MATH_ERROR judgement_result = C2A_MATH_ERROR_OK;
 
   double diff = input - filter->last_accept_val_;
