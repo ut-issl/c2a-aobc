@@ -157,6 +157,14 @@ float Z_FILTER_calc_output(ZFilter* filter, const float input)
 
 double Z_FILTER_calc_output_double(ZFilter* filter, const double input)
 {
+  // NAN確認
+  C2A_MATH_ERROR ret = C2A_MATH_check_nan_inf_double(input);
+  if (ret != C2A_MATH_ERROR_OK)
+  {
+    // TODO: Add Event Logger
+    return 0.0;
+  }
+
   double output_d = input;
 
   switch (filter->order)
