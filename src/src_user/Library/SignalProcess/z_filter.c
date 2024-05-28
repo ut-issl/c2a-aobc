@@ -162,7 +162,7 @@ double Z_FILTER_calc_output_double(ZFilter* filter, const double input)
   if (ret != C2A_MATH_ERROR_OK)
   {
     // TODO: Add Event Logger
-    return 0.0;
+    return filter->output_previous[0];
   }
 
   double output_d = input;
