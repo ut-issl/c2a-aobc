@@ -10,4 +10,4 @@ on:
 jobs:
   c2a:
     name: C2A
-    uses: arkedge/workflows-c2a/.github/workflows/default.yml@v4.5.3
+    uses: arkedge/workflows-c2a/.github/workflows/default.yml@v5.2.0
