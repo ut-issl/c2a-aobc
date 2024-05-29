@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include <src_core/System/TimeManager/time_manager.h>
+#include <src_core/System/EventManager/event_logger.h>
 
 #include "math_constants.h"
 
@@ -83,7 +84,8 @@ void PID_CONTROL_calc_output(PidControl* pid_control, const float error)
     pid_control->control_output = 0.0f;
     PID_CONTROL_reset_integral_error(pid_control);
     pid_control->pre_error = 0.0f;
-    // TODO: Add Event Logger
+    // TODO: IDは現状テキトウな値なので、修正する(今はアプリIDと被らない大きな値にしている。)
+    EL_record_event(EL_GROUP_CALCULATION_ERROR, 200, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
   }
 
   return;

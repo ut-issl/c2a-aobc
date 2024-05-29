@@ -8,7 +8,7 @@
 
 #include <math.h>
 #include <src_user/Library/math_constants.h>
-
+#include <src_core/System/EventManager/event_logger.h>
 
 //!< bilinear transformation
 static C2A_MATH_ERROR Z_FILTER_bilinear_trans_(ZFilter* filter,
@@ -161,7 +161,8 @@ double Z_FILTER_calc_output_double(ZFilter* filter, const double input)
   C2A_MATH_ERROR ret = C2A_MATH_check_nan_inf_double(input);
   if (ret != C2A_MATH_ERROR_OK)
   {
-    // TODO: Add Event Logger
+    // TODO: IDは現状テキトウな値なので、修正する(今はアプリIDと被らない大きな値にしている。)
+    EL_record_event(EL_GROUP_CALCULATION_ERROR, 201, EL_ERROR_LEVEL_LOW, (uint32_t)ret);
     return filter->output_previous[0];
   }
 
