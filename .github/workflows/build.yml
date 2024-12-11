@@ -16,7 +16,7 @@ on:
 
 env:
   # renovate: datasource=github-releases depName=ut-issl/s2e-aobc
-  S2E_AOBC_VERSION: v5.0.0
+  S2E_AOBC_VERSION: 1701e606e5469dea1db5714f9e17695e52d3a4f4
 
 jobs:
   build_c2a_with_s2e_win:
@@ -85,7 +85,6 @@ jobs:
           ls cspice/include
           ls cspice/generic_kernels
           ls nrlmsise00
-          ls nrlmsise00/table
           ls nrlmsise00/lib
           ls nrlmsise00/lib/libnrlmsise00.lib
           ls nrlmsise00/src
@@ -179,7 +178,6 @@ jobs:
           ls cspice/include
           ls cspice/generic_kernels
           ls nrlmsise00
-          ls nrlmsise00/table
           ls nrlmsise00/lib*
           ls nrlmsise00/lib*/libnrlmsise00.a
           ls nrlmsise00/src
