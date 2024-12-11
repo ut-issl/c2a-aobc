@@ -7,9 +7,9 @@
 #include <src_core/IfWrapper/i2c.h>
 #include <src_user/Settings/port_config.h>
 
-int OBC_C2A_I2cWriteCommand (int port_id, const unsigned char i2c_addr, const unsigned char* data, const unsigned char len);
-int OBC_C2A_I2cWriteRegister(int port_id, const unsigned char i2c_addr, const unsigned char* data, const unsigned char len);
-int OBC_C2A_I2cReadRegister (int port_id, const unsigned char i2c_addr, unsigned char* data, const unsigned char len);
+int s2e::components::OBC_C2A_I2cWriteCommand (int port_id, const unsigned char i2c_addr, const unsigned char* data, const unsigned char len);
+int s2e::components::OBC_C2A_I2cWriteRegister(int port_id, const unsigned char i2c_addr, const unsigned char* data, const unsigned char len);
+int s2e::components::OBC_C2A_I2cReadRegister (int port_id, const unsigned char i2c_addr, unsigned char* data, const unsigned char len);
 
 int I2C_init(void* my_i2c_v)
 {
@@ -27,7 +27,7 @@ int I2C_rx(void* my_i2c_v, void* data_v, int buffer_size)
   int i_ret = 0;
   unsigned char* data = (unsigned char*)data_v;
 
-  OBC_C2A_I2cReadRegister (my_i2c->ch, my_i2c->device_address, data, my_i2c->rx_length);
+  s2e::components::OBC_C2A_I2cReadRegister (my_i2c->ch, my_i2c->device_address, data, my_i2c->rx_length);
   i_ret = my_i2c->rx_length;
 
   return i_ret;
@@ -39,7 +39,7 @@ int I2C_tx(void* my_i2c_v, void* data_v, int data_size)
   int i_ret = 0;
   unsigned char* data = (unsigned char*)data_v;
 
-  OBC_C2A_I2cWriteCommand(my_i2c->ch, my_i2c->device_address, data, data_size);
+  s2e::components::OBC_C2A_I2cWriteCommand(my_i2c->ch, my_i2c->device_address, data, data_size);
 
   // RW0003専用特殊処理 FIXME: 別の場所に置き換える->S2E側の大きな改修が必要なので少し後回し
   if (my_i2c->ch == 1)
@@ -51,7 +51,7 @@ int I2C_tx(void* my_i2c_v, void* data_v, int data_size)
       if (my_i2c->stop_flag == 0)
       {
         uint8_t ReadRegAddress = data[2];
-        OBC_C2A_I2cWriteCommand(my_i2c->ch, my_i2c->device_address, &ReadRegAddress, 1);
+        s2e::components::OBC_C2A_I2cWriteCommand(my_i2c->ch, my_i2c->device_address, &ReadRegAddress, 1);
       }
     }
   }

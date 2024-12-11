@@ -48,12 +48,12 @@ int UART_tx(void* my_uart_v, void* data_v, int data_size)
   }
   else
   {
-    int result = OBC_C2A_SendFromObc(my_uart->ch, (unsigned char*)data_v, 0, data_size);
+    int result = s2e::components::OBC_C2A_SendFromObc(my_uart->ch, (unsigned char*)data_v, 0, data_size);
 
     if (result < 0) return -1;
   }
 #else
-  int result = OBC_C2A_SendFromObc(my_uart->ch, (unsigned char*)data_v, 0, data_size);
+  int result = s2e::components::OBC_C2A_SendFromObc(my_uart->ch, (unsigned char*)data_v, 0, data_size);
 
   if (result < 0) return -1;
 #endif
