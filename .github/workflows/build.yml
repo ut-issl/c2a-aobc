@@ -22,7 +22,7 @@ jobs:
   build_c2a_with_s2e_win:
     name: Build C2A with S2E on Windows VS2022
     # VS2022 を使うため
-    runs-on: windows-2022
+    runs-on: windows-2025
     strategy:
       fail-fast: false
 
