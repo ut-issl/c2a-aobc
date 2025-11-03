@@ -1,0 +1,3 @@
+[submodule "src/src_core"]
+	path = src/src_core
+	url = https://github.com/arkedge/c2a-core
