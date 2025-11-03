@@ -49,7 +49,9 @@ Icon
 # CMake and VS directorDies
 CMakeBuilds/
 .vs/
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 __vm/
 
 # others
