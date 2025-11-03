@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "probe-rs flash and debug",
+            "cwd": "${workspaceFolder}",
+            "connectUnderReset": true,
+            "chip": "STM32H753ZITx",
+            "flashingConfig": {
+                "flashingEnabled": true,
+                "haltAfterReset": true
+            },
+            "coreConfigs": [
+                {
+                    "coreIndex": 0,
+                    "programBinary": "monazite/target/thumbv7em-none-eabihf/debug/monazite",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                        "channelNumber": 0,
+                        // Format RTT data as String data
+                        "dataFormat": "String",
+                        // Include host-side timestamps for every line of data transferred from the target RTT output
+                        "showTimestamps": true
+                        },
+                        {
+                        "channelNumber": 1,
+                        // Treat data as raw binary data, and do not format in any way
+                        "dataFormat": "BinaryLE"
+                        }
+                    ]
+                }
+            ],
+            "consoleLogLevel": "Console",
+            "preLaunchTask": "cargo build (monazite debug)"
+        }
+    ]
+}
