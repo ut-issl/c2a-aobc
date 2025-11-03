@@ -1,0 +1,2 @@
+subsystem,is_active,name,group,local,err_level,should_match_err_level,type,count_threshold,time_threshold[s],bc,description,note
+*,TRUE,EH_RULE_TEST0,EL_GROUP_TEST_EH,0,LOW,TRUE,SINGLE,0,0,BC_ID_MAX,single,

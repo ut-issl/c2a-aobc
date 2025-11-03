@@ -1,0 +1,5 @@
+subsystem,name,bcid,type,option,ti,cmd,args,description,note
+FF,BC_SL_START_UP_TO_INITIAL,0,,,,,,,
+,,,deploy,TLCD_ID_DEPLOY_TLM,10,BC_HK_CYCLIC_TLM,,,
+,,,cmd,,100,Cmd_CODE_MM_FINISH_TRANSITION,,遷移自体はここで終了,
+FF,BC_SL_NOP,1,,,,,,,
