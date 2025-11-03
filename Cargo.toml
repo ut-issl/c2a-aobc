@@ -1,0 +1,10 @@
+[package]
+name = "c2a-aobc-core-v4"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+c2a-core = "4.5.0"
+
+[build-dependencies]
+cmake = "0.1"

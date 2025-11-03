@@ -1,8 +1,22 @@
-[tool.black]
-target-version = ['py38']
-line-length = 100
-include = '\.pyi?$'
+[project]
+name = "c2a-aobc-core-v4"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">= 3.8"
+dependencies = [
+    "c2a-generator @ git+https://github.com/ut-issl/c2a-generator.git@refac-separate_include",
+]
 
-# TODO: .flake8 を消してこちらに移植する
-# [tool.flake8]
-# max-line-length = 100
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.setuptools]
+py-modules = []
+
+[tool.hatch.build.targets.wheel]
+packages = [""]

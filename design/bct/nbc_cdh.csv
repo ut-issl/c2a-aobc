@@ -1,4 +1,4 @@
 subsystem,name,bcid,type,option,ti,cmd,args,description,note
 CDH,BC_HK_CYCLIC_TLM,60,,,,,,,
-,,,cmd,,1,Cmd_CODE_TG_GENERATE_RT_TLM,uint8:Tlm_CODE_TOBC_HK,,
+,,,cmd,,1,Cmd_CODE_TG_GENERATE_RT_TLM,uint8:Tlm_CODE_AOBC_HK,,
 ,,,deploy,TLCD_ID_DEPLOY_TLM,10,BC_HK_CYCLIC_TLM,,,

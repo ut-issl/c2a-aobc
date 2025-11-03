@@ -7,7 +7,7 @@ if __name__ == "__main__":
     out_dir = Path(__file__).parent.parent.parent / "design" / "tlm"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    prefix = "GEOX_TOBC_TLM_DB_"
+    prefix = "AOBC_TLM_DB_"
 
     for tlm_file in sorted(tlm_path.glob("*.csv")):
         name = tlm_file.name

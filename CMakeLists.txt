@@ -1,60 +1,96 @@
-## CMake file for S2E integration
-
 cmake_minimum_required(VERSION 3.13)
 project(C2A)
 
-option(BUILD_C2A_AS_CXX "Build C2A as C++" OFF)
+# options
+# C2A 全体を C99 としてビルドするかどうか
+option(C2A_BUILD_AS_C99 "Build C2A as C99" OFF)
 
-option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
+# SCI COM for connection to WINGS TMTC IF
+# ！！！注意！！！
+# これをONにした状態で，SCIの受け口がない場合（TMTC IFが動いてない状態）
+# そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
+option(C2A_USE_SCI_COM_WINGS "Use SCI_COM_WINGS" OFF)
 
-# UART COM for connection to PC UART
-# これをONにした状態でTMTC_IFが動いていない場合，そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
-option(USE_UART_COM "Use UART COM" OFF)
+# SCI COM for connection to PC UART
+# ！！！注意！！！
+# これをONにした状態で，SCIの受け口がない場合（受けてのTeratermが起動していない状態）
+# そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
+option(C2A_USE_SCI_COM_UART "Use SCI_COM_UART" OFF)
+
+option(C2A_BUILD_WITH_SILS_MOCKUP "Build C2A with SILS mockup for check undefined symbols by build minimal C2A user executable(C89 only)" OFF)
+
+option(C2A_BUILD_FOR_SILS "Build C2A for SILS target" ON)
+
+# Core App のターゲット追加は src_user/applications/CMakeLists.txt で行う
+set(C2A_USE_ALL_CORE_APPS OFF)
+set(C2A_USE_ALL_CORE_TEST_APPS OFF)
+
+if(C2A_BUILD_WITH_SILS_MOCKUP)
+  set(C2A_BUILD_AS_CXX OFF)
+  set(C2A_BUILD_FOR_SILS ON)
+endif()
+
+if(C2A_BUILD_AS_CXX)
+  message("Build C2A as C++!")
+endif()
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_core)
 set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user)
-set(C2A_SATELLITE_PARAMETERS_DIR SatelliteParameters/Sample) # relative path from Settings
-
-if(NOT BUILD_C2A_AS_CXX)
-  set(BUILD_C2A_AS_C99 ON)
-endif()
-set(USE_ALL_C2A_CORE_APPS OFF)
-set(USE_ALL_C2A_CORE_TEST_APPS OFF)
-set(USE_ALL_C2A_CORE_LIB ON)
-
-set(C2A_SRCS
-  ${C2A_CORE_DIR}/Applications/divided_cmd_utility.c
-  ${C2A_CORE_DIR}/Applications/event_utility.c
-  ${C2A_CORE_DIR}/Applications/gs_command_dispatcher.c
-  ${C2A_CORE_DIR}/Applications/memory_dump.c
-  ${C2A_CORE_DIR}/Applications/nop.c
-  ${C2A_CORE_DIR}/Applications/realtime_command_dispatcher.c
-  ${C2A_CORE_DIR}/Applications/timeline_command_dispatcher.c
-  # ${C2A_CORE_DIR}/Applications/utility_command.c
-  # ${C2A_CORE_DIR}/Applications/utility_counter.c
-
-  # SRC_USER codes
-  # ${C2A_USER_DIR}/C2A_main.c
-)
 
 include_directories(src)
 
+# Output debug print to SILS console window
+option(C2A_SHOW_DEBUG_PRINT_ON_SILS "Show debug print" ON)
+if(C2A_SHOW_DEBUG_PRINT_ON_SILS)
+  add_definitions(-DSHOW_DEBUG_PRINT_ON_SILS)
+  message("Show debug print")
+endif()
+
+execute_process(
+  COMMAND git log -1 --format=%H
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_REVISION_C2A_USER
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+  COMMAND git log -1 --format=%h
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_REVISION_C2A_USER_SHORT
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+add_definitions("-DGIT_REVISION_C2A_USER=\"${GIT_REVISION_C2A_USER}\"")
+add_definitions("-DGIT_REVISION_C2A_USER_SHORT=0x${GIT_REVISION_C2A_USER_SHORT}")
+
 add_subdirectory(${C2A_CORE_DIR})
 
-add_subdirectory(${C2A_USER_DIR}/Applications)
-add_subdirectory(${C2A_USER_DIR}/Drivers)
-add_subdirectory(${C2A_USER_DIR}/IfWrapper)
-add_subdirectory(${C2A_USER_DIR}/Library)
-add_subdirectory(${C2A_USER_DIR}/Settings)
-add_subdirectory(${C2A_USER_DIR}/TlmCmd)
+add_subdirectory(${C2A_USER_DIR}/applications)
+add_subdirectory(${C2A_USER_DIR}/component_driver)
+add_subdirectory(${C2A_USER_DIR}/hal)
+add_subdirectory(${C2A_USER_DIR}/library)
+add_subdirectory(${C2A_USER_DIR}/settings)
+add_subdirectory(${C2A_USER_DIR}/tlm_cmd)
 
-add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+set(C2A_SRCS
+  ${C2A_USER_DIR}/c2a_main.c
+)
+
+if(C2A_BUILD_AS_CXX)
+  message("Build as C++!!!")
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+endif()
+
+if(C2A_BUILD_WITH_SILS_MOCKUP)
+  add_definitions(-DDEFINE_MAIN_ON_SILS)
+  add_executable(${PROJECT_NAME} ${C2A_SRCS})
+else()
+  add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+endif()
 
 set(C2A_USER_MODULES
   C2A_USER_APPS
-  C2A_USER_DRIVERS
   C2A_USER_CMD_TLM
-  C2A_USER_IF_WRAPPER
+  C2A_USER_DRIVERS
+  C2A_USER_HAL
   C2A_USER_LIB
   C2A_USER_SETTINGS
 )

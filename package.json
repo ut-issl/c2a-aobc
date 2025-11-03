@@ -1,0 +1,20 @@
+{
+  "name": "c2a-aobc-core-v4",
+  "packageManager": "pnpm@9.1.1",
+  "scripts": {
+    "build:tlmcmddb": "tlmcmddb-cli bundle --pretty tlm-cmd-db/TLM_DB/calced_data tlm-cmd-db/CMD_DB tlmcmddb.json",
+    "run:c2a": "cargo run",
+    "run:gaia": "tmtc-c2a --satconfig satconfig.json --tlmcmddb tlmcmddb.json",
+    "run:kble": "bash -c 'while :; do kble -s <(jrsonnet spaghetti.jsonnet); sleep 1; done'",
+    "run-real:kble-serialport": "bash -c 'while :; do kble-serialport; sleep 1; done'",
+    "run-real:kble": "bash -c 'while :; do kble -s <(jrsonnet spaghetti.real.jsonnet -V=COM_PORT); sleep 1; done'",
+    "run-all": "run-p run:*",
+    "run-real": "run-p run:gaia run-real:*",
+    "devtools:real": "run-s build:* run-real",
+    "devtools:sils": "run-s build:* run-all"
+  },
+  "devDependencies": {
+    "npm-run-all": "4.1.5",
+    "tools": "file:./boom-tools"
+  }
+}
