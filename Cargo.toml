@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-c2a-core = "4.5.0"
+c2a-core = { path = "src/src_core" }
+c2a-dev-runtime = { path = "src/src_core/dev-runtime" }
+c2a-uart-kble = { path = "src/src_core/hal/uart-kble" }
+c2a-wdt-noop = { path = "src/src_core/hal/wdt-noop" }
 
 [build-dependencies]
 cmake = "0.1"
