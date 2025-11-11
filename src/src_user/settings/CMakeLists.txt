@@ -8,7 +8,6 @@ set(C2A_SRCS
   modes/mode_definitions.c
   modes/task_lists/tl_initial.c
   modes/task_lists/elements/tl_elem_debug_display.c
-  modes/task_lists/elements/tl_elem_gs_related_process.c
   modes/task_lists/elements/tl_elem_tlm_cmd_hirate.c
   modes/transitions/sl_initial.c
   modes/transitions/sl_nop.c

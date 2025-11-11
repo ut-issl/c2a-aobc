@@ -2,40 +2,58 @@
  * @file
  * @brief  HW 依存 Print, つまり ログ情報のフォーマット出力（デバッグ出力）
  */
+// こいつもBootLoaderに配置するので，リプロ可能領域のものをincludeしないこと！！
 
+// printはHW依存性が強いため，ヘッダーはcoreにおき，オーバーライドする
+// ビルド対象にて選択する
 #include <src_core/library/print.h>
 
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "./print_arduino.h"
+#include "../settings/sils_define.h"
 
 // バッファサイズよりでかい文字列が来ると死ぬ
 static char PRINT_buffer_[512];
 
-#ifndef SILS_FW
+#ifdef SILS_FW
+
+// SILS 用 Printf() 実装
 
 void Printf(const char* format, ...)
 {
-  int threshold = 0;
-  va_list argptr;
+#ifdef SHOW_DEBUG_PRINT_ON_SILS
+  va_list args;
+  va_start(args, format);
+  vsprintf(PRINT_buffer_, format, args);
 
-  va_start(argptr, format);
-  threshold = vsprintf(PRINT_buffer_, format, argptr);
+  printf("%s", PRINT_buffer_);
+  fflush(stdout);
 
-  printf_debug(PRINT_buffer_); // H/W dependent
-  va_end(argptr);
+  va_end(args);
+#else
+  // なにも表示しない
+#endif
 }
 
-#else // SILS用
+#else
 
+#include <src_core/system/watchdog_timer/watchdog_timer.h>
+
+// 実機用 Printf() 実装のテンプレート
 void Printf(const char* format, ...)
 {
-  // SILS環境が不明なので一旦コメントアウト 2020/08/22 鈴本
-  // va_list args;
-  // va_start(args, format);
-  // //printf(format, args);
-  // va_end(args);
+  va_list argptr;
+
+  WDT_clear_wdt();
+
+  va_start(argptr, format);
+
+  // ここに出力の本体を書く
+
+  va_end(argptr);
+
+  WDT_clear_wdt();
 }
 
 #endif

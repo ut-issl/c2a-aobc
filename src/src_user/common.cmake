@@ -1,11 +1,11 @@
-if(BUILD_C2A_AS_CXX)
+if(C2A_BUILD_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)
 else()
   set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)
   set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
 endif()
 
-if(BUILD_C2A_AS_SILS_FW)
+if(C2A_BUILD_FOR_SILS)
   target_compile_definitions(${PROJECT_NAME} PUBLIC SILS_FW)
 endif()
 

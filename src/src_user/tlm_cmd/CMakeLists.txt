@@ -5,10 +5,13 @@ project(C2A_USER_CMD_TLM)
 set(C2A_SRCS
   block_command_definitions.c
   block_command_user_settings.c
-  # command_definitions.c
-  # telemetry_definitions.c
+  command_definitions.c
+  telemetry_definitions.c
   user_packet_handler.c
-  normal_block_command_definition/nbc_start_hk_tlm.c
+  normal_block_command_definition/nbc_cdh.c
+  normal_block_command_definition/nbc_sequence_list.c
+  normal_block_command_definition/nbc_task_list.c
+  normal_block_command_definition/nbc_tl_elems.c
 )
 
 if(C2A_BUILD_AS_CXX)

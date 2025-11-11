@@ -1,6 +1,6 @@
 {
   plugs: {
-    sils: "ws://localhost:9696/channels/0",
+    sils: "ws://localhost:9696/channels/3",
     gaia: "ws://localhost:8910",
     eb90dec: "exec:kble-eb90 decode",
     eb90enc: "exec:kble-eb90 encode",

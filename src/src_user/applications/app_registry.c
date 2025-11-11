@@ -14,7 +14,7 @@ void AR_load_initial_settings(void)
   // Common
   // add_application_(AR_DI_UART_EXAMPLE, DI_uart_example);
   // add_application_(AR_DI_I2C_EXAMPLE,  I2C_EXAMPLE_update);
-  add_application_(AR_DI_MOBC,         CSRV_MOBC_update);
+  add_application_(AR_CSRV_MOBC_CMD_PH,         CSRV_MOBC_update);
   // add_application_(AR_DI_MOBC_RT_TLM_PH,  DI_MOBC_rt_tlm_packet_handler);
   // AOCS
   // add_application_(AR_DI_MPU9250,      DI_MPU9250_update);
@@ -38,9 +38,14 @@ void AR_load_initial_settings(void)
   add_application_(AR_TLC_DISPATCHER_BC, TLCD_bc_create_app);
   add_application_(AR_TLC_DISPATCHER_TLM, TLCD_tlm_create_app);
   add_application_(AR_EVENT_UTILITY, EVENT_UTIL_create_app);
-  // add_application_(AR_DBG_FLUSH_SCREEN, flush_screen);
-  // add_application_(AR_DBG_PRINT_TIMESTAMP, print_time_stamp);
-  // add_application_(AR_DBG_PRINT_CMD_STATUS, print_cmd_status);
+  add_application_(AR_CSRV_MOBC_RT_TLM_PH, CSRV_MOBC_rt_tlm_packet_handler);
+  add_application_(AR_APP_DBG_FLUSH_SCREEN, APP_DBG_flush_screen);
+  add_application_(AR_APP_DBG_PRINT_TIMESTAMP, APP_DBG_print_time_stamp);
+  add_application_(AR_APP_DBG_PRINT_CMD_STATUS, APP_DBG_print_cmd_status);
+  add_application_(AR_APP_DBG_PRINT_EVENT_LOGGER0, APP_DBG_print_event_logger0);
+  add_application_(AR_APP_DBG_PRINT_EVENT_LOGGER1, APP_DBG_print_event_logger1);
+  add_application_(AR_APP_DBG_PRINT_EVENT_HANDLER, APP_DBG_print_event_handler);
+  add_application_(AR_APP_DBG_PRINT_GIT_REV, APP_DBG_print_git_rev);
 
   // User Defined
   // AOCS

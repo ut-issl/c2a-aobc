@@ -35,6 +35,8 @@
 // #include "DriverInstances/di_fm25v10.h"
 
 // UserDefined
+#include "user_defined/debug_apps.h"
+
 // AOCS
 // #include "UserDefined/AOCS/aocs_mode_manager.h"
 // #include "UserDefined/AOCS/aocs_manager.h"

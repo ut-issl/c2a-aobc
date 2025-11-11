@@ -20,7 +20,7 @@
 #define TL_TLM_PAGE_MAX  (1)
 
 #define PH_GSC_LIST_MAX  (4)
-#define PH_RTC_LIST_MAX  (16)
+#define PH_RTC_LIST_MAX  (32)
 #define PH_TLC_GS_LIST_MAX  (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX) // コメント追加（2019/08/19 鈴本）
                                                                  // これが最長じゃないといけない
                                                                  // timeline_command_dispatcher.tlm_info_.tl_list の長さがこれなので

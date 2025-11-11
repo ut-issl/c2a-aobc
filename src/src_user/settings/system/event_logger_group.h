@@ -67,6 +67,13 @@ typedef enum
   EL_GROUP_NVM_TRIPLE_REDUNDANT = 122,  //!< 不揮発メモリ三重冗長エラー
   EL_GROUP_NVM_BC               = 123,  //!< 不揮発BC操作時のエラー
 
+  // TEST
+  EL_GROUP_TEST             = 0xf0,        // pytest用
+  EL_GROUP_TEST1            = 0xf1,        // pytest用
+  EL_GROUP_TEST_EH          = 0xf2,        // pytest用 EH
+  EL_GROUP_TEST_EH_RESPOND  = 0xf3,        // pytest用 EHの対応検知用
+  EL_GROUP_TEST_EH1         = 0xf4,        // pytest用 EH
+
   // とりあえず最大値は0x7f(127)に！
   EL_GROUP_MAX = 0x80       // これはいじらない！
 } EL_GROUP;

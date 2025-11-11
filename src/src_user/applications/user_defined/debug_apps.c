@@ -71,7 +71,7 @@ static RESULT APP_DBG_flush_screen_(void)
   VT100_erase_down();
   VT100_reset_cursor();
   VT100_erase_line();
-  Printf("-- C2A SUBOBC SAMPLE Flight S/W --\n");
+  Printf("-- C2A AOBC Flight S/W --\n");
   VT100_erase_line();
   Printf("BUILD: %s %s\n", __DATE__, __TIME__);
   return RESULT_OK;
