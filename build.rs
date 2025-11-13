@@ -5,8 +5,18 @@ fn main() {
         .define("C2A_BUILD_FOR_32BIT", "OFF")
         .define("C2A_BUILD_AS_C99", "ON")
         .define("C2A_USE_SCI_COM_WINGS", "OFF")
-        .define("C2A_SHOW_DEBUG_PRINT_ON_SILS", "ON")
         .build_target("C2A");
+
+    let target = std::env::var("TARGET").unwrap();
+    let libc2a = if target == "thumbv7em-none-eabihf" {
+        libc2a
+            .target(&target)
+            .define("CMAKE_TOOLCHAIN_FILE", "toolchain-monazite.cmake")
+            .define("C2A_BUILD_FOR_SILS", "OFF")
+            .define("C2A_USE_SIMPLE_LIBC", "ON")
+    } else {
+        libc2a.define("C2A_BUILD_FOR_SILS", "ON")
+    };
 
     // Build C2A & link
     println!("cargo:rerun-if-changed=./src/src_core");
