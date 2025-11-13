@@ -5,6 +5,8 @@ project(C2A_USER_LIB)
 set(C2A_SRCS
   print.c
   vt100.c
+  RTT/SEGGER_RTT.c
+  RTT/SEGGER_RTT_printf.c
 )
 
 if(C2A_BUILD_AS_CXX)

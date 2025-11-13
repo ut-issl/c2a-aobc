@@ -1,0 +1,19 @@
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-rs download --chip-description-path chip-description.yaml --chip monazite_bank2"
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+  "-C", "link-arg=-Tdefmt.x",
+  # This is needed if your flash or ram addresses are not aligned to 0x10000 in memory.x
+  # See https://github.com/rust-embedded/cortex-m-quickstart/pull/95
+  #"-C", "link-arg=--nmagic",
+
+  # This is needed if you link Newlib (libc, libm) to search correct ABI variant (probably environment-dependent behavior)
+  # You should use arm-none-eabi-gcc as linker
+  #"-C", "link-arg=-mthumb",
+  #"-C", "link-arg=-mcpu=cortex-m7",
+  #"-C", "link-arg=-mfpu=fpv5-sp-d16",
+  #"-C", "link-arg=-mfloat-abi=hard",
+]
+
+[build]
+target = "thumbv7em-none-eabihf"    # Cortex-M7F

@@ -1,0 +1,209 @@
+name: monazite
+manufacturer:
+  id: 32
+  cc: 0
+generated_from_pack: true
+pack_file_release: 3.0.0
+variants:
+- name: monazite_bank1
+  cores:
+  - name: main
+    type: armv7em
+    core_access_options: !Arm
+      ap: 0
+      psel: 0
+  memory_map:
+  - !Ram
+    name: RAM_D1
+    range:
+      start: 0x24000000
+      end: 0x24080000
+    cores:
+    - main
+  - !Ram
+    name: RAM_D2
+    range:
+      start: 0x30000000
+      end: 0x30048000
+    cores:
+    - main
+  - !Ram
+    name: DTCMRAM
+    range:
+      start: 0x20000000
+      end: 0x20020000
+    cores:
+    - main
+  - !Ram
+    name: RAM_D3
+    range:
+      start: 0x38000000
+      end: 0x38010000
+    cores:
+    - main
+  - !Nvm
+    name: FLASH
+    range:
+      start: 0x8000000
+      end: 0x8100000
+    is_boot_memory: true
+    cores:
+    - main
+  flash_algorithms:
+  - monazite_bank1
+- name: monazite_bank2
+  cores:
+  - name: main
+    type: armv7em
+    core_access_options: !Arm
+      ap: 0
+      psel: 0
+  memory_map:
+  - !Ram
+    name: RAM_D1
+    range:
+      start: 0x24000000
+      end: 0x24080000
+    cores:
+    - main
+  - !Ram
+    name: RAM_D2
+    range:
+      start: 0x30000000
+      end: 0x30048000
+    cores:
+    - main
+  - !Ram
+    name: DTCMRAM
+    range:
+      start: 0x20000000
+      end: 0x20020000
+    cores:
+    - main
+  - !Ram
+    name: RAM_D3
+    range:
+      start: 0x38000000
+      end: 0x38010000
+    cores:
+    - main
+  - !Nvm
+    name: FLASH
+    range:
+      start: 0x8000000
+      end: 0x8100000
+    is_boot_memory: true
+    cores:
+    - main
+  flash_algorithms:
+  - monazite_bank2
+- name: monazite_mirrored
+  cores:
+  - name: main
+    type: armv7em
+    core_access_options: !Arm
+      ap: 0
+      psel: 0
+  memory_map:
+  - !Ram
+    name: RAM_D1
+    range:
+      start: 0x24000000
+      end: 0x24080000
+    cores:
+    - main
+  - !Ram
+    name: RAM_D2
+    range:
+      start: 0x30000000
+      end: 0x30048000
+    cores:
+    - main
+  - !Ram
+    name: DTCMRAM
+    range:
+      start: 0x20000000
+      end: 0x20020000
+    cores:
+    - main
+  - !Ram
+    name: RAM_D3
+    range:
+      start: 0x38000000
+      end: 0x38010000
+    cores:
+    - main
+  - !Nvm
+    name: FLASH_MIRRORED
+    range:
+      start: 0x8000000
+      end: 0x8100000
+    is_boot_memory: true
+    cores:
+    - main
+  flash_algorithms:
+  - monazite_mirrored
+flash_algorithms:
+- name: monazite_bank1
+  description: flashing to bank1 on monazite
+  default: true
+  instructions: gLVvRkDy2CxC8gQDwPIADMXyACOc+AAAGUZIsYhoQPABAIhg0fgIAUDwAQDB+AgBAToBIAMqjPgAAEPSSmkAKkDyIxLE8mdSSL8D9YBzGmBI9qsSzPbvUhpgT/AMAkD273NIv0/0hnKLUEDy2SPA8gADSmkYcLLx/z8Y3EL2OyDA9hkASGBG9n9gxPZdQEhgyGkg8ABAyGFIaUDwAgBIYYhpwAf80UhpQPABAEhhASAAIYz4AABE8lAAxfYAAAFgACCAvQDw3/hA8tghwPIAAQh4ASgcvwEgcEeAtW9GQvIMAsXyACIQaEDwAQAQYNL4ADEAIAhwQ/ABAcL4ABGAvUDy2CHA8gABCXgBKRy/ASBwR4C1b0aCsELyBAEMI8XyACFKaQAqSL9P9IZzQPbvclpQT/AIAk/04GNIv0/0hHID6lAgAPE0AFBQUFhA8IAAUFBIvwH1gHEBkQDwqPgA8KP4AagA8JP4ArCAvfC1A68t6QAPgbAURkDy2CLA8gACEngBKkbRQvIECgHwHwXF8gAq2vgUIFZG2vgUMAAqSL8G9YB2AJbmHCbwAwY2Gy5DMNFP9IAWBurTI8UYBOsBCU/wCAsMJgAqSL9P9IR7SL9P9IZ2TEUi0ED273BK+AYAMiBK+AsAAPBi+ATxIAgA8Fv4ACAhWClQBDAgKPrRAPBW+ADwUfhoRgDwQfggNQAoREbf0AEgAbC96AAP8L0AIPnnQPLYIMDyAAAAeAEoHL8BIHBHgLVvRoKwQvIEAAwixfIAIEFpAClIv0/0hnJA9u9xEVBP8AgBT/A4Aki/T/SEcQpQClhC8IACClBIvwD1gHABkADwG/gA8Bb4AagA8Ab4ArCAvYC1b0YA3v7e0LUCrwRo4GjABwLQAPAL+Pnn4GjA84BA0L2/80+PcEe/82+PcEcAv3BHAADU1A==
+  pc_init: 0x1
+  pc_uninit: 0xc9
+  pc_program_page: 0x16d
+  pc_erase_sector: 0x101
+  pc_erase_all: 0x223
+  data_section_offset: 0x2dc
+  flash_properties:
+    address_range:
+      start: 0x8000000
+      end: 0x8100000
+    page_size: 0x400
+    erased_byte_value: 0xff
+    program_page_timeout: 1000
+    erase_sector_timeout: 2000
+    sectors:
+    - size: 0x20000
+      address: 0x0
+- name: monazite_bank2
+  description: flashing to bank2 on monazite
+  default: true
+  instructions: gLVvRkDy6CxC8gQDwPIADMXyACOc+AAAGUZIsYhoQPABAIhg0fgIAUDwAQDB+AgBAToBIAMqjPgAAEHSSmkAKkDyIxLE8mdSWL8D9YBzGmBI9qsSzPbvUhpgT/SGckD273NIvwwii1BA8ukjwPIAA0ppGHAAKhjUQvY7IMD2GQBIYEb2f2DE9l1ASGDIaUDwAEDIYUhpQPACAEhhiGnAB/zRSGlA8AEASGEBIAAhjPgAAETyUADF9gAAAWAAIIC9APDp+EDy6CHA8gABCHgBKBy/ASBwR4C1b0ZC8gwCxfIAIhBoQPABABBg0vgAMQAgCHBD8AEBwvgAEYC9QPLoIcDyAAEJeAEpHL8BIHBHgLVvRoKwQvIEAU/0hnPF8gAhSmkAKki/DCNA9u9yWlBP9IRyT/TgY0i/CCID6lAgAfWAcwDxNABQUFBYRL9C8gQDxfIAI0DwgABQUAGTAPCv+ADwqvgBqADwmvgCsIC98LUDry3pAA+BsBRGQPLoIsDyAAISeAEqStFC8gQJAfAfBcXyACkJ9YB22fgUINn4FDAAKkS/QvIEBsXyACYAluYcJvADBjYbLkMx0dtDT/SAFgbq0yME6wEKHRhP9IR7T/SGdgAqSL9P8AgLSL8MJlRFItBA9u9wSfgGADIgSfgLAADwZfgE8SAIAPBe+AAgIVgpUAQwICj60QDwWfgA8FT4aEYA8ET4IDUAKERG39ABIAGwvegAD/C9ACD550Dy6CDA8gAAAHgBKBy/ASBwR4C1b0aCsELyBABP9IZyxfIAIAD1gHNBaQApSL8MIkD273ERUE/0hHFP8DgCSL8IIQpQClhEv0LyBAPF8gAjQvCAAgpQAZMA8Bv4APAW+AGoAPAG+AKwgL2AtW9GAN7+3tC1Aq8EaOBowAcC0ADwC/j55+BowPOAQNC9v/NPj3BHv/Nvj3BHAL9wRwAA1NQ=
+  pc_init: 0x1
+  pc_uninit: 0xc5
+  pc_program_page: 0x16f
+  pc_erase_sector: 0xfd
+  pc_erase_all: 0x22d
+  data_section_offset: 0x2ec
+  flash_properties:
+    address_range:
+      start: 0x8000000
+      end: 0x8100000
+    page_size: 0x400
+    erased_byte_value: 0xff
+    program_page_timeout: 1000
+    erase_sector_timeout: 2000
+    sectors:
+    - size: 0x20000
+      address: 0x0
+- name: monazite_mirrored
+  description: flashing to both banks on monazite at the same time
+  default: true
+  instructions: sLUCr4SwQPL4LkLyBBzA8gAOQvIEA574AADF8gAsxfIAI2CxAiFoRs3pAjxQ+CFAATEEKaVoRfABBaVg9tFRHgEgAymO+AAAINJA8vkhzekCPMDyAAFA8iMTCHBI9qsQAiHsRsTyZ1PM9u9QQPbvclz4IUABMQQpI2AgYOJg99EBII74AAAAIASwsL0A8Av5QPL4LMDyAAyc+AAAASgcvwEgcEeAtW9GhLBC8gQQakbF8gAgA5BC8gQAxfIAIAKQAiBS+CAwATAEKJloQfABAZlg9tEAIIz4AAAEsIC9QPL4IcDyAAEJeAEpHL8BIHBH8LUDry3pAAuGsELyBBEN8RQIxfIAIQAkBJFC8gQBxfIAIUD273kDkU/04GEB6lAgACEA8TQFAagA8QgGVvghAMD4DJCFYIFoQfCAAYFgBZAA8MX4APDA+EBGAPCw+Ci54gdP8AEBT/ABBOfQBrC96AAL8L3wtQOvLekAD4ewApBA8vggwPIAAAB4AShP0ULyBABUGMXyACAA9YBzAfAfAQGSzekEA9AcIPADAAauUEAEqghDACGw+oDwT/AyCUAJAJBS+AGAA5HN+BiAeLPd6QGlA5gEMAOQokUd0ED273DI+AwAyPgIkADwefgK8SALAPBy+AAgWvgAEClQBDAgKPnRAPBs+ADwZ/gwRgDwV/ggNdpGWLnf5wKYBKoDmQD1gBACkACYCCnL0QAgAOABIAewvegAD/C9QPL4IMDyAAAAeAEoHL8BIHBH8LUDry3pAAuGsELyBBAFrMXyACAAJgSQQvIEAMXyACBA9u94A5ABqADxCAVP8DgJACFV+CEAwPgMgMD4CJCBaEHwgAGBYAWQAPAk+ADwH/ggRgDwD/goufIHT/ABAU/wAQbm0AawvegAC/C9gLVvRgDe/t7QtQKvBGjgaMAHAtAA8Av4+efgaMDzgEDQvb/zT49wR7/zb49wRwC/cEcAANTU
+  pc_init: 0x1
+  pc_uninit: 0x91
+  pc_program_page: 0x165
+  pc_erase_sector: 0xdf
+  pc_erase_all: 0x229
+  data_section_offset: 0x2fc
+  flash_properties:
+    address_range:
+      start: 0x8000000
+      end: 0x8100000
+    page_size: 0x400
+    erased_byte_value: 0xff
+    program_page_timeout: 1000
+    erase_sector_timeout: 2000
+    sectors:
+    - size: 0x20000
+      address: 0x0

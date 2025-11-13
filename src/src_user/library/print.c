@@ -12,13 +12,29 @@
 #include <stdarg.h>
 
 #include "../settings/sils_define.h"
+#include "./RTT/SEGGER_RTT.h"
 
 // バッファサイズよりでかい文字列が来ると死ぬ
 static char PRINT_buffer_[512];
 
-#ifdef SILS_FW
+#ifndef SILS_FW
 
-// SILS 用 Printf() 実装
+#include <src_core/system/watchdog_timer/watchdog_timer.h>
+
+void Printf(const char* format, ...)
+{
+  va_list argptr;
+
+  WDT_clear_wdt();         // 2019/03/10 追加
+
+  va_start(argptr, format);
+  SEGGER_RTT_vprintf(0, format, &argptr);
+  va_end(argptr);
+
+  WDT_clear_wdt();         // 2019/03/10 追加
+}
+
+#else
 
 void Printf(const char* format, ...)
 {
@@ -34,26 +50,6 @@ void Printf(const char* format, ...)
 #else
   // なにも表示しない
 #endif
-}
-
-#else
-
-#include <src_core/system/watchdog_timer/watchdog_timer.h>
-
-// 実機用 Printf() 実装のテンプレート
-void Printf(const char* format, ...)
-{
-  va_list argptr;
-
-  WDT_clear_wdt();
-
-  va_start(argptr, format);
-
-  // ここに出力の本体を書く
-
-  va_end(argptr);
-
-  WDT_clear_wdt();
 }
 
 #endif
