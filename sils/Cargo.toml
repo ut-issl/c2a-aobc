@@ -1,0 +1,15 @@
+[package]
+name = "sils"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace.lints.clippy]
+pedantic = "warn"
+
+[dependencies]
+c2a-aobc-core-v4 = { path = "../" }
+c2a-dev-runtime = { git = "https://github.com/arkedge/c2a-core.git", tag = "v4.5.1" }
+c2a-uart-kble = { path = "../src/src_core/hal/uart-kble" }
+c2a-wdt-noop = { path = "../src/src_core/hal/wdt-noop" }
