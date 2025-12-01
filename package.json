@@ -3,7 +3,7 @@
   "packageManager": "pnpm@9.1.1",
   "scripts": {
     "build:tlmcmddb": "tlmcmddb-cli bundle --pretty tlm-cmd-db/TLM_DB/calced_data tlm-cmd-db/CMD_DB tlmcmddb.json",
-    "run:c2a": "cargo run",
+    "run:c2a": "cd sils && cargo run",
     "run:gaia": "tmtc-c2a --satconfig satconfig.json --tlmcmddb tlmcmddb.json",
     "run:kble": "bash -c 'while :; do kble -s <(jrsonnet spaghetti.jsonnet); sleep 1; done'",
     "run-real:kble-serialport": "bash -c 'while :; do kble-serialport; sleep 1; done'",
