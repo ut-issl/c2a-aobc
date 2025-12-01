@@ -1,0 +1,16 @@
+name: check_coding_rule
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  check_coding_rule_v4:
+    uses: ut-issl/c2a-workflows/.github/workflows/check-coding-rule.yml@d0581c2d15d7ae77ff6f6c4beb726b2d9d4f2ef1
+    with:
+      c2a_dir: .
+      c2a_custom_setup: |
+        ./src/src_core/setup.sh
