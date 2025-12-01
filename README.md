@@ -57,7 +57,7 @@
     sudo apt install gcc-multilib protobuf-compiler libclang-dev cmake g++ g++-multilib
     ```
 - Setup
-    - Under the c2a-aobc-core-v4 directory, run:
+    - Under the c2a-aobc-core-v4/sils directory, run:
     ```
     nvm install
     corepack enable
@@ -65,7 +65,7 @@
     ```
 ### Running SILS
 - To run only C2A
-    - Under the c2a-aobc-core-v4 directory, run:
+    - Under the c2a-aobc-core-v4/sils directory, run:
     ```
     cargo run
     ```
