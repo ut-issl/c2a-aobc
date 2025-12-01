@@ -5,13 +5,6 @@
 ## Overview
 
 - `C2A-AOBC` is the flight software for the AOCS module developed by ISSL/UT, Seiren, and JAXA.
-- Support environments
-  - For real AOBC (Attitude On Board Computer)
-    - [vMicro](https://www.visualmicro.com/) + Visual Studio 2019
-  - For SILS test
-    - [S2E-AOBC v5.0.0](https://github.com/ut-issl/s2e-aobc/releases/tag/v5.0.0)
-  - Telemetry/Command interface
-    - [WINGS v2.1.0](https://github.com/ut-issl/wings/releases/tag/v2.1.0)
 - How to use
   - `The main developers` of the AOCS module directly use this repository to add new features and improve the module.
   - `General users` of the AOCS module do not need to use and edit this repository directly. They need to create a project-specific repository and define spacecraft-specific parameters within the repository.
@@ -42,60 +35,55 @@
 
 ## For main developers
 ### How to clone the repository
-  - This repository includes [c2a-core](https://github.com/ut-issl/c2a-core) and [tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator) as the `git submodule`. Please use the following commands to construct the directory.
+  - This repository includes [c2a-core](https://github.com/arkedge/c2a-core) as the `git submodule`. Please use the following commands to construct the directory.
     ```
-    $ git clone git@github.com:ut-issl/c2a-aobc.git
-    $ cd c2a-aobc/
+    $ git clone git@github.com:ut-issl/c2a-aobc-core-v4.git
+    $ cd c2a-aobc-core-v4/
     $ git submodule init
     $ git submodule update
     ```
   - Or use the following commands to clone the repository.
     ```
-    $ git clone --recursive git@github.com:ut-issl/c2a-aobc.git
+    $ git clone --recursive git@github.com:ut-issl/c2a-aobc-core-v4.git
     ```
-- After the clone, please execute the following script file for the local setting of git.
-  - Windows: `RUN_AFTER_CLONE.bat`
-  - Mac: `RUN_AFTER_CLONE.command`
 
+### How to construct the development environment for SILS
+- Follow the instructions in the [c2a_core documentation](https://github.com/arkedge/c2a-core/blob/main/docs/sils/c2a_dev_runtime.md)
+- Install the required tools:
+  - rustup: https://www.rust-lang.org/learn/get-started
+  - nvm: https://github.com/nvm-sh/nvm#installing-and-updating
+  - yarn: https://classic.yarnpkg.com/lang/en/docs/install/
+  - rye: https://rye-up.com/guide/installation/
+- Install compilers:
+    ```
+    sudo apt install gcc-multilib protobuf-compiler libclang-dev cmake g++ g++-multilib
+    ```
+- Setup
+    - Under the c2a-aobc-core-v4 directory, run:
+    ```
+    nvm install
+    corepack enable
+    pnpm install
+    ```
+### Running SILS
+- To run only C2A
+    - Under the c2a-aobc-core-v4 directory, run:
+    ```
+    cargo run
+    ```
+- To run together with DevTools
+    - Under the c2a-aobc-core-v4 directory, run:
+    - After running the command below, you can access DevTools at [http://localhost:8900/devtools/](http://localhost:8900/devtools/)
+    ```
+    pnpm run devtools:sils
+    ```
 
 ### How to construct the development environment for real AOBC
-1. Install Arduino IDE
-   - Install [Arduino](https://www.arduino.cc/en/software)
-   - Launch Arduino project
-   - Add board setting
-     - `メニューバー＞ファイル＞環境設定`
-     - Add the following description to the additional board manager's URL
-       - https://github.com/chipKIT32/chipKIT-core/raw/master/package_chipkit_index.json
-   - Install `ChipKIT`
-     - `メニューバー＞ツール＞ボード＞ボードマネージャ`
-     - Click `Install` of `chipKIT`
-2. Add board definition file
-   - Open `C:\Users\^^^\AppData\Local\Arduino15\packages\chipKIT\hardware\pic32\2.1.0` directory
-     - **NOTE** This directory name is changed by the PC environment
-   - Open `board.txt`, and move to the end of the line.
-   - Open `c2a-aobc/settings/board.txt`
-   - Copy all contents and paste them to the end of the `2.1.0\board.txt`.
-   - Save and close the `2.1.0\board.txt`.
-   - Copy `c2a-aobc/settings/MXL795` directory and paste to the `\2.1.0\variants` directory
+- Please use [monazite](https://github.com/arkedge/monazite).
 
-3. Install Visual Studio 2019 and [vMicro](https://www.visualmicro.com/)
-   - TBW
-
-4. Setting of `vMicro`
-   - Open `C2A_AOBC.sln`
-   - Select `拡張機能>vMicro` and set it as follows.
-     - IDE: Arduino 1.6/1.8
-     - Board: PIC32MX795F512L(80MHz)
-     - Port: depends on your environment
-     - **NOTE** If you cannot include DTWI.h and DSPI.h and cannot build, add DTWI and DSPI from `Add Library>Current Platform` in `vMicro` settings.
        
 ### How to edit TLM/CMD (Telemetry/Command)
-1. Edit TLM/CMD DB in `c2a-aobc/database/`
-   - Please find detailed information on [How to use TLM/CMD DB](https://github.com/ut-issl/tlm-cmd-db).
-2. Execute `tools/tlm_cmd_generator` and generate source codes.
-   - [How to use tlm-cmd-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator)
-   - Just use the version specified in the submodule.
-   - It is set to read `tools/tlm_cmd_gen_config.json` as the config file.
+- Please find detailed information on `c2a-aobc-core-v4/design/README.md`.
 
 
 ### Development style
@@ -137,12 +125,6 @@
     - `body`: Body-fixed frame (**body frame of AOBC module**)
     - `compo`: Component frame
   - For abbreviations, please see the ISSL internal [document](https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/77#note_568506174).
-
-### Tips
-- When using `vMicro`, setting the `Visual Studio` to display by folders instead of filters makes it easier to use.
-- For build errors when SILS test with `S2E`, try the following operations first.
-  - Perform `git submodule update`.
-  - Delete CMake cache of S2E.
 
 ## Used Projects
 
