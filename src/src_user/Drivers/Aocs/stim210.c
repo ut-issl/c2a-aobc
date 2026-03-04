@@ -765,25 +765,21 @@ static int STIM210_convert_gyro_output_(STIM210_Driver* stim210_driver, const ui
   return 0;
 }
 
-static int STIM210_convert_temperature_(STIM210_Driver* stim210_driver, const uint8_t* temperature_bytes)
+static int STIM210_convert_temperature_(STIM210_Driver* stim210_driver,  const uint8_t* temperature_bytes)
 {
   uint8_t axis = 0;
   uint8_t idx = 0;
-  float temperature_degC[PHYSICAL_CONST_THREE_DIM] = { 0.0f, 0.0f, 0.0f };
-
   for (axis = 0; axis < PHYSICAL_CONST_THREE_DIM; axis++)
   {
-    for (idx = 0; idx < STIM210_RX_TEMPERATURE_SIZE; idx++)
-    {
-      temperature_degC[axis] += temperature_bytes[axis * STIM210_RX_TEMPERATURE_SIZE + idx] * STIM210_kScaleRaw2Temperature_[idx];
-    }
-    if (temperature_degC[axis] > STIM210_kMaxTemperatureDegC_)
-    {
-      temperature_degC[axis] = STIM210_kMaxTemperatureDegC_ * 2.0f;
-    }
-    stim210_driver->info.temperature_compo_degC[axis] = temperature_degC[axis];
-  }
+    uint8_t msb = temperature_bytes[axis * STIM210_RX_TEMPERATURE_SIZE + 0];
+    uint8_t lsb = temperature_bytes[axis * STIM210_RX_TEMPERATURE_SIZE + 1];
 
+    int16_t raw = (int16_t)((((uint16_t)msb) << 8) | (uint16_t)lsb);
+
+    float degC = (float)raw / 256.0f;
+
+    stim210_driver->info.temperature_compo_degC[axis] = degC;
+  }
   return 0;
 }
 
